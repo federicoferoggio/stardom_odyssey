@@ -60,7 +60,7 @@ function showPlanetInfo(planetIndex) {
 
     // Set the planet image dynamically based on the planet name
     const planetImageInfo = document.getElementById('planetImage');
-    planetImageInfo.src = "images/" + planet.name.toLowerCase().replace(/\s+/g, '') + ".webp";
+    planetImageInfo.src = "images/" + planet.name.replace(/\s+/g, '') + ".webp";
     planetImageInfo.alt = planet.name;
 
     // Display the modal
