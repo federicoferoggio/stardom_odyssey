@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Campaign</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body id="container_all">
+    <div id="controls">
+        <label for="monthInput">Current Month:</label>
+        <input type="number" id="monthInput" value="10200" min="10200" oninput="updateSystem()" size="auto">
+    </div>
+
+    <div id="solarSystem">
+        <div id="sun"><img src="images/sun.webp" alt="sun" class="planetImage"></div>
+        <div class="orbit" id="orbit1">
+            <div class="planet" data-name="Hellcoast"><img src="images/Hellcoast.webp" alt="Hellcoast"
+                    class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit2">
+            <div class="planet" data-name="Jetaras"><img src="images/Jetaras.webp" alt="Jetaras" class="planetImage">
+            </div>
+        </div>
+        <div class="orbit" id="orbit3">
+            <div class="planet" data-name="Void"><img src="images/Void.webp" alt="Void" class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit4">
+            <div class="planet" data-name="Draconia"><img src="images/Draconia.webp" alt="Draconia" class="planetImage">
+            </div>
+        </div>
+        <div class="orbit" id="orbit5">
+            <div class="planet" data-name="Ion"><img src="images/Ion.webp" alt="Ion" class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit6">
+            <div class="planet" data-name="Saltar"><img src="images/Saltar.webp" alt="Saltar" class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit7">
+            <div class="planet" data-name="Wandacker"><img src="images/Wandacker.webp" alt="Wandacker"
+                    class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit8">
+            <div class="planet" data-name="Xan"><img src="images/Xan.webp" alt="Xan" class="planetImage"></div>
+        </div>
+        <div class="orbit" id="orbit9">
+            <div class="planet" data-name="Brion7"><img src="images/Brion7.webp" alt="Brion7" class="planetImage">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for displaying planet information -->
+    <div id="planetInfo" style="display:none;">
+        <div id="planetInfoContent">
+            <h2 id="planetName"></h2>
+            <img id="planetImage" src="" alt="Planet Image" style="width:100px; height:100px;" border-radius="50%"> <!-- Add this line -->
+            <ul id="planetDistances"></ul>
+            <button onclick="closeModal()" background-color="black" >Close</button>
+        </div>
+    </div>
+
+    <div id="bottomSections">
+
+
+        <div id="companyStats">
+            <h2>Your Family</h2>
+            <div class="stats-bonus-container">
+                <div class="stat-input">
+                    <label for="might">Might:</label>
+                    <input type="number" id="might" value="1" min="1" max="6">
+                </div>
+                <div class="stat-input">
+                    <label for="treasure">Treasure:</label>
+                    <input type="number" id="treasure" value="1" min="1" max="6">
+                </div>
+                <div class="stat-input">
+                    <label for="influence">Influence:</label>
+                    <input type="number" id="influence" value="1" min="1" max="6">
+                </div>
+                <div class="stat-input">
+                    <label for="territory">Territory:</label>
+                    <input type="number" id="territory" value="1" min="1" max="6">
+                </div>
+                <div class="stat-input">
+                    <label for="sovereignty">Sovereignty:</label>
+                    <input type="number" id="sovereignty" value="1" min="1" max="6">
+                </div>
+            </div>
+
+            <div class="stat-input">
+                <label for="companyBonus">Company Bonus:</label>
+                <select id="companyBonus">
+                    <option value="" disabled selected>Select a bonus</option>
+                    <!-- Bonuses will be populated here -->
+                </select>
+                <p id="bonusDescription"></p> <!-- To display the selected bonus description -->
+            </div>
+
+        </div>
+
+
+        <div id="companyActions">
+            <h2>Company Actions</h2>
+            <label for="actionsMenu">Choose an Action:</label>
+            <select id="actionsMenu" onchange="updateActionDetails()">
+                <option value="" disabled selected>Select an action</option>
+                <!-- Actions from the Reign file will be populated here -->
+            </select>
+
+            <div id="actionDetails">
+                <!-- Action details and dice rolls will be displayed here -->
+            </div>
+
+            <div id="rivalSelection" style="display:none;">
+                <label for="rivalsMenu">Select Rival Company:</label>
+                <select id="rivalsMenu">
+                    <!-- Rival companies loaded from CSV will populate here -->
+                </select>
+            </div>
+
+            <!-- Table for displaying selected company statistics -->
+            <table id="companyStatsTable" style="display:none;">
+                <tr>
+                    <th>Might</th>
+                    <th>Treasure</th>
+                    <th>Influence</th>
+                    <th>Territory</th>
+                    <th>Sovereignty</th>
+                </tr>
+                <tr>
+                    <td id="statMight"></td>
+                    <td id="statTreasure"></td>
+                    <td id="statInfluence"></td>
+                    <td id="statTerritory"></td>
+                    <td id="statSovereignty"></td>
+                </tr>
+            </table>
+
+            <button id="activateAction" onclick="activateAction()">Activate</button>
+        </div>
+    </div>
+    <div id="CourtSection">
+        <h2>Your Court</h2>
+        <div class="court-container">
+            <!-- Court members will be populated here dynamically -->
+        </div>
+    </div>
+    
+    </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

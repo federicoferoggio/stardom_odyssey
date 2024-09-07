@@ -1,0 +1,677 @@
+/* Prevent x-axis overflow */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Josefin Sans', sans-serif;
+    color: white;
+    height: 100vh;
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+    background-image: url('images/space-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    box-sizing: border-box;
+}
+
+#container_all {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.7)),
+        /* Keep the dark opacity filter */
+        url('images/space-background.jpg');
+    /* Background image */
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    /* Set the width to 100% of the viewport */
+    overflow-x: hidden;
+    /* Prevent x-axis overflow */
+    height: 100%;
+}
+
+#solarSystem {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    z-index: 1;
+    /* Ensure the system stays behind the content */
+}
+
+#sun {
+    width: 30px;
+    /* Adjust size as needed */
+    height: 30px;
+    background-color: yellow;
+    /* Color for the sun */
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    /* Center the sun */
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* Ensure the sun is at the exact center */
+    pointer-events: none;
+    /* Make orbits unclickable */
+}
+
+.orbit {
+    position: absolute;
+    border: none;
+    /* Hide the orbits */
+    border-radius: 50%;
+    transform-origin: center;
+    /* This ensures rotation happens around the orbit's center */
+    pointer-events: none;
+    /* Make orbits unclickable */
+}
+
+#orbit1 {
+    width: 100px;
+    height: 100px;
+}
+
+#orbit2 {
+    width: 150px;
+    height: 150px;
+}
+
+#orbit3 {
+    width: 200px;
+    height: 200px;
+}
+
+#orbit4 {
+    width: 250px;
+    height: 250px;
+}
+
+#orbit5 {
+    width: 300px;
+    height: 300px;
+}
+
+#orbit6 {
+    width: 350px;
+    height: 350px;
+}
+
+#orbit7 {
+    width: 400px;
+    height: 400px;
+}
+
+#orbit8 {
+    width: 450px;
+    height: 450px;
+}
+
+#orbit9 {
+    width: 500px;
+    height: 500px;
+}
+
+.planet {
+    width: 15px;
+    height: 15px;
+    background-color: #ffffff00;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    /* Position planets at the top of the orbit */
+    left: 50%;
+    transform: translate(-50%, 0);
+    /* Align the planet horizontally with the orbit's edge */
+    z-index: 100;
+    /* Ensure planets are above the orbits */
+    pointer-events: auto;
+    /* Ensure planets can be clicked */
+}
+
+.planetImage {
+    width: 15px;
+    /* Set the desired width of the planet */
+    height: 15px;
+    /* Set the desired height of the planet */
+    border-radius: 50%;
+    /* Optional: If you want the image to appear circular */
+    transform: translate(0%, 0%);
+    /* Center the image within the planet */
+
+}
+
+#sun .planetImage {
+    width: 40px;
+    height: 40px;
+    transform: translate(-5%, -5%);
+    ;
+}
+
+#planetInfo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000000ba;
+    /* Semi-transparent black background */
+    border: 2px solid white;
+    /* White border around the modal */
+    border-radius: 15px;
+    /* Rounded corners */
+    padding: 20px;
+    z-index: 2000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    /* Add subtle shadow */
+    display: none;
+    /* Hidden by default */
+}
+
+
+#planetImage {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-top: 20px;
+    /* Add space between the button and other elements */
+}
+
+#planetInfoContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center children horizontally */
+    justify-content: center;
+    /* Center children vertically */
+}
+
+#planetInfoContent h2 {
+    margin-top: 0;
+}
+
+#planetInfoContent ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#controls {
+    position: absolute;
+    top: 10px;
+    /* Adjust this value if needed */
+    left: 10px;
+    /* Adjust this value if needed */
+    background-color: #000000;
+    /* Ensure it's visible against the background */
+    padding: 10px;
+    /* Add padding for better visibility */
+    border-radius: 5px;
+    /* Optional: adds rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: adds a subtle shadow */
+    z-index: 1000;
+    /* Ensures it stays on top of other elements */
+    display: inline-block;
+    /* Adjust this to match content size */
+    max-width: 200px;
+    /* Limit the width of the control box */
+    box-sizing: border-box;
+    /* Ensure padding is included in the width */
+    text-align: left;
+    /* Align text to the left */
+}
+
+input[type="number"] {
+    box-sizing: border-box;
+    /* Ensures padding is included in width */
+    padding: 5px;
+    /* Adjust padding to be less, if necessary */
+    font-size: 16px;
+    /* Adjust font size if needed */
+    height: auto;
+    /* Adjust height to auto */
+    width: 100%;
+    /* Ensure the width of the input fits the container */
+    border-radius: 5px;
+    /* Match the border radius if necessary */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label,
+input,
+select,
+button,
+div {
+    font-family: 'Josefin Sans', sans-serif;
+    /* Apply the font to all headings, inputs, etc. */
+    color: white;
+    /* Ensure text is white */
+}
+
+/* Inline-block for label and input */
+.stat-input label {
+    display: inline-block;
+    width: auto;
+    /* Fixed width for labels */
+    margin-right: 10px;
+    /* Space between the label and the input */
+}
+
+.stat-input input {
+    display: inline-block;
+    width: auto;
+    /* Set width for inputs */
+    padding: 5px;
+}
+
+.stat-input {
+    margin-bottom: 15px;
+}
+
+h2 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin: 5px 0;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#actionDetails,
+#rivalSelection {
+    margin-top: 10px;
+}
+
+#actionDetails p {
+    white-space: pre-wrap;
+    /* Handle \n as new lines */
+    word-wrap: break-word;
+    /* Break long words */
+    line-height: 1.5;
+    /* Optional: Improve readability by adjusting line height */
+    margin-top: 10px;
+}
+
+#activateAction {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin-top: 10px;
+}
+
+#activateAction:hover {
+    background-color: #45a049;
+}
+
+#bottomSections {
+    display: flex;
+    padding-top: 30%;
+    justify-content: space-between;
+    padding: 20px;
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    /* Ensure no overflow */
+    min-height: 50vh;
+    /* Take up the full viewport height */
+    box-sizing: border-box;
+    /* Ensure padding doesn't cause overflow */
+}
+
+#companyStats,
+#companyActions {
+    flex: 1;
+    margin: 0 10px;
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Maintain background consistency */
+    padding: 20px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    /* Prevent any content overflow */
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8),
+        /* White border */
+        0 0 10px rgba(255, 255, 255, 0.6),
+        /* Glow effect */
+        0 10px 30px rgba(255, 255, 255, 0);
+    /* Gradient fading to invisible */
+}
+
+/* Flexbox container for stats and bonus */
+.stats-bonus-container {
+    display: flex;
+    justify-content: space-between;
+    /* Space between inputs and dropdown */
+    gap: 20px;
+    /* Space between the sections */
+}
+
+/* Ensure both stats and dropdown sections take equal width */
+.stats-container,
+.bonus-container {
+    flex: 1;
+    /* Equal width for both sections */
+}
+
+
+select {
+    padding: 5px;
+    width: 100%;
+    /* Ensure dropdown takes full width */
+}
+
+#bonusDescription {
+    white-space: normal;
+    /* Allow line breaks in the description */
+    word-wrap: break-word;
+    /* Ensure long words are broken correctly */
+    margin-top: 5px;
+    color: #ffffff;
+    max-width: 100%;
+    /* Make sure it uses the full width of the container */
+    overflow-y: auto;
+    /* Add a scrollbar if the text overflows */
+}
+
+
+
+/* General style for all dropdown menus */
+select {
+    appearance: none;
+    /* Remove default OS styling */
+    -webkit-appearance: none;
+    /* Remove Chrome and Safari default styling */
+    -moz-appearance: none;
+    /* Remove Firefox default styling */
+
+    font-family: 'Josefin Sans', sans-serif;
+    /* Apply the Josefin Sans font */
+    font-size: 16px;
+    /* Set the font size */
+    color: white;
+    /* White text */
+    background-color: #333;
+    /* Dark background for dropdown */
+    border: 1px solid #666;
+    /* Border around the dropdown */
+    border-radius: 5px;
+    /* Rounded corners */
+    padding: 10px;
+    /* Padding inside the dropdown */
+    width: 100%;
+    /* Ensure it takes full width */
+    cursor: pointer;
+    /* Show a pointer cursor when hovering */
+    outline: none;
+    /* Remove default outline on focus */
+}
+
+/* Style for dropdown arrow (custom icon if desired) */
+select::after {
+    content: '▼';
+    /* Custom arrow */
+    color: white;
+    /* Arrow color */
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    /* Ensure the arrow isn't clickable */
+}
+
+/* Add some space between the options */
+select option {
+    padding: 10px;
+    background-color: #444;
+    /* Dark background for dropdown options */
+    color: white;
+    /* White text for options */
+}
+
+/* Hover state for the dropdown */
+select:hover {
+    background-color: #444;
+    /* Change background on hover */
+}
+
+/* Focus state (when clicked or tabbed into) */
+select:focus {
+    border-color: #fff;
+    /* Highlight border on focus */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    /* Add subtle glow */
+}
+
+
+/* General style for all inputs and dropdown menus */
+input,
+select,
+textarea {
+    appearance: none;
+    /* Remove default OS styling */
+    -webkit-appearance: none;
+    /* Remove Chrome and Safari default styling */
+    -moz-appearance: none;
+    /* Remove Firefox default styling */
+
+    font-family: 'Josefin Sans', sans-serif;
+    /* Use Josefin Sans font */
+    font-size: 16px;
+    /* Set font size */
+    color: white;
+    /* White text */
+    background-color: #333;
+    /* Dark background */
+    border: 1px solid #666;
+    /* Border around the input */
+    border-radius: 5px;
+    /* Rounded corners */
+    padding: 10px;
+    /* Padding inside the input */
+    width: 100%;
+    /* Ensure input takes full width */
+    cursor: pointer;
+    /* Pointer cursor for inputs */
+    outline: none;
+    /* Remove default outline on focus */
+    box-sizing: border-box;
+    /* Include padding and border in element's total width and height */
+}
+
+/* Style for dropdown menus (select) */
+select {
+    background-color: #333;
+    /* Dark background for dropdown */
+    color: white;
+    /* White text */
+    cursor: pointer;
+    /* Pointer cursor for dropdown */
+}
+
+/* Optional: style for dropdown arrow */
+select::after {
+    content: '▼';
+    /* Custom arrow */
+    color: white;
+    /* Arrow color */
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    /* Arrow should not be clickable */
+}
+
+/* Add some space between the dropdown options */
+select option {
+    padding: 10px;
+    background-color: #444;
+    /* Dark background for dropdown options */
+    color: white;
+    /* White text for options */
+}
+
+/* Hover and focus states for inputs and dropdowns */
+input:hover,
+select:hover,
+textarea:hover {
+    background-color: #444;
+    /* Darker background on hover */
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #fff;
+    /* White border on focus */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    /* Add subtle glow on focus */
+}
+
+/* Style for textarea to ensure it matches other inputs */
+textarea {
+    resize: vertical;
+    /* Allow vertical resizing only */
+}
+
+/* Disabled inputs and dropdowns */
+input[disabled],
+select[disabled],
+textarea[disabled] {
+    background-color: #555;
+    /* Darker background for disabled elements */
+    color: #aaa;
+    /* Light gray text for disabled elements */
+    cursor: not-allowed;
+    /* Not allowed cursor for disabled elements */
+}
+
+
+/* General button styling */
+button {
+    font-family: 'Josefin Sans', sans-serif;
+    /* Apply the Josefin Sans font */
+    font-size: 16px;
+    /* Set font size */
+    color: white;
+    /* White text */
+    background-color: black;
+    /* Black background */
+    border: 2px solid white;
+    /* White border */
+    padding: 10px 20px;
+    /* Add padding inside the button */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer cursor */
+    text-transform: uppercase;
+    /* Optional: Make text uppercase */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transition for hover */
+    text-align: center;
+}
+
+/* Hover and focus states for buttons */
+button:hover,
+button:focus {
+    background-color: white;
+    /* Change background to white */
+    color: black;
+    /* Change text color to black */
+    outline: none;
+    /* Remove default outline */
+}
+
+/* Disabled buttons */
+button:disabled {
+    background-color: #555;
+    /* Gray background for disabled buttons */
+    color: #aaa;
+    /* Gray text for disabled buttons */
+    cursor: not-allowed;
+    /* Not allowed cursor for disabled state */
+    border: 2px solid #aaa;
+    /* Lighter gray border */
+}
+
+
+/* Court section styling */
+#CourtSection {
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
+    border-radius: 5px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
+                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
+                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading to invisible */
+    margin: 0px 30px 30px;
+    /* Add margin to the bottom */
+
+}
+
+/* Court section styling */
+.court-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 20px; /* Space between members */
+}
+
+
+/* Individual court member styling */
+.court-member {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+
+/* Image styling for court members */
+.court-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* Court member name */
+.court-member h3 {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Court member bonuses */
+.court-member p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: white;
+}
+
+
+
+
+
