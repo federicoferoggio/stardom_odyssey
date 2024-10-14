@@ -10,15 +10,17 @@
 <body id="container_all">
 
     <!-- Navigation Menu -->
-    <div id="menu" class="menu-container">
-        <label for="pageSelect">Naviga:</label>
-        <select id="pageSelect" onchange="navigateToPage()">
-            <option value="" disabled selected>Seleziona una pagina</option>
-            <option value="index.html">Pagina Principale</option>
-            <option value="planets.html">Pianeti</option>
-            <option value="court.html">Corte</option>
-        </select>
-    </div>
+    <nav class="menu">
+        <div class="menu-container">
+            <button class="menu-button">Menu</button>
+            <div class="menu-links">
+                <a href="index.html">Court</a>
+                <a href="families.html">Families</a>
+                <a href="https://www.dndbeyond.com/campaigns/5380810">D&D Beyond Campaign</a>
+                <a href="https://federicoferoggio.github.io/stardom_odyssey/">Planets Explorer</a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Page Title -->
     <h1 style="text-align: center; color: white;">I Grandi dello Stardom</h1>

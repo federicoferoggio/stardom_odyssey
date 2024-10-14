@@ -130,3 +130,78 @@ h1 {
         grid-template-columns: 1fr; /* Single column on mobile */
     }
 }
+
+/* Page Structure */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Josefin Sans', sans-serif;
+    background-color: #121212;
+    color: white;
+}
+
+/* Title Styling */
+h1 {
+    margin-top: 20px;
+    font-size: 3em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Menu container styling */
+.menu {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* This moves the menu to the top-right corner */
+    z-index: 10; /* Ensure the menu is on top of other content */
+}
+
+/* Menu button */
+.menu-button {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Menu links container - hidden by default */
+.menu-links {
+    display: none; /* Hidden until clicked */
+    position: absolute;
+    right: 0; /* Align dropdown with the button on the right */
+    background-color: #333;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1;
+    padding: 10px;
+}
+
+/* Menu links */
+.menu-links a {
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Menu link hover effect */
+.menu-links a:hover {
+    background-color: #555;
+}
+
+/* Display the dropdown when active */
+.menu-container.active .menu-links {
+    display: block;
+}
+
+/* Family List with 3 Columns */
+#familyList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+    grid-gap: 30px; /* Space between columns */
+    width: 80%;
+    margin: 50px auto;
+}

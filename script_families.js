@@ -68,3 +68,19 @@ function displayFamilyDetails() {
 window.onload = function() {
     loadFamilyData();
 };
+
+// Get the menu button and container
+const menuButton = document.querySelector('.menu-button');
+const menuContainer = document.querySelector('.menu-container');
+
+// Toggle the dropdown menu when clicking the button
+menuButton.addEventListener('click', () => {
+    menuContainer.classList.toggle('active');
+});
+
+// Close the dropdown if clicked outside
+window.addEventListener('click', (e) => {
+    if (!menuContainer.contains(e.target) && !menuButton.contains(e.target)) {
+        menuContainer.classList.remove('active');
+    }
+});

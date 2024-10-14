@@ -413,3 +413,19 @@ function loadCourtMembers() {
         })
         .catch(error => console.error('Error loading court members:', error));
 }
+
+
+const menuButton = document.querySelector('.menu-button');
+const menuContainer = document.querySelector('.menu-container');
+
+// Toggle the dropdown menu when clicking the button
+menuButton.addEventListener('click', () => {
+    menuContainer.classList.toggle('active');
+});
+
+// Close the dropdown if clicked outside
+window.addEventListener('click', (e) => {
+    if (!menuContainer.contains(e.target) && !menuButton.contains(e.target)) {
+        menuContainer.classList.remove('active');
+    }
+});
