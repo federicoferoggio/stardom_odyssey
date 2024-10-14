@@ -1,0 +1,132 @@
+/* Page Structure */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Josefin Sans', sans-serif;
+    background-color: #121212;
+    color: white;
+}
+
+/* Title Styling */
+h1 {
+    margin-top: 20px;
+    font-size: 3em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Family List with 3 Columns */
+#familyList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+    grid-gap: 30px; /* Space between columns */
+    width: 80%;
+    margin: 50px auto; /* Center the family grid on the page */
+}
+
+/* Each family entry */
+.family-entry {
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    justify-content: space-between; /* Spread content between top and bottom */
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    box-sizing: border-box; /* Ensure padding is included in width calculations */
+    width: 100%; /* Ensure equal width across columns */
+    max-width: 350px; /* Set a maximum width for each family entry */
+    height: 100%; /* Make the container fill the full available height */
+}
+
+/* Force equal height for all family entries */
+#familyList > .family-entry {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spread content, ensuring the member list goes to the bottom */
+    height: 100%;
+}
+
+/* Banner image styling */
+.family-banner {
+    width: 100%;
+    height: auto; /* Ensure full visibility */
+    object-fit: contain; /* Ensure image is fully contained */
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Family Name */
+.family-name {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+/* Family Motto */
+.family-motto {
+    font-size: 1.5em;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+/* Family Description */
+.family-description {
+    margin: 20px 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    flex-grow: 1; /* Take up available space, pushing the member list to the bottom */
+}
+
+/* Scrollable Member List */
+.family-members {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling if necessary */
+    padding: 20px;
+    gap: 20px;
+    max-width: 100%; /* Ensure the member list does not grow beyond the family entry */
+    box-sizing: border-box;
+    margin-top: auto; /* Push the member list to the bottom of the container */
+}
+
+.family-members::-webkit-scrollbar {
+    height: 10px; /* Height of the scrollbar */
+}
+
+.family-members::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Each Member */
+.member {
+    flex-shrink: 0; /* Prevent member blocks from shrinking */
+    text-align: center;
+}
+
+.member img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Ensure images fill the circular shape */
+    border-radius: 50%; /* Make images round */
+    border: 2px solid white;
+}
+
+.member p {
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 1200px) {
+    #familyList {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    #familyList {
+        grid-template-columns: 1fr; /* Single column on mobile */
+    }
+}

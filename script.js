@@ -38,6 +38,16 @@ const planetsData = [
     { name: 'Brion7', distanceFromSun: 20.0 }
 ];
 
+function navigateToPage() {
+    const pageSelect = document.getElementById('pageSelect');
+    const selectedPage = pageSelect.value;
+    
+    if (selectedPage) {
+        window.location.href = selectedPage; // Navigate to the selected page
+    }
+}
+
+
 // Function to show planet info when a planet is clicked
 function showPlanetInfo(planetIndex) {
     const planet = planetsData[planetIndex];

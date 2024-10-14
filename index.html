@@ -14,6 +14,18 @@
 </head>
 
 <body id="container_all">
+
+    <div id="menu" class="menu-container">
+        <label for="pageSelect">You are on page:</label>
+        <select id="pageSelect" onchange="navigateToPage()">
+            <option value="" disabled selected>Select a page</option>
+            <option value="index.html">Page 1</option>
+            <option value="planets.html">Page 2</option>
+            <option value="page3.html">Page 3</option>
+            <option value="strategy_map.html">Strategy Map</option>
+        </select>
+    </div>
+
     <div id="controls">
         <label for="monthInput">Current Month:</label>
         <input type="number" id="monthInput" value="10200" min="10200" oninput="updateSystem()" size="auto">
