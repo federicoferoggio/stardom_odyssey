@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Solar Map</title>
+  <style>
+    /* Fullscreen background image */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('images/space-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    /* Fullscreen container for SVG */
+    #map-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Ensure SVG scales properly */
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+
+    /* Style for clickable planets */
+    .clickable-point {
+      cursor: pointer;
+      fill: yellow; /* Visible fill for planets */
+    }
+  </style>
+</head>
+<body>
+  <div id="map-container">
+    <svg id="solar-map" xmlns="http://www.w3.org/2000/svg">
+      <!-- SVG content dynamically loaded -->
+    </svg>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load SVG dynamically
+      fetch('images/map.svg')
+        .then(response => response.text())
+        .then(svgContent => {
+          const svgContainer = document.getElementById('solar-map');
+          svgContainer.innerHTML = svgContent;
+
+          // Enable zoom and pan functionality
+          enableZoomAndPan(svgContainer);
+
+          // Find the second group and make its elements clickable
+          const groups = svgContainer.querySelectorAll('g');
+          if (groups.length > 1) {
+            const secondGroup = groups[1]; // Target the second group
+
+            secondGroup.querySelectorAll('*').forEach(element => {
+              element.classList.add('clickable-point');
+              element.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent zoom/pan from triggering
+                alert(`You clicked on ${element.id}`);
+              });
+            });
+          } else {
+            console.warn("Second group not found in the SVG");
+          }
+        })
+        .catch(error => console.error('Error loading SVG:', error));
+    });
+
+    function enableZoomAndPan(svg) {
+      let viewBox = svg.viewBox.baseVal;
+      let isPanning = false;
+      let startX, startY;
+
+      const minZoom = 0.5;  // Minimum zoom level (50% of original size)
+      const maxZoom = 3;    // Maximum zoom level (300% of original size)
+      let currentZoom = 0.5;  // Start at 50% zoom
+      const zoomSpeed = 0.05; // Slower zoom effect
+
+      // Set initial viewBox at 50% zoom
+      const originalWidth = 2000; // Replace with actual SVG width
+      const originalHeight = 2000; // Replace with actual SVG height
+      viewBox.x = originalWidth * 0.25;
+      viewBox.y = originalHeight * 0.25;
+      viewBox.width = originalWidth * currentZoom;
+      viewBox.height = originalHeight * currentZoom;
+
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomDirection = e.deltaY > 0 ? 1 : -1; // Scroll up or down
+        const newZoom = currentZoom + zoomDirection * -zoomSpeed;
+
+        if (newZoom >= minZoom && newZoom <= maxZoom) {
+          const zoomFactor = viewBox.width * zoomSpeed;
+          const mouseX = e.offsetX / svg.clientWidth;
+          const mouseY = e.offsetY / svg.clientHeight;
+
+          viewBox.x += zoomFactor * mouseX * zoomDirection;
+          viewBox.y += zoomFactor * mouseY * zoomDirection;
+          viewBox.width -= zoomFactor * zoomDirection;
+          viewBox.height -= zoomFactor * zoomDirection;
+
+          currentZoom = newZoom;
+
+          constrainPan(viewBox, originalWidth, originalHeight);
+        }
+      });
+
+      // Drag to pan
+      svg.addEventListener('mousedown', (e) => {
+        isPanning = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        svg.style.cursor = 'grabbing';
+      });
+
+      svg.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+
+        const dx = (startX - e.clientX) * (viewBox.width / svg.clientWidth);
+        const dy = (startY - e.clientY) * (viewBox.height / svg.clientHeight);
+
+        viewBox.x += dx;
+        viewBox.y += dy;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        constrainPan(viewBox, originalWidth, originalHeight);
+      });
+
+      svg.addEventListener('mouseup', () => {
+        isPanning = false;
+        svg.style.cursor = 'grab';
+      });
+
+      svg.addEventListener('mouseleave', () => {
+        isPanning = false;
+        svg.style.cursor = 'grab';
+      });
+
+      function constrainPan(viewBox, width, height) {
+        if (viewBox.x < 0) viewBox.x = 0;
+        if (viewBox.y < 0) viewBox.y = 0;
+        if (viewBox.x + viewBox.width > width) viewBox.x = width - viewBox.width;
+        if (viewBox.y + viewBox.height > height) viewBox.y = height - viewBox.height;
+      }
+    }
+  </script>
+</body>
+</html>
