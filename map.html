@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Solar Map</title>
   <style>
-    /* Fullscreen background image */
     body {
       margin: 0;
       padding: 0;
-      background: url('images/space-background.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: #000;
       overflow: hidden;
     }
 
-    /* Fullscreen container for SVG */
     #map-container {
       position: absolute;
       top: 0;
@@ -24,138 +22,233 @@
       overflow: hidden;
     }
 
-    /* Ensure SVG scales properly */
     svg {
+      display: block;
       width: 100%;
       height: 100%;
-      display: block;
       cursor: grab;
     }
 
-    /* Style for clickable planets */
-    .clickable-point {
-      cursor: pointer;
-      fill: yellow; /* Visible fill for planets */
+    .dialog-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border: 1px solid white;
+      border-radius: 8px;
+      display: none;
+      z-index: 1000;
+      text-align: center;
+      /* Ensure all text in the dialog is centered */
+    }
+
+    .dialog-box h2 {
+      margin: 0 0 10px 0;
+      /* Add spacing between title and owner */
+      text-align: center;
+      /* Ensure title is centered */
+    }
+
+    .dialog-box p {
+      margin: 5px 0;
+      /* Add slight spacing for readability */
+      text-align: center;
+      /* Center align the owner and description text */
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-rotation {
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-fill-mode: forwards;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
   <div id="map-container">
     <svg id="solar-map" xmlns="http://www.w3.org/2000/svg">
       <!-- SVG content dynamically loaded -->
     </svg>
   </div>
+  <div id="dialog" class="dialog-box"></div>
 
+  ...
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Load SVG dynamically
+      const svgContainer = document.getElementById('solar-map');
+      const dialog = document.getElementById('dialog');
+  
+      // Load the SVG file
       fetch('images/map.svg')
         .then(response => response.text())
         .then(svgContent => {
-          const svgContainer = document.getElementById('solar-map');
           svgContainer.innerHTML = svgContent;
-
-          // Enable zoom and pan functionality
-          enableZoomAndPan(svgContainer);
-
-          // Find the second group and make its elements clickable
-          const groups = svgContainer.querySelectorAll('g');
-          if (groups.length > 1) {
-            const secondGroup = groups[1]; // Target the second group
-
-            secondGroup.querySelectorAll('*').forEach(element => {
-              element.classList.add('clickable-point');
-              element.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent zoom/pan from triggering
-                alert(`You clicked on ${element.id}`);
-              });
-            });
-          } else {
-            console.warn("Second group not found in the SVG");
+  
+          // Log all IDs in the SVG
+          const allSVGIds = [...svgContainer.querySelectorAll('*')]
+            .map(obj => obj.id)
+            .filter(id => id); // Exclude empty IDs
+          console.log('All SVG IDs:', allSVGIds);
+          // Set initial viewBox for zoom/pan functionality
+          if (!svgContainer.hasAttribute('viewBox')) {
+            svgContainer.setAttribute('viewBox', '0 0 10000 10000');
           }
+  
+          enableZoomAndPan(svgContainer);
+          loadCSVAndProcess();
         })
         .catch(error => console.error('Error loading SVG:', error));
-    });
-
-    function enableZoomAndPan(svg) {
-      let viewBox = svg.viewBox.baseVal;
-      let isPanning = false;
-      let startX, startY;
-
-      const minZoom = 0.5;  // Minimum zoom level (50% of original size)
-      const maxZoom = 3;    // Maximum zoom level (300% of original size)
-      let currentZoom = 0.5;  // Start at 50% zoom
-      const zoomSpeed = 0.05; // Slower zoom effect
-
-      // Set initial viewBox at 50% zoom
-      const originalWidth = 2000; // Replace with actual SVG width
-      const originalHeight = 2000; // Replace with actual SVG height
-      viewBox.x = originalWidth * 0.25;
-      viewBox.y = originalHeight * 0.25;
-      viewBox.width = originalWidth * currentZoom;
-      viewBox.height = originalHeight * currentZoom;
-
-      svg.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const zoomDirection = e.deltaY > 0 ? 1 : -1; // Scroll up or down
-        const newZoom = currentZoom + zoomDirection * -zoomSpeed;
-
-        if (newZoom >= minZoom && newZoom <= maxZoom) {
-          const zoomFactor = viewBox.width * zoomSpeed;
-          const mouseX = e.offsetX / svg.clientWidth;
-          const mouseY = e.offsetY / svg.clientHeight;
-
-          viewBox.x += zoomFactor * mouseX * zoomDirection;
-          viewBox.y += zoomFactor * mouseY * zoomDirection;
-          viewBox.width -= zoomFactor * zoomDirection;
-          viewBox.height -= zoomFactor * zoomDirection;
-
-          currentZoom = newZoom;
-
-          constrainPan(viewBox, originalWidth, originalHeight);
+  
+  
+      function enableZoomAndPan(svg) {
+        const viewBox = svg.viewBox.baseVal;
+        const originalWidth = viewBox.width;
+        const originalHeight = viewBox.height;
+        const minZoom = 0.01;
+        const maxZoom = 1;
+  
+        let isPanning = false;
+        let startX, startY;
+        let currentZoom = 1;
+        const zoomSpeed = 0.1;
+  
+        svg.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          const zoomFactor = e.deltaY > 0 ? 1 + zoomSpeed : 1 - zoomSpeed;
+          const newZoom = currentZoom * zoomFactor;
+  
+          if (newZoom >= minZoom && newZoom <= maxZoom) {
+            const mouseX = e.offsetX / svg.clientWidth;
+            const mouseY = e.offsetY / svg.clientHeight;
+  
+            const deltaWidth = viewBox.width * (1 - zoomFactor);
+            const deltaHeight = viewBox.height * (1 - zoomFactor);
+  
+            viewBox.x += deltaWidth * mouseX;
+            viewBox.y += deltaHeight * mouseY;
+            viewBox.width *= zoomFactor;
+            viewBox.height *= zoomFactor;
+  
+            currentZoom = newZoom;
+          }
+        });
+  
+        svg.addEventListener('mousedown', (e) => {
+          isPanning = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          svg.style.cursor = 'grabbing';
+        });
+  
+        svg.addEventListener('mousemove', (e) => {
+          if (!isPanning) return;
+  
+          const dx = (startX - e.clientX) * (viewBox.width / svg.clientWidth);
+          const dy = (startY - e.clientY) * (viewBox.height / svg.clientHeight);
+  
+          viewBox.x += dx;
+          viewBox.y += dy;
+  
+          startX = e.clientX;
+          startY = e.clientY;
+        });
+  
+        svg.addEventListener('mouseup', () => {
+          isPanning = false;
+          svg.style.cursor = 'grab';
+        });
+  
+        svg.addEventListener('mouseleave', () => {
+          isPanning = false;
+          svg.style.cursor = 'grab';
+        });
+      }
+  
+      function loadCSVAndProcess() {
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1694376835&single=true&output=csv';
+        fetch(url)
+          .then(response => response.text())
+          .then(csvData => processCSV(csvData))
+          .catch(error => console.error('Error loading CSV:', error));
+      }
+  
+      function processCSV(csvData) {
+        const rows = csvData.split('\n').map(row => row.split(','));
+        const headers = rows.shift();
+  
+        const data = rows.map(row => {
+          return headers.reduce((acc, header, i) => {
+            acc[header.trim()] = row[i]?.trim(); // Trim spaces for robust mapping
+            return acc;
+          }, {});
+        });
+  
+        const validIDs = new Set(data.map(item => item.ID));
+  
+        console.log('Valid IDs from CSV:', Array.from(validIDs));
+  
+        filterSVG(validIDs, data);
+      }
+  
+      function filterSVG(validIDs, data) {
+        const sun = document.getElementById('sun');
+        if (!sun) {
+          console.error('Sun element not found in the SVG');
+          return;
+        }
+  
+        const sunBBox = sun.getBBox();
+        const sunCenterX = sunBBox.x + sunBBox.width / 2;
+        const sunCenterY = sunBBox.y + sunBBox.height / 2;
+  
+        const objects = svgContainer.querySelectorAll('circle, ellipse, rect, path');
+        objects.forEach(obj => {
+          if (!validIDs.has(obj.id) && !obj.id.includes('orbit') && obj.id !== 'sun') {
+            obj.style.display = 'none';
+          } else {
+            obj.style.display = '';
+            const objectData = data.find(item => item.ID === obj.id);
+            if (objectData) {
+              // Apply color
+              obj.style.fill = objectData.Color;
+              obj.style.transformOrigin = `${sunCenterX}px ${sunCenterY}px`;
+              const speed = parseFloat(objectData.Speed) || 1; // Default to 1 if missing
+              const animationDuration = (60 / speed) * 5; // 5 minutes for full rotation
+              obj.classList.add('animate-rotation');
+              obj.style.animation = `rotate ${animationDuration}s linear infinite`;
+  
+              obj.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent zoom/pan interference
+                dialog.style.display = 'block';
+                dialog.innerHTML = `<h2>${objectData.Name}</h2><p style="color: ${objectData.Color};">${objectData.Owner}</p><p>${objectData.Descr}</p>`;
+              });
+            }
+          }
+        });
+      }
+  
+      window.addEventListener('click', (e) => {
+        if (!dialog.contains(e.target)) {
+          dialog.style.display = 'none';
         }
       });
-
-      // Drag to pan
-      svg.addEventListener('mousedown', (e) => {
-        isPanning = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        svg.style.cursor = 'grabbing';
-      });
-
-      svg.addEventListener('mousemove', (e) => {
-        if (!isPanning) return;
-
-        const dx = (startX - e.clientX) * (viewBox.width / svg.clientWidth);
-        const dy = (startY - e.clientY) * (viewBox.height / svg.clientHeight);
-
-        viewBox.x += dx;
-        viewBox.y += dy;
-
-        startX = e.clientX;
-        startY = e.clientY;
-
-        constrainPan(viewBox, originalWidth, originalHeight);
-      });
-
-      svg.addEventListener('mouseup', () => {
-        isPanning = false;
-        svg.style.cursor = 'grab';
-      });
-
-      svg.addEventListener('mouseleave', () => {
-        isPanning = false;
-        svg.style.cursor = 'grab';
-      });
-
-      function constrainPan(viewBox, width, height) {
-        if (viewBox.x < 0) viewBox.x = 0;
-        if (viewBox.y < 0) viewBox.y = 0;
-        if (viewBox.x + viewBox.width > width) viewBox.x = width - viewBox.width;
-        if (viewBox.y + viewBox.height > height) viewBox.y = height - viewBox.height;
-      }
-    }
+    });
   </script>
 </body>
+
 </html>
