@@ -312,30 +312,12 @@ select {
     margin-top: 10px;
 }
 
-#activateAction {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    display: block;
-    margin-top: 10px;
-}
-
-#activateAction:hover {
-    background-color: #45a049;
-}
-
 #bottomSections {
+    margin: 20px 30px 30px;
     display: flex;
-    padding-top: 30%;
     justify-content: space-between;
-    padding: 20px;
     box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-    width: 100vw;
     /* Ensure no overflow */
-    min-height: 50vh;
     /* Take up the full viewport height */
     box-sizing: border-box;
     /* Ensure padding doesn't cause overflow */
@@ -344,7 +326,6 @@ select {
 #companyStats,
 #companyActions {
     flex: 1;
-    margin: 0 10px;
     background-color: rgba(0, 0, 0, 0.9);
     /* Maintain background consistency */
     padding: 20px;
@@ -359,6 +340,14 @@ select {
         /* Glow effect */
         0 10px 30px rgba(255, 255, 255, 0);
     /* Gradient fading to invisible */
+}
+
+#companyStats {
+    margin-right: 10px;
+}
+
+#companyActions {
+    margin-left: 10px;
 }
 
 /* Flexbox container for stats and bonus */
@@ -719,3 +708,95 @@ button:disabled {
 .menu-container.active .menu-links {
     display: block;
 }
+
+.bonus-checkbox {
+    width: 20px;
+    height: 20px;
+    appearance: none; /* Remove the default checkbox styling */
+    border: 2px solid #ccc;
+    border-radius: 4px; /* Optional: Rounded corners */
+    background-color: white;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+.bonus-checkbox:checked {
+    background-color: #4CAF50; /* Green background when checked */
+    border-color: #4CAF50; /* Match border to background color */
+}
+
+.bonus-checkbox:checked::after {
+    content: '✔'; /* Unicode checkmark */
+    font-size: 14px; /* Adjust size of the checkmark */
+    color: white; /* Checkmark color */
+    position: absolute;
+    top: 2px; /* Adjust position */
+    left: 4px; /* Adjust position */
+}
+#timelineSection {
+    margin: 0px 30px 30px;
+    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
+    padding: 20px; /* Add internal padding */
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
+                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
+                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+#timelineContainer {
+    display: flex;
+    overflow-x: auto; /* Horizontal scrolling for the timeline */
+    gap: 10px; /* Add consistent spacing between items */
+    padding: 10px 0; /* Vertical padding for the scroll container */
+    scrollbar-width: thin;
+    scrollbar-color: #fff transparent;
+}
+
+#timelineContainer::-webkit-scrollbar {
+    height: 8px; /* Set the height of the horizontal scrollbar */
+}
+
+#timelineContainer::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 5px; /* Rounded scrollbar thumb */
+}
+
+.timeline-item {
+    flex: 0 0 250px; /* Fixed width */
+    height: auto; /* Fixed height */
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly transparent background */
+    border: 1px solid white;
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;
+    color: white;
+    box-sizing: border-box; /* Include padding in size */
+    overflow: hidden; /* Ensure no overflow */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: flex-start; /* Align content to the top */
+}
+
+.timeline-item h3 {
+    margin: 10px 0 5px; /* Space above and below the title */
+    font-size: 16px;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis for long titles */
+}
+
+.timeline-item p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    line-height: 1.4; /* Adjust spacing for readability */
+    white-space: normal; /* Allow wrapping */
+    word-wrap: break-word; /* Break long words */
+}
+
+.timeline-item h3:first-child {
+    margin-top: 5px; /* Ensure time number (first child) is close to the top */
+}
+
+

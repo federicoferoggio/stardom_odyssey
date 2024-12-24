@@ -1,29 +1,78 @@
-// Simulate Reign actions based on your Reign file
-const reignActions = {
-    "Attack": `Roll: Might + Treasure. Opposed By: Might + Territory.\nDescription: Engage in various forms of attacks, including Raiding, Annexation, Symbolism, or Pre-Emptive Defense. Objectives include reducing the enemy's Treasure, Might, or Territory or gaining symbolic victories.`,
-
-    "Defend": `Roll: Might + Territory. Opposed By: Might + Treasure.\nDescription: Defend your company from enemy attacks, preventing them from seizing resources or territory.`,
-
-    "Espionage": `Roll: Influence + Treasure. Opposed By: Influence + Territory.\nDescription: Gather intelligence on rivals or spread misinformation. Success allows you to learn vital information or destabilize the opponent.`,
-
-    "Counter espionage": `Roll: Influence + Territory. Opposed By: Influence + Treasure.\nDescription: Protect your company from enemy spies. Success helps you uncover and neutralize espionage activities.`,
-
-    "Total Conquest": `Description: If you can reduce a rival Company’s Sovereignty to zero, it collapses. If you reduce two of a Company’s Qualities to zero in one month, including either Sovereignty or Territory, you completely overwhelm and subsume that Company.`,
-
-    "Being Informed": `Roll: Influence + Sovereignty. Opposed By: Influence + Treasure or a Difficulty set by the GM.\nDescription: Gather information about what’s going on, whether general news or obscure information about hidden activities.`,
-
-    "Improve culture": `Roll: Territory + Treasure. Opposed By: Difficulty equal to current Sovereignty.\nDescription: Improve your Company's culture by building infrastructure, supporting arts, and fostering community. Success can temporarily or permanently increase Sovereignty.`,
-
-    "Policing": `Roll: Might + Sovereignty. Opposed By: Influence + Might.\nDescription: Address internal threats and maintain order within your Company by dealing with infiltrators or dissidents.`,
-
-    "Rise in stature": `Roll: Sovereignty + Treasure. Opposed By: Difficulty equal to current Influence.\nDescription: Increase your Company's prestige and influence through social or financial means. Success can temporarily or permanently raise Influence.`,
-
-    "Train and levy troops": `Roll: Sovereignty + Territory. Opposed By: Difficulty equal to current Might.\nDescription: Raise and integrate new troops to increase your Company's Might. This action can permanently raise Might but cannot exceed a certain limit.`,
-
-    "Unconventional warfare": `Roll: Influence + Might. Opposed By: Might + Sovereignty.\nDescription: Engage in unconventional tactics such as sabotage, assassination, or other covert operations. Success can damage the enemy’s Qualities like Might, Territory, Influence, or Treasure.`
+const actions = {
+    "Improve culture": {
+        description: "Enhances the cultural standing of your company.",
+        rolls: ["territory", "treasure"]
+    },
+    "Expand influence": {
+        description: "Increases your influence across regions.",
+        rolls: ["influence", "sovereignty"]
+    },
+    "Fortify defenses": {
+        description: "Strengthens your defenses against rivals.",
+        rolls: ["might", "territory"]
+    },
+    "Attack": {
+        description: "Engages enemy forces for raiding, annexation, or symbolic victory.",
+        rolls: ["might", "treasure"]
+    },
+    "Defend": {
+        description: "Protects against invasions or raids.",
+        rolls: ["might", "territory"]
+    },
+    "Espionage": {
+        description: "Gathers intelligence on rivals or influences opinions covertly.",
+        rolls: ["influence", "treasure"]
+    },
+    "Counter-Espionage": {
+        description: "Detects and counters rival intelligence operations.",
+        rolls: ["influence", "territory"]
+    },
+    "Policing": {
+        description: "Addresses internal threats and maintains order.",
+        rolls: ["might", "sovereignty"]
+    },
+    "Train and Levy Troops": {
+        description: "Recruits and integrates troops into the company.",
+        rolls: ["sovereignty", "territory"]
+    },
+    "Rise in Stature": {
+        description: "Increases your company's prestige and influence.",
+        rolls: ["sovereignty", "treasure"]
+    },
+    "Unconventional Warfare": {
+        description: "Executes sabotage, assassinations, or other unconventional military actions.",
+        rolls: ["influence", "might"]
+    },
+    "Improve the Culture": {
+        description: "Invests in community and cultural projects to unify the populace.",
+        rolls: ["territory", "treasure"]
+    }
+    // Additional actions can be defined based on deeper analysis of the file.
 };
 
 let companyData = {};
+
+let bonuses = [];
+
+function fetchBonuses() {
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=237415455&single=true&output=csv")
+        .then(response => response.text())
+        .then(csv => {
+            bonuses = csv.split("\n").slice(1).map(line => {
+                const [bonus, score, situation, diceType, extra, always] = line.split(",");
+                return {
+                    bonus: bonus.trim(),
+                    score: score.trim(),
+                    situation: situation.trim(),
+                    diceType: diceType.trim(),
+                    extra: parseInt(extra, 10),
+                    always: always.trim() === "Y"
+                };
+            });
+            console.log("Parsed Bonuses:", bonuses); // Debug here
+        })
+        .catch(err => console.error("Failed to fetch bonuses:", err));
+}
 
 // Array to hold the orbital distances in months for each planet
 const planetsData = [
@@ -41,7 +90,7 @@ const planetsData = [
 function navigateToPage() {
     const pageSelect = document.getElementById('pageSelect');
     const selectedPage = pageSelect.value;
-    
+
     if (selectedPage) {
         window.location.href = selectedPage; // Navigate to the selected page
     }
@@ -120,13 +169,14 @@ function attachPlanetClickListeners() {
 // Initialize the system when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
     populateActions();
-    loadRivalCompanies(); // Load rival companies from CSV on load
+    fetchBonuses();
     attachPlanetClickListeners();
     setPlanetsOnTop();
     updateSystem(); // If this function updates planetary orbits or other dynamic behavior
     loadCompanyBonuses();
     loadFamilyStats();
     loadCourtMembers();
+    fetchTimelineData();
 });
 
 // Function to update planetary system (rotation based on the month input)
@@ -149,31 +199,116 @@ function updateSystem() {
 // Function to populate actions into the action menu
 function populateActions() {
     const actionsMenu = document.getElementById("actionsMenu");
-    Object.keys(reignActions).forEach(action => {
-        let option = document.createElement("option");
-        option.value = action;
-        option.textContent = action.charAt(0).toUpperCase() + action.slice(1);
+    Object.keys(actions).forEach(actionName => {
+        const option = document.createElement("option");
+        option.value = actionName;
+        option.textContent = actionName;
         actionsMenu.appendChild(option);
     });
 }
 
 function updateActionDetails() {
-    const action = document.getElementById("actionsMenu").value;
+    const actionsMenu = document.getElementById("actionsMenu");
     const actionDetails = document.getElementById("actionDetails");
-    const companyStatsTable = document.getElementById("companyStatsTable");
-    
-    actionDetails.innerHTML = `<p>${reignActions[action]}</p>`;
+    const selectedAction = actionsMenu.value;
 
-    if (action === "Attack" || action === "Influence" || action === "Espionage" || action === "Counter espionage") {
-        document.getElementById("rivalSelection").style.display = "block";
-        companyStatsTable.style.display = "table";  // Show the table for these actions
-    } else {
-        document.getElementById("rivalSelection").style.display = "none";
-        companyStatsTable.style.display = "none";  // Hide the table for other actions
+    if (!selectedAction || !actions[selectedAction]) {
+        actionDetails.innerHTML = ""; // Clear details if no action is selected
+        return;
     }
-    actionDetails.innerHTML = `<p>${reignActions[action]}</p>`;
 
+    const action = actions[selectedAction];
+    const description = action.description;
+    const rolls = action.rolls;
+
+    // Calculate base dice roll
+    let totalRoll = 0;
+    rolls.forEach(stat => {
+        const statValue = parseInt(document.getElementById(stat).value, 10) || 0;
+        totalRoll += statValue;
+    });
+
+    // Generate bonuses checklist with corrected filtering
+    const bonusesForRoll = bonuses.filter(bonus =>
+        (bonus.always && rolls.includes(bonus.score.toLowerCase())) || 
+        (!bonus.always && rolls.includes(bonus.score.toLowerCase()))
+    );
+
+    const bonusChecklist = `
+    <ul style="list-style: none; padding: 0;">
+        ${bonusesForRoll.map(bonus => `
+            <li style="margin-bottom: 5px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" class="bonus-checkbox" value="${bonus.bonus}" 
+                           data-dice-type="${bonus.diceType}" data-extra="${bonus.extra}" 
+                           ${bonus.always ? "checked disabled" : ""} 
+                           style="margin-right: 10px; width: 20px; height: 20px;">
+                    ${bonus.bonus} (${bonus.diceType}, +${bonus.extra})
+                </label>
+            </li>
+        `).join("")}
+    </ul>
+    `;
+    console.log("Generated Bonus Checklist:", bonusChecklist); // Debug
+
+    // Calculate total dice with bonuses
+    let totalNormalDice = totalRoll;
+    let expertDice = 0;
+    let masterDice = 0;
+
+    bonusesForRoll.forEach(bonus => {
+        if (bonus.always) {
+            if (bonus.diceType === "Normal Dice") {
+                totalNormalDice += bonus.extra;
+            } else if (bonus.diceType === "Expert Dice") {
+                expertDice += bonus.extra;
+            } else if (bonus.diceType === "Master Dice") {
+                masterDice += bonus.extra;
+            }
+        }
+    });
+
+    // Display the action details, bonuses, and dice rolls
+    actionDetails.innerHTML = `
+        <p><strong>Description:</strong> ${description}</p>
+        <p><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} ED` : ""}${masterDice > 0 ? ` + ${masterDice} MD` : ""}</p>
+        <div>
+            <strong>Applicable Bonuses:</strong>
+            <form id="bonusForm">
+                ${bonusChecklist}
+            </form>
+        </div>
+    `;
+
+    // Attach change event listeners to dynamic checkboxes
+    document.querySelectorAll(".bonus-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+            const extra = parseInt(checkbox.dataset.extra, 10);
+            const diceType = checkbox.dataset.diceType.trim();
+            if (checkbox.checked) {
+                if (diceType === "Normal Dice") {
+                    totalNormalDice += extra;
+                } else if (diceType === "Expert Dice") {
+                    expertDice += extra;
+                } else if (diceType === "Master Dice") {
+                    masterDice += extra;
+                }
+            } else {
+                if (diceType === "Normal Dice") {
+                    totalNormalDice -= extra;
+                } else if (diceType === "Expert Dice") {
+                    expertDice -= extra;
+                } else if (diceType === "Master Dice") {
+                    masterDice -= extra;
+                }
+            }
+            // Update roll display dynamically
+            actionDetails.querySelector("p:nth-child(2)").innerHTML =
+                `<strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} Expert Dice` : ""}${masterDice > 0 ? ` + ${masterDice} Master Dice` : ""}</strong>`;
+        });
+    });
 }
+
 
 const googleSheetFamilyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
 
@@ -206,43 +341,6 @@ function loadVirtanenFamilyStats(might, treasure, influence, territory, sovereig
     document.getElementById('sovereignty').value = sovereignty.trim();
 }
 
-
-// Update the loadRivalCompanies function to load the CSV from Google Sheets
-function loadRivalCompanies() {
-    // Replace this URL with your published Google Sheets CSV link
-    const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
-
-    fetch(googleSheetURL)
-        .then(response => response.text())
-        .then(data => {
-            const lines = data.split('\n');
-            const rivalsMenu = document.getElementById("rivalsMenu");
-            lines.forEach((line, index) => {
-                if (index === 0) return; // Skip the header row
-                const [name, might, treasure, influence, territory, sovereignty] = line.split(',');
-
-                // Store company data in an object
-                companyData[name] = {
-                    might: might.trim(),
-                    treasure: treasure.trim(),
-                    influence: influence.trim(),
-                    territory: territory.trim(),
-                    sovereignty: sovereignty.trim()
-                };
-
-                // Create dropdown options
-                let option = document.createElement("option");
-                option.value = name.trim();
-                option.textContent = name.trim();
-                rivalsMenu.appendChild(option);
-            });
-
-            // Set event listener for when a company is selected
-            rivalsMenu.addEventListener('change', updateCompanyStats);
-        })
-        .catch(error => console.error('Error loading Google Sheets CSV:', error));
-}
-
 // Store the original stats when the company is selected
 function updateCompanyStats() {
     const selectedCompany = document.getElementById("rivalsMenu").value;
@@ -270,61 +368,6 @@ function updateCompanyStats() {
     }
 }
 
-function activateAction() {
-    const action = document.getElementById("actionsMenu").value;
-
-    if (!action) {
-        alert("Please select an action first.");
-        return;
-    }
-
-    // Get current company stats
-    let might = parseInt(document.getElementById("might").value);
-    let treasure = parseInt(document.getElementById("treasure").value);
-    let influence = parseInt(document.getElementById("influence").value);
-    let territory = parseInt(document.getElementById("territory").value);
-    let sovereignty = parseInt(document.getElementById("sovereignty").value);
-
-    // Degrade the relevant qualities based on the action
-    switch (action) {
-        case 'Attack':
-            // Degrade Might and Treasure
-            if (might > 0) might -= 1;
-            if (treasure > 0) treasure -= 1;
-            break;
-        case 'Defend':
-            // Degrade Might and Territory
-            if (might > 0) might -= 1;
-            if (territory > 0) territory -= 1;
-            break;
-        case 'Espionage':
-            // Degrade Influence and Treasure
-            if (influence > 0) influence -= 1;
-            if (treasure > 0) treasure -= 1;
-            break;
-        case 'Counter espionage':
-            // Degrade Influence and Territory
-            if (influence > 0) influence -= 1;
-            if (territory > 0) territory -= 1;
-            break;
-        case 'Total conquest':
-            // Degrade Sovereignty and another quality
-            if (sovereignty > 0) sovereignty -= 1;
-            break;
-        // Add more cases for other actions
-        default:
-            alert("No degradation rules for this action.");
-            return;
-    }
-
-    // Update the values in the form
-    document.getElementById("might").value = might;
-    document.getElementById("treasure").value = treasure;
-    document.getElementById("influence").value = influence;
-    document.getElementById("territory").value = territory;
-    document.getElementById("sovereignty").value = sovereignty;
-}
-
 // Google Sheet URL to fetch company bonuses
 const googleSheetBonusURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=549477368&single=true&output=csv';
 
@@ -337,7 +380,7 @@ function loadCompanyBonuses() {
         .then(data => {
             const lines = data.split('\n');
             const companyBonusMenu = document.getElementById("companyBonus");
-            
+
             lines.forEach((line, index) => {
                 if (index === 0) return; // Skip the header row
                 const [name, bonus] = line.split(',');
@@ -429,3 +472,54 @@ window.addEventListener('click', (e) => {
         menuContainer.classList.remove('active');
     }
 });
+
+async function fetchTimelineData() {
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
+
+    try {
+        const response = await fetch(url);
+        const data = await response.text();
+
+        // Parse CSV
+        const rows = data.split("\n").slice(1); // Skip the header row
+        const events = rows.map(row => {
+            const [month, event, description] = row.split(",");
+            return { month, event, description };
+        });
+
+        populateTimeline(events);
+    } catch (error) {
+        console.error("Error fetching timeline data:", error);
+    }
+}
+
+function scrollToLastEvent() {
+    const container = document.getElementById("timelineContainer");
+    container.scrollLeft = container.scrollWidth; // Scroll to the far right
+}
+
+function updateCurrentMonth(month) {
+    const monthInput = document.getElementById("monthInput");
+    monthInput.value = month; // Set the input value to the last month
+    monthInput.dispatchEvent(new Event("input")); // Trigger the update event
+}
+
+function populateTimeline(events) {
+    const container = document.getElementById("timelineContainer");
+    container.innerHTML = ""; // Clear previous events
+
+    events.forEach(({ month, event, description }) => {
+        const item = document.createElement("div");
+        item.className = "timeline-item";
+        item.innerHTML = `<h3>${month}</h3><strong>${event}</strong><p>${description}</p>`;
+        container.appendChild(item);
+    });
+
+    const lastEvent = events[events.length - 1]; // Get the last event
+    if (lastEvent) {
+        updateCurrentMonth(lastEvent.month); // Update the input box to the last month
+    }
+
+    scrollToLastEvent(); // Scroll to the last event
+}
+
