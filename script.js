@@ -524,15 +524,15 @@ function populateTimeline(events) {
 const qualities = {
     Might: [
         "little more than farmers",       // 1
-        "subpar",     // 2
-        "reliable and solid",     // 3
-        "well trained and prepared",       // 4
-        "powerful and disciplined",        // 5
-        "terrifying to face against"               // 6
+        "comparable to well armed militias",     // 2
+        "well trained and prepared",     // 3
+        "tough to battle for almost everyone",       // 4
+        "a deadly challenge to anyone",        // 5
+        "terrifying to face in battle"               // 6
     ],
     Treasure: [
-        "copper coins",            // 1
-        "silver coins",         // 2
+        "copper coins",           // 1
+        "silver coins",           // 2
         "gold coins",             // 3
         "platinum coins",         // 4
         "gold ingots",            // 5
@@ -549,18 +549,18 @@ const qualities = {
     Territory: [
         "a barely populated El-Beth-El",               // 1
         "a sparsely populated El-Beth-El",             // 2
-        "a densly populated El-Beth-El", // 3
-        "a densly populated planet and some colonies",              // 4
-        "lands sparsed all over the Stardom",               // 5
+        "El-Beth-El and some colonies", // 3
+        "El-Beth-El and numerous colonies",              // 4
+        "denly poupulated lands that stretch through planets and colonies",               // 5
         "planets, stars, colonies, and even more"             // 6
     ],
     Sovereignty: [
-        "hateful",             // 1
-        "resentful",          // 2
-        "accepting",          // 3
-        "dedicated",          // 4
-        "patriotic",          // 5
-        "zealous"             // 6
+        "hate",             // 1
+        "resent",          // 2
+        "accept",          // 3
+        "support",          // 4
+        "love",          // 5
+        "worship"             // 6
     ]
 };
 
@@ -577,7 +577,7 @@ function generateDescription() {
         Sovereignty: parseInt(document.getElementById("sovereignty").value, 10)
     };
     const description = `
-        Your reign\'s forces are ${qualities.Might[stats.Might - 1]}, and your subjects are ${qualities.Sovereignty[stats.Sovereignty - 1]} towards your rule. You are ${qualities.Influence[stats.Influence - 1]} in the system, and your territory is made of ${qualities.Territory[stats.Territory - 1]}. In your court people deal in ${qualities.Treasure[stats.Treasure - 1]}.
+        Your reign\'s forces are ${qualities.Might[stats.Might - 1]}, and your subjects ${qualities.Sovereignty[stats.Sovereignty - 1]} your rule. You are ${qualities.Influence[stats.Influence - 1]} in the system, and your territory is ${qualities.Territory[stats.Territory - 1]}. In your court people deal in ${qualities.Treasure[stats.Treasure - 1]}.
     `.trim();
     document.getElementById("dynamicDescription").innerText = description;
 }
