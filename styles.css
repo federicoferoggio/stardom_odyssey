@@ -780,6 +780,23 @@ button:disabled {
     justify-content: flex-start; /* Align content to the top */
 }
 
+.description-popup {
+    display: none; /* Initially hidden */
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* Ensure the popup doesn't interfere with mouse events */
+    
+    /* Changes to allow multi-line text */
+    white-space: normal; /* Allow text to wrap */
+    max-width: 300px; /* Set a maximum width for the popup */
+    word-wrap: break-word; /* Ensure long words break to fit */
+}
+
 .timeline-item h3 {
     margin: 10px 0 5px; /* Space above and below the title */
     font-size: 16px;

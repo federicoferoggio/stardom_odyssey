@@ -481,8 +481,8 @@ async function fetchTimelineData() {
         // Parse CSV
         const rows = data.split("\n").slice(1); // Skip the header row
         const events = rows.map(row => {
-            const [month, event, description] = row.split(",");
-            return { month, event, description };
+            const [month, event, description, mod] = row.split(",");
+            return { month, event, description, mod };
         });
 
         populateTimeline(events);
@@ -491,9 +491,16 @@ async function fetchTimelineData() {
     }
 }
 
-function scrollToLastEvent() {
+function scrollToCurrentMonth() {
     const container = document.getElementById("timelineContainer");
-    container.scrollLeft = container.scrollWidth; // Scroll to the far right
+    const currentItem = Array.from(container.getElementsByClassName("timeline-item")).find(item => {
+        const strongElement = item.querySelector("strong");
+        return strongElement && strongElement.textContent === "Current";
+    });
+
+    if (currentItem) {
+        currentItem.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
 }
 
 function updateCurrentMonth(month) {
@@ -506,16 +513,42 @@ function populateTimeline(events) {
     const container = document.getElementById("timelineContainer");
     container.innerHTML = ""; // Clear previous events
 
-    events.forEach(({ month, event, description }) => {
+    events.forEach(({ month, event, description, mod }) => {
+        if (event === "") {
+            return; // Skip the current month
+        }
+        mod = mod.replace(/;/g, ' and ');
         const item = document.createElement("div");
         item.className = "timeline-item";
-        item.innerHTML = `<h3>${month}</h3><strong>${event}</strong><p>${description}</p>`;
+        item.innerHTML = `<h3>${month}</h3><strong>${event}</strong><p>${mod}</p>`;
+        const descriptionDiv = document.createElement("div");
+        descriptionDiv.className = "description-popup";
+        descriptionDiv.textContent = description;
+    
+        // Append the description div to the item
+        item.appendChild(descriptionDiv);
+
+        item.addEventListener("mouseover", (e) => {
+            descriptionDiv.style.display = "block";
+        });
+    
+        // Update the popup position on mousemove
+        item.addEventListener("mousemove", (e) => {
+            descriptionDiv.style.left = e.pageX + 15 + "px"; // 15px to the right of the cursor
+            descriptionDiv.style.top = e.pageY + 15 + "px"; // 15px below the cursor
+        });
+    
+        // Hide the popup on mouseout
+        item.addEventListener("mouseout", () => {
+            descriptionDiv.style.display = "none";
+        });
+    
         container.appendChild(item);
     });
 
-    const lastEvent = events[events.length - 1]; // Get the last event
-    if (lastEvent) {
-        updateCurrentMonth(lastEvent.month); // Update the input box to the last month
+    const currentMonth = events.find(({ event }) => event === "Current");
+    if (currentMonth) {
+        updateCurrentMonth(currentMonth.month); // Update the input box to the last month
     }
 
     scrollToLastEvent(); // Scroll to the last event
