@@ -551,7 +551,7 @@ const qualities = {
         "a sparsely populated El-Beth-El",             // 2
         "El-Beth-El and some colonies", // 3
         "El-Beth-El and numerous colonies",              // 4
-        "denly poupulated lands that stretch through planets and colonies",               // 5
+        "densly poupulated lands that stretch through planets and colonies",               // 5
         "planets, stars, colonies, and even more"             // 6
     ],
     Sovereignty: [
