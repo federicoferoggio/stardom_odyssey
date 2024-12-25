@@ -20,7 +20,7 @@ const actions = {
         rolls: ["might", "sovereignty"]
     },
     "Train and Levy Troops": {
-        description: "Recruits and integrates troops into the company. Just like  Rise in Stature or Improve the Culture, you can get a permanent bonus if you hit a height equal to your current might, but you cannot get a temporary bonus with this action. Your might cannot increase beyond the number currently set by the spelljamming level.",
+        description: "Recruits and integrates troops into the company. Just like Rise in Stature or Improve the Culture, you can get a permanent bonus if you hit a height equal to your current might, but you cannot get a temporary bonus with this action. Your might cannot increase beyond the number currently set by the spelljamming level.",
         rolls: ["sovereignty", "territory"]
     },
     "Build up the fleet": {
@@ -268,17 +268,17 @@ function updateActionDetails() {
         <label for="bonusDropdown">How useful were you in aiding your company?</label>
         <select id="bonusDropdown">
             <option value="none" selected>Did not do shit</option>
-            <option value="-3d">We shat in our pants! -3d</option>
+            <option value="-3d">We shat our pants! -3d</option>
             <option value="-2d">We only earned shame. -2d</option>
             <option value="-1d">Would have been better to do nothing. -1d</option>
             <option value="0">Waste of time. No effect</option>
             <option value="1d">Somewhat useful. +1d</option>
-            <option value="ED">We did good! +Expert Dice</option>
+            <option value="ED">We did good! +ED</option>
             <option value="2d">Give us gold and give us glory. +2d</option>
-            <option value="MD">We are kings, we are winners. +Master Dice</option>
-            <option value="3d">We were chosen by the gods themselves! +3d</option>
-            <option value="1+MD">PHD success right here! +1d and Master Dice</option>
-            <option value="2+MD">Legends will be told of our greatness. +2d and Master Dice</option>
+            <option value="MD">We are kings, we are winners. +MD</option>
+            <option value="3d">Legends of our greatness will be sung for centuries. +3d</option>
+            <option value="1+MD">A success that few will ever see again. +1d and MD</option>
+            <option value="2+MD">Gods step aside, for we have come. +2d and MD</option>
         </select>
     `;
 
