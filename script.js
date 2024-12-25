@@ -1,54 +1,67 @@
 const actions = {
-    "Improve culture": {
-        description: "Enhances the cultural standing of your company.",
-        rolls: ["territory", "treasure"]
-    },
-    "Expand influence": {
-        description: "Increases your influence across regions.",
-        rolls: ["influence", "sovereignty"]
-    },
-    "Fortify defenses": {
-        description: "Strengthens your defenses against rivals.",
-        rolls: ["might", "territory"]
-    },
     "Attack": {
-        description: "Engages enemy forces for raiding, annexation, or symbolic victory.",
+        description: "Engages enemy forces or defenses for raiding, annexation, or a symbolic victory. However you want to call it, it bolis down to attacking someone else's troops and defenses. The attacked defends with Might and Territory",
         rolls: ["might", "treasure"]
     },
     "Defend": {
-        description: "Protects against invasions or raids.",
+        description: "When you are on the defensive, protecting your territory and people. The attacker will roll Might and Treasure.",
         rolls: ["might", "territory"]
     },
     "Espionage": {
-        description: "Gathers intelligence on rivals or influences opinions covertly.",
+        description: "Gathers intelligence on rivals or influences opinions covertly. Different from being informed, you are using subterfuge to convert opinions and gather information. The target will defend with Influence and Territory.",
         rolls: ["influence", "treasure"]
     },
     "Counter-Espionage": {
-        description: "Detects and counters rival intelligence operations.",
+        description: "Detects and counters rival intelligence operations. This is when you are specifically hunting for infiltrators among your ranks. Your (perceived) enemies will defend with Influence and Treasure.",
         rolls: ["influence", "territory"]
     },
     "Policing": {
-        description: "Addresses internal threats and maintains order.",
+        description: "Addresses internal threats and maintains order. Refer to the rules for more information about this action, but it boils down to using direct force against a group inside your terriories, might them be bandits, rebels or infiltrators. The target will defend with Influence and Might.",
         rolls: ["might", "sovereignty"]
     },
     "Train and Levy Troops": {
-        description: "Recruits and integrates troops into the company.",
+        description: "Recruits and integrates troops into the company. Just like  Rise in Stature or Improve the Culture, you can get a permanent bonus if you hit a height equal to your current might, but you cannot get a temporary bonus with this action. Your might cannot increase beyond the number currently set by the spelljamming level.",
         rolls: ["sovereignty", "territory"]
     },
+    "Build up the fleet": {
+        description: "Increases the size and quality of your fleet. In a society of space faring, this is a must if you want to increase the might of your company. The difficulty of the roll is equal to the current spelljamming level of your company.",
+        rolls: ["treasure", "influence"]
+    },
     "Rise in Stature": {
-        description: "Increases your company's prestige and influence.",
+        description: "Increases your company's prestige and influence, both at home and abroad. When you want a temporary increase, any set will give you a +1 bonus until the end of the next month. For a permanent bonus, you need to hit a height equal to your current influence.",
         rolls: ["sovereignty", "treasure"]
     },
     "Unconventional Warfare": {
-        description: "Executes sabotage, assassinations, or other unconventional military actions.",
+        description: "Executes sabotage, assassinations, or other unconventional military actions. This is a dirty business, and getting caught spells disaster. For more complete information, refer to the rules. The target will defend with Might and Sovereignty.",
         rolls: ["influence", "might"]
     },
     "Improve the Culture": {
-        description: "Invests in community and cultural projects to unify the populace.",
+        description: "Invests in community and cultural projects to unify the populace. Culture here is not just about art and music, but also the quality of life and the sense of belonging. If you want a temporary bonus, any set will give you a +1 bonus until the end of the next month. For a permanent bonus, you need to hit a height equal to your current soverignty and a width equal to your current territory.",
         rolls: ["territory", "treasure"]
+    },
+    "Being informed": {
+        description: "When you want to collect information about a company or a person. It isn't spying, that would be unpolite: just asking questions. If you roll against someone else, they use their Influence and Treasure to defend.",
+        rolls: ["influence", "sovereignty"]
     }
     // Additional actions can be defined based on deeper analysis of the file.
 };
+
+
+// CSV file URL (replace with your actual URL)
+const googleSheetCourtURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=2021236788&single=true&output=csv';
+
+const courtPositions = [
+    "Draconian Guard",
+    "Beholdic Spymaster",
+    "Fiendish General",
+    "Empyrean Chaplain",
+    "Haggish Diplomat",
+    "Acerakkian Archmage",
+    "Krakian Shipmaster",
+    "Diabolic Coincount",
+    "Modronic Minister",
+    "The Enlightened"
+];
 
 let companyData = {};
 
@@ -221,14 +234,14 @@ function updateActionDetails() {
     const description = action.description;
     const rolls = action.rolls;
 
-    // Calculate base dice roll
-    let totalRoll = 0;
+    // Base roll calculation
+    let baseRoll = 0;
     rolls.forEach(stat => {
         const statValue = parseInt(document.getElementById(stat).value, 10) || 0;
-        totalRoll += statValue;
+        baseRoll += statValue;
     });
 
-    // Generate bonuses checklist with corrected filtering
+    // Generate checklist bonuses from CSV data
     const bonusesForRoll = bonuses.filter(bonus =>
         (bonus.always && rolls.includes(bonus.score.toLowerCase())) || 
         (!bonus.always && rolls.includes(bonus.score.toLowerCase()))
@@ -238,7 +251,7 @@ function updateActionDetails() {
     <ul style="list-style: none; padding: 0;">
         ${bonusesForRoll.map(bonus => `
             <li style="margin-bottom: 5px;">
-                <label style="display: flex; align-items: center; cursor: pointer;">
+                <label style="display: flex; align-items: center; cursor: pointer;", title="${bonus.situation}">
                     <input type="checkbox" class="bonus-checkbox" value="${bonus.bonus}" 
                            data-dice-type="${bonus.diceType}" data-extra="${bonus.extra}" 
                            ${bonus.always ? "checked disabled" : ""} 
@@ -249,43 +262,58 @@ function updateActionDetails() {
         `).join("")}
     </ul>
     `;
-    console.log("Generated Bonus Checklist:", bonusChecklist); // Debug
 
-    // Calculate total dice with bonuses
-    let totalNormalDice = totalRoll;
-    let expertDice = 0;
-    let masterDice = 0;
+    // Generate dropdown menu for bonus selection
+    const bonusDropdown = `
+        <label for="bonusDropdown">How useful were you in aiding your company?</label>
+        <select id="bonusDropdown">
+            <option value="none" selected>Did not do shit</option>
+            <option value="-3d">We shat in our pants! -3d</option>
+            <option value="-2d">We only earned shame. -2d</option>
+            <option value="-1d">Would have been better to do nothing. -1d</option>
+            <option value="0">Waste of time. No effect</option>
+            <option value="1d">Somewhat useful. +1d</option>
+            <option value="ED">We did good! +Expert Dice</option>
+            <option value="2d">Give us gold and give us glory. +2d</option>
+            <option value="MD">We are kings, we are winners. +Master Dice</option>
+            <option value="3d">We were chosen by the gods themselves! +3d</option>
+            <option value="1+MD">PHD success right here! +1d and Master Dice</option>
+            <option value="2+MD">Legends will be told of our greatness. +2d and Master Dice</option>
+        </select>
+    `;
 
-    bonusesForRoll.forEach(bonus => {
-        if (bonus.always) {
-            if (bonus.diceType === "Normal Dice") {
-                totalNormalDice += bonus.extra;
-            } else if (bonus.diceType === "Expert Dice") {
-                expertDice += bonus.extra;
-            } else if (bonus.diceType === "Master Dice") {
-                masterDice += bonus.extra;
-            }
-        }
-    });
-
-    // Display the action details, bonuses, and dice rolls
+    // Display action details, bonuses, and dice rolls
     actionDetails.innerHTML = `
         <p><strong>Description:</strong> ${description}</p>
-        <p><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} ED` : ""}${masterDice > 0 ? ` + ${masterDice} MD` : ""}</p>
+        <p id="rollDisplay"><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${baseRoll}d10</p>
         <div>
-            <strong>Applicable Bonuses:</strong>
+            <strong>Court Bonuses:</strong>
             <form id="bonusForm">
                 ${bonusChecklist}
             </form>
         </div>
+        <div>
+            <strong>Completion Bonus:</strong>
+            ${bonusDropdown}
+        </div>
     `;
 
-    // Attach change event listeners to dynamic checkboxes
-    document.querySelectorAll(".bonus-checkbox").forEach(checkbox => {
-        checkbox.addEventListener("change", () => {
-            const extra = parseInt(checkbox.dataset.extra, 10);
-            const diceType = checkbox.dataset.diceType.trim();
+    // Attach event listeners to recalculate roll
+    document.querySelectorAll(".bonus-checkbox, #bonusDropdown").forEach(element => {
+        element.addEventListener("change", recalculateRoll);
+    });
+
+    // Function to recalculate the total roll
+    function recalculateRoll() {
+        let totalNormalDice = baseRoll;
+        let expertDice = 0;
+        let masterDice = 0;
+
+        // Add checklist bonuses
+        document.querySelectorAll(".bonus-checkbox").forEach(checkbox => {
             if (checkbox.checked) {
+                const extra = parseInt(checkbox.dataset.extra, 10);
+                const diceType = checkbox.dataset.diceType.trim();
                 if (diceType === "Normal Dice") {
                     totalNormalDice += extra;
                 } else if (diceType === "Expert Dice") {
@@ -293,21 +321,33 @@ function updateActionDetails() {
                 } else if (diceType === "Master Dice") {
                     masterDice += extra;
                 }
-            } else {
-                if (diceType === "Normal Dice") {
-                    totalNormalDice -= extra;
-                } else if (diceType === "Expert Dice") {
-                    expertDice -= extra;
-                } else if (diceType === "Master Dice") {
-                    masterDice -= extra;
-                }
             }
-            // Update roll display dynamically
-            actionDetails.querySelector("p:nth-child(2)").innerHTML =
-                `<strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} Expert Dice` : ""}${masterDice > 0 ? ` + ${masterDice} Master Dice` : ""}</strong>`;
         });
-    });
+
+        // Add dropdown bonus
+        const dropdownValue = document.getElementById("bonusDropdown").value;
+        if (dropdownValue.endsWith("d")) {
+            totalNormalDice += parseInt(dropdownValue, 10);
+        } else if (dropdownValue === "ED") {
+            expertDice += 1;
+        } else if (dropdownValue === "MD") {
+            masterDice += 1;
+        } else if (dropdownValue.includes("+MD")) {
+            const [normalDiceBonus] = dropdownValue.split("+");
+            totalNormalDice += parseInt(normalDiceBonus, 10);
+            masterDice += 1;
+        }
+
+        // Update roll display
+        const rollDisplay = actionDetails.querySelector("#rollDisplay");
+        rollDisplay.innerHTML = `<strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} Expert Dice` : ""}${masterDice > 0 ? ` + ${masterDice} Master Dice` : ""}</strong>`;
+    }
+
+    // Trigger initial evaluation to account for always-checked bonuses
+    recalculateRoll();
 }
+
+
 
 
 const googleSheetFamilyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
@@ -339,33 +379,8 @@ function loadVirtanenFamilyStats(might, treasure, influence, territory, sovereig
     document.getElementById('influence').value = influence.trim();
     document.getElementById('territory').value = territory.trim();
     document.getElementById('sovereignty').value = sovereignty.trim();
-}
 
-// Store the original stats when the company is selected
-function updateCompanyStats() {
-    const selectedCompany = document.getElementById("rivalsMenu").value;
-    const stats = companyData[selectedCompany];
-
-    if (stats) {
-        // Store the original stats so they can be reset
-        originalStats = {
-            might: stats.might,
-            treasure: stats.treasure,
-            influence: stats.influence,
-            territory: stats.territory,
-            sovereignty: stats.sovereignty
-        };
-
-        // Show the company stats table
-        document.getElementById("companyStatsTable").style.display = "table";
-
-        // Update the table values
-        document.getElementById("statMight").textContent = stats.might;
-        document.getElementById("statTreasure").textContent = stats.treasure;
-        document.getElementById("statInfluence").textContent = stats.influence;
-        document.getElementById("statTerritory").textContent = stats.territory;
-        document.getElementById("statSovereignty").textContent = stats.sovereignty;
-    }
+    generateDescription();
 }
 
 // Google Sheet URL to fetch company bonuses
@@ -407,23 +422,6 @@ function updateBonusDescription() {
     const bonusDescription = document.getElementById("bonusDescription");
     bonusDescription.textContent = companyBonuses[selectedBonus];
 }
-
-
-// CSV file URL (replace with your actual URL)
-const googleSheetCourtURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=2021236788&single=true&output=csv';
-
-const courtPositions = [
-    "Draconian Guard",
-    "Beholdic Spymaster",
-    "Fiendish General",
-    "Empyrean Chaplain",
-    "Haggish Diplomat",
-    "Acerakkian Archmage",
-    "Krakian Shipmaster",
-    "Diabolic Coincount",
-    "Modronic Minister",
-    "The Enlightened"
-];
 
 function loadCourtMembers() {
     fetch(googleSheetCourtURL)
@@ -523,3 +521,63 @@ function populateTimeline(events) {
     scrollToLastEvent(); // Scroll to the last event
 }
 
+const qualities = {
+    Might: [
+        "little more than farmers",       // 1
+        "subpar",     // 2
+        "reliable and solid",     // 3
+        "well trained and prepared",       // 4
+        "powerful and disciplined",        // 5
+        "terrifying to face against"               // 6
+    ],
+    Treasure: [
+        "copper coins",            // 1
+        "silver coins",         // 2
+        "gold coins",             // 3
+        "platinum coins",         // 4
+        "gold ingots",            // 5
+        "trucks of platinum"             // 6
+    ],
+    Influence: [
+        "unknown",            // 1
+        "irrelevant",         // 2
+        "respected",          // 3
+        "influential",        // 4
+        "a cornerstone",      // 5
+        "legendary"           // 6
+    ],
+    Territory: [
+        "a barely populated El-Beth-El",               // 1
+        "a sparsely populated El-Beth-El",             // 2
+        "a densly populated El-Beth-El", // 3
+        "a densly populated planet and some colonies",              // 4
+        "lands sparsed all over the Stardom",               // 5
+        "planets, stars, colonies, and even more"             // 6
+    ],
+    Sovereignty: [
+        "hateful",             // 1
+        "resentful",          // 2
+        "accepting",          // 3
+        "dedicated",          // 4
+        "patriotic",          // 5
+        "zealous"             // 6
+    ]
+};
+
+["might", "treasure", "influence", "territory", "sovereignty"].forEach(id => {
+    document.getElementById(id).addEventListener("input", generateDescription);
+});
+
+function generateDescription() {
+    const stats = {
+        Might: parseInt(document.getElementById("might").value, 10),
+        Treasure: parseInt(document.getElementById("treasure").value, 10),
+        Influence: parseInt(document.getElementById("influence").value, 10),
+        Territory: parseInt(document.getElementById("territory").value, 10),
+        Sovereignty: parseInt(document.getElementById("sovereignty").value, 10)
+    };
+    const description = `
+        Your reign\'s forces are ${qualities.Might[stats.Might - 1]}, and your subjects are ${qualities.Sovereignty[stats.Sovereignty - 1]} towards your rule. You are ${qualities.Influence[stats.Influence - 1]} in the system, and your territory is made of ${qualities.Territory[stats.Territory - 1]}. In your court people deal in ${qualities.Treasure[stats.Treasure - 1]}.
+    `.trim();
+    document.getElementById("dynamicDescription").innerText = description;
+}

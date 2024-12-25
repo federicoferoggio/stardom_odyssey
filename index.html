@@ -107,10 +107,14 @@
                 </div>
             </div>
 
-            <div class="stat-input">
-                <label for="companyBonus">Company Bonus:</label>
+            <div id="dynamicDescription" style="line-height: 1.4;">
+                <!-- Dynamic description will appear here -->
+            </div>
+
+            <div class="stat-input" style="margin: 5px;">
+                <label for="companyBonus">Current Assets:</label>
                 <select id="companyBonus">
-                    <option value="" disabled selected>Select a bonus</option>
+                    <option value="" disabled selected>Select an asset</option>
                     <!-- Bonuses will be populated here -->
                 </select>
                 <p id="bonusDescription"></p> <!-- To display the selected bonus description -->
@@ -129,6 +133,7 @@
 
             <div id="actionDetails">
                 <!-- Action details and dice rolls will be displayed here -->
+
             </div>
 
             <div id="rivalSelection" style="display:none;">
