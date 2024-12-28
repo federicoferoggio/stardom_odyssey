@@ -5,11 +5,12 @@ body {
     font-family: 'Josefin Sans', sans-serif;
     color: white;
     height: 100vh;
-    overflow: hidden; /* Prevent both horizontal and vertical scroll */
+    overflow: hidden;
+    /* Prevent both horizontal and vertical scroll */
     background:
-    linear-gradient(rgba(0, 0, 0, 0.7),
-        rgba(0, 0, 0, 0.7)),
-    url('images/space-background.jpg');
+        linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.7)),
+        url('images/space-background.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -18,24 +19,30 @@ body {
 
 /* Menu container styling */
 .menu {
-    position: fixed; /* Use fixed to keep it within the viewport */
+    position: fixed;
+    /* Use fixed to keep it within the viewport */
     top: 10px;
-    right: 10px; /* Ensure it stays within the viewport */
+    right: 10px;
+    /* Ensure it stays within the viewport */
     z-index: 1000;
 }
 
 /* Menu links container - initially hidden */
 .menu-links {
-    display: none; /* Hidden until clicked */
+    display: none;
+    /* Hidden until clicked */
     position: absolute;
-    top: 40px; /* Positioned below the button */
-    right: 0; /* Align dropdown with the button */
+    top: 40px;
+    /* Positioned below the button */
+    right: 0;
+    /* Align dropdown with the button */
     background-color: #333;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     z-index: 1;
     padding: 10px;
-    width: max-content; /* Automatically adjust width */
+    width: max-content;
+    /* Automatically adjust width */
 }
 
 /* Menu button */
@@ -66,64 +73,264 @@ body {
 .menu-container.active .menu-links {
     display: block;
 }
+
 #map-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: grab;
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
 }
 
 .dialog-box {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 20px;
-  border: 1px solid white;
-  border-radius: 8px;
-  display: none;
-  z-index: 1000;
-  text-align: center;
-  /* Ensure all text in the dialog is centered */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border: 1px solid white;
+    border-radius: 8px;
+    display: none;
+    z-index: 1000;
+    text-align: center;
+    max-width: 33%; /* Max width is one-third of the screen */
+    width: auto; /* Allow the box to shrink if the content is small */
+    overflow: auto; /* Enable scrolling if content overflows */
+    max-height: 90vh; /* Prevent it from exceeding 90% of viewport height */
+    box-sizing: border-box; /* Include padding and border in width/height calculations */
 }
-
 .dialog-box h2 {
-  margin: 0 0 10px 0;
-  /* Add spacing between title and owner */
-  text-align: center;
-  /* Ensure title is centered */
+    margin: 0 0 10px 0;
+    /* Add spacing between title and owner */
+    text-align: center;
+    /* Ensure title is centered */
 }
 
 .dialog-box p {
-  margin: 5px 0;
-  /* Add slight spacing for readability */
-  text-align: center;
-  /* Center align the owner and description text */
+    margin: 5px 0;
+    /* Add slight spacing for readability */
+    text-align: center;
+    /* Center align the owner and description text */
 }
 
 @keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
 
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .animate-rotation {
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+}
+
+
+.slider-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#speed-slider {
+    width: 150px;
+}
+
+#speed-value {
+    font-weight: bold;
+}
+
+
+/* Keyframes for Orbit Animations */
+@keyframes orbit-sun {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbit-planet {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Planets orbiting the Sun */
+#group-xan {
+    animation: orbit-sun 500s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-void {
+    animation: orbit-sun 150s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-jetaras {
+    animation: orbit-sun 140s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-hellcoast {
+    animation: orbit-sun 120s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-wandacker {
+    animation: orbit-sun 350s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-brion_7 {
+    animation: orbit-sun 700s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-draconia {
+    animation: orbit-sun 160s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-ion {
+    animation: orbit-sun 250s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+#group-saltar {
+    animation: orbit-sun 300s linear infinite;
+    transform-origin: 5000px 5000px;
+}
+
+/* Moons orbiting their planets */
+
+#enov {
+    animation: orbit-planet 20s linear infinite;
+    transform-origin: 4820.0894px 5000px;
+    /* Center of Draconia */
+}
+
+#tithion {
+    animation: orbit-planet 25s linear infinite;
+    transform-origin: 4820.0894px 5000px;
+    /* Center of Draconia */
+}
+
+#hoter {
+    animation: orbit-planet 30s linear infinite;
+    transform-origin: 4659.9863px 5000px;
+    /* Center of Ion */
+}
+
+#zimurn {
+    animation: orbit-planet 35s linear infinite;
+    transform-origin: 4659.9863px 5000px;
+    /* Center of Ion */
+}
+
+#tophadus {
+    animation: orbit-planet 40s linear infinite;
+    transform-origin: 4659.9863px 5000px;
+    /* Center of Ion */
+}
+
+#aepra {
+    animation: orbit-planet 15s linear infinite;
+    transform-origin: 4610.0176px 5000px;
+    /* Center of Saltar */
+}
+
+#allenia {
+    animation: orbit-planet 20s linear infinite;
+    transform-origin: 4610.0176px 5000px;
+    /* Center of Saltar */
+}
+
+#calichi {
+    animation: orbit-planet 25s linear infinite;
+    transform-origin: 4610.0176px 5000px;
+    /* Center of Saltar */
+}
+
+#enides {
+    animation: orbit-planet 25s linear infinite;
+    transform-origin: 4510.0762px 5000px;
+    /* Center of Wandacker */
+}
+
+#hophus {
+    animation: orbit-planet 0s linear infinite;
+    transform-origin: 4510.0762px 5000px;
+    /* Center of Wandacker */
+}
+
+#tebara {
+    animation: orbit-planet 35s linear infinite;
+    transform-origin: 4510.0762px 5000px;
+    /* Center of Wandacker */
+}
+
+#elbethel {
+    animation: orbit-planet 40s linear infinite;
+    transform-origin: 4510.0762px 5000px;
+    /* Center of Wandacker */
+}
+
+#enides {
+    animation: orbit-planet 25s linear infinite;
+    transform-origin: 4510.0762px 5000px;
+    /* Center of Wandacker */
+}
+
+#taliotis {
+    animation: orbit-planet 30s linear infinite;
+    transform-origin: 3809.2202px 5000px;
+    /* Center of Xan */
+}
+
+#nereis {
+    animation: orbit-planet 35s linear infinite;
+    transform-origin: 3809.2202px 5000px;
+    /* Center of Xan */
+}
+
+#progomeneus {
+    animation: orbit-planet 40s linear infinite;
+    transform-origin: 3809.2202px 5000px;
+    /* Center of Xan */
+}
+
+#asteroids {
+    animation: orbit-sun 1200s linear infinite;
+    transform-origin: 5000px 5000px;
+    /* Center of Xan */
 }
