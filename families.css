@@ -1,10 +1,16 @@
-/* Page Structure */
+/* General Page Styling */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Josefin Sans', sans-serif;
     background-color: #121212;
     color: white;
+    background-attachment: fixed; /* Keeps the background static */
+    overflow-y: auto; /* Allows scrolling of the content */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes full height */
 }
 
 /* Title Styling */
@@ -15,193 +21,143 @@ h1 {
     text-align: center;
 }
 
-/* Family List with 3 Columns */
+/* Family List Container */
 #familyList {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-    grid-gap: 30px; /* Space between columns */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adapts to available space */
+    gap: 30px; /* Space between entries */
     width: 80%;
-    margin: 50px auto; /* Center the family grid on the page */
+    margin: 50px auto;
+    align-items: stretch; /* Stretch entries to uniform height */
 }
 
-/* Each family entry */
+/* Family Entry Styling */
 .family-entry {
-    display: flex;
-    flex-direction: column; /* Arrange children vertically */
-    justify-content: space-between; /* Spread content between top and bottom */
+    display: grid;
+    grid-template-rows: auto auto auto auto 0.5fr 1fr auto; /* Explicitly allocate space */
+    gap: 0;
+    justify-items: center; /* Center align horizontally */
+    align-items: start; /* Align items to the top */
     text-align: center;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    box-sizing: border-box; /* Ensure padding is included in width calculations */
-    width: 100%; /* Ensure equal width across columns */
-    max-width: 350px; /* Set a maximum width for each family entry */
-    height: 100%; /* Make the container fill the full available height */
+    box-sizing: border-box;
+    height: 100%; /* Uniform height */
 }
 
-/* Force equal height for all family entries */
-#familyList > .family-entry {
+/* Align Content Within Entries */
+.family-entry > * {
+    margin: 0; /* Prevent unintended spacing */
+    align-self: stretch; /* Stretch children vertically */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Spread content, ensuring the member list goes to the bottom */
-    height: 100%;
+    justify-content: center; /* Center content vertically */
 }
 
-/* Banner image styling */
+/* Family Banner/Icon Image Styling */
 .family-banner {
-    width: 100%;
-    height: auto; /* Ensure full visibility */
-    object-fit: contain; /* Ensure image is fully contained */
+    grid-row: 1;
+    width: 100px; /* Fixed width */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Ensure proper fitting */
     border-radius: 10px;
     margin-bottom: 20px;
 }
 
-/* Family Name */
+/* Family Name Styling */
 .family-name {
+    grid-row: 2;
     font-size: 2.5em;
-    margin: 0;
 }
 
-/* Family Motto */
+/* Family Motto Styling */
 .family-motto {
+    grid-row: 3;
     font-size: 1.5em;
     font-style: italic;
     margin: 10px 0;
-}
-
-/* Family Description */
-.family-description {
-    margin: 20px 0;
-    font-size: 1.2em;
-    line-height: 1.5;
-    flex-grow: 1; /* Take up available space, pushing the member list to the bottom */
-}
-
-/* Scrollable Member List */
-.family-members {
+    height: 2.5em; /* Fixed height to accommodate up to two lines */
+    overflow: hidden; /* Prevent extra text from breaking layout */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
     display: flex;
+    align-items: center; /* Center text vertically within the fixed height */
+    justify-content: center; /* Center text horizontally */
+}
+
+/* Total Power Styling */
+.family-total-power {
+    grid-row: 4;
+    font-size: 1.2em;
+    margin: 10px 0;
+    height: 50px; /* Fixed height to accommodate up to two lines */
+}
+
+.family-description {
+    grid-row: 6;
+    font-size: 1em;
+    line-height: 1.5;
+    margin: 0; /* Match this with `.family-generated-description` */
+    text-align: left;
+    display: block;
+    align-self: stretch; /* Ensure it stretches in the grid */
+    justify-self: stretch; /* Ensure it takes the full width available */
+}
+
+.family-generated-description {
+    grid-row: 5;
+    font-size: 1em;
+    line-height: 1.5;
+    margin: 10px 0;
+    text-align: left; /* Align text to the left */
+    display: block;
+}
+
+
+/* Scrollable Members List */
+.family-members {
+    grid-row: 7;
+    display: flex; /* Enable flexbox */
+    flex-direction: row; /* Ensure horizontal layout */
     flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Enable horizontal scrolling if necessary */
-    padding: 20px;
-    gap: 20px;
-    max-width: 100%; /* Ensure the member list does not grow beyond the family entry */
-    box-sizing: border-box;
-    margin-top: auto; /* Push the member list to the bottom of the container */
+    overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+    scrollbar-width: none;
+    overflow-y: hidden;
+    gap: 10px; /* Space between members */
+    padding-top: 30px;
+    padding-bottom: 5px;
+    max-width: 100%; /* Constrain the width to the family entry */
+    align-items: center; /* Vertically align the members */
 }
 
+/* Styling Scrollbar for Members List */
 .family-members::-webkit-scrollbar {
-    height: 10px; /* Height of the scrollbar */
+    display: none;
 }
 
-.family-members::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-}
-
-/* Each Member */
-.member {
-    flex-shrink: 0; /* Prevent member blocks from shrinking */
-    text-align: center;
-}
-
+/* Member Styling */
 .member img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover; /* Ensure images fill the circular shape */
-    border-radius: 50%; /* Make images round */
+    width: 50px; /* Fixed width */
+    height: 50px; /* Fixed height */
+    max-height: 50px; /* Restrict maximum height */
+    object-fit: cover;
+    border-radius: 50%;
     border: 2px solid white;
 }
 
 .member p {
-    margin-top: 10px;
-    font-size: 1em;
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: center;
+    max-width: 100px; /* Limit width to prevent overflow */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap; /* Prevent wrapping */
 }
-
-/* Ensure responsiveness */
-@media (max-width: 1200px) {
-    #familyList {
-        grid-template-columns: repeat(2, 1fr); /* Two columns on smaller screens */
-    }
-}
-
+/* Responsiveness */
 @media (max-width: 768px) {
     #familyList {
-        grid-template-columns: 1fr; /* Single column on mobile */
+        grid-template-columns: 1fr; /* Single column on smaller screens */
     }
-}
-
-/* Page Structure */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Josefin Sans', sans-serif;
-    background-color: #121212;
-    color: white;
-}
-
-/* Title Styling */
-h1 {
-    margin-top: 20px;
-    font-size: 3em;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-/* Menu container styling */
-.menu {
-    position: absolute;
-    top: 20px;
-    right: 20px; /* This moves the menu to the top-right corner */
-    z-index: 10; /* Ensure the menu is on top of other content */
-}
-
-/* Menu button */
-.menu-button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* Menu links container - hidden by default */
-.menu-links {
-    display: none; /* Hidden until clicked */
-    position: absolute;
-    right: 0; /* Align dropdown with the button on the right */
-    background-color: #333;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    z-index: 1;
-    padding: 10px;
-}
-
-/* Menu links */
-.menu-links a {
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Menu link hover effect */
-.menu-links a:hover {
-    background-color: #555;
-}
-
-/* Display the dropdown when active */
-.menu-container.active .menu-links {
-    display: block;
-}
-
-/* Family List with 3 Columns */
-#familyList {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three equal columns */
-    grid-gap: 30px; /* Space between columns */
-    width: 80%;
-    margin: 50px auto;
 }

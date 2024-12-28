@@ -363,9 +363,9 @@ function loadFamilyStats() {
 
                 const [familyName, might, treasure, influence, territory, sovereignty] = line.split(',');
 
-                // Check if the family is "Virtanen"
-                if (familyName.trim() === 'Virtanen') {
-                    loadVirtanenFamilyStats(might, treasure, influence, territory, sovereignty);
+                // Check if the family is "La Mano"
+                if (familyName.trim() === 'La Mano') {
+                    loadthehandFamilyStats(might, treasure, influence, territory, sovereignty);
                 }
             });
         })
@@ -373,7 +373,7 @@ function loadFamilyStats() {
 }
 
 
-function loadVirtanenFamilyStats(might, treasure, influence, territory, sovereignty) {
+function loadthehandFamilyStats(might, treasure, influence, territory, sovereignty) {
     document.getElementById('might').value = might.trim();
     document.getElementById('treasure').value = treasure.trim();
     document.getElementById('influence').value = influence.trim();
