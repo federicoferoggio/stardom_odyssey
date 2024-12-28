@@ -16,7 +16,7 @@ const qualities = {
     ],
     Territory: [
         ["controllano una regione dimenticata", "i loro territori sono insignificanti"], // 1–2
-        ["governano un pianeta ricco di anime e numerose colonie", "le loro terre si espandono su più sistemi"], // 3–4
+        ["governano un pianeta vasto e sviluppato, e numerose colonie", "le loro terre si espandono su più sistemi"], // 3–4
         ["dominano pianeti, asteroidi, colonie e persino di più", "il loro dominio si estende oltre l'immaginabile"] // 5–6
     ],
     Sovereignty: [

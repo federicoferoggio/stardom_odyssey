@@ -34,7 +34,7 @@ h1 {
 /* Family Entry Styling */
 .family-entry {
     display: grid;
-    grid-template-rows: auto auto auto auto 1fr 1fr auto; /* Explicitly allocate space */
+    grid-template-rows: auto auto auto auto 18% 1fr auto; /* Explicitly allocate space */
     gap: 0;
     justify-items: center; /* Center align horizontally */
     align-items: start; /* Align items to the top */
@@ -122,11 +122,10 @@ h1 {
     flex-direction: row; /* Ensure horizontal layout */
     flex-wrap: nowrap; /* Prevent wrapping */
     overflow-x: auto; /* Enable horizontal scrolling if content overflows */
-    scrollbar-width: none;
     overflow-y: hidden;
     gap: 10px; /* Space between members */
-    padding-top: 30px;
-    padding-bottom: 5px;
+    padding-top: 40px;
+    padding-bottom: 10px;
     max-width: 100%; /* Constrain the width to the family entry */
     align-items: center; /* Vertically align the members */
 }
