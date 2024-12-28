@@ -11,7 +11,148 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <svg
+   width="10000"
+   height="10000"
+   viewBox="0 0 10000 10000"
+   xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Keyframes for Orbit Animations */
+    @keyframes orbit-sun {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes orbit-planet {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Planets orbiting the Sun */
+    #group-xan {
+      animation: orbit-sun 500s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-void {
+      animation: orbit-sun 150s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-jetaras {
+      animation: orbit-sun 140s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-hellcoast {
+      animation: orbit-sun 120s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-wandacker {
+      animation: orbit-sun 350s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-brion_7 {
+      animation: orbit-sun 700s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-draconia {
+      animation: orbit-sun 160s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-ion {
+      animation: orbit-sun 250s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    #group-saltar {
+      animation: orbit-sun 300s linear infinite;
+      transform-origin: 5000px 5000px;
+    }
+
+    /* Moons orbiting their planets */
+
+    #enov {
+      animation: orbit-planet 20s linear infinite;
+      transform-origin: 4820.0894px 5000px; /* Center of Draconia */
+    }
+
+    #tithion {
+      animation: orbit-planet 25s linear infinite;
+      transform-origin: 4820.0894px 5000px; /* Center of Draconia */
+    }
+
+    #hoter {
+      animation: orbit-planet 30s linear infinite;
+      transform-origin: 4659.9863px 5000px; /* Center of Ion */
+    }
+
+    #zimurn {
+      animation: orbit-planet 35s linear infinite;
+      transform-origin: 4659.9863px 5000px; /* Center of Ion */
+    }
+
+    #tophadus {
+      animation: orbit-planet 40s linear infinite;
+      transform-origin: 4659.9863px 5000px; /* Center of Ion */
+    }
+
+    #aepra {
+      animation: orbit-planet 15s linear infinite;
+      transform-origin: 4610.0176px 5000px; /* Center of Saltar */
+    }
+
+    #allenia {
+      animation: orbit-planet 20s linear infinite;
+      transform-origin: 4610.0176px 5000px; /* Center of Saltar */
+    }
+
+    #calichi {
+      animation: orbit-planet 25s linear infinite;
+      transform-origin: 4610.0176px 5000px; /* Center of Saltar */
+    }
+
+    #enides {
+      animation: orbit-planet 25s linear infinite;
+      transform-origin: 4510.0762px 5000px; /* Center of Wandacker */
+    }
+
+    #hophus {
+      animation: orbit-planet 30s linear infinite;
+      transform-origin: 4510.0762px 5000px; /* Center of Wandacker */
+    }
+
+    #tebara {
+      animation: orbit-planet 35s linear infinite;
+      transform-origin: 4510.0762px 5000px; /* Center of Wandacker */
+    }
+
+    #elbethel {
+      animation: orbit-planet 40s linear infinite;
+      transform-origin: 4510.0762px 5000px; /* Center of Wandacker */
+    }
+
+    #enides {
+      animation: orbit-planet 25s linear infinite;
+      transform-origin: 4510.0762px 5000px; /* Center of Wandacker */
+    }
+
+    #taliotis {
+      animation: orbit-planet 30s linear infinite;
+      transform-origin: 3809.2202px 5000px; /* Center of Xan */
+    }
+
+    #nereis {
+      animation: orbit-planet 35s linear infinite;
+      transform-origin: 3809.2202px 5000px; /* Center of Xan */
+    }
+    </style>
+   <sodipodi:namedview
      id="namedview1"
      pagecolor="#505050"
      bordercolor="#eeeeee"
@@ -21,11 +162,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
-     inkscape:zoom="1.9484735"
-     inkscape:cx="4533.2924"
-     inkscape:cy="5019.5706"
+     inkscape:zoom="2.1639827"
+     inkscape:cx="4501.1912"
+     inkscape:cy="4988.025"
      inkscape:window-width="1440"
-     inkscape:window-height="764"
+     inkscape:window-height="763"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
@@ -39,205 +180,219 @@
      cx="5000"
      cy="5000"
      r="50"><title
-       id="title1">sun</title></circle><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="hellcoast"
-     cx="4900.3364"
-     cy="5000"
-     r="5"><title
-       id="title2">hellcoast</title></circle><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_hell_coast"
-     cx="5000"
-     cy="5000"
-     r="100" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="jetaras"
-     cx="4880.0269"
-     cy="5000"
-     r="5"
-     inkscape:label="jetaras"><title
-       id="title3">jetaras</title></circle><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_jetaras"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_jetaras"
-     r="120" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="void"
-     cx="4859.999"
-     cy="5000"
-     r="5"
-     inkscape:label="void" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_void"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_void"
-     r="140" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="draconia"
-     cx="4820.0894"
-     cy="5000"
-     r="5"
-     inkscape:label="draconia" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="enov"
-     cx="4808.415"
-     cy="5000"
-     inkscape:label="enov"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="tithion"
-     cx="4800.5361"
-     cy="5000"
-     inkscape:label="tithion"
-     r="2.5" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_draconia"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_draconia"
-     r="180" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="ion"
-     cx="4659.9863"
-     cy="5000"
-     r="5"
-     inkscape:label="ion" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="hoter"
-     cx="4650.9385"
-     cy="5000"
-     inkscape:label="hoter"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="zimurn"
-     cx="4644.4912"
-     cy="5000"
-     inkscape:label="zimurn"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="tophadus"
-     cx="4637.8218"
-     cy="5000"
-     inkscape:label="tophadus"
-     r="2.5" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_ion"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_ion"
-     r="340" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="saltar"
-     cx="4610.0176"
-     cy="5000"
-     r="5"
-     inkscape:label="saltar" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="aepra"
-     cx="4601.4028"
-     cy="5000"
-     inkscape:label="aepra"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="allenia"
-     cx="4594.9556"
-     cy="5000"
-     inkscape:label="allenia"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="calichi"
-     cx="4587.665"
-     cy="5000"
-     inkscape:label="calichi"
-     r="2.5" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_saltar"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_saltar"
-     r="390" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="wandacker"
-     cx="4510.0762"
-     cy="5000"
-     r="5"
-     inkscape:label="wandacker" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="enides"
-     cx="4501.4614"
-     cy="5000"
-     inkscape:label="enides"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="hophus"
-     cx="4495.0142"
-     cy="5000"
-     inkscape:label="hophus"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="tebara"
-     cx="4481.375"
-     cy="5000"
-     inkscape:label="tebara"
-     r="2.5" /><circle
-     style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="elbethel"
-     cx="4488.0288"
-     cy="5000"
-     inkscape:label="elbethel"
-     r="2.5" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_wandacker"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_wandacker"
-     r="490" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="xan"
-     cx="3809.2202"
-     cy="5000"
-     r="5"
-     inkscape:label="xan" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="taliotis"
-     cx="3800.6055"
-     cy="5000"
-     inkscape:label="taliotis"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="nereis"
-     cx="3794.1582"
-     cy="5000"
-     inkscape:label="nereis"
-     r="2.5" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="progomeneus"
-     cx="3787.2209"
-     cy="5000"
-     inkscape:label="progomeneus"
-     r="2.5" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_xan"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_xan"
-     r="1190" /><circle
-     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
-     id="brion7"
-     cx="3010.3345"
-     cy="5000"
-     r="5"
-     inkscape:label="brion7" /><circle
-     style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
-     id="orbit_brion_7"
-     cx="5000"
-     cy="5000"
-     inkscape:label="orbit_brion_7"
-     r="1990" /><circle
+       id="title1">sun</title></circle><g
+     id="group-hellcoast"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="hellcoast"
+       cx="4900.3364"
+       cy="5000"
+       r="5"><title
+         id="title2">hellcoast</title></circle><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_hell_coast"
+       cx="5000"
+       cy="5000"
+       r="100" /></g><g
+     id="group-jetaras"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="jetaras"
+       cx="4880.0269"
+       cy="5000"
+       r="5"
+       inkscape:label="jetaras"><title
+         id="title3">jetaras</title></circle><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_jetaras"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_jetaras"
+       r="120" /></g><g
+     id="group-void"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="void"
+       cx="4859.999"
+       cy="5000"
+       r="5"
+       inkscape:label="void" /><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_void"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_void"
+       r="140" /></g><g
+     id="group-draconia"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="draconia"
+       cx="4820.0894"
+       cy="5000"
+       r="5"
+       inkscape:label="draconia" /><g
+       id="moons-draconia"><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="enov"
+         cx="4808.415"
+         cy="5000"
+         inkscape:label="enov"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="tithion"
+         cx="4800.5361"
+         cy="5000"
+         inkscape:label="tithion"
+         r="2.5" /></g><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_draconia"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_draconia"
+       r="180" /></g><g
+     id="group-ion"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="ion"
+       cx="4659.9863"
+       cy="5000"
+       r="5"
+       inkscape:label="ion" /><g
+       id="moons-ion"><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="hoter"
+         cx="4650.9385"
+         cy="5000"
+         inkscape:label="hoter"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="zimurn"
+         cx="4644.4912"
+         cy="5000"
+         inkscape:label="zimurn"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="tophadus"
+         cx="4637.8218"
+         cy="5000"
+         inkscape:label="tophadus"
+         r="2.5" /></g><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_ion"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_ion"
+       r="340" /></g><g
+     id="group-saltar"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="saltar"
+       cx="4610.0176"
+       cy="5000"
+       r="5"
+       inkscape:label="saltar" /><g
+       id="moons-saltar"><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="aepra"
+         cx="4601.4028"
+         cy="5000"
+         inkscape:label="aepra"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="allenia"
+         cx="4594.9556"
+         cy="5000"
+         inkscape:label="allenia"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="calichi"
+         cx="4587.665"
+         cy="5000"
+         inkscape:label="calichi"
+         r="2.5" /></g><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_saltar"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_saltar"
+       r="390" /></g><g
+     id="group-wandacker"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="wandacker"
+       cx="4510.0762"
+       cy="5000"
+       r="5"
+       inkscape:label="wandacker" /><g
+       id="moons-wandacker"><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="enides"
+         cx="4501.4614"
+         cy="5000"
+         inkscape:label="enides"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="hophus"
+         cx="4495.0142"
+         cy="5000"
+         inkscape:label="hophus"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="tebara"
+         cx="4481.375"
+         cy="5000"
+         inkscape:label="tebara"
+         r="2.5" /><circle
+         style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="elbethel"
+         cx="4488.0288"
+         cy="5000"
+         inkscape:label="elbethel"
+         r="2.5" /></g><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_wandacker"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_wandacker"
+       r="490" /></g><g
+     id="group-xan"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="xan"
+       cx="3809.2202"
+       cy="5000"
+       r="5"
+       inkscape:label="xan" /><g
+       id="moons-xan"><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="taliotis"
+         cx="3800.6055"
+         cy="5000"
+         inkscape:label="taliotis"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="nereis"
+         cx="3794.1582"
+         cy="5000"
+         inkscape:label="nereis"
+         r="2.5" /><circle
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+         id="progomeneus"
+         cx="3787.2209"
+         cy="5000"
+         inkscape:label="progomeneus"
+         r="2.5" /></g><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_xan"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_xan"
+       r="1190" /></g><g
+     id="group-brion_7"><circle
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
+       id="brion7"
+       cx="3010.3345"
+       cy="5000"
+       r="5"
+       inkscape:label="brion7" /><circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.37795276;stroke-dasharray:none"
+       id="orbit_brion_7"
+       cx="5000"
+       cy="5000"
+       inkscape:label="orbit_brion_7"
+       r="1990" /></g><circle
      style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"
      id="pti_1"
      cx="4938.2905"
