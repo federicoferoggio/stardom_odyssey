@@ -34,7 +34,7 @@ h1 {
 /* Family Entry Styling */
 .family-entry {
     display: grid;
-    grid-template-rows: auto auto auto auto 0.5fr 1fr auto; /* Explicitly allocate space */
+    grid-template-rows: auto auto auto auto 1fr 1fr auto; /* Explicitly allocate space */
     gap: 0;
     justify-items: center; /* Center align horizontally */
     align-items: start; /* Align items to the top */
