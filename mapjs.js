@@ -95,7 +95,7 @@ function processCSV(csvData, svgContainer, dialog) {
 function filterSVG(validIDs, data, svgContainer, dialog) {
     const objects = svgContainer.querySelectorAll('circle, ellipse, rect, path');
     objects.forEach(obj => {
-        if (!validIDs.has(obj.id) && !obj.id.includes('orbit') && obj.id !== 'sun' && obj.id !== 'asteroids') {
+        if (!validIDs.has(obj.id) && !obj.id.includes('orbit') && obj.id !== 'sun' && obj.id !== 'asteroids' && obj.id !== 'asteroids_names') {
             obj.style.display = 'none';
         } else {
             obj.style.display = '';

@@ -329,7 +329,7 @@ svg {
     /* Center of Xan */
 }
 
-#asteroids {
+#asteroids, #asteroids_names {
     animation: orbit-sun 1200s linear infinite;
     transform-origin: 5000px 5000px;
     /* Center of Xan */
