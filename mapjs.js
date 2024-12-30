@@ -105,19 +105,22 @@ function filterSVG(validIDs, data, svgContainer, dialog) {
 
                 if (obj.id.startsWith('pti_')) {
                     const speed = parseFloat(objectData.Speed) || 1;
-                    const animationDuration = (60 / speed) * 5;
+                    const animationDuration = speed;
                     obj.classList.add('animate-rotation');
                     obj.style.animation = `rotate ${animationDuration}s linear infinite`;
                     // Ensure the transform origin is set to the center of the object (position of the sun)
                     obj.style.transformOrigin = '5000px 5000px';
                     obj.style.cursor = 'pointer';
+                    // epxand the radius of the object to make it easier to click
+                    obj.setAttribute('r', 5);
+
                 }
                 // cursor is set to pointer to indicate the object is clickable
                 obj.style.cursor = 'pointer';
                 obj.addEventListener('click', (event) => {
                     event.stopPropagation();
                     dialog.style.display = 'block';
-                    dialog.innerHTML = `<h2>${objectData.Name}</h2><p style="color: ${objectData.Color};">${objectData.Owner}</p><p>${objectData.Descr}</p>`;
+                    dialog.innerHTML = `<h2>${objectData.Name}</h2><p style="color: ${objectData.Color};">${objectData.Owner}</p><p>${objectData.Descr}</p>`; 
                 });
             }
         }
