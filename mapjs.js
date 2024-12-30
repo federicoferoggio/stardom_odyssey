@@ -73,9 +73,18 @@ function enableZoomAndPan(svg) {
     });
 }
 
-// Process CSV data
 function processCSV(csvData, svgContainer, dialog) {
+    // Split CSV into rows and cells
     const rows = csvData.split('\n').map(row => row.split(','));
+
+    // Replace '&' with ',' in the entire CSV data
+    rows.forEach(row => {
+        row.forEach((cell, index) => {
+            row[index] = cell.replace(/&/g, ','); // Replace '&' with ','
+        });
+    });
+
+    // Extract headers and data
     const headers = rows.shift();
 
     const data = rows.map(row => {
