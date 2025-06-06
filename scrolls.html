@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warscroll & Card Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Eczar:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to enhance the game-like feel */
+        body {
+            background-color: #1a202c; /* Dark background */
+            font-family: 'Roboto', sans-serif;
+            color: #e2e8f0;
+        }
+
+        .header-title {
+            font-family: 'Eczar', serif;
+            font-weight: 800;
+            color: #f6ad55; /* A gold-like color */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Warscroll container styling */
+        .warscroll-container {
+            display: flex;
+            overflow: hidden; /* Hide the overflow, we'll scroll with JS */
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth; /* Smooth scrolling effect */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .warscroll {
+            flex: 0 0 100%; /* Each warscroll takes the full width of the container */
+            scroll-snap-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .warscroll svg {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            border: 3px solid #4a5568;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Card scroller styling */
+        .card-scroller {
+            scrollbar-width: thin;
+            scrollbar-color: #4a5568 #2d3748;
+        }
+
+        .card-scroller::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .card-scroller::-webkit-scrollbar-track {
+            background: #2d3748;
+            border-radius: 10px;
+        }
+
+        .card-scroller::-webkit-scrollbar-thumb {
+            background-color: #4a5568;
+            border-radius: 10px;
+            border: 2px solid #2d3748;
+        }
+
+        .card svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures SVG fills the container, maintaining aspect ratio */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-radius: 0.5rem;
+            /* Removed the border from here */
+        }
+        
+        .card:hover svg {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(246, 173, 85, 0.2), 0 10px 10px -5px rgba(246, 173, 85, 0.1);
+        }
+        
+        /* Navigation Buttons */
+        .nav-btn {
+            background: linear-gradient(145deg, #3a415a, #2b3044);
+            color: #f6ad55;
+            box-shadow: 5px 5px 10px #242836, -5px -5px 10px #3c445c;
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-btn:hover {
+            color: #fff;
+            background: linear-gradient(145deg, #f6ad55, #e79c45);
+            box-shadow: 2px 2px 5px #c47d37, -2px -2px 5px #ffbb53;
+        }
+        .nav-btn:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <h1 class="text-4xl md:text-5xl text-center mb-8 header-title">Warscroll Library</h1>
+
+        <!-- Warscroll Viewer Section -->
+        <div class="relative mb-12">
+            <!-- Warscroll Container will be populated by JavaScript -->
+            <div id="warscroll-container" class="warscroll-container rounded-lg bg-gray-800 min-h-[200px] flex items-center justify-center">
+                 <p id="warscroll-loader" class="text-gray-400">Loading Warscrolls...</p>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button id="prev-btn" class="nav-btn absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-4 md:-translate-x-6 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl z-10 hidden">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="next-btn" class="nav-btn absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-4 md:translate-x-6 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-2xl z-10 hidden">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Cards Section -->
+        <div>
+            <h2 class="text-2xl md:text-3xl text-center mb-6 header-title">Available Cards</h2>
+            <!-- Card Scroller will be populated by JavaScript -->
+            <div id="card-scroller" class="card-scroller flex overflow-x-auto space-x-6 pb-4 bg-gray-800 rounded-lg min-h-[150px] p-4 items-center">
+                <p id="card-loader" class="text-gray-400">Loading Cards...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            
+            // --- CONFIGURATION ---
+            // IMPORTANT: List your SVG filenames here. For a static site (like GitHub Pages),
+            // the browser cannot read directory contents, so you must provide the file list manually.
+            const warscrollFiles = ['ashranian_corsars.svg', 'bataarian_warhorse.svg', 'draconian_guard.svg', 'korrian_cultist.svg', 'steel_master.svg'];
+            const cardFiles = ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', '8.svg'];
+
+            // --- DYNAMIC SVG LOADING ---
+            async function fetchAndDisplaySVGs(directory, fileList, containerId, itemClass, loaderId) {
+                const container = document.getElementById(containerId);
+                const loader = document.getElementById(loaderId);
+                
+                if (fileList.length === 0) {
+                     container.innerHTML = `<p class="text-gray-400">No files listed for this section.</p>`;
+                     return;
+                }
+
+                // Clear loader text
+                container.innerHTML = ''; 
+
+                for (const fileName of fileList) {
+                    try {
+                        // This will fetch the actual file from the specified path.
+                        // Prepending with './' makes the relative path explicit, which can
+                        // resolve issues in certain sandboxed environments.
+                        const response = await fetch(`./${directory}/${fileName}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const svgContent = await response.text();
+
+                        const wrapper = document.createElement('div');
+                        wrapper.className = itemClass;
+                        wrapper.innerHTML = svgContent;
+                        container.appendChild(wrapper);
+
+                    } catch (error) {
+                        console.error(`Failed to load SVG: ${directory}/${fileName}`, error);
+                        // Optional: Display an error placeholder
+                        const errorWrapper = document.createElement('div');
+                        errorWrapper.className = itemClass;
+                        errorWrapper.innerHTML = `<div class="w-full h-full bg-red-900 rounded-lg flex items-center justify-center text-center p-4"><p>Error loading<br>${fileName}</p></div>`;
+                        container.appendChild(errorWrapper);
+                    }
+                }
+                if (loader) loader.style.display = 'none';
+            }
+            
+            // Load all assets
+            await fetchAndDisplaySVGs('warscrolls/battle_sheets', warscrollFiles, 'warscroll-container', 'warscroll', 'warscroll-loader');
+            await fetchAndDisplaySVGs('warscrolls/cards', cardFiles, 'card-scroller', 'card flex-shrink-0 w-48 h-64 md:w-56 md:h-80', 'card-loader');
+
+
+            // --- NAVIGATION SETUP (runs after SVGs are loaded) ---
+            const warscrollContainer = document.getElementById('warscroll-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const warscrolls = document.querySelectorAll('.warscroll');
+
+            if (warscrolls.length > 1) { // Only show buttons if there's more than one warscroll
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+
+                let currentIndex = 0;
+                const totalWarscrolls = warscrolls.length;
+
+                function updateWarscrollPosition() {
+                    if (warscrolls[currentIndex]) {
+                       const scrollAmount = warscrolls[currentIndex].offsetLeft;
+                       warscrollContainer.scrollTo({
+                           left: scrollAmount,
+                           behavior: 'smooth'
+                       });
+                    }
+                }
+
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % totalWarscrolls;
+                    updateWarscrollPosition();
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + totalWarscrolls) % totalWarscrolls;
+                    updateWarscrollPosition();
+                });
+
+                // Update on window resize to keep scroll position correct
+                window.addEventListener('resize', updateWarscrollPosition);
+            } else if (warscrolls.length === 0) {
+                 const container = document.getElementById('warscroll-container');
+                 // The fetch function already handles empty lists, but this is a fallback.
+                 container.innerHTML = '<p class="text-gray-400">No Warscrolls found.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
