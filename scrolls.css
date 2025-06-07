@@ -121,7 +121,3 @@ body {
     color: black;
     outline: none;
 }
-
-.nav-btn:active {
-    /* Removed transform to prevent button movement on click */
-}
