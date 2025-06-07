@@ -1,0 +1,127 @@
+/* General Body and Font Styles from new file */
+body {
+    font-family: 'Josefin Sans', sans-serif;
+    /* New default font */
+    color: white;
+    /* New default text color */
+    overflow-x: hidden;
+    /* CORRECTED: Background with dark overlay */
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('images/space-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* CORRECTED Header Title Style */
+.header-title {
+    /* The specific font-family has been removed to inherit from the body */
+    font-weight: 800;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Original Warscroll Layout Styles (Functionality Preserved) */
+.warscroll-container {
+    display: flex;
+    overflow-x: auto; /* Changed from hidden to auto to allow scrolling */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.warscroll {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.warscroll svg {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    border: 3px solid #4a5568;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* Original Card Scroller Layout Styles (Functionality Preserved) */
+.card-scroller-container {
+    position: relative;
+    overflow: visible !important;
+    padding-top: 12rem;
+    padding-bottom: 12rem;
+    margin-top: -10rem;
+    z-index: 0;
+}
+
+.card-scroller {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: visible !important;
+    scrollbar-width: thin;
+    scrollbar-color: #4a5568 #2d3748;
+}
+
+.card-scroller::-webkit-scrollbar {
+    height: 8px;
+}
+
+.card-scroller::-webkit-scrollbar-track {
+    background: #2d3748;
+    border-radius: 10px;
+}
+
+.card-scroller::-webkit-scrollbar-thumb {
+    background-color: #4a5568;
+    border-radius: 10px;
+    border: 2px solid #2d3748;
+}
+
+/* Original Card Styles (Functionality Preserved) */
+.card {
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.card svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.2s ease-in-out;
+    border-radius: 0.5rem;
+}
+
+/* Navigation Button Styles from new file */
+.nav-btn {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    border: 2px solid white;
+    padding: 10px;
+    /* Adjusted padding for a circular button */
+    border-radius: 50%;
+    /* Kept circular shape */
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-align: center;
+    /* Ensure icon is centered */
+    display: flex;
+    /* For centering icon */
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover,
+.nav-btn:focus {
+    background-color: white;
+    color: black;
+    outline: none;
+}
+
+.nav-btn:active {
+    /* Removed transform to prevent button movement on click */
+}
