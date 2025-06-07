@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.card').forEach(card => {
         let floatingClone;
 
-        card.addEventListener('mouseenter', () => {
+        card.addEventListener('mouseenter', (e) => {
             const svg = card.querySelector('svg');
             if (!svg) return;
 
@@ -80,17 +80,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             floatingClone.style.position = 'fixed';
             floatingClone.style.pointerEvents = 'none';
             floatingClone.style.zIndex = '99999';
-            floatingClone.style.transform = 'scale(0.5)';
-            floatingClone.style.transformOrigin = 'top left';
+            floatingClone.style.transform = 'scale(0.4)';
+            floatingClone.style.transformOrigin = 'center';
             floatingClone.style.opacity = '0';
             floatingClone.style.transition = 'opacity 0.2s ease-out';
 
             floatingClone.appendChild(clone);
             document.body.appendChild(floatingClone);
 
-            const rect = svg.getBoundingClientRect();
-            floatingClone.style.left = `${rect.left}px`;
-            floatingClone.style.top = `${rect.top}px`;
+            const cloneWidth = floatingClone.offsetWidth;
+            const cloneHeight = floatingClone.offsetHeight;
+            floatingClone.style.left = `${e.clientX - cloneWidth / 2}px`;
+            floatingClone.style.top = `${e.clientY - cloneHeight / 2}px`;
 
             requestAnimationFrame(() => {
                 floatingClone.style.opacity = '1';
@@ -99,8 +100,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         card.addEventListener('mousemove', (e) => {
             if (!floatingClone) return;
-            floatingClone.style.left = `${e.clientX}px`;
-            floatingClone.style.top = `${e.clientY}px`;
+            const cloneWidth = floatingClone.offsetWidth;
+            const cloneHeight = floatingClone.offsetHeight;
+            floatingClone.style.left = `${e.clientX - cloneWidth / 2}px`;
+            floatingClone.style.top = `${e.clientY - cloneHeight / 2}px`;
         });
 
         card.addEventListener('mouseleave', () => {

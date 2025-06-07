@@ -2,7 +2,6 @@
 body {
     font-family: 'Josefin Sans', sans-serif;
     color: white;
-    overflow-x: hidden;
     background:
         linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
         url('images/space-background.jpg');
@@ -16,7 +15,7 @@ body {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
-    padding: 2rem;
+    padding: 2rem 0; /* Changed: Only top and bottom padding */
 }
 
 /* Header Title Style */
@@ -27,6 +26,7 @@ h1.header-title {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 3rem;
+    padding: 0 2rem; /* Added: Side padding to the title */
 }
 
 h2.header-title {
@@ -51,24 +51,24 @@ h2.header-title {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     background-color: #1f2937; /* Formerly bg-gray-800 */
-    border-radius: 0.5rem;
     min-height: 200px;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    border-radius: 0.5rem;
+    border: 3px solid #4a5568;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
 }
 
 .warscroll {
     flex: 0 0 100%;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     transition: transform 0.3s ease-in-out;
+
 }
 
 .warscroll svg {
     width: 100%;
     height: auto;
-    border-radius: 0.5rem;
-    border: 3px solid #4a5568;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
 }
 
 /* Navigation Buttons for Warscroll */
@@ -112,6 +112,10 @@ h2.header-title {
 }
 
 /* Card Scroller Section */
+.cards-section {
+    padding: 0 2rem; /* Added: Side padding for the cards section */
+}
+
 .card-scroller {
     display: flex;
     overflow-x: auto;
