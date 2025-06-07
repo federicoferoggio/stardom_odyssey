@@ -28,15 +28,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (error) {
                 const errorWrapper = document.createElement('div');
                 errorWrapper.className = itemClass;
-                errorWrapper.innerHTML = `<div class="w-full h-full bg-red-900 rounded-lg flex items-center justify-center text-center p-4"><p>Error loading<br>${fileName}</p></div>`;
+                errorWrapper.innerHTML = `<div class="error-message"><p>Error loading<br>${fileName}</p></div>`;
                 container.appendChild(errorWrapper);
             }
         }
     }
 
     await fetchAndDisplaySVGs('warscrolls/battle_sheets', warscrollFiles, 'warscroll-container', 'warscroll', 'warscroll-loader');
-    await fetchAndDisplaySVGs('warscrolls/cards', cardFiles, 'card-scroller', 'card flex-shrink-0 w-48 h-64 md:w-56 md:h-80', 'card-loader');
-
+    await fetchAndDisplaySVGs('warscrolls/cards', cardFiles, 'card-scroller', 'card', 'card-loader');
     const warscrollContainer = document.getElementById('warscroll-container');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');

@@ -663,21 +663,10 @@ button:disabled {
 
 /* Menu container styling */
 .menu {
-    position: absolute;
+    position: fixed; /* Changed from absolute */
     top: 10px;
-    right: 10px; /* Position the menu in the top-right corner */
-    z-index: 1000; /* Ensure it stays above other content */
-}
-
-/* Menu button */
-.menu-button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    right: 10px;
+    z-index: 1000;
 }
 
 /* Menu links container - hidden by default */
