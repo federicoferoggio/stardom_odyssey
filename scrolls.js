@@ -113,4 +113,96 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // New Side Menu Functionality
+    const sideMenuButton = document.querySelector('.side-menu-button');
+    const sideMenu = document.getElementById('side-menu');
+    const closeSideMenuButton = document.querySelector('.close-side-menu-button');
+
+    sideMenuButton.addEventListener('click', () => {
+        sideMenu.classList.add('open');
+    });
+
+    closeSideMenuButton.addEventListener('click', () => {
+        sideMenu.classList.remove('open');
+    });
+
+    // Unit Data with points (updated as per user request)
+    const unitsData = [
+        {
+            id: "unit1",
+            name: "Ashranian Corsairs",
+            points: 12, 
+        },
+        {
+            id: "unit2",
+            name: "Bataarian Warhorse",
+            points: 30, 
+        },
+        {
+            id: "unit3",
+            name: "Draconian Guard",
+            points: 12, 
+        },
+        {
+            id: "unit4",
+            name: "Korrian Cultist",
+            points: 9, 
+        },
+        {
+            id: "unit5",
+            name: "Steel Master",
+            points: 13, 
+        }
+    ];
+
+    // Army Builder Functionality
+    const unitQuantityInputs = document.getElementById('unitQuantityInputs');
+    const pointsProgressBar = document.getElementById('pointsProgressBar');
+    const pointsProgressText = document.getElementById('pointsProgressText');
+    const maxPoints = 500;
+
+    function populateUnitsForArmyBuilder() {
+        unitQuantityInputs.innerHTML = ''; // Clear previous inputs
+        unitsData.forEach(unit => {
+            const div = document.createElement('div');
+            div.classList.add('unit-input-group');
+            div.innerHTML = `
+                <label for="qty-${unit.id}">${unit.name} (${unit.points} pts):</label>
+                <input type="number" id="qty-${unit.id}" value="0" min="0">
+            `;
+            unitQuantityInputs.appendChild(div);
+
+            // Add event listener to recalculate totals on quantity change
+            div.querySelector(`#qty-${unit.id}`).addEventListener('input', calculateArmyTotals);
+        });
+        calculateArmyTotals(); // Initial calculation
+    }
+
+    function calculateArmyTotals() {
+        let totalPoints = 0;
+
+        unitsData.forEach(unit => {
+            const quantityInput = document.getElementById(`qty-${unit.id}`);
+            const quantity = parseInt(quantityInput.value, 10) || 0;
+
+            totalPoints += (unit.points * quantity);
+        });
+
+        // Update progress bar
+        const percentage = (totalPoints / maxPoints) * 100;
+        pointsProgressBar.style.width = `${Math.min(percentage, 100)}%`;
+        pointsProgressText.textContent = `${totalPoints} / ${maxPoints} Points`;
+
+        if (totalPoints > maxPoints) {
+            pointsProgressBar.style.backgroundColor = '#dc3545'; // Red if over limit
+            pointsProgressText.style.color = 'red';
+        } else {
+            pointsProgressBar.style.backgroundColor = '#4CAF50'; // Green
+            pointsProgressText.style.color = 'white';
+        }
+    }
+
+    // Initialize new functionalities
+    populateUnitsForArmyBuilder();
 });
