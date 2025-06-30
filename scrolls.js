@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const warscrollFiles = ['ashranian_corsars.svg', 'bataarian_warhorse.svg', 'draconian_guard.svg', 'korrian_cultist.svg', 'steel_master.svg'];
+    const warscrollFiles = ['Ashranian Corsars.svg', 'Bataarian Warhorse.svg', 'Draconian Guard.svg', 'Exectutioners of Bane.svg', 'Hermits of the Dust.svg', 'Korrian Cultist.svg', 'Steel Master.svg' ];
     const cardFiles = ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', '8.svg'];
 
     async function fetchAndDisplaySVGs(directory, fileList, containerId, itemClass, loaderId) {
@@ -142,17 +142,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         {
             id: "unit3",
             name: "Draconian Guard",
-            points: 12, 
+            points: 11, 
         },
         {
             id: "unit4",
             name: "Korrian Cultist",
-            points: 9, 
+            points: 8, 
         },
         {
             id: "unit5",
             name: "Steel Master",
             points: 13, 
+        },
+        {
+            id: "unit6",
+            name: "Exectutioners of Bane",
+            points: 16, 
+        },
+        {
+            id: "unit7",
+            name: "Hermits of the Dust",
+            points: 40, 
         }
     ];
 
