@@ -243,6 +243,7 @@ function updateActionDetails() {
 
     // Generate checklist bonuses from CSV data
     const bonusesForRoll = bonuses.filter(bonus =>
+        bonus.score.toLowerCase() === "all" || // Include bonuses with "all" as the score
         (bonus.always && rolls.includes(bonus.score.toLowerCase())) || 
         (!bonus.always && rolls.includes(bonus.score.toLowerCase()))
     );

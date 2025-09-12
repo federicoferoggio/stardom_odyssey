@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const warscrollFiles = [
-        'Ashranian Corsars.svg',
-        // 'Bataarian Warhorse.svg',
         'Draconian Guard.svg',
-        'Exectutioners of Bane.svg',
-        'Hermits of the Dust.svg',
+        'Spiderlings.svg',
         'Korrian Cultist.svg',
         'Steel Master.svg'
     ];
@@ -138,16 +135,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Unit Data with points (updated as per user request)
     const unitsData = [
         {
-            id: "unit1",
-            name: "Ashranian Corsairs",
-            points: 12, 
-        },
-        // {
-        //     id: "unit2",
-        //     name: "Bataarian Warhorse",
-        //     points: 30, 
-        // },
-        {
             id: "unit3",
             name: "Draconian Guard",
             points: 11, 
@@ -160,18 +147,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         {
             id: "unit5",
             name: "Steel Master",
-            points: 13, 
+            points: 13,
         },
         {
-            id: "unit6",
-            name: "Exectutioners of Bane",
-            points: 16, 
+            id: "unit8",
+            name: "Spiderlings",
+            points: 10, 
         },
-        {
-            id: "unit7",
-            name: "Hermits of the Dust",
-            points: 40, 
-        }
     ];
 
     // Army Builder Functionality
