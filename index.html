@@ -9,11 +9,17 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body id="container_all">
+    
+    <div id="laManoBox">
+        <h1>La Mano</h1>
+        <p id="laManoSubtitle"></p>
+    </div>
 
     <nav class="menu">
         <div class="menu-container">
@@ -27,6 +33,8 @@
             </div>
         </div>
     </nav>
+
+
 
     <div id="controls">
         <label for="monthInput">Current Month:</label>
@@ -73,9 +81,10 @@
     <div id="planetInfo" style="display:none;">
         <div id="planetInfoContent">
             <h2 id="planetName"></h2>
-            <img id="planetImage" src="" alt="Planet Image" style="width:100px; height:100px;" border-radius="50%"> <!-- Add this line -->
+            <img id="planetImage" src="" alt="Planet Image" style="width:100px; height:100px;" border-radius="50%">
+            <!-- Add this line -->
             <ul id="planetDistances"></ul>
-            <button onclick="closeModal()" background-color="black" >Close</button>
+            <button onclick="closeModal()" background-color="black">Close</button>
         </div>
     </div>
 
@@ -174,7 +183,7 @@
             <!-- Court members will be populated here dynamically -->
         </div>
     </div>
-    
+
     </div>
 
     </div>

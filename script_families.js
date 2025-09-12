@@ -107,13 +107,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Process each family
     familyData.forEach(family => {
-        const familyName = family.Name;
-        const familyElement = Array.from(document.querySelectorAll('.family-entry'))
-            .find(entry => entry.querySelector('.family-name').textContent.trim() === familyName);
+        const familyName = (family.Name || "").trim().toLowerCase();
+        const entry = Array.from(document.querySelectorAll('.family-entry')).find(e =>
+            e.querySelector('.family-name') &&
+            e.querySelector('.family-name').textContent.trim().toLowerCase() === familyName
+        );
+        if (entry) {
+            // Set government type
+            const govElem = entry.querySelector('.family-government');
+            if (govElem) govElem.textContent = family.Government || "";
 
-        if (familyElement) {
-            const totalPowerElement = familyElement.querySelector('.family-total-power');
-            const descriptionElement = familyElement.querySelector('.family-generated-description');
+            // Existing logic for total power and description
+            const totalPowerElement = entry.querySelector('.family-total-power');
+            const descriptionElement = entry.querySelector('.family-generated-description');
 
             const relevantStats = ["Might", "Treasure", "Influence", "Territory", "Sovereignty"];
             const totalPower = relevantStats.reduce((sum, stat) => {
@@ -128,22 +134,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const descriptionPhrase = generateFamilyDescription(stats);
 
-            // Assuming totalPowerElement is the image element (e.g., <img> element)
-            if (totalPower <= 10) {
-                totalPowerElement.src = 'images/deadlyness/10.svg';
-            } else if (totalPower <= 15) {
-                totalPowerElement.src = 'images/deadlyness/11.svg';
-            } else if (totalPower <= 20) {
-                totalPowerElement.src = 'images/deadlyness/16.svg';
-            } else if (totalPower <= 25) {
-                totalPowerElement.src = 'images/deadlyness/21.svg';
-            } else {
-                totalPowerElement.src = 'images/deadlyness/26.svg';
+            if (totalPowerElement) {
+                if (totalPower <= 10) {
+                    totalPowerElement.src = 'images/deadlyness/10.svg';
+                } else if (totalPower <= 15) {
+                    totalPowerElement.src = 'images/deadlyness/11.svg';
+                } else if (totalPower <= 20) {
+                    totalPowerElement.src = 'images/deadlyness/16.svg';
+                } else if (totalPower <= 25) {
+                    totalPowerElement.src = 'images/deadlyness/21.svg';
+                } else {
+                    totalPowerElement.src = 'images/deadlyness/26.svg';
+                }
+                totalPowerElement.title = `Total Power: ${totalPower}`;
             }
-
-            // Set the title of the element to the totalPower value
-            totalPowerElement.title = `Total Power: ${totalPower}`;
-            descriptionElement.textContent = descriptionPhrase;
+            if (descriptionElement) descriptionElement.textContent = descriptionPhrase;
         }
     });
 });

@@ -366,7 +366,29 @@ select {
     flex: 1;
     /* Equal width for both sections */
 }
+#laManoBox {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    border-bottom: 2px solid white; /* Optional: Add a border at the bottom */
+    position: relative;
+    z-index: 1000; /* Ensure it stays on top */
+}
 
+#laManoBox h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+#laManoBox p {
+    margin: 10px 0 0;
+    font-size: 1.2rem;
+    font-style: italic;
+}
 
 select {
     padding: 5px;

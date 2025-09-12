@@ -354,6 +354,7 @@ function updateActionDetails() {
 const googleSheetFamilyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
 
 
+// Update the `loadFamilyStats` function to include the "Government" column
 function loadFamilyStats() {
     fetch(googleSheetFamilyURL)
         .then(response => response.text())
@@ -362,11 +363,11 @@ function loadFamilyStats() {
             lines.forEach((line, index) => {
                 if (index === 0) return; // Skip the header row
 
-                const [familyName, might, treasure, influence, territory, sovereignty] = line.split(',');
+                const [familyName, might, treasure, influence, territory, sovereignty, government] = line.split(',');
 
                 // Check if the family is "La Mano"
                 if (familyName.trim() === 'La Mano') {
-                    loadthehandFamilyStats(might, treasure, influence, territory, sovereignty);
+                    loadthehandFamilyStats(might, treasure, influence, territory, sovereignty, government);
                 }
             });
         })
@@ -374,14 +375,36 @@ function loadFamilyStats() {
 }
 
 
-function loadthehandFamilyStats(might, treasure, influence, territory, sovereignty) {
+function loadthehandFamilyStats(might, treasure, influence, territory, sovereignty, government) {
     document.getElementById('might').value = might.trim();
     document.getElementById('treasure').value = treasure.trim();
     document.getElementById('influence').value = influence.trim();
     document.getElementById('territory').value = territory.trim();
     document.getElementById('sovereignty').value = sovereignty.trim();
 
-    generateDescription();
+    // Map of government types to their associated stats
+    const governmentStats = {
+        "Stratocracy": ["Might", "Territory", "Sovereignty"],
+        "Martial Empire": ["Might", "Treasure", "Territory"],
+        "Space Crusaders": ["Territory", "Sovereignty", "Influence"],
+        "Feudal Realm": ["Territory", "Might", "Treasure"],
+        "Megacorporation": ["Treasure", "Influence", "Territory"],
+        "Plutocratic Oligarchy": ["Treasure", "Territory", "Sovereignty"],
+        "Fanatic Purifiers": ["Sovereignty", "Might", "Territory"],
+        "Divine Mandate": ["Sovereignty", "Influence", "Treasure"],
+        "Hegemonic Imperialists": ["Influence", "Territory", "Might"],
+        "Enigmatic Wizards": ["Influence", "Treasure", "Sovereignty"]
+    };
+
+    // Get the associated stats for the government type
+    const associatedStats = governmentStats[government.trim()] || [];
+
+    // Generate the subtitle content
+    const subtitleElement = document.getElementById('laManoSubtitle');
+    subtitleElement.innerHTML = `
+        ${government.trim()}<br>
+        ${associatedStats.map(stat => `${stat}`).join(", ")}
+    `;
 }
 
 // Google Sheet URL to fetch company bonuses

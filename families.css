@@ -51,9 +51,6 @@ h1 {
 .family-entry > * {
     margin: 0; /* Prevent unintended spacing */
     align-self: stretch; /* Stretch children vertically */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
 }
 
 /* Family Banner/Icon Image Styling */
@@ -159,4 +156,13 @@ h1 {
     #familyList {
         grid-template-columns: 1fr; /* Single column on smaller screens */
     }
+}
+
+.family-government {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #fff;
+    margin: 5px 0 0 0;
+    text-align: center;
+    display: block !important;
 }
