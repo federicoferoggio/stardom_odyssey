@@ -34,7 +34,7 @@ h1 {
 /* Family Entry Styling */
 .family-entry {
     display: grid;
-    grid-template-rows: auto auto auto auto auto 1fr auto; /* Explicitly allocate space */
+    grid-template-rows: auto auto auto auto auto auto 1fr; /* Explicitly allocate space */
     gap: 0;
     justify-items: center; /* Center align horizontally */
     align-items: start; /* Align items to the top */
@@ -55,7 +55,6 @@ h1 {
 
 /* Family Banner/Icon Image Styling */
 .family-banner {
-    grid-row: 1;
     width: 100px; /* Fixed width */
     height: auto; /* Maintain aspect ratio */
     object-fit: contain; /* Ensure proper fitting */
@@ -65,13 +64,11 @@ h1 {
 
 /* Family Name Styling */
 .family-name {
-    grid-row: 2;
     font-size: 2.5em;
 }
 
 /* Family Motto Styling */
 .family-motto {
-    grid-row: 3;
     font-size: 1.1em;
     font-style: italic;
     margin: 10px 0;
@@ -85,14 +82,12 @@ h1 {
 
 /* Total Power Styling */
 .family-total-power {
-    grid-row: 4;
     font-size: 1.2em;
     margin: 10px 0;
     height: 50px; /* Fixed height to accommodate up to two lines */
 }
 
 .family-description {
-    grid-row: 6;
     font-size: 1em;
     line-height: 1.5;
     margin: 0; /* Match this with `.family-generated-description` */
@@ -103,18 +98,17 @@ h1 {
 }
 
 .family-generated-description {
-    grid-row: 5;
     font-size: 1em;
     line-height: 1.5;
     margin: 10px 0;
     text-align: left; /* Align text to the left */
     display: block;
+    height: 150px;
 }
 
 
 /* Scrollable Members List */
 .family-members {
-    grid-row: 7;
     display: flex; /* Enable flexbox */
     flex-direction: row; /* Ensure horizontal layout */
     flex-wrap: nowrap; /* Prevent wrapping */
@@ -125,11 +119,6 @@ h1 {
     padding-bottom: 10px;
     max-width: 100%; /* Constrain the width to the family entry */
     align-items: center; /* Vertically align the members */
-}
-
-/* Styling Scrollbar for Members List */
-.family-members::-webkit-scrollbar {
-    display: none;
 }
 
 /* Member Styling */
@@ -159,7 +148,6 @@ h1 {
 }
 
 .family-government {
-    grid-row: 1;
     font-size: 0.9em;
     font-style: italic;
     color: #fff;
@@ -167,6 +155,7 @@ h1 {
     text-align: center;
     display: block !important;
 }
+.family-government { grid-row: 1; }
 .family-banner { grid-row: 2; }
 .family-name { grid-row: 3; }
 .family-motto { grid-row: 4; }
