@@ -34,7 +34,7 @@ h1 {
 /* Family Entry Styling */
 .family-entry {
     display: grid;
-    grid-template-rows: auto auto auto auto 18% 1fr auto; /* Explicitly allocate space */
+    grid-template-rows: auto auto auto auto auto 1fr auto; /* Explicitly allocate space */
     gap: 0;
     justify-items: center; /* Center align horizontally */
     align-items: start; /* Align items to the top */
@@ -72,7 +72,7 @@ h1 {
 /* Family Motto Styling */
 .family-motto {
     grid-row: 3;
-    font-size: 1.5em;
+    font-size: 1.1em;
     font-style: italic;
     margin: 10px 0;
     height: 2.5em; /* Fixed height to accommodate up to two lines */
@@ -159,10 +159,18 @@ h1 {
 }
 
 .family-government {
+    grid-row: 1;
     font-size: 0.9em;
     font-style: italic;
     color: #fff;
-    margin: 5px 0 0 0;
+    margin: 0 0 10px 0;
     text-align: center;
     display: block !important;
 }
+.family-banner { grid-row: 2; }
+.family-name { grid-row: 3; }
+.family-motto { grid-row: 4; }
+.family-total-power { grid-row: 5; }
+.family-generated-description { grid-row: 6; }
+.family-description { grid-row: 7; }
+.family-members { grid-row: 8; }
