@@ -163,3 +163,159 @@ h1 {
 .family-generated-description { grid-row: 6; }
 .family-description { grid-row: 7; }
 .family-members { grid-row: 8; }
+
+
+
+/* Pacts Modal Styling */
+.pacts-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.pacts-modal-content {
+    background-color: #1a1a1a;
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 700px;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.pacts-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.pacts-close:hover,
+.pacts-close:focus {
+    color: white;
+    text-decoration: none;
+}
+
+#pactsTitle {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    text-align: center;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+}
+
+#pactsList {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.pact-item {
+    background-color: rgba(0, 0, 0, 0.467);
+    margin: 12px 0;
+    border-radius: 8px;
+    font-size: 1.1em;
+    line-height: 1.4;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.pact-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.pact-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pact-title {
+    flex: 1;
+}
+
+.pact-toggle {
+    font-size: 0.8em;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.pact-description {
+    padding: 0 15px 15px 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.134);
+    margin-top: 5px;
+}
+
+.pact-desc-text, .pact-effects {
+    margin: 10px 0;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.pact-effects {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* Color coding based on treaty categories */
+.pact-item.relational {
+    border-left: 4px solid #4a90e2; /* Blue for relational treaties */
+}
+
+.pact-item.benefit {
+    border-left: 4px solid #7ed321; /* Green for benefit treaties */
+}
+
+.pact-item.unique {
+    border-left: 4px solid #f5a623; /* Orange/Gold for unique treaties */
+}
+
+/* Make power button look clickable but remove hover tooltip */
+.family-total-power {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.family-total-power:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .pacts-modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    #pactsTitle {
+        font-size: 1.4em;
+    }
+    
+    .pact-item {
+        font-size: 1em;
+    }
+    
+    .pact-header {
+        padding: 12px;
+    }
+    
+    .pact-description {
+        padding: 0 12px 12px 12px;
+    }
+    
+    .pact-desc-text, .pact-effects {
+        font-size: 0.9em;
+    }
+}
