@@ -72,7 +72,7 @@ const treatyDescriptions = {
         effects: "+1 limite massimo Influence per entrambi i partiti.",
         category: "benefit"
     },
-    "Accordo Nave-Magica": {
+    "Accordo Spelljammer": {
         description: "Un contratto esclusivo con i maestri costruttori che garantisce accesso alle loro avanzate tecnologie navali.",
         effects: "Sblocca azione 'Innalza la Flotta'.",
         category: "unique"
