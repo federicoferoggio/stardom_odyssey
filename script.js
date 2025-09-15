@@ -1,51 +1,53 @@
 const actions = {
-    "Attack": {
-        description: "Engages enemy forces or defenses for raiding, annexation, or a symbolic victory. However you want to call it, it bolis down to attacking someone else's troops and defenses. The attacked defends with Might and Territory",
+    "Attacco": {
+        description: "Coinvolge le forze nemiche o le difese per razziare, annettere territori o ottenere una vittoria simbolica. Comunque la si voglia chiamare, si tratta di attaccare le truppe e le difese di qualcun altro. Il difensore usa Potenza e Territorio.",
         rolls: ["might", "treasure"]
     },
-    "Defend": {
-        description: "When you are on the defensive, protecting your territory and people. The attacker will roll Might and Treasure.",
+    "Difesa": {
+        description: "Quando si è sulla difensiva, proteggendo il proprio territorio e la propria gente. L'attaccante userà Potenza e Tesoro.",
         rolls: ["might", "territory"]
     },
-    "Espionage": {
-        description: "Gathers intelligence on rivals or influences opinions covertly. Different from being informed, you are using subterfuge to convert opinions and gather information. The target will defend with Influence and Territory.",
+    "Spionaggio": {
+        description: "Raccoglie informazioni sui rivali o influenza le opinioni segretamente. Diverso dal semplice essere informati, qui si usa il sotterfugio per convertire opinioni e raccogliere informazioni. Il bersaglio si difenderà con Influenza e Territorio.",
         rolls: ["influence", "treasure"]
     },
-    "Counter-Espionage": {
-        description: "Detects and counters rival intelligence operations. This is when you are specifically hunting for infiltrators among your ranks. Your (perceived) enemies will defend with Influence and Treasure.",
+    "Controspionaggio": {
+        description: "Rileva e contrasta le operazioni di intelligence rivali. Questo è quando si sta specificamente cacciando infiltrati tra i propri ranghi. I nemici (percepiti) si difenderanno con Influenza e Tesoro.",
         rolls: ["influence", "territory"]
     },
-    "Policing": {
-        description: "Addresses internal threats and maintains order. Refer to the rules for more information about this action, but it boils down to using direct force against a group inside your terriories, might them be bandits, rebels or infiltrators. The target will defend with Influence and Might.",
+    "Controllo dell'Ordine": {
+        description: "Affronta le minacce interne e mantiene l'ordine. Si tratta essenzialmente di usare la forza diretta contro un gruppo all'interno dei propri territori, che siano banditi, ribelli o infiltrati. Il bersaglio si difenderà con Influenza e Potenza.",
         rolls: ["might", "sovereignty"]
     },
-    "Train and Levy Troops": {
-        description: "Recruits and integrates troops into the company. Just like Rise in Stature or Improve the Culture, you can get a permanent bonus if you hit a height equal to your current might, but you cannot get a temporary bonus with this action. Your might cannot increase beyond the number currently set by the spelljamming level.",
-        rolls: ["sovereignty", "territory"]
-    },
-    "Build up the fleet": {
-        description: "Increases the size and quality of your fleet. In a society of space faring, this is a must if you want to increase the might of your company. The difficulty of the roll is equal to the current spelljamming level of your company.",
-        rolls: ["treasure", "influence"]
-    },
-    "Rise in Stature": {
-        description: "Increases your company's prestige and influence, both at home and abroad. When you want a temporary increase, any set will give you a +1 bonus until the end of the next month. For a permanent bonus, you need to hit a height equal to your current influence.",
-        rolls: ["sovereignty", "treasure"]
-    },
-    "Unconventional Warfare": {
-        description: "Executes sabotage, assassinations, or other unconventional military actions. This is a dirty business, and getting caught spells disaster. For more complete information, refer to the rules. The target will defend with Might and Sovereignty.",
+    "Guerra Non Convenzionale": {
+        description: "Esegue sabotaggi, assassinii o altre azioni militari non convenzionali. È un affare sporco, e farsi scoprire significa disastro. Il bersaglio si difenderà con Potenza e Sovranità.",
         rolls: ["influence", "might"]
     },
-    "Improve the Culture": {
-        description: "Invests in community and cultural projects to unify the populace. Culture here is not just about art and music, but also the quality of life and the sense of belonging. If you want a temporary bonus, any set will give you a +1 bonus until the end of the next month. For a permanent bonus, you need to hit a height equal to your current soverignty and a width equal to your current territory.",
-        rolls: ["territory", "treasure"]
-    },
-    "Being informed": {
-        description: "When you want to collect information about a company or a person. It isn't spying, that would be unpolite: just asking questions. If you roll against someone else, they use their Influence and Treasure to defend.",
+    "Raccolta Informazioni": {
+        description: "Quando si vogliono raccogliere informazioni su una compagnia o una persona. Non è spionaggio, quello sarebbe scortese: solo fare domande. Se si tira contro qualcun altro, userà Influenza e Tesoro per difendersi.",
         rolls: ["influence", "sovereignty"]
+    },
+    "Aumento: Might": {
+        description: "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Might contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+        rolls: ["might"]
+    },
+    "Aumento: Influence": {
+        description: "Espande la rete di contatti e il prestigio della compagnia. Richiede un tiro di Influence contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+        rolls: ["influence"]
+    },
+    "Aumento: Treasure": {
+        description: "Migliora l'infrastruttura economica e le risorse finanziarie della compagnia. Richiede un tiro di Treasure contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+        rolls: ["treasure"]
+    },
+    "Aumento: Territory": {
+        description: "Sviluppa e consolida il controllo territoriale della compagnia. Richiede un tiro di Territory contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+        rolls: ["territory"]
+    },
+    "Aumento: Sovereignty": {
+        description: "Rafforza la coesione interna e la lealtà dei membri della compagnia. Richiede un tiro di Sovereignty contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+        rolls: ["sovereignty"]
     }
-    // Additional actions can be defined based on deeper analysis of the file.
 };
-
 
 // CSV file URL (replace with your actual URL)
 const googleSheetCourtURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=2021236788&single=true&output=csv';
