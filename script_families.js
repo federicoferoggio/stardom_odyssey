@@ -346,8 +346,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
         if (entry) {
             // Set government type
-            const govElem = entry.querySelector('.family-government');
-            if (govElem) govElem.textContent = family.Government || "";
+            const govElem = entry.querySelector('.family-government')
+            const familyGovernment = family.Government
+            const familyPlanet = family.Planet
+            if (govElem) govElem.textContent = `${familyGovernment} of ${familyPlanet}` || "";
 
             // Existing logic for total power and description
             const totalPowerElement = entry.querySelector('.family-total-power');
