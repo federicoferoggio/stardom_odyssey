@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const warscrollFiles = [
-        'Draconian Guard.svg',
+        'Imperial Guard.svg',
         'Spiderlings.svg',
         'Korrian Cultist.svg',
-        'Steel Master.svg'
+        'Steel Master.svg',
+        'Butalizers.svg'
     ];
     const cardFiles = ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', '8.svg'];
 
@@ -135,24 +136,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Unit Data with points (updated as per user request)
     const unitsData = [
         {
-            id: "unit3",
+            id: "unit1",
             name: "Imperial Guard",
             points: 11, 
         },
         {
-            id: "unit4",
+            id: "unit2",
             name: "Korrian Cultist",
             points: 8, 
         },
         {
-            id: "unit5",
+            id: "unit3",
             name: "Steel Master",
             points: 15,
         },
         {
-            id: "unit8",
+            id: "unit4",
             name: "Spiderlings",
             points: 10, 
+        },
+        {
+            id: "unit5",
+            name: "Brutalizers",
+            points: 80, 
         },
     ];
 
@@ -160,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const unitQuantityInputs = document.getElementById('unitQuantityInputs');
     const pointsProgressBar = document.getElementById('pointsProgressBar');
     const pointsProgressText = document.getElementById('pointsProgressText');
-    const maxPoints = 500;
+    const maxPoints = 600;
 
     function populateUnitsForArmyBuilder() {
         unitQuantityInputs.innerHTML = ''; // Clear previous inputs
