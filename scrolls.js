@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const unitsData = [
         {
             id: "unit3",
-            name: "Draconian Guard",
+            name: "Imperial Guard",
             points: 11, 
         },
         {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         {
             id: "unit5",
             name: "Steel Master",
-            points: 13,
+            points: 15,
         },
         {
             id: "unit8",
