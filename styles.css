@@ -367,15 +367,18 @@ select {
     /* Equal width for both sections */
 }
 #laManoBox {
-    width: 100%;
     background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
     color: white;
     text-align: center;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-    border-bottom: 2px solid white; /* Optional: Add a border at the bottom */
     position: relative;
-    z-index: 1000; /* Ensure it stays on top */
+    margin: 30px 30px 30px;
+    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
+    padding: 20px; /* Add internal padding */
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
+                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
+                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 #laManoBox h1 {

@@ -89,19 +89,6 @@ function fetchBonuses() {
         .catch(err => console.error("Failed to fetch bonuses:", err));
 }
 
-// Array to hold the orbital distances in months for each planet
-const planetsData = [
-    { name: 'Hellcoast', distanceFromSun: 0.2 },
-    { name: 'Jetaras', distanceFromSun: 0.4 },
-    { name: 'Void', distanceFromSun: 0.6 },
-    { name: 'Draconia', distanceFromSun: 1.0 },
-    { name: 'Ion', distanceFromSun: 3.5 },
-    { name: 'Saltar', distanceFromSun: 4.0 },
-    { name: 'Wandacker', distanceFromSun: 5.0 },
-    { name: 'Xan', distanceFromSun: 12.0 },
-    { name: 'Brion7', distanceFromSun: 20.0 }
-];
-
 function navigateToPage() {
     const pageSelect = document.getElementById('pageSelect');
     const selectedPage = pageSelect.value;
@@ -111,105 +98,15 @@ function navigateToPage() {
     }
 }
 
-
-// Function to show planet info when a planet is clicked
-function showPlanetInfo(planetIndex) {
-    const planet = planetsData[planetIndex];
-    const planetNameElement = document.getElementById('planetName');
-    const planetDistances = document.getElementById('planetDistances');
-
-    planetNameElement.textContent = planet.name; // Set the planet's name in the modal
-    planetDistances.innerHTML = ''; // Clear previous distances
-
-    const currentMonth = parseInt(document.getElementById("monthInput").value, 10);
-
-    planetsData.forEach((otherPlanet, otherIndex) => {
-        if (planetIndex !== otherIndex) {
-            const distance = calculateDistance(planet, otherPlanet, currentMonth, planetIndex, otherIndex);
-            const listItem = document.createElement('li');
-            listItem.textContent = `${otherPlanet.name}: ${distance.toFixed(2)} months`;
-            planetDistances.appendChild(listItem);
-        }
-    });
-
-    // Set the planet image dynamically based on the planet name
-    const planetImageInfo = document.getElementById('planetImage');
-    planetImageInfo.src = "images/" + planet.name.replace(/\s+/g, '') + ".webp";
-    planetImageInfo.alt = planet.name;
-
-    // Display the modal
-    document.getElementById('planetInfo').style.display = 'block';
-}
-
-// Function to calculate the distance between two planets
-function calculateDistance(planet1, planet2, month, index1, index2) {
-    const totalMonths = 12; // Assuming a 12-month cycle
-
-    // Calculate the angle of each planet in radians
-    const angle1 = ((month / (index1 + 1)) % totalMonths) * (2 * Math.PI / totalMonths);
-    const angle2 = ((month / (index2 + 1)) % totalMonths) * (2 * Math.PI / totalMonths);
-
-    // Calculate the coordinates of each planet based on their angle and distance from the sun
-    const x1 = planet1.distanceFromSun * Math.cos(angle1);
-    const y1 = planet1.distanceFromSun * Math.sin(angle1);
-    const x2 = planet2.distanceFromSun * Math.cos(angle2);
-    const y2 = planet2.distanceFromSun * Math.sin(angle2);
-
-    // Calculate the distance between the two planets using the distance formula
-    const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-
-    return distance;
-}
-
-function closeModal() {
-    document.getElementById('planetInfo').style.display = 'none';
-}
-
-// Function to set planets' z-index to ensure they are on top
-function setPlanetsOnTop() {
-    const planets = document.querySelectorAll('.planet');
-    planets.forEach(planet => {
-        planet.style.zIndex = 1000; // A very high z-index value
-    });
-}
-
-// Function to attach click event to each planet after the DOM is fully loaded
-function attachPlanetClickListeners() {
-    const planets = document.querySelectorAll('.planet img'); // Make sure you are selecting the correct element
-    planets.forEach((planet, index) => {
-        planet.addEventListener('click', () => showPlanetInfo(index));
-    });
-}
-
 // Initialize the system when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
     populateActions();
     fetchBonuses();
-    attachPlanetClickListeners();
-    setPlanetsOnTop();
-    updateSystem(); // If this function updates planetary orbits or other dynamic behavior
     loadCompanyBonuses();
     loadFamilyStats();
     loadCourtMembers();
     fetchTimelineData();
 });
-
-// Function to update planetary system (rotation based on the month input)
-function updateSystem() {
-    loadFamilyStats();
-    const month = parseInt(document.getElementById("monthInput").value, 10);
-    const totalMonths = 12; // Assuming a 12-month cycle
-
-    const orbits = document.querySelectorAll('.orbit');
-    orbits.forEach((orbit, index) => {
-        // Calculate the rotation angle based on the current month and orbit index
-        const speedFactor = (index + 1); // Increase the factor with distance, so outer planets move slower
-        const angle = ((month / speedFactor) % totalMonths) * (360 / totalMonths);
-        orbit.style.transform = `rotate(${angle}deg)`;
-    });
-
-    setPlanetsOnTop();
-}
 
 // Function to populate actions into the action menu
 function populateActions() {
@@ -517,24 +414,6 @@ async function fetchTimelineData() {
     }
 }
 
-function scrollToCurrentMonth() {
-    const container = document.getElementById("timelineContainer");
-    const currentItem = Array.from(container.getElementsByClassName("timeline-item")).find(item => {
-        const strongElement = item.querySelector("strong");
-        return strongElement && strongElement.textContent === "Current";
-    });
-
-    if (currentItem) {
-        currentItem.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-    }
-}
-
-function updateCurrentMonth(month) {
-    const monthInput = document.getElementById("monthInput");
-    monthInput.value = month; // Set the input value to the last month
-    monthInput.dispatchEvent(new Event("input")); // Trigger the update event
-}
-
 function populateTimeline(events) {
     const container = document.getElementById("timelineContainer");
     container.innerHTML = ""; // Clear previous events
@@ -572,12 +451,7 @@ function populateTimeline(events) {
         container.appendChild(item);
     });
 
-    const currentMonth = events.find(({ event }) => event === "Current");
-    if (currentMonth) {
-        updateCurrentMonth(currentMonth.month); // Update the input box to the last month
-    }
-
-    scrollToLastEvent(); // Scroll to the last event
+    container.scrollLeft = container.scrollWidth;
 }
 
 const qualities = {
