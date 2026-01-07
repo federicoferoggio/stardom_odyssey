@@ -159,21 +159,6 @@ h2.header-title {
     padding: 1rem;
 }
 
-/* New Side Menu Styles */
-.side-menu-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
-    background-color: #333;
-    color: white;
-    padding: 10px 15px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 .side-menu {
     position: fixed;
     top: 0;
