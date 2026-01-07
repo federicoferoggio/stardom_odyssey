@@ -580,6 +580,16 @@ function buildSolarSystem(svgContainer, dialog, month) {
     });
 }
 
+
+function populateTimeline(events) {
+    const currentMonth = events.find(({ event }) => event === "Current");
+    if (currentMonth) {
+        updateCurrentMonth(currentMonth.month); // Update the input box to the last month
+    }
+
+    scrollToLastEvent(); // Scroll to the last event
+}
+
 // Close dialog on outside click
 function closeDialogOnClickOutside(dialog) {
     window.addEventListener('click', (e) => {
