@@ -580,14 +580,30 @@ function buildSolarSystem(svgContainer, dialog, month) {
     });
 }
 
+async function fetchTimelineData() {
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
 
-function populateTimeline(events) {
-    const currentMonth = events.find(({ event }) => event === "Current");
-    if (currentMonth) {
-        updateCurrentMonth(currentMonth.month); // Update the input box to the last month
+    try {
+        const response = await fetch(url);
+        const data = await response.text();
+
+        // Parse CSV
+        const rows = data.split("\n").slice(1); // Skip the header row
+        const events = rows.map(row => {
+            const [month, event, description, mod] = row.split(",");
+            return { month, event, description, mod };
+        });
+
+        const currentMonth = events.find(({ event }) => event === "Current");
+        if (currentMonth) {
+            const monthInput = document.getElementById("monthInput");
+            monthInput.value = currentMonth.month; // Set the input value to the last month
+            monthInput.dispatchEvent(new Event("input")); // Trigger the update event
+        }
+
+    } catch (error) {
+        console.error("Error fetching timeline data:", error);
     }
-
-    scrollToLastEvent(); // Scroll to the last event
 }
 
 // Close dialog on outside click
@@ -606,6 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthInput = document.getElementById('monthInput');
     const svgContainer = document.getElementById('solar-map');
     const dialog = document.getElementById('dialog');
+    fetchTimelineData()
 
     setupMenuToggle(menuButton, menuContainer);
     closeDialogOnClickOutside(dialog);
