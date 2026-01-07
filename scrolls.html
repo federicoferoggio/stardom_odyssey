@@ -31,7 +31,10 @@
         </div>
     </nav>
 
-    <button class="side-menu-button">Open Army Builder</button>
+    <div class="side-buttons" style="position:fixed; left:16px; top:16px; display:flex; flex-direction:column; gap:8px; z-index:1000;">
+        <button class="side-menu-button">Open Army Builder</button>
+        <button class="dice-menu-button">Open Dice Roller</button>
+    </div>
 
     <div id="side-menu" class="side-menu">
         <button class="close-side-menu-button">X</button>
@@ -44,6 +47,39 @@
                 <div class="points-bar-container">
                     <div class="points-bar-fill" id="pointsProgressBar"></div>
                     <div class="points-bar-text" id="pointsProgressText">0 / 500 Points</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dice-menu" class="side-menu dice-menu">
+        <button class="close-dice-menu-button">X</button>
+        <div class="side-menu-content">
+            <div class="dice-roller-section">
+                <h3>Dice Roller</h3>
+                <div class="dice-input-group">
+                    <label for="tok-input">TOK:</label>
+                    <input type="number" id="tok-input" value="1" min="1">
+                </div>
+                <div class="dice-input-group">
+                    <label for="atk-input">ATK:</label>
+                    <input type="number" id="atk-input" value="1" min="1">
+                </div>
+                <div class="dice-input-group">
+                    <label for="hit-input">HIT:</label>
+                    <input type="number" id="hit-input" value="1" min="1">
+                </div>
+                <div class="dice-input-group">
+                    <label for="wnd-input">WND:</label>
+                    <input type="number" id="wnd-input" value="1" min="1">
+                </div>
+
+                <div style="margin-top:12px;">
+                    <button id="roll-dice-btn">Roll Dice</button>
+                </div>
+
+                <div id="roll-result" style="margin-top:12px;">
+                    <p class="muted">No roll yet.</p>
                 </div>
             </div>
         </div>

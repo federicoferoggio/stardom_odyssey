@@ -132,6 +132,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         sideMenu.classList.remove('open');
     });
 
+    // Dice Roller Side Menu Functionality
+    const diceMenuButton = document.querySelector('.dice-menu-button');
+    const diceMenu = document.getElementById('dice-menu');
+    const closeDiceMenuButton = document.querySelector('.close-dice-menu-button');
+
+    if (diceMenuButton && diceMenu && closeDiceMenuButton) {
+        diceMenuButton.addEventListener('click', () => {
+            diceMenu.classList.add('open');
+        });
+
+        closeDiceMenuButton.addEventListener('click', () => {
+            diceMenu.classList.remove('open');
+        });
+    }
+
+    function rollDiceOnce() {
+        return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function performDiceRoll(tok, atk, hit, wnd) {
+        // Roll tok*atk dice
+        let rolls = Array.from({ length: tok * atk }, rollDiceOnce);
+        console.log('Initial Rolls:', rolls);
+
+        // Filter for hits
+        rolls = rolls.filter(roll => roll >= hit);
+        console.log('After Hit Filter:', rolls);
+
+        // Reroll hits
+        rolls = rolls.map(roll => rollDiceOnce());
+        console.log('After Rerolling Hits:', rolls);
+
+        // Filter for wnd
+        rolls = rolls.filter(roll => roll >= wnd);
+        console.log('After Wound Filter:', rolls);
+
+        // Total damage is number of successful wnd rolls
+        return rolls.length;
+    }
+
+    const rollBtn = document.getElementById('roll-dice-btn');
+    const tokInput = document.getElementById('tok-input');
+    const atkInput = document.getElementById('atk-input');
+    const hitInput = document.getElementById('hit-input');
+    const wndInput = document.getElementById('wnd-input');
+    const rollResult = document.getElementById('roll-result');
+
+    if (rollBtn) {
+        rollBtn.addEventListener('click', () => {
+            const tok = parseInt(tokInput.value, 10) || 1;
+            const atk = parseInt(atkInput.value, 10) || 0;
+            const hit = parseInt(hitInput.value, 10) || 0;
+            const wnd = parseInt(wndInput.value, 10) || 0;
+
+            const res = performDiceRoll(tok, atk, hit, wnd);
+
+            rollResult.innerHTML = `<strong>Resulting Damage:</strong> ${res}`;
+        });
+    }
+
     // Unit Data with points (updated as per user request)
     const unitsData = [
         {
