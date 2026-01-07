@@ -18,6 +18,7 @@
     
     <div id="laManoBox">
         <h1>La Mano</h1>
+        <img id="laManoLogo" src="images/symbols/HandIcon.png" alt="La Mano Logo" style="width:150px; height:150px;">
         <p id="laManoSubtitle"></p>
     </div>
 
@@ -33,60 +34,6 @@
             </div>
         </div>
     </nav>
-
-
-
-    <div id="controls">
-        <label for="monthInput">Current Month:</label>
-        <input type="number" id="monthInput" value="10202" min="10200" oninput="updateSystem()" size="auto">
-    </div>
-
-    <div id="solarSystem">
-        <div id="sun"><img src="images/sun.webp" alt="sun" class="planetImage"></div>
-        <div class="orbit" id="orbit1">
-            <div class="planet" data-name="Hellcoast"><img src="images/Hellcoast.webp" alt="Hellcoast"
-                    class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit2">
-            <div class="planet" data-name="Jetaras"><img src="images/Jetaras.webp" alt="Jetaras" class="planetImage">
-            </div>
-        </div>
-        <div class="orbit" id="orbit3">
-            <div class="planet" data-name="Void"><img src="images/Void.webp" alt="Void" class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit4">
-            <div class="planet" data-name="Draconia"><img src="images/Draconia.webp" alt="Draconia" class="planetImage">
-            </div>
-        </div>
-        <div class="orbit" id="orbit5">
-            <div class="planet" data-name="Ion"><img src="images/Ion.webp" alt="Ion" class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit6">
-            <div class="planet" data-name="Saltar"><img src="images/Saltar.webp" alt="Saltar" class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit7">
-            <div class="planet" data-name="Wandacker"><img src="images/Wandacker.webp" alt="Wandacker"
-                    class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit8">
-            <div class="planet" data-name="Xan"><img src="images/Xan.webp" alt="Xan" class="planetImage"></div>
-        </div>
-        <div class="orbit" id="orbit9">
-            <div class="planet" data-name="Brion7"><img src="images/Brion7.webp" alt="Brion7" class="planetImage">
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for displaying planet information -->
-    <div id="planetInfo" style="display:none;">
-        <div id="planetInfoContent">
-            <h2 id="planetName"></h2>
-            <img id="planetImage" src="" alt="Planet Image" style="width:100px; height:100px;" border-radius="50%">
-            <!-- Add this line -->
-            <ul id="planetDistances"></ul>
-            <button onclick="closeModal()" background-color="black">Close</button>
-        </div>
-    </div>
 
     <div id="bottomSections">
 
