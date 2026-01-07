@@ -21,8 +21,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "tebara",
         "Name": "Tebara",
         "OrbitAround": "wandacker",
-        "Period": 1,
-        "DistanceFromParent": 32+2.5,
+        "Period": 4*10/3+20,
+        "DistanceFromParent": 8*4+2.5,
         "Color": "#F502DC",
         "Owner": "Caillot",
         "Descr": "Una società aristocratica schiavista che coltiva la maggior parte del cibo per il sistema."
@@ -31,8 +31,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "tophadus",
         "Name": "Tophadus",
         "OrbitAround": "ion",
-        "Period": 1,
-        "DistanceFromParent": 24+2.5,
+        "Period": 3*10/3+20,
+        "DistanceFromParent": 8*3+2.5,
         "Color": "#00CB6E",
         "Owner": "Carxus",
         "Descr": "L'acqua è il luogo da cui provengono le navi. Una luna oceanica dove i Carxus hanno costruito per la prima volta i loro grandi warjammers, navi che ora dominano il sistema."
@@ -41,7 +41,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_26",
         "Name": "Prot Blanc",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 1725.70,
         "Color": "#00CB6E",
         "Owner": "Carxus",
@@ -51,7 +51,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_19",
         "Name": "L'alleanza",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 805.70-20,
         "Color": "#E7E2FD",
         "Owner": "Confraternita",
@@ -61,7 +61,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_9",
         "Name": "Gith Crèche X'ller",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 604.70,
         "Color": "#FADEA5",
         "Owner": "Gith",
@@ -71,8 +71,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "enov",
         "Name": "Enov",
         "OrbitAround": "draconia",
-        "Period": 1,
-        "DistanceFromParent": 8+2.5,
+        "Period": 1*10/3+20,
+        "DistanceFromParent": 8*1+2.5,
         "Color": "#C005ED",
         "Owner": "Grayshine",
         "Descr": "Qualcosa di più simile a una fortezza che a un pianeta, in cui si nascondono ricchezze oltre ogni immaginazione. Il pianeta è la riserva di tutte le risorse del sistema."
@@ -81,8 +81,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "aepra",
         "Name": "Aepra",
         "OrbitAround": "saltar",
-        "Period": 1,
-        "DistanceFromParent": 8+2.5,
+        "Period": 1*10/3+20,
+        "DistanceFromParent": 8*1+2.5,
         "Color": "#F58900",
         "Owner": "Hai",
         "Descr": "Una luna governata fino a poco tempo fa da una guerra civile costante; ora una nuova famiglia cerca di destreggiarsi tra odi secolari e l'influenza dei potenti e vicini Ousssek."
@@ -101,8 +101,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "taliotis",
         "Name": "Taliotis",
         "OrbitAround": "xan",
-        "Period": 1,
-        "DistanceFromParent": 8+2.5,
+        "Period": 1*10/3+20,
+        "DistanceFromParent": 8*1+2.5,
         "Color": "#F41500",
         "Owner": "Heretics",
         "Descr": "Terra degli eretici."
@@ -111,8 +111,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "nereis",
         "Name": "Nereis",
         "OrbitAround": "xan",
-        "Period": 1,
-        "DistanceFromParent": 16+2.5,
+        "Period": 2*10/3+20,
+        "DistanceFromParent": 8*2+2.5,
         "Color": "#F41500",
         "Owner": "Heretics",
         "Descr": "Terra degli eretici."
@@ -121,8 +121,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "progomeneus",
         "Name": "Progomeneus",
         "OrbitAround": "xan",
-        "Period": 1,
-        "DistanceFromParent": 24+2.5,
+        "Period": 3*10/3+20,
+        "DistanceFromParent": 8*3+2.5,
         "Color": "#F41500",
         "Owner": "Heretics",
         "Descr": "Terra degli eretici."
@@ -131,8 +131,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "hophus",
         "Name": "Hophus",
         "OrbitAround": "wandacker",
-        "Period": 1,
-        "DistanceFromParent": 16+2.5,
+        "Period": 2*10/3+20,
+        "DistanceFromParent": 8*2+2.5,
         "Color": "#FFCF01",
         "Owner": "Kesk",
         "Descr": "Oscurità e dolore sono sovrani su questa luna senza sole."
@@ -151,7 +151,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_8",
         "Name": "Ceneris",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 809.70,
         "Color": "#7405ED",
         "Owner": "Mitsumoro",
@@ -181,7 +181,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_14",
         "Name": "Khraeel-II",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 434.70,
         "Color": "#613C24",
         "Owner": "Ntsu",
@@ -191,7 +191,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_35",
         "Name": "Colonia B-34",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 2150.70,
         "Color": "#613C24",
         "Owner": "Ntsu",
@@ -211,7 +211,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_18",
         "Name": "Tela Kindori",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 859.70-20,
         "Color": "#C160FF",
         "Owner": "Ousssek",
@@ -221,7 +221,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_23",
         "Name": "Tela dell'Oro",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 1449.70,
         "Color": "#C160FF",
         "Owner": "Ousssek",
@@ -231,8 +231,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "tithion",
         "Name": "Tithion",
         "OrbitAround": "draconia",
-        "Period": 1,
-        "DistanceFromParent": 16+2.5,
+        "Period": 2*10/3+20,
+        "DistanceFromParent": 8*2+2.5,
         "Color": "#00B3F5",
         "Owner": "Rasaily",
         "Descr": "Casa delle orde di orchi che così spesso discendono nel sistema, sotto il comando dei loro leader, per soddisfare la loro sete di sangue uccidendo e sottomettendo pianeti ribelli."
@@ -241,8 +241,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "allenia",
         "Name": "Allenia",
         "OrbitAround": "saltar",
-        "Period": 1,
-        "DistanceFromParent": 16+2.5,
+        "Period": 2*10/3+20,
+        "DistanceFromParent": 8*2+2.5,
         "Color": "#00F542",
         "Owner": "Rivera",
         "Descr": "Il ghiaccio e il gelo non hanno fermato la natura su questa luna. Un mondo-prigione, qui vengono mandati tutti gli indesiderabili a vivere in una brutale società di tribù goblinoidi in guerra per gli scarti che i loro padroni lasciano."
@@ -251,8 +251,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "enides",
         "Name": "Enides",
         "OrbitAround": "wandacker",
-        "Period": 1,
-        "DistanceFromParent": 8+2.5,
+        "Period": 1*10/3+20,
+        "DistanceFromParent": 8*1+2.5,
         "Color": "#00EEFA",
         "Owner": "Shawel",
         "Descr": "Un centro di ricerca e creazione, gli Shawel sono una famiglia che ha sempre eccelso nella creazione di manufatti magici."
@@ -261,8 +261,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "calichi",
         "Name": "Calichi",
         "OrbitAround": "saltar",
-        "Period": 1,
-        "DistanceFromParent": 24+2.5,
+        "Period": 3*10/3+20,
+        "DistanceFromParent": 8*3+2.5,
         "Color": "#F5AE01",
         "Owner": "Sifu",
         "Descr": "Nulla è stabile qui tranne la distruzione costante. Costantemente colpita da disastri naturali, questa società vive per sopravvivere un altro giorno."
@@ -271,7 +271,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_10",
         "Name": "Lo slancio",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 1422.70,
         "Color": "#E7AFF9",
         "Owner": "Spunnik",
@@ -281,7 +281,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_1",
         "Name": "The Suneye",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 61.70,
         "Color": "#F697D8",
         "Owner": "Stability Commission",
@@ -291,8 +291,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "hoter",
         "Name": "Hoter",
         "OrbitAround": "ion",
-        "Period": 1,
-        "DistanceFromParent": 8+2.5,
+        "Period": 1*10/3+20,
+        "DistanceFromParent": 8*1+2.5,
         "Color": "#7EFA00",
         "Owner": "Stozav",
         "Descr": "Una luna di gas governata da navi che fluttuano sulla sua superficie, filtrando e raccogliendo un potente afrodisiaco usato dagli stozav per creare le loro sostanze potenziate."
@@ -321,8 +321,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "elbethel",
         "Name": "El-beth-el",
         "OrbitAround": "wandacker",
-        "Period": 1,
-        "DistanceFromParent": 24+2.5,
+        "Period": 3*10/3+20,
+        "DistanceFromParent": 8*3+2.5,
         "Color": "#CC6E35",
         "Owner": "The Hand",
         "Descr": "Quattro regni su un pianeta con un unico padrone su tutti. La Mano è un nuovo arrivato nel sistema e deve rapidamente bilanciare tutti i problemi brucianti e distruttivi lasciati dai loro predecessori."
@@ -331,7 +331,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_25",
         "Name": "Stazione Mineraria Gemma A",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 1472.70,
         "Color": "#DCF59D",
         "Owner": "Waytir-Yugani",
@@ -351,7 +351,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_4",
         "Name": "Khraeel-I",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 160.70,
         "Color": "#0576ED",
         "Owner": "Wueng",
@@ -361,7 +361,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_21",
         "Name": "Il Tiratore",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 874.70,
         "Color": "#0576ED",
         "Owner": "Wueng",
@@ -371,8 +371,8 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "zimurn",
         "Name": "Zimurn",
         "OrbitAround": "ion",
-        "Period": 1,
-        "DistanceFromParent": 16+2.5,
+        "Period": 2*10/3+20,
+        "DistanceFromParent": 8*2+2.5,
         "Color": "#FB005F",
         "Owner": "Zolinath",
         "Descr": "Isole fluttuanti ospitano una legge radicata. Una società in cui la legge è tutto, e la deviazione è il più grande crimine."
@@ -381,7 +381,7 @@ const SOLAR_SYSTEM_DATA = [
         "ID": "pti_13",
         "Name": "Sogno della Pace",
         "OrbitAround": "sun",
-        "Period": 1,
+        "Period": (1200*108)/700,
         "DistanceFromParent": 871.70+20,
         "Color": "#C340FF",
         "Owner": "Mercanti di Giada",
@@ -410,57 +410,30 @@ function computeBodyPosition(body, month, computedPositions) {
     
     if (body.ID === "sun") {
         return {x: 5000, y: 5000}; // Center of the SVG
-    } else if (body.ID.startsWith('pti_')) {
-        // Fixed points in space
-        const parentBody = SOLAR_SYSTEM_DATA.find(b => b.ID === body.OrbitAround);
-        const parentPosition = computeBodyPosition(parentBody, month, computedPositions);
-        let x = 0;
-        let y = 0;
-
-        if(body.ID === "pti_1") {x=-61.5; y=0;}
-        if(body.ID === "pti_4") {x=-152.5; y=0;}
-        if(body.ID === "pti_26") {x=-1253.5; y=-1186.5;}
-        if(body.ID === "pti_21") {x=-874.5; y=0;}
-        if(body.ID === "pti_23") {x=-1417.5; y=305.7128950625;}
-        if(body.ID === "pti_25") {x=-1171.5; y=892.5;}
-        if(body.ID === "pti_35") {x=-2150.5; y=10.5;}
-        if(body.ID === "pti_19") {x=802.5; y=-63.5;}
-        if(body.ID === "pti_18") {x=-656.5; y=554.5;}
-        if(body.ID === "pti_14") {x=363.5; y=238.5;}
-        if(body.ID === "pti_13") {x=426.5; y=759.5;}
-        if(body.ID === "pti_8") {x=-607.5; y=-535.5;}
-        if(body.ID === "pti_9") {x=425.5; y=-429.5;}
-        if(body.ID === "pti_10") {x=537.5; y=1317.5;}
-        // return {x: parentPosition.x + x,  y: parentPosition.y + y};
-
-        const phase = Math.atan2(y, x);
-        const r = body.DistanceFromParent;
-        // 1200:700 = x:108
-        const period = (1200*108)/700;
-        x = r*Math.cos(phase+month * (2 * Math.PI) / period);
-        y = r*Math.sin(phase+month * (2 * Math.PI) / period);
-        return {x: parentPosition.x + x,  y: parentPosition.y + y};
-    } else {
-        // If it is a planet or moon
-        const parentBody = SOLAR_SYSTEM_DATA.find(b => b.ID === body.OrbitAround);
-        const parentPosition = computeBodyPosition(parentBody, month, computedPositions);
-
-        // Compute the body's position based on its orbit
-        const r = body.DistanceFromParent;
-        // const x = r*Math.cos(-Math.PI/2+month * (2 * Math.PI) / body.Period);
-        // const y = r*Math.sin(-Math.PI/2+month * (2 * Math.PI) / body.Period);
-
-        let period = body.Period;
-        if (body.OrbitAround != "sun") {
-            const idx = (body.DistanceFromParent - 2.5) / 8;
-            period = 20 + idx * 10/3;
-        }
-
-        const phase = -2*Math.PI/2;
-        const x = r*Math.cos(phase+month * (2 * Math.PI) / period);
-        const y = r*Math.sin(phase+month * (2 * Math.PI) / period);
-        return {x: parentPosition.x + x,  y: parentPosition.y + y};
     }
+    
+    const parentBody = SOLAR_SYSTEM_DATA.find(b => b.ID === body.OrbitAround);
+    const parentPosition = computeBodyPosition(parentBody, month, computedPositions);
+    
+    custom_phase = {
+        "pti_26":-2.383646608362283,
+        "pti_19":-0.07896319873795357,
+        "pti_9":-0.790076491839103,
+        "pti_8":-2.4191034962274705,
+        "pti_14":0.5806662120457247,
+        "pti_18":2.440224064063863,
+        "pti_23":2.9291757325014562,
+        "pti_10":1.1834385071366533,
+        "pti_25":2.49055451090383,
+        "pti_13":1.0591260433715197
+    }
+
+    const phase = custom_phase[body.ID] || Math.PI;
+    const r = body.DistanceFromParent;
+    const period = body.Period;
+    const x = r*Math.cos(phase+month * (2 * Math.PI) / period);
+    const y = r*Math.sin(phase+month * (2 * Math.PI) / period);
+    return {x: parentPosition.x + x,  y: parentPosition.y + y};
 }
 
 // Menu toggle functionality
