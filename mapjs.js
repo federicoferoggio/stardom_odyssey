@@ -446,6 +446,17 @@ function enableZoomAndPan(svg) {
     let currentZoom = 1;
     const zoomSpeed = 0.1;
 
+    // Touch/tap detection state
+    let touchStartTime = null;
+    let touchStartPos = null;
+    let touchMoved = false;
+
+    // Touch-specific state
+    let lastTouchDistance = null;
+    let lastTouchMidpoint = null;
+    let isTouchPanning = false;
+
+    // Wheel (mouse) zoom
     svg.addEventListener('wheel', (e) => {
         e.preventDefault();
         const zoomFactor = e.deltaY > 0 ? 1 + zoomSpeed : 1 - zoomSpeed;
@@ -466,6 +477,7 @@ function enableZoomAndPan(svg) {
         }
     });
 
+    // Mouse pan
     svg.addEventListener('mousedown', (e) => {
         isPanning = true;
         startX = e.clientX;
@@ -491,6 +503,131 @@ function enableZoomAndPan(svg) {
     svg.addEventListener('mouseleave', () => {
         isPanning = false;
         svg.style.cursor = 'grab';
+    });
+
+    // Touch handlers: single-touch pan, two-finger pinch-to-zoom
+    svg.addEventListener('touchstart', (ev) => {
+        if (!ev.touches) return;
+        if (ev.touches.length === 1) {
+            // Single-finger pan
+            isTouchPanning = true;
+            const t = ev.touches[0];
+            startX = t.clientX;
+            startY = t.clientY;
+            svg.style.cursor = 'grabbing';
+            // Tap detection init
+            touchStartTime = Date.now();
+            touchStartPos = { x: t.clientX, y: t.clientY };
+            touchMoved = false;
+        } else if (ev.touches.length === 2) {
+            // Pinch start
+            isTouchPanning = false;
+            const t1 = ev.touches[0];
+            const t2 = ev.touches[1];
+            const dx = t2.clientX - t1.clientX;
+            const dy = t2.clientY - t1.clientY;
+            lastTouchDistance = Math.hypot(dx, dy);
+            const midX = (t1.clientX + t2.clientX) / 2;
+            const midY = (t1.clientY + t2.clientY) / 2;
+            lastTouchMidpoint = { x: midX, y: midY };
+        }
+        // Prevent page scrolling while interacting with the SVG
+        ev.preventDefault();
+    }, { passive: false });
+
+    svg.addEventListener('touchmove', (ev) => {
+        if (!ev.touches) return;
+        if (ev.touches.length === 1 && isTouchPanning) {
+            // Single-finger pan
+            const t = ev.touches[0];
+            const dx = (startX - t.clientX) * (viewBox.width / svg.clientWidth);
+            const dy = (startY - t.clientY) * (viewBox.height / svg.clientHeight);
+            viewBox.x += dx;
+            viewBox.y += dy;
+            startX = t.clientX;
+            startY = t.clientY;
+            // If finger moved sufficiently from initial touch, mark as moved (not a tap)
+            if (touchStartPos) {
+                const moveDist = Math.hypot(t.clientX - touchStartPos.x, t.clientY - touchStartPos.y);
+                if (moveDist > 10) touchMoved = true;
+            }
+        } else if (ev.touches.length === 2) {
+            // Pinch-to-zoom
+            const t1 = ev.touches[0];
+            const t2 = ev.touches[1];
+            const dx = t2.clientX - t1.clientX;
+            const dy = t2.clientY - t1.clientY;
+            const newDist = Math.hypot(dx, dy);
+
+            if (lastTouchDistance && lastTouchDistance > 0) {
+                const scale = newDist / lastTouchDistance;
+
+                // Calculate candidate newZoom (smaller viewBox.width -> zoom in)
+                const candidateZoom = currentZoom / scale;
+                if (candidateZoom >= minZoom && candidateZoom <= maxZoom) {
+                    // zoomFactor used to multiply viewBox.width/height
+                    const zoomFactor = 1 / scale;
+                    const midX = (t1.clientX + t2.clientX) / 2;
+                    const midY = (t1.clientY + t2.clientY) / 2;
+                    const mouseX = midX / svg.clientWidth;
+                    const mouseY = midY / svg.clientHeight;
+
+                    const deltaWidth = viewBox.width * (1 - zoomFactor);
+                    const deltaHeight = viewBox.height * (1 - zoomFactor);
+
+                    viewBox.x += deltaWidth * mouseX;
+                    viewBox.y += deltaHeight * mouseY;
+                    viewBox.width *= zoomFactor;
+                    viewBox.height *= zoomFactor;
+
+                    currentZoom = candidateZoom;
+                }
+            }
+
+            lastTouchDistance = newDist;
+            lastTouchMidpoint = { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+        }
+
+        // Prevent page scrolling while interacting with the SVG
+        ev.preventDefault();
+    }, { passive: false });
+
+    svg.addEventListener('touchend', (ev) => {
+        // Reset states when fingers are removed
+        if (!ev.touches || ev.touches.length === 0) {
+            // If it was a short tap (no significant move), synthesize a click on the element
+            const now = Date.now();
+            const changed = ev.changedTouches && ev.changedTouches[0];
+            if (touchStartTime && !touchMoved && changed && (now - touchStartTime) < 300) {
+                const cx = changed.clientX;
+                const cy = changed.clientY;
+                // elementFromPoint returns the topmost element at the screen coordinates
+                const el = document.elementFromPoint(cx, cy);
+                if (el) {
+                    // Dispatch a synthetic mouse click event so existing handlers run
+                    const evt = new MouseEvent('click', { view: window, bubbles: true, cancelable: true, clientX: cx, clientY: cy });
+                    el.dispatchEvent(evt);
+                }
+            }
+
+            isTouchPanning = false;
+            lastTouchDistance = null;
+            lastTouchMidpoint = null;
+            touchStartTime = null;
+            touchStartPos = null;
+            touchMoved = false;
+            svg.style.cursor = 'grab';
+        } else if (ev.touches.length === 1) {
+            // If one finger remains, enable panning for it
+            isTouchPanning = true;
+            const t = ev.touches[0];
+            startX = t.clientX;
+            startY = t.clientY;
+            // Reset tap detection for the remaining touch
+            touchStartTime = Date.now();
+            touchStartPos = { x: t.clientX, y: t.clientY };
+            touchMoved = false;
+        }
     });
 }
 
@@ -613,6 +750,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Rebuild the solar system on month change
         buildSolarSystem(svgContainer, dialog, parseInt(monthInput.value, 10));
     });
+
+    document.getElementById('monthControls').style.backgroundColor = 'blue';
 
     fetch('images/map.svg')
         .then(response => response.text())
