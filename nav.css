@@ -1,0 +1,70 @@
+
+/* Menu container styling */
+.menu {
+    position: fixed; /* Changed from absolute */
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.menu-button {
+    font-family: 'Josefin Sans', sans-serif;
+    /* Apply the font to all headings, inputs, etc. */
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    /* Apply the Josefin Sans font */
+    font-size: 16px;
+    /* Set font size */
+    color: white;
+    /* White text */
+    background-color: black;
+    /* Black background */
+    border: 2px solid white;
+    /* White border */
+    padding: 10px 20px;
+    /* Add padding inside the button */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Pointer cursor */
+    text-transform: uppercase;
+    /* Optional: Make text uppercase */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth transition for hover */
+    text-align: center;
+}
+
+.menu-button:hover,
+.menu-button:focus {
+    background-color: white;
+    /* Change background to white */
+    color: black;
+    /* Change text color to black */
+    outline: none;
+    /* Remove default outline */
+}
+
+/* Menu links container - hidden by default */
+.menu-links {
+    display: none; /* Hidden until clicked */
+    position: absolute;
+    right: 0; /* Align dropdown with the button on the right */
+    background-color: #333;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1;
+    padding: 10px;
+}
+
+/* Menu links */
+.menu-links a {
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Menu link hover effect */
+.menu-links a:hover {
+    background-color: #555;
+}

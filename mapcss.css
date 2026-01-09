@@ -17,63 +17,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Menu container styling */
-.menu {
-    position: fixed;
-    /* Use fixed to keep it within the viewport */
-    top: 10px;
-    right: 10px;
-    /* Ensure it stays within the viewport */
-    z-index: 1000;
-}
-
-/* Menu links container - initially hidden */
-.menu-links {
-    display: none;
-    /* Hidden until clicked */
-    position: absolute;
-    top: 40px;
-    /* Positioned below the button */
-    right: 0;
-    /* Align dropdown with the button */
-    background-color: #333;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    z-index: 1;
-    padding: 10px;
-    width: max-content;
-    /* Automatically adjust width */
-}
-
-/* Menu button */
-.menu-button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* Menu links */
-.menu-links a {
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Menu link hover effect */
-.menu-links a:hover {
-    background-color: #555;
-}
-
-/* Display dropdown when active */
-.menu-container.active .menu-links {
-    display: block;
-}
-
 #map-container {
     position: absolute;
     top: 0;

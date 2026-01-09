@@ -113,21 +113,6 @@ let pactsData = {};
 let familyStats = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const menuButton = document.querySelector('.menu-button');
-    const menuContainer = document.querySelector('.menu-container');
-
-    // Toggle the dropdown menu when clicking the button
-    menuButton.addEventListener('click', () => {
-        menuContainer.classList.toggle('active');
-    });
-
-    // Close the dropdown if clicked outside
-    window.addEventListener('click', (e) => {
-        if (!menuContainer.contains(e.target) && !menuButton.contains(e.target)) {
-            menuContainer.classList.remove('active');
-        }
-    });
-
     const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv";
     const pactsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1375108331&single=true&output=csv";
 

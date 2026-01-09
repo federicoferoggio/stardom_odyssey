@@ -26,8 +26,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    width: 100vw;
-    /* Set the width to 100% of the viewport */
+    width: 100%;
     overflow-x: hidden;
     /* Prevent x-axis overflow */
     height: 100%;
@@ -684,44 +683,6 @@ button:disabled {
     font-size: 14px;
     margin: 5px 0;
     color: white;
-}
-
-/* Menu container styling */
-.menu {
-    position: fixed; /* Changed from absolute */
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-}
-
-/* Menu links container - hidden by default */
-.menu-links {
-    display: none; /* Hidden until clicked */
-    position: absolute;
-    right: 0; /* Align dropdown with the button on the right */
-    background-color: #333;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    z-index: 1;
-    padding: 10px;
-}
-
-/* Menu links */
-.menu-links a {
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Menu link hover effect */
-.menu-links a:hover {
-    background-color: #555;
-}
-
-/* Display the dropdown when active */
-.menu-container.active .menu-links {
-    display: block;
 }
 
 .bonus-checkbox {

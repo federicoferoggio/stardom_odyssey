@@ -436,20 +436,6 @@ function computeBodyPosition(body, month, computedPositions) {
     return {x: parentPosition.x + x,  y: parentPosition.y + y};
 }
 
-// Menu toggle functionality
-function setupMenuToggle(menuButton, menuContainer) {
-    menuButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        menuContainer.classList.toggle('active');
-    });
-
-    window.addEventListener('click', (e) => {
-        if (!menuContainer.contains(e.target) && !menuButton.contains(e.target)) {
-            menuContainer.classList.remove('active');
-        }
-    });
-}
-
 // Enable zoom and pan for the SVG
 function enableZoomAndPan(svg) {
     const viewBox = svg.viewBox.baseVal;
@@ -617,14 +603,11 @@ function closeDialogOnClickOutside(dialog) {
 
 // Main initialization
 document.addEventListener('DOMContentLoaded', () => {
-    const menuButton = document.querySelector('.menu-button');
-    const menuContainer = document.querySelector('.menu-container');
     const monthInput = document.getElementById('monthInput');
     const svgContainer = document.getElementById('solar-map');
     const dialog = document.getElementById('dialog');
     fetchTimelineData()
 
-    setupMenuToggle(menuButton, menuContainer);
     closeDialogOnClickOutside(dialog);
     monthInput.addEventListener('input', () => {
         // Rebuild the solar system on month change
