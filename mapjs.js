@@ -751,8 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
         buildSolarSystem(svgContainer, dialog, parseInt(monthInput.value, 10));
     });
 
-    document.getElementById('monthControls').style.backgroundColor = 'blue';
-
     fetch('images/map.svg')
         .then(response => response.text())
         .then(svgContent => {
