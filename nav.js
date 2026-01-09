@@ -9,15 +9,15 @@
 */
 
 document.addEventListener("DOMContentLoaded", function() {
-    const menuContainer = document.querySelector('.menu');
+    const menuContainer = document.querySelector('.navigation-menu');
 
     const button = document.createElement('button');
-    button.className = 'menu-button';
+    button.className = 'navigation-menu-button';
     button.style.marginTop = '0';
     button.textContent = 'Menu';
 
     const menuLinks = document.createElement('div');
-    menuLinks.className = 'menu-links';
+    menuLinks.className = 'navigation-menu-links';
 
     const links = [
         { href: 'index.html', text: 'Court' },

@@ -1,13 +1,13 @@
 
 /* Menu container styling */
-.menu {
+.navigation-menu {
     position: fixed; /* Changed from absolute */
     top: 20px;
     right: 20px;
     z-index: 1000;
 }
 
-.menu-button {
+.navigation-menu-button {
     font-family: 'Josefin Sans', sans-serif;
     /* Apply the font to all headings, inputs, etc. */
     color: white;
@@ -34,8 +34,8 @@
     text-align: center;
 }
 
-.menu-button:hover,
-.menu-button:focus {
+.navigation-menu-button:hover,
+.navigation-menu-button:focus {
     background-color: white;
     /* Change background to white */
     color: black;
@@ -45,7 +45,7 @@
 }
 
 /* Menu links container - hidden by default */
-.menu-links {
+.navigation-menu-links {
     display: none; /* Hidden until clicked */
     position: absolute;
     right: 0; /* Align dropdown with the button on the right */
@@ -57,7 +57,7 @@
 }
 
 /* Menu links */
-.menu-links a {
+.navigation-menu-links a {
     color: white;
     padding: 10px 15px;
     text-decoration: none;
@@ -65,6 +65,6 @@
 }
 
 /* Menu link hover effect */
-.menu-links a:hover {
+.navigation-menu-links a:hover {
     background-color: #555;
 }
