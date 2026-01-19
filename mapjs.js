@@ -1,3 +1,19 @@
+// Browser cache instance (uses cache.js BrowserCache)
+const cache = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
+async function myfetch(url) {
+    if (cache && cache.fetchAndCache)
+    {
+        return cache.fetchAndCache(url)
+    } else {
+        console.log("Fetching without cache for URL:", url);
+        return fetch(url).then(r => r.text());
+    }
+}
+
+// CSV file URL (replace with your actual URL)
+const googleSheetBaseURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk';
+const googleSheetTimelinedataURL = `${googleSheetBaseURL}/pub?gid=1188539103&single=true&output=csv`;
+
 const SOLAR_SYSTEM_DATA = [
     {
         "ID": "sun",
@@ -704,11 +720,8 @@ function buildSolarSystem(svgContainer, dialog, month) {
 }
 
 async function fetchTimelineData() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
-
     try {
-        const response = await fetch(url);
-        const data = await response.text();
+        const data = await myfetch(googleSheetTimelinedataURL);
 
         // Parse CSV
         const rows = data.split("\n").slice(1); // Skip the header row
@@ -743,7 +756,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthInput = document.getElementById('monthInput');
     const svgContainer = document.getElementById('solar-map');
     const dialog = document.getElementById('dialog');
-    fetchTimelineData()
 
     closeDialogOnClickOutside(dialog);
     monthInput.addEventListener('input', () => {
@@ -763,5 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
             enableZoomAndPan(svgContainer);
             buildSolarSystem(svgContainer, dialog, 0); // Initial build for month 0
         })
+        .then(() => {fetchTimelineData();})
         .catch(error => console.error('Error loading SVG:', error));
 });

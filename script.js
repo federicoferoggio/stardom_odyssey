@@ -1,3 +1,23 @@
+// Browser cache instance (uses cache.js BrowserCache)
+const cache = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
+async function myfetch(url) {
+    if (cache && cache.fetchAndCache)
+    {
+        return cache.fetchAndCache(url)
+    } else {
+        console.log("Fetching without cache for URL:", url);
+        return fetch(url).then(r => r.text());
+    }
+}
+
+// CSV file URL (replace with your actual URL)
+const googleSheetBaseURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk';
+const googleSheetBonusesURL = `${googleSheetBaseURL}/pub?gid=237415455&single=true&output=csv`;
+const googleSheetFamilyURL = `${googleSheetBaseURL}/pub?gid=0&single=true&output=csv`;
+const googleSheetCourtURL = `${googleSheetBaseURL}/pub?gid=2021236788&single=true&output=csv`;
+const googleSheetBonusURL = `${googleSheetBaseURL}/pub?gid=549477368&single=true&output=csv`;
+const googleSheetTimelinedataURL = `${googleSheetBaseURL}/pub?gid=1188539103&single=true&output=csv`;
+
 const actions = {
     "Attacco": {
         description: "Coinvolge le forze nemiche o le difese per razziare, annettere territori o ottenere una vittoria simbolica. Comunque la si voglia chiamare, si tratta di attaccare le truppe e le difese di qualcun altro. Il difensore usa Potenza e Territorio.",
@@ -49,9 +69,6 @@ const actions = {
     }
 };
 
-// CSV file URL (replace with your actual URL)
-const googleSheetCourtURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=2021236788&single=true&output=csv';
-
 const courtPositions = [
     "Draconian Guard",
     "Beholdic Spymaster",
@@ -70,8 +87,7 @@ let companyData = {};
 let bonuses = [];
 
 function fetchBonuses() {
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=237415455&single=true&output=csv")
-        .then(response => response.text())
+    myfetch(googleSheetBonusesURL)
         .then(csv => {
             bonuses = csv.split("\n").slice(1).map(line => {
                 const [bonus, score, situation, diceType, extra, always] = line.split(",");
@@ -248,15 +264,9 @@ function updateActionDetails() {
 }
 
 
-
-
-const googleSheetFamilyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
-
-
 // Update the `loadFamilyStats` function to include the "Government" column
 function loadFamilyStats() {
-    fetch(googleSheetFamilyURL)
-        .then(response => response.text())
+    myfetch(googleSheetFamilyURL)
         .then(data => {
             const lines = data.split('\n');
             lines.forEach((line, index) => {
@@ -306,15 +316,11 @@ function loadthehandFamilyStats(might, treasure, influence, territory, sovereign
     `;
 }
 
-// Google Sheet URL to fetch company bonuses
-const googleSheetBonusURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=549477368&single=true&output=csv';
-
 let companyBonuses = {};
 
 // Function to load company bonuses from Google Sheets
 function loadCompanyBonuses() {
-    fetch(googleSheetBonusURL)
-        .then(response => response.text())
+    myfetch(googleSheetBonusURL)
         .then(data => {
             const lines = data.split('\n');
             const companyBonusMenu = document.getElementById("companyBonus");
@@ -347,8 +353,7 @@ function updateBonusDescription() {
 }
 
 function loadCourtMembers() {
-    fetch(googleSheetCourtURL)
-        .then(response => response.text())
+    myfetch(googleSheetCourtURL)
         .then(data => {
             const lines = data.split('\n');
             const courtContainer = document.querySelector('.court-container');
@@ -380,11 +385,8 @@ function loadCourtMembers() {
 
 
 async function fetchTimelineData() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
-
     try {
-        const response = await fetch(url);
-        const data = await response.text();
+        const data = await myfetch(googleSheetTimelinedataURL);
 
         // Parse CSV
         const rows = data.split("\n").slice(1); // Skip the header row

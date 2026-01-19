@@ -1,3 +1,21 @@
+// Browser cache instance (uses cache.js BrowserCache)
+const cache = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
+async function myfetch(url) {
+    if (cache && cache.fetchAndCache)
+    {
+        return cache.fetchAndCache(url)
+    } else {
+        console.log("Fetching without cache for URL:", url);
+        return fetch(url).then(r => r.text());
+    }
+}
+
+const googleSheetBaseURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk';
+const csvUrl = `${googleSheetBaseURL}/pub?gid=0&single=true&output=csv`;
+const pactsUrl = `${googleSheetBaseURL}/pub?gid=1375108331&single=true&output=csv`;
+
+
+
 const qualities = {
     Might: [
         ["le loro truppe sono contadini con spade", "il loro esercito è più simbolico che reale"], // 1–2
@@ -113,13 +131,9 @@ let pactsData = {};
 let familyStats = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv";
-    const pactsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1375108331&single=true&output=csv";
-
     // Fetch and parse the CSV data
     async function fetchFamilyData(url) {
-        const response = await fetch(url);
-        const csvText = await response.text();
+        const csvText = await myfetch(url);
         const rows = csvText.split("\n").map(row => row.split(","));
         const headers = rows[0].map(header => header.trim());
         const data = rows.slice(1).map(row => {
@@ -135,8 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fetch and parse pacts data
     async function fetchPactsData(url) {
-        const response = await fetch(url);
-        const csvText = await response.text();
+        const csvText = await myfetch(url);
         const rows = csvText.split("\n").map(row => {
             // Handle commas within parentheses properly
             const result = [];
