@@ -1,19 +1,3 @@
-// Browser cache instance (uses cache.js BrowserCache)
-const cache = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
-async function myfetch(url) {
-    if (cache && cache.fetchAndCache)
-    {
-        return cache.fetchAndCache(url)
-    } else {
-        console.log("Fetching without cache for URL:", url);
-        return fetch(url).then(r => r.text());
-    }
-}
-
-// CSV file URL (replace with your actual URL)
-const googleSheetBaseURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk';
-const googleSheetTimelinedataURL = `${googleSheetBaseURL}/pub?gid=1188539103&single=true&output=csv`;
-
 const SOLAR_SYSTEM_DATA = [
     {
         "ID": "sun",
@@ -719,29 +703,6 @@ function buildSolarSystem(svgContainer, dialog, month) {
     });
 }
 
-async function fetchTimelineData() {
-    try {
-        const data = await myfetch(googleSheetTimelinedataURL);
-
-        // Parse CSV
-        const rows = data.split("\n").slice(1); // Skip the header row
-        const events = rows.map(row => {
-            const [month, event, description, mod] = row.split(",");
-            return { month, event, description, mod };
-        });
-
-        const currentMonth = events.find(({ event }) => event === "Current");
-        if (currentMonth) {
-            const monthInput = document.getElementById("monthInput");
-            monthInput.value = currentMonth.month; // Set the input value to the last month
-            monthInput.dispatchEvent(new Event("input")); // Trigger the update event
-        }
-
-    } catch (error) {
-        console.error("Error fetching timeline data:", error);
-    }
-}
-
 // Close dialog on outside click
 function closeDialogOnClickOutside(dialog) {
     window.addEventListener('click', (e) => {
@@ -775,6 +736,15 @@ document.addEventListener('DOMContentLoaded', () => {
             enableZoomAndPan(svgContainer);
             buildSolarSystem(svgContainer, dialog, 0); // Initial build for month 0
         })
-        .then(() => {fetchTimelineData();})
+        .then(() => {
+            fetchTimelineData().then(events => {
+            const currentMonth = events.find(event => event['Event'] === "Current");
+            if (currentMonth) {
+                const monthInput = document.getElementById("monthInput");
+                monthInput.value = currentMonth['Month']; // Set the input value to the last month
+                monthInput.dispatchEvent(new Event("input")); // Trigger the update event
+            }
+        })
+        })
         .catch(error => console.error('Error loading SVG:', error));
 });
