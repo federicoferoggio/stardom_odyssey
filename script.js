@@ -317,10 +317,12 @@ function loadTimeline(events) {
     events.forEach(event => {
         let name = event['Event'];
         let mod = event['Modifier (Inizio del Mese)'];
-        if (name === "") {
-            return; // Skip the current month
+        // Skip rows without a valid event name (handles undefined, null, and empty string)
+        if (!name) {
+            return; // Skip the current month / invalid row
         }
-        mod = mod.replace(/;/g, ' and ');
+        // Safely normalize modifier to a string before using replace
+        mod = (mod || "").replace(/;/g, ' and ');
         const item = document.createElement("div");
         item.className = "timeline-item";
         item.innerHTML = `<h3>${event['Month']}</h3><strong>${name}</strong><p>${mod}</p>`;
