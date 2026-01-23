@@ -96,39 +96,44 @@
     // TODOS:
     // Fetch and parse pacts data
     async function fetchPactsData() {
-        const csvText = await myfetch(pactsUrl);
-        const rows = csvText.split("\n").map(row => {
-            // Handle commas within parentheses properly
-            const result = [];
-            let current = '';
-            let inParentheses = false;
-            
-            for (let char of row) {
-                if (char === '(') inParentheses = true;
-                if (char === ')') inParentheses = false;
+        try {
+            const csvText = await myfetch(pactsUrl);
+            const rows = csvText.split("\n").map(row => {
+                // Handle commas within parentheses properly
+                const result = [];
+                let current = '';
+                let inParentheses = false;
                 
-                if (char === ',' && !inParentheses) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
+                for (let char of row) {
+                    if (char === '(') inParentheses = true;
+                    if (char === ')') inParentheses = false;
+                    
+                    if (char === ',' && !inParentheses) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
                 }
-            }
-            result.push(current.trim());
-            return result;
-        });
-        
-        const headers = rows[0];
-        const data = {};
-        
-        rows.slice(1).forEach(row => {
-            const company = row[0];
-            if (company) {
-                data[company] = row.slice(1).filter(pact => pact && pact.trim() !== '');
-            }
-        });
-        
-        return data;
+                result.push(current.trim());
+                return result;
+            });
+            
+            const headers = rows[0];
+            const data = {};
+            
+            rows.slice(1).forEach(row => {
+                const company = row[0];
+                if (company) {
+                    data[company] = row.slice(1).filter(pact => pact && pact.trim() !== '');
+                }
+            });
+            
+            return data;
+        } catch (error) {
+            console.error("Error fetching pacts data:", error);
+            return {};
+        }
     }
 
     // Exported variables
