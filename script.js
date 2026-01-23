@@ -49,63 +49,31 @@ const actions = {
     }
 };
 
-// CSV file URL (replace with your actual URL)
-const googleSheetCourtURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=2021236788&single=true&output=csv';
-
-const courtPositions = [
-    "Draconian Guard",
-    "Beholdic Spymaster",
-    "Fiendish General",
-    "Empyrean Chaplain",
-    "Haggish Diplomat",
-    "Acerakkian Archmage",
-    "Krakian Shipmaster",
-    "Diabolic Coincount",
-    "Modronic Minister",
-    "The Enlightened"
-];
-
-let companyData = {};
-
 let bonuses = [];
 
-function fetchBonuses() {
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=237415455&single=true&output=csv")
-        .then(response => response.text())
-        .then(csv => {
-            bonuses = csv.split("\n").slice(1).map(line => {
-                const [bonus, score, situation, diceType, extra, always] = line.split(",");
-                return {
-                    bonus: bonus.trim(),
-                    score: score.trim(),
-                    situation: situation.trim(),
-                    diceType: diceType.trim(),
-                    extra: parseInt(extra, 10),
-                    always: always.trim() === "Y"
-                };
-            });
-            console.log("Parsed Bonuses:", bonuses); // Debug here
-        })
-        .catch(err => console.error("Failed to fetch bonuses:", err));
-}
+function loadBonuses(csv) {
+    csv.forEach(row => {
+        bonuses.push({
+            bonus: row['Bonus'],
+            score: row['Score'],
+            situation: row['Situation'],
+            diceType: row['Dice Type'],
+            extra: row['Extra'],
+            always: row['Always'] === "Y"
+        });
+    });
 
-function navigateToPage() {
-    const pageSelect = document.getElementById('pageSelect');
-    const selectedPage = pageSelect.value;
-
-    if (selectedPage) {
-        window.location.href = selectedPage; // Navigate to the selected page
-    }
+    console.log("Parsed Bonuses:", bonuses); // Debug here
 }
 
 // Initialize the system when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
     populateActions();
-    fetchBonuses();
-    loadCompanyBonuses();
-    loadFamilyStats();
-    loadCourtMembers();
-    fetchTimelineData();
+    fetchBonuses().then(loadBonuses);
+    fetchCompanyAssets().then(loadCompanyAssets);
+    fetchFamiliesData().then(loadFamilyStats);
+    fetchCourtMembers().then(loadCourtMembers);
+    fetchTimelineData().then(loadTimeline);
 });
 
 // Function to populate actions into the action menu
@@ -248,38 +216,19 @@ function updateActionDetails() {
 }
 
 
-
-
-const googleSheetFamilyURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv';
-
-
 // Update the `loadFamilyStats` function to include the "Government" column
-function loadFamilyStats() {
-    fetch(googleSheetFamilyURL)
-        .then(response => response.text())
-        .then(data => {
-            const lines = data.split('\n');
-            lines.forEach((line, index) => {
-                if (index === 0) return; // Skip the header row
+function loadFamilyStats(families) {
+    const lamano = families.find(family => family['Name'] === 'La Mano');
+    
+    if (!lamano) return;
 
-                const [familyName, might, treasure, influence, territory, sovereignty, government] = line.split(',');
+    document.getElementById('might').value = lamano['Might'];
+    document.getElementById('treasure').value = lamano['Treasure'];
+    document.getElementById('influence').value = lamano['Influence'];
+    document.getElementById('territory').value = lamano['Territory'];
+    document.getElementById('sovereignty').value = lamano['Sovereignty'];
 
-                // Check if the family is "La Mano"
-                if (familyName.trim() === 'La Mano') {
-                    loadthehandFamilyStats(might, treasure, influence, territory, sovereignty, government);
-                }
-            });
-        })
-        .catch(error => console.error('Error loading family stats:', error));
-}
-
-
-function loadthehandFamilyStats(might, treasure, influence, territory, sovereignty, government) {
-    document.getElementById('might').value = might.trim();
-    document.getElementById('treasure').value = treasure.trim();
-    document.getElementById('influence').value = influence.trim();
-    document.getElementById('territory').value = territory.trim();
-    document.getElementById('sovereignty').value = sovereignty.trim();
+    let government = lamano['Government'];
 
     // Map of government types to their associated stats
     const governmentStats = {
@@ -296,124 +245,90 @@ function loadthehandFamilyStats(might, treasure, influence, territory, sovereign
     };
 
     // Get the associated stats for the government type
-    const associatedStats = governmentStats[government.trim()] || [];
+    const associatedStats = governmentStats[government] || [];
 
     // Generate the subtitle content
     const subtitleElement = document.getElementById('laManoSubtitle');
     subtitleElement.innerHTML = `
-        ${government.trim()}<br>
+        ${government}<br>
         ${associatedStats.map(stat => `${stat}`).join(", ")}
     `;
 }
 
-// Google Sheet URL to fetch company bonuses
-const googleSheetBonusURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=549477368&single=true&output=csv';
+// Function to load company assets from Google Sheets
+function loadCompanyAssets(assets) {
+    // const lines = data.split('\n');
+    const companyAssetsMenu = document.getElementById("companyBonus");
+    companyAssetsMenu.addEventListener('change', () => {
+        const selectedBonus = document.getElementById("companyBonus").value;
+        const bonusDescription = document.getElementById("bonusDescription");
+        // bonusDescription.textContent = companyAssets[selectedBonus];
 
-let companyBonuses = {};
+        // Find the selected asset and update the description
+        let selectedAsset = assets.find(asset => asset['Name'] === selectedBonus);
+        if (selectedAsset) {
+            bonusDescription.textContent = selectedAsset['Bonus'];
+        } else {
+            console.log("Selected asset not found.");
+            bonusDescription.textContent = "";
+        }
+    });
+    assets.forEach(asset => {
+        const name = asset['Name'];
 
-// Function to load company bonuses from Google Sheets
-function loadCompanyBonuses() {
-    fetch(googleSheetBonusURL)
-        .then(response => response.text())
-        .then(data => {
-            const lines = data.split('\n');
-            const companyBonusMenu = document.getElementById("companyBonus");
-
-            lines.forEach((line, index) => {
-                if (index === 0) return; // Skip the header row
-                const [name, bonus] = line.split(',');
-
-                // Store company bonuses in an object
-                companyBonuses[name.trim()] = bonus.trim();
-
-                // Create dropdown options
-                let option = document.createElement("option");
-                option.value = name.trim();
-                option.textContent = name.trim();
-                companyBonusMenu.appendChild(option);
-            });
-
-            // Set event listener to show bonus description when a bonus is selected
-            companyBonusMenu.addEventListener('change', updateBonusDescription);
-        })
-        .catch(error => console.error('Error loading company bonuses:', error));
+        // Create dropdown options
+        let option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        companyAssetsMenu.appendChild(option);
+    });
 }
 
-// Function to update the bonus description based on the selected bonus
-function updateBonusDescription() {
-    const selectedBonus = document.getElementById("companyBonus").value;
-    const bonusDescription = document.getElementById("bonusDescription");
-    bonusDescription.textContent = companyBonuses[selectedBonus];
+function loadCourtMembers(courtmembers) {
+    const courtContainer = document.querySelector('.court-container');
+    courtmembers.forEach(member => {
+        const role = member['Role'];
+        const name = member['Name'];
+        const bonuses = member['Bonuses'];
+
+        // If name is empty, skip this role
+        if (!name) return;
+
+        // Create a court member element
+        const memberDiv = document.createElement('div');
+        memberDiv.classList.add('court-member');
+
+        // Set the court member's image, name, and bonuses
+        memberDiv.innerHTML = `
+            <img src="images/court/${name}.webp" alt="${name}" onerror="this.onerror=null; this.src='images/court/placeholder.webp';">
+            <h3>${name}</h3>
+            <p><strong>Role:</strong> ${role}</p>
+            <p><strong>Bonuses:</strong> ${bonuses || 'No bonuses available'}</p>
+        `;
+
+        courtContainer.appendChild(memberDiv);
+    });
 }
 
-function loadCourtMembers() {
-    fetch(googleSheetCourtURL)
-        .then(response => response.text())
-        .then(data => {
-            const lines = data.split('\n');
-            const courtContainer = document.querySelector('.court-container');
-            lines.forEach((line, index) => {
-                if (index === 0) return; // Skip header row
-
-                const [role, name, bonuses] = line.split(',');
-
-                // If name is empty, skip this role
-                if (!name.trim()) return;
-
-                // Create a court member element
-                const memberDiv = document.createElement('div');
-                memberDiv.classList.add('court-member');
-
-                // Set the court member's image, name, and bonuses
-                memberDiv.innerHTML = `
-                    <img src="images/court/${name.trim()}.webp" alt="${name.trim()}" onerror="this.onerror=null; this.src='images/court/placeholder.webp';">
-                    <h3>${name.trim()}</h3>
-                    <p><strong>Role:</strong> ${role.trim()}</p>
-                    <p><strong>Bonuses:</strong> ${bonuses.trim() || 'No bonuses available'}</p>
-                `;
-
-                courtContainer.appendChild(memberDiv);
-            });
-        })
-        .catch(error => console.error('Error loading court members:', error));
-}
-
-
-async function fetchTimelineData() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
-
-    try {
-        const response = await fetch(url);
-        const data = await response.text();
-
-        // Parse CSV
-        const rows = data.split("\n").slice(1); // Skip the header row
-        const events = rows.map(row => {
-            const [month, event, description, mod] = row.split(",");
-            return { month, event, description, mod };
-        });
-
-        populateTimeline(events);
-    } catch (error) {
-        console.error("Error fetching timeline data:", error);
-    }
-}
-
-function populateTimeline(events) {
+function loadTimeline(events) {
     const container = document.getElementById("timelineContainer");
     container.innerHTML = ""; // Clear previous events
 
-    events.forEach(({ month, event, description, mod }) => {
-        if (event === "") {
-            return; // Skip the current month
+    events.forEach(event => {
+        let name = event['Event'];
+        let mod = event['Modifier (Inizio del Mese)'];
+        // Skip rows without a valid event name (handles undefined, null, and empty string)
+        if (!name) {
+            return; // Skip the current month / invalid row
         }
-        mod = mod.replace(/;/g, ' and ');
+        // Safely normalize modifier to a string before using replace
+        mod = (mod || "").replace(/;/g, ' and ');
         const item = document.createElement("div");
         item.className = "timeline-item";
-        item.innerHTML = `<h3>${month}</h3><strong>${event}</strong><p>${mod}</p>`;
+        item.innerHTML = `<h3>${event['Month']}</h3><strong>${name}</strong><p>${mod}</p>`;
         const descriptionDiv = document.createElement("div");
         descriptionDiv.className = "description-popup";
-        descriptionDiv.textContent = description;
+        descriptionDiv.textContent = event['Description'];
     
         // Append the description div to the item
         item.appendChild(descriptionDiv);

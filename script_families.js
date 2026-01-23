@@ -113,63 +113,6 @@ let pactsData = {};
 let familyStats = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=0&single=true&output=csv";
-    const pactsUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1375108331&single=true&output=csv";
-
-    // Fetch and parse the CSV data
-    async function fetchFamilyData(url) {
-        const response = await fetch(url);
-        const csvText = await response.text();
-        const rows = csvText.split("\n").map(row => row.split(","));
-        const headers = rows[0].map(header => header.trim());
-        const data = rows.slice(1).map(row => {
-            const obj = {};
-            row.forEach((value, index) => {
-                const trimmedValue = value.trim();
-                obj[headers[index]] = isNaN(trimmedValue) || trimmedValue === "" ? trimmedValue : parseInt(trimmedValue, 10);
-            });
-            return obj;
-        });
-        return data.filter(row => row.Name); // Exclude empty rows
-    }
-
-    // Fetch and parse pacts data
-    async function fetchPactsData(url) {
-        const response = await fetch(url);
-        const csvText = await response.text();
-        const rows = csvText.split("\n").map(row => {
-            // Handle commas within parentheses properly
-            const result = [];
-            let current = '';
-            let inParentheses = false;
-            
-            for (let char of row) {
-                if (char === '(') inParentheses = true;
-                if (char === ')') inParentheses = false;
-                
-                if (char === ',' && !inParentheses) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current.trim());
-            return result;
-        });
-        
-        const headers = rows[0];
-        const data = {};
-        
-        rows.slice(1).forEach(row => {
-            const company = row[0];
-            if (company) {
-                data[company] = row.slice(1).filter(pact => pact && pact.trim() !== '');
-            }
-        });
-        
-        return data;
-    }
 
     // Function to capitalize the first letter of each sentence
     function capitalizeSentences(description) {
@@ -319,8 +262,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Fetch both datasets
-    const familyData = await fetchFamilyData(csvUrl);
-    pactsData = await fetchPactsData(pactsUrl);
+    const familyData = await window.fetchFamiliesData();
+    pactsData = await window.fetchPactsData();
 
     // Process each family
     familyData.forEach(family => {

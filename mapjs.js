@@ -703,49 +703,20 @@ function buildSolarSystem(svgContainer, dialog, month) {
     });
 }
 
-async function fetchTimelineData() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv";
-
-    try {
-        const response = await fetch(url);
-        const data = await response.text();
-
-        // Parse CSV
-        const rows = data.split("\n").slice(1); // Skip the header row
-        const events = rows.map(row => {
-            const [month, event, description, mod] = row.split(",");
-            return { month, event, description, mod };
-        });
-
-        const currentMonth = events.find(({ event }) => event === "Current");
-        if (currentMonth) {
-            const monthInput = document.getElementById("monthInput");
-            monthInput.value = currentMonth.month; // Set the input value to the last month
-            monthInput.dispatchEvent(new Event("input")); // Trigger the update event
-        }
-
-    } catch (error) {
-        console.error("Error fetching timeline data:", error);
-    }
-}
-
-// Close dialog on outside click
-function closeDialogOnClickOutside(dialog) {
-    window.addEventListener('click', (e) => {
-        if (!dialog.contains(e.target)) {
-            dialog.style.display = 'none';
-        }
-    });
-}
 
 // Main initialization
 document.addEventListener('DOMContentLoaded', () => {
     const monthInput = document.getElementById('monthInput');
     const svgContainer = document.getElementById('solar-map');
     const dialog = document.getElementById('dialog');
-    fetchTimelineData()
 
-    closeDialogOnClickOutside(dialog);
+    // Close dialog on outside click
+    window.addEventListener('click', (e) => {
+        if (!dialog.contains(e.target)) {
+            dialog.style.display = 'none';
+        }
+    });
+
     monthInput.addEventListener('input', () => {
         // Rebuild the solar system on month change
         buildSolarSystem(svgContainer, dialog, parseInt(monthInput.value, 10));
@@ -762,6 +733,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             enableZoomAndPan(svgContainer);
             buildSolarSystem(svgContainer, dialog, 0); // Initial build for month 0
+        })
+        .then(fetchTimelineData)
+        .then(events => {
+            const currentMonth = events.find(event => event['Event'] === "Current");
+            if (currentMonth) {
+                const monthInput = document.getElementById("monthInput");
+                monthInput.value = currentMonth['Month']; // Set the input value to the last month
+                monthInput.dispatchEvent(new Event("input")); // Trigger the update event
+            }
         })
         .catch(error => console.error('Error loading SVG:', error));
 });
