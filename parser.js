@@ -1,9 +1,9 @@
 // Central parser and fetch utilities for the app
-// Provides a global `myfetch`, `fetchFamiliesData`, `fetchPactsData`, and `fetchTimelineCSV`.
+// Provides functions to fetch and parse data from Google Sheets
 (function(){
     const cacheInstance = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
 
-    myfetch = async function(url) {
+    async function myfetch(url) {
         if (cacheInstance && cacheInstance.fetchAndCache) {
             return cacheInstance.fetchAndCache(url);
         } else {
@@ -33,10 +33,10 @@
      * @param {*} csvText - The CSV text to parse. The first row should contain headers.
      * @returns {Array<Object>} - Parsed data.
      */
-    async function parseDataframe(csvText) {
+    function parseDataframe(csvText) {
         const rows = csvText.split("\n").map(row => row.split(","));
         const headers = rows[0].map(header => header.trim());
-        return data = rows.slice(1).map(row => {
+        const data = rows.slice(1).map(row => {
             const obj = {};
             row.forEach((value, index) => {
                 const trimmedValue = value.trim();
@@ -44,6 +44,7 @@
             });
             return obj;
         });
+        return data;
     }
 
     async function fetchTimelineData() {
@@ -51,6 +52,7 @@
             .then(parseDataframe)
             .catch(error => {
                 console.error("Error fetching timeline data:", error);
+                return [];
             });
     }
 
@@ -58,7 +60,8 @@
         return myfetch(googleSheetFamiliesURL)
             .then(parseDataframe)
             .catch(error => {
-                console.error("Error fetching timeline data:", error);
+                console.error("Error fetching families data:", error);
+                return [];
             });
     }
 
@@ -67,6 +70,7 @@
             .then(parseDataframe)
             .catch(error => {
                 console.error("Error fetching court members data:", error);
+                return [];
             });
     }
 
@@ -75,6 +79,7 @@
             .then(parseDataframe)
             .catch(error => {
                 console.error("Error fetching company assets data:", error);
+                return [];
             });
     }
 
@@ -83,6 +88,7 @@
             .then(parseDataframe)
             .catch(error => {
                 console.error("Error fetching bonuses data:", error);
+                return [];
             });
     }
 
