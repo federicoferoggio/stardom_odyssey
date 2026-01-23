@@ -119,7 +119,6 @@
                 return result;
             });
             
-            const headers = rows[0];
             const data = {};
             
             rows.slice(1).forEach(row => {

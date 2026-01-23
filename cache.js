@@ -200,8 +200,6 @@
                 return parsed;
             } catch (err) {
                 console.error('BrowserCache: fetchAndCache failed', err);
-                // If fetch fails and we had stale cached data return it (best-effort)
-                if (cached && cached.value !== null) return cached.value;
                 throw err;
             }
         }
