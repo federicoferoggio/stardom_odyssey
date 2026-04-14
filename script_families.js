@@ -156,11 +156,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return capitalizeSentences(description);
     }
 
-    // Extract treaty name from full treaty text
-    function extractTreatyName(treatyText) {
-        return treatyText.split(' (')[0].trim();
-    }
-
     // Get treaty info
     function getTreatyInfo(treatyName) {
         // Try exact match first
@@ -224,13 +219,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (pacts && pacts.length > 0) {
             list.innerHTML = pacts.map((pact, index) => {
-                const treatyName = extractTreatyName(pact);
+                const treatyName = pact.Pact;
                 const treatyInfo = getTreatyInfo(treatyName);
                 
                 return `
                     <div class="pact-item ${treatyInfo.category}" onclick="toggleDescription(${index})">
                         <div class="pact-header">
-                            <span class="pact-title">${pact}</span>
+                            <span class="pact-title">${pact.Pact} (${pact.To})</span>
                             <span class="pact-toggle">▼</span>
                         </div>
                         <div class="pact-description" id="desc-${index}" style="display: none;">
@@ -316,7 +311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalPowerElement.style.cursor = 'pointer';
                 totalPowerElement.onclick = () => {
                     const displayName = entry.querySelector('.family-name').textContent.trim();
-                    const pacts = pactsData[displayName] || [];
+                    const pacts = pactsData.filter(p => p['From'].trim().toLowerCase() === displayName.trim().toLowerCase());
                     showPacts(displayName, pacts, totalPower);
                 };
             }

@@ -93,41 +93,37 @@
     }
 
 
-    // TODOS:
-    // Fetch and parse pacts data
     async function fetchPactsData() {
         try {
             const csvText = await myfetch(pactsUrl);
-            const rows = csvText.split("\n").map(row => {
-                // Handle commas within parentheses properly
-                const result = [];
-                let current = '';
-                let inParentheses = false;
-                
-                for (let char of row) {
-                    if (char === '(') inParentheses = true;
-                    if (char === ')') inParentheses = false;
-                    
-                    if (char === ',' && !inParentheses) {
-                        result.push(current.trim());
-                        current = '';
-                    } else {
-                        current += char;
-                    }
-                }
-                result.push(current.trim());
-                return result;
-            });
-            
-            const data = {};
-            
+
+            // Example of a row:
+            // Ntsu,Supporto Arcano (Carxus),Supporto Arcano (Caillot),Patto di Vassallaggio su (Carxus),...
+            // I want to use regex to parse this into:
+            // [
+            //   { From: "Ntsu", Pact: "Supporto Arcano", To: "Carxus" },
+            //   { From: "Ntsu", Pact: "Supporto Arcano", To: "Caillot" },
+            //   ...
+            // ]
+
+            let data = [];
+            const rows = csvText.split("\n");
+            const headers = rows[0].split(",").map(h => h.trim());
+
             rows.slice(1).forEach(row => {
-                const company = row[0];
-                if (company) {
-                    data[company] = row.slice(1).filter(pact => pact && pact.trim() !== '');
-                }
+                // Split at first comma to separate company from pacts
+                const firstCommaIndex = row.indexOf(",");
+                const company = row.slice(0, firstCommaIndex).trim();
+                row.slice(firstCommaIndex + 1)
+                    .matchAll(/\s*(.+?)\s*\((.+?)\),/g)
+                    .forEach(pactEntry => {
+                        data.push({
+                            From: company,
+                            Pact: pactEntry[1].trim(),
+                            To: pactEntry[2].trim()
+                        });
+                    });
             });
-            
             return data;
         } catch (error) {
             console.error("Error fetching pacts data:", error);
@@ -142,9 +138,6 @@
     window.fetchCourtMembers = fetchCourtMembers;
     window.fetchCompanyAssets = fetchCompanyAssets;
     window.fetchBonuses = fetchBonuses;
-
-    // ToDO
     window.fetchPactsData = fetchPactsData;
-
 
 })();
