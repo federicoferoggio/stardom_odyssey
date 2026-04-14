@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
         { href: 'families.html', text: 'Families' },
         { href: 'map.html', text: 'Map' },
         { href: 'https://www.dndbeyond.com/campaigns/5380810', text: 'D&D Beyond Campaign' },
+        { href: 'geopolitics.html', text: 'Geopolitics' },
         { href: 'https://federicoferoggio.github.io/planetnavigator/', text: 'Planets Explorer' }
     ];
 
