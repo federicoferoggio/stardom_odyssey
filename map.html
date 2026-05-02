@@ -1,38 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Solar Map</title>
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="mapcss.css">
-  <script src="cache.js"></script>
-  <script src="parser.js"></script>
-  <script src="mapjs.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Map</title>
+    <link rel="stylesheet" href="map.css">
 </head>
 
 <body>
 
-  <!-- Start Navigation Menu -->
-  <nav class="navigation-menu"></nav>
-  <script src="nav.js"></script>
-  <link rel="stylesheet" href="nav.css">
-  <!-- End Navigation Menu-->
-  
-  <div id="monthControls">
-      <label for="monthInput">Current Month:</label>
-      <input type="number" id="monthInput" value="10224" min="0" size="auto">
-  </div>
-  <div id="map-container">
-    <svg id="solar-map" xmlns="http://www.w3.org/2000/svg">
-      <!-- SVG content dynamically loaded -->
-    </svg>
-  </div>
-  <div id="dialog" class="dialog-box"></div>
+    <nav class="navigation-menu"></nav>
+    <script src="nav.js"></script>
+    <link rel="stylesheet" href="nav.css">
 
+    <div id="controls">
+        <label for="tickInput">Mese:</label>
+        <input type="range" id="tickSlider" min="0" max="24" step="0.01" value="0"
+            style="width:120px; accent-color:#4f98a3;">
+        <input type="number" id="tickInput" min="0" max="24" step="0.01" value="0">
+        <button id="pasteBtn">📋 Paste data</button>
+        <button id="rulerBtn">📏 Righello</button>
+        <div id="searchWrapper">
+            <span id="searchIcon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Cerca…" autocomplete="off">
+            <div id="searchResults"></div>
+        </div>
+        <span id="status">Loading…</span>
+    </div>
 
+    <div id="map-container">
+        <svg id="solar-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs id="svg-defs">
+                <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="30%" stop-color="#ffe090" />
+                    <stop offset="70%" stop-color="#ff8800" />
+                    <stop offset="100%" stop-color="#cc2200" stop-opacity="0" />
+                </radialGradient>
+                <filter id="glow-strong" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="glow-soft" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="glow-moon" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <g id="bg-stars"></g>
+            <g id="orbit-layer"></g>
+            <g id="path-layer"></g>
+            <g id="body-layer"></g>
+        </svg>
+    </div>
+
+    <div id="info-panel">
+        <button class="close-btn" id="info-close">✕</button>
+        <h2 id="info-name">—</h2>
+        <div class="owner" id="info-owner"></div>
+        <div class="desc" id="info-desc">—</div>
+        <div class="meta" id="info-meta"></div>
+    </div>
+
+    <div id="paste-modal">
+        <div id="paste-box">
+            <h3>📋 Incolla i dati del foglio</h3>
+            <p>
+                Apri il foglio Google &rarr; seleziona <strong>tutte le celle</strong> (Ctrl+A) &rarr; copia (Ctrl+C)
+                &rarr; incolla qui.<br>
+                Funziona con TSV (tab), CSV (virgola) o copia diretta da Google Sheets.<br>
+                Header obbligatori: <code>id</code> &nbsp;|&nbsp; <code>name</code> &nbsp;|&nbsp; <code>anchor</code> (o
+                vuoto = sun) &nbsp;|&nbsp; <code>distance</code> &nbsp;|&nbsp; <code>color</code> (#hex) &nbsp;|&nbsp;
+                <code>node</code> (x = pianeta)
+            </p>
+            <div class="paste-row">
+                <label>Bodies<br><small style="color:#444">(obbligatorio)</small></label>
+                <textarea id="paste-bodies"
+                    placeholder="id&#9;name&#9;anchor&#9;distance&#9;color&#9;node&#9;speed&#9;owner&#9;descr&#10;earth&#9;Earth&#9;sun&#9;1&#9;#4488ff&#9;x&#9;1&#9;Federation&#9;Blue planet"></textarea>
+            </div>
+            <div class="paste-row">
+                <label>Timeline<br><small style="color:#444">(opzionale)</small></label>
+                <textarea id="paste-timeline"
+                    placeholder="month&#9;event&#9;status&#10;1&#9;Year 1&#9;current"></textarea>
+            </div>
+            <div class="paste-actions">
+                <button class="btn-cancel" id="paste-cancel">Annulla</button>
+                <button class="btn-load" id="paste-load">▶ Carica mappa</button>
+            </div>
+        </div>
+    </div>
+    <div id="ruler-tooltip"></div>
+    <div id="debug"></div>
+
+    <div id="assets-tab">
+        <div id="assets-handle">
+            <span class="drag-bar"></span>
+            📊 Distribuzione delle Risorse
+            <span id="assets-toggle-label" style="margin-left:4px;font-size:10px;color:#444">▲ apri</span>
+        </div>
+        <div id="assets-body">
+            <h3>Risorse per tipo</h3>
+            <div class="assets-grid" id="assets-grid"></div>
+        </div>
+    </div>
+    <script src="map.js"></script>
 </body>
 
 </html>

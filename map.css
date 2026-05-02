@@ -1,0 +1,478 @@
+/* ── FONT ───────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── BODY — space background dal vecchio map ─────────────────────────────────── */
+body {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        url('images/space-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #ccc;
+    font-family: 'Josefin Sans', 'Courier New', monospace;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* ── MAP CONTAINER ───────────────────────────────────────────────────────────── */
+#map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent;  /* ← aggiungi questa riga */
+}
+svg {
+  background-color: transparent;
+}
+#solar-svg {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    display: block;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+#solar-svg:active { cursor: grabbing; }
+
+/* ── CONTROLS — in alto, centrata ────────────────────────────────────────────── */
+#controls {
+    position: fixed;
+    bottom: 16px;       /* ← era top: 12px */
+    top: unset;         /* ← annulla eventuale top ereditato */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 7px 16px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#controls label {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+#tickInput {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #eee;
+    padding: 3px 7px;
+    border-radius: 4px;
+    width: 80px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+#tickSlider {
+    cursor: pointer;
+    height: 18px;
+    accent-color: #4f98a3;
+}
+
+#status {
+    font-size: 11px;
+    color: #aaa;
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Bottoni nella barra */
+#pasteBtn, #rulerBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ccc;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+#pasteBtn:hover, #rulerBtn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+#rulerBtn.active {
+    background: rgba(255, 200, 80, 0.18);
+    border-color: rgba(255, 200, 80, 0.5);
+    color: #ffc840;
+}
+
+/* ── ASSETS TAB — in alto a destra ───────────────────────────────────────────── */
+#assets-tab {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    right: unset;
+    transform: translateX(-50%);
+    width: 500px;
+    border-top: none;
+    border-radius: 0 0 10px 10px;   /* angoli solo in basso */
+    backdrop-filter: blur(10px);
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#assets-handle {
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 11px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    border-radius: 0 0 10px 10px;  /* era 0 0 0 10px */
+    transition: background .2s;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+#assets-handle:hover { background: rgba(255,255,255,0.05); color: #ddd; }
+
+.drag-bar {
+    display: inline-block;
+    width: 3px;
+    height: 16px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin-right: 2px;
+}
+
+#assets-body {
+    display: none;
+    padding: 12px 14px 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#assets-tab.open #assets-body { display: block; }
+
+#assets-body h3 {
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.assets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.asset-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 9px 10px;
+    font-size: 11px;
+}
+
+.res-header {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.res-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 10px;
+    color: #aaa;
+}
+
+.res-row:last-child { border-bottom: none; }
+
+.owner-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* ── ORBIT / LABELS ──────────────────────────────────────────────────────────── */
+.orbit-ring {
+    stroke: rgba(255, 255, 255, 0.13);  /* ← era 0.055 */
+    stroke-width: 1.5;
+}
+.moon-orbit-ring {
+    stroke: rgba(255, 255, 255, 0.07);  /* ← era 0.028 */
+    stroke-width: 1;
+}
+
+.body-group { cursor: pointer; }
+
+.body-label {
+    font-size: 22px;
+    fill: rgba(255, 255, 255, 0.78);
+    pointer-events: none;
+    font-weight: 600;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.moon-label {
+    font-size: 16px;
+    fill: rgba(255, 255, 255, 0.58);
+    pointer-events: none;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+.body-group:hover .body-label,
+.body-group:hover .moon-label { fill: #fff; }
+
+/* ── INFO PANEL ──────────────────────────────────────────────────────────────── */
+#info-panel {
+    position: fixed;
+    right: 18px;
+    top: 60px;
+    width: 270px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 18px 16px 14px;
+    backdrop-filter: blur(10px);
+    display: none;
+    z-index: 200;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#info-panel h2 {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 3px;
+    letter-spacing: 0.04em;
+}
+
+#info-panel .owner {
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+#info-panel .desc {
+    font-size: 11px;
+    color: #999;
+    line-height: 1.6;
+}
+
+#info-panel .meta {
+    font-size: 10px;
+    color: #555;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+    white-space: pre-line;
+}
+
+#info-panel .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#info-panel .close-btn:hover { color: #ccc; }
+
+/* ── PASTE MODAL ─────────────────────────────────────────────────────────────── */
+#paste-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    backdrop-filter: blur(6px);
+}
+
+#paste-modal.open { display: flex; }
+
+#paste-box {
+    background: rgba(10, 10, 20, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    width: 92%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+#paste-box h3 { color: #fff; font-size: 14px; font-weight: 600; }
+#paste-box p { font-size: 11px; color: #666; line-height: 1.65; }
+#paste-box code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    color: #aaa;
+}
+
+.paste-row { display: flex; gap: 10px; align-items: flex-start; }
+.paste-row label { font-size: 11px; color: #888; min-width: 90px; padding-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+.paste-row textarea {
+    flex: 1;
+    min-height: 110px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ddd;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    resize: vertical;
+}
+.paste-row textarea:focus { outline: none; border-color: rgba(80,180,255,0.4); }
+
+.paste-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.btn-load {
+    background: rgba(80,180,255,0.15);
+    border: 1px solid rgba(80,180,255,0.35);
+    color: #80ccff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background .2s;
+}
+.btn-load:hover { background: rgba(80,180,255,0.28); }
+
+.btn-cancel {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #666;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+.btn-cancel:hover { background: rgba(255,255,255,0.06); color: #aaa; }
+
+/* ── SEARCH ──────────────────────────────────────────────────────────────────── */
+#searchWrapper { position: relative; }
+
+#searchInput {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #eee;
+    padding: 3px 7px 3px 24px;
+    border-radius: 4px;
+    width: 160px;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+    transition: border-color .2s, width .2s;
+}
+#searchInput:focus { border-color: rgba(80,180,255,0.5); width: 200px; }
+
+#searchIcon {
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+#searchResults {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 220px;
+    background: rgba(0,0,0,0.95);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    overflow: hidden;
+    display: none;
+    z-index: 300;
+    backdrop-filter: blur(10px);
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.search-item {
+    padding: 7px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background .15s;
+    font-family: 'Josefin Sans', sans-serif;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover, .search-item.active { background: rgba(80,180,255,0.12); }
+.search-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.search-name { color: #ddd; }
+.search-sub { color: #555; font-size: 10px; margin-left: auto; }
+
+/* ── RULER ───────────────────────────────────────────────────────────────────── */
+#ruler-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 400;
+    background: rgba(0,0,0,0.88);
+    border: 1px solid rgba(255,200,80,0.35);
+    color: #ffc840;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: none;
+    white-space: nowrap;
+}
+
+/* ── DEBUG ───────────────────────────────────────────────────────────────────── */
+#debug {
+    position: fixed;
+    bottom: 8px;
+    left: 10px;
+    z-index: 300;
+    font-size: 10px;
+    color: #333;
+    pointer-events: none;
+    max-width: 500px;
+}
