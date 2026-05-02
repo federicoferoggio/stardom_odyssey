@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Map</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #060610;
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #controls {
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(6, 6, 20, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 7px 16px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        #controls label {
+            font-size: 11px;
+            color: #777;
+        }
+
+        #tickInput {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #eee;
+            padding: 3px 7px;
+            border-radius: 4px;
+            width: 80px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        #status {
+            font-size: 11px;
+            color: #aaa;
+            max-width: 360px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #pasteBtn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ccc;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        #pasteBtn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        #map-container {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #solar-svg {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+            display: block;
+        }
+
+        #solar-svg:active {
+            cursor: grabbing;
+        }
+
+        .orbit-ring {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.055);
+            stroke-width: 1.5;
+        }
+
+        .moon-orbit-ring {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.028);
+            stroke-width: 1;
+        }
+
+        .body-group {
+            cursor: pointer;
+        }
+
+        .body-label {
+            font-size: 22px;
+            fill: rgba(255, 255, 255, 0.78);
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .moon-label {
+            font-size: 16px;
+            fill: rgba(255, 255, 255, 0.58);
+            pointer-events: none;
+        }
+
+        .body-group:hover .body-label,
+        .body-group:hover .moon-label {
+            fill: #fff;
+        }
+
+        #info-panel {
+            position: fixed;
+            right: 18px;
+            top: 60px;
+            width: 270px;
+            background: rgba(8, 8, 22, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 18px 16px 14px;
+            backdrop-filter: blur(10px);
+            display: none;
+            z-index: 200;
+        }
+
+        #info-panel h2 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        #info-panel .owner {
+            font-size: 12px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #info-panel .desc {
+            font-size: 11px;
+            color: #999;
+            line-height: 1.55;
+        }
+
+        #info-panel .meta {
+            font-size: 10px;
+            color: #555;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            padding-top: 8px;
+            white-space: pre-line;
+        }
+
+        #info-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #info-panel .close-btn:hover {
+            color: #ccc;
+        }
+
+        #paste-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        #paste-modal.open {
+            display: flex;
+        }
+
+        #paste-box {
+            background: #0d0d20;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            width: 92%;
+            max-width: 680px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        #paste-box h3 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        #paste-box p {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.65;
+        }
+
+        #paste-box code {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .paste-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .paste-row label {
+            font-size: 11px;
+            color: #888;
+            min-width: 90px;
+            padding-top: 6px;
+        }
+
+        .paste-row textarea {
+            flex: 1;
+            min-height: 110px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ddd;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            resize: vertical;
+        }
+
+        .paste-row textarea:focus {
+            outline: none;
+            border-color: rgba(80, 180, 255, 0.4);
+        }
+
+        .paste-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-load {
+            background: rgba(80, 180, 255, 0.15);
+            border: 1px solid rgba(80, 180, 255, 0.35);
+            color: #80ccff;
+            padding: 6px 18px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .btn-load:hover {
+            background: rgba(80, 180, 255, 0.28);
+        }
+
+        .btn-cancel {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #666;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #aaa;
+        }
+
+        #debug {
+            position: fixed;
+            bottom: 8px;
+            left: 10px;
+            z-index: 300;
+            font-size: 10px;
+            color: #333;
+            pointer-events: none;
+            max-width: 500px;
+        }
+        #rulerBtn {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.2);
+            color: #ccc; padding: 3px 10px; border-radius: 4px; font-family: inherit;
+            font-size: 11px; cursor: pointer; transition: background .2s;
+        }
+        #rulerBtn:hover  { background: rgba(255,255,255,0.15); color: #fff; }
+        #rulerBtn.active { background: rgba(255,200,80,0.18); border-color: rgba(255,200,80,0.5); color: #ffc840; }
+
+        #ruler-tooltip {
+            position: fixed; pointer-events: none; z-index: 400;
+            background: rgba(8,8,22,0.92); border: 1px solid rgba(255,200,80,0.35);
+            color: #ffc840; font-family: 'Courier New', monospace; font-size: 11px;
+            padding: 4px 10px; border-radius: 6px; display: none; white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="controls">
+        <label for="tickInput">Tick:</label>
+        <input type="number" id="tickInput" value="0" min="0" step="1">
+        <button id="pasteBtn">📋 Paste data</button>
+        <button id="rulerBtn">📏 Ruler</button>
+        <span id="status">Loading…</span>
+    </div>
+
+    <div id="map-container">
+        <svg id="solar-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs id="svg-defs">
+                <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="30%" stop-color="#ffe090" />
+                    <stop offset="70%" stop-color="#ff8800" />
+                    <stop offset="100%" stop-color="#cc2200" stop-opacity="0" />
+                </radialGradient>
+                <filter id="glow-strong">
+                    <feGaussianBlur stdDeviation="8" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="glow-soft">
+                    <feGaussianBlur stdDeviation="4" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="glow-moon">
+                    <feGaussianBlur stdDeviation="2" result="b" />
+                    <feMerge>
+                        <feMergeNode in="b" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <g id="bg-stars"></g>
+            <g id="orbit-layer"></g>
+            <g id="body-layer"></g>
+        </svg>
+    </div>
+
+    <div id="info-panel">
+        <button class="close-btn" id="info-close">✕</button>
+        <h2 id="info-name">—</h2>
+        <div class="owner" id="info-owner"></div>
+        <div class="desc" id="info-desc">—</div>
+        <div class="meta" id="info-meta"></div>
+    </div>
+
+    <div id="paste-modal">
+        <div id="paste-box">
+            <h3>📋 Incolla i dati del foglio</h3>
+            <p>
+                Apri il foglio Google &rarr; seleziona <strong>tutte le celle</strong> (Ctrl+A) &rarr; copia (Ctrl+C)
+                &rarr; incolla qui.<br>
+                Funziona con TSV (tab), CSV (virgola) o copia diretta da Google Sheets.<br>
+                Header obbligatori: <code>id</code> &nbsp;|&nbsp; <code>name</code> &nbsp;|&nbsp; <code>anchor</code> (o
+                vuoto = sun) &nbsp;|&nbsp; <code>distance</code> &nbsp;|&nbsp; <code>color</code> (#hex) &nbsp;|&nbsp;
+                <code>node</code> (x = pianeta)
+            </p>
+            <div class="paste-row">
+                <label>Bodies<br><small style="color:#444">(obbligatorio)</small></label>
+                <textarea id="paste-bodies"
+                    placeholder="id&#9;name&#9;anchor&#9;distance&#9;color&#9;node&#9;speed&#9;owner&#9;descr&#10;earth&#9;Earth&#9;sun&#9;1&#9;#4488ff&#9;x&#9;1&#9;Federation&#9;Blue planet"></textarea>
+            </div>
+            <div class="paste-row">
+                <label>Timeline<br><small style="color:#444">(opzionale)</small></label>
+                <textarea id="paste-timeline"
+                    placeholder="month&#9;event&#9;status&#10;1&#9;Year 1&#9;current"></textarea>
+            </div>
+            <div class="paste-actions">
+                <button class="btn-cancel" id="paste-cancel">Annulla</button>
+                <button class="btn-load" id="paste-load">▶ Carica mappa</button>
+            </div>
+        </div>
+    </div>
+    <div id="ruler-tooltip"></div>
+    <div id="debug"></div>
+
+    <script>
+        const CANVAS = 10000, CENTER = CANVAS / 2, DIST_SCALE = 250, MOON_GAP = 60, MOON_START = 60, PLANET_R = 28, MOON_R = 12, SUN_R = 55;
+        const SHEET_BODIES_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pubhtml?gid=204162722&single=true';
+        const SHEET_TIMELINE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pubhtml?gid=1188539103&single=true';
+
+        let byId = {}, tick = 0, ready = false;
+        let ownerColors = {};
+
+        function dbg(msg) { console.log('[MAP]', msg); document.getElementById('debug').textContent = msg; }
+
+        function hexToRgb(hex) { hex = hex.replace(/^#/, ''); if (hex.length === 3) hex = hex.split('').map(c => c + c).join(''); return { r: parseInt(hex.slice(0, 2), 16) || 0, g: parseInt(hex.slice(2, 4), 16) || 0, b: parseInt(hex.slice(4, 6), 16) || 0 }; }
+        function darken(hex, f = 0.35) { const { r, g, b } = hexToRgb(hex); return `rgb(${Math.round(r * f)},${Math.round(g * f)},${Math.round(b * f)})`; }
+        function lighten(hex, f = 1.6) { const { r, g, b } = hexToRgb(hex); return `rgb(${Math.min(255, Math.round(r * f))},${Math.min(255, Math.round(g * f))},${Math.min(255, Math.round(b * f))})`; }
+
+        const NS = 'http://www.w3.org/2000/svg';
+        function el(tag, attrs = {}) { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; }
+
+        const svg = document.getElementById('solar-svg');
+        let vb = { x: CENTER - window.innerWidth / 2, y: CENTER - window.innerHeight / 2, w: window.innerWidth, h: window.innerHeight };
+        function applyVB() { svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); }
+        applyVB();
+
+        let panning = false, px = 0, py = 0;
+        svg.addEventListener('mousedown', e => { if (e.button !== 0) return; panning = true; px = e.clientX; py = e.clientY; });
+        svg.addEventListener('mousemove', e => { if (!panning) return; vb.x -= (e.clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.clientY - py) * (vb.h / svg.clientHeight); px = e.clientX; py = e.clientY; applyVB(); });
+        svg.addEventListener('mouseup', () => { panning = false; });
+        svg.addEventListener('mouseleave', () => { panning = false; });
+        svg.addEventListener('wheel', e => { e.preventDefault(); const f = e.deltaY > 0 ? 1.12 : 0.88; const mx = e.offsetX / svg.clientWidth, my = e.offsetY / svg.clientHeight; vb.x += vb.w * mx * (1 - f); vb.y += vb.h * my * (1 - f); vb.w *= f; vb.h *= f; applyVB(); }, { passive: false });
+        let lastTD = null;
+        svg.addEventListener('touchstart', e => { e.preventDefault(); if (e.touches.length === 1) { panning = true; px = e.touches[0].clientX; py = e.touches[0].clientY; } else if (e.touches.length === 2) { panning = false; lastTD = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); } }, { passive: false });
+        svg.addEventListener('touchmove', e => { e.preventDefault(); if (e.touches.length === 1 && panning) { vb.x -= (e.touches[0].clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.touches[0].clientY - py) * (vb.h / svg.clientHeight); px = e.touches[0].clientX; py = e.touches[0].clientY; applyVB(); } else if (e.touches.length === 2 && lastTD) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); vb.w *= lastTD / d; vb.h *= lastTD / d; lastTD = d; applyVB(); } }, { passive: false });
+        svg.addEventListener('touchend', () => { panning = false; lastTD = null; });
+
+        // ── TSV/CSV PARSER ────────────────────────────────────────────────────────────
+        function parsePaste(text) {
+            if (!text || !text.trim()) return [];
+            const lines = text.trim().split(/\r?\n/);
+            if (lines.length < 2) return [];
+            const sep = lines[0].includes('\t') ? '\t' : ',';
+            const headers = lines[0].split(sep).map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+            const rows = [];
+            for (let i = 1; i < lines.length; i++) {
+                const cells = lines[i].split(sep);
+                if (cells.every(c => !c.trim())) continue;
+                const obj = {};
+                headers.forEach((h, j) => { obj[h] = (cells[j] || '').trim(); });
+                rows.push(obj);
+            }
+            dbg(`Paste parsed: ${rows.length} rows | headers: ${headers.join(', ')}`);
+            return rows;
+        }
+
+        // ── FETCH GOOGLE SHEET HTML ───────────────────────────────────────────────────
+        async function fetchTable(url) {
+            const res = await fetch(url, { cache: 'no-store' });
+            const html = await res.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const tables = Array.from(doc.querySelectorAll('table'));
+            let best = null, bestRows = 0;
+            for (const t of tables) { const rc = t.querySelectorAll('tr').length; if (rc > bestRows) { bestRows = rc; best = t; } }
+            if (!best || bestRows < 2) { dbg(`WARN fetchTable: 0 rows (tables=${tables.length})`); return []; }
+            const allRows = Array.from(best.querySelectorAll('tr'));
+            // find header row (first with text)
+            let hi = 0;
+            for (let i = 0; i < Math.min(5, allRows.length); i++) { if (Array.from(allRows[i].querySelectorAll('th,td')).some(c => c.textContent.trim())) { hi = i; break; } }
+            const headers = Array.from(allRows[hi].querySelectorAll('th,td')).map(td => td.textContent.trim().toLowerCase().replace(/\s+/g, '_'));
+            dbg(`fetchTable: ${allRows.length - hi - 1} rows | headers: ${headers.join(', ')}`);
+            return allRows.slice(hi + 1).map(row => {
+                const cells = Array.from(row.querySelectorAll('td'));
+                const obj = {};
+                headers.forEach((h, i) => { obj[h] = cells[i] ? cells[i].textContent.trim() : ''; });
+                return obj;
+            }).filter(r => Object.values(r).some(v => v !== ''));
+        }
+
+        // ── NORMALISE ─────────────────────────────────────────────────────────────────
+        function getF(r, ...keys) { for (const k of keys) { if (r[k] !== undefined && r[k] !== '') return r[k]; const lk = k.toLowerCase(); if (r[lk] !== undefined && r[lk] !== '') return r[lk]; } return ''; }
+
+        function normalise(rows) {
+            const map = {};
+            map['sun'] = { id: 'sun', anchor: '', distance: 0, speed: 0, color: '#ffaa00', name: 'Sun', owner: '', fleets: '', descr: '', isNode: true, moonSlot: 0 };
+            const moonCount = {};
+            rows.forEach(r => {
+                const rawId = getF(r, 'id', 'ID', 'Id'); if (!rawId) return;
+                const id = rawId.trim().toLowerCase();
+                const anchor = (getF(r, 'anchor', 'Anchor') || 'sun').trim().toLowerCase();
+                const nodeVal = getF(r, 'node', 'Node', 'isNode').trim().toLowerCase();
+                const isNode = ['x', 'yes', 'true', '1', '✓', '✔'].includes(nodeVal);
+                let moonSlot = 0;
+                if (!isNode && anchor !== 'sun') { if (moonCount[anchor] === undefined) moonCount[anchor] = 0; moonSlot = moonCount[anchor]++; }
+                const rawColor = getF(r, 'color', 'Color', 'colour', 'Colour') || '#aaaaaa';
+                const color = rawColor.startsWith('#') ? rawColor : '#aaaaaa';
+                map[id] = { id, anchor, distance: parseFloat(getF(r, 'distance', 'Distance') || '0') || 0, moonSlot, speed: parseFloat(getF(r, 'speed', 'Speed') || '1') || 1, color, name: getF(r, 'name', 'Name') || rawId, owner: getF(r, 'owner', 'Owner'), fleets: getF(r, 'fleets', 'Fleets'), descr: getF(r, 'descr', 'description', 'Description', 'desc', 'Desc'), isNode };
+            });
+            const planets = Object.values(map).filter(b => b.anchor === 'sun' && b.id !== 'sun').length;
+            const moons = Object.values(map).filter(b => b.anchor !== 'sun' && b.anchor !== '').length;
+            dbg(`Normalised: ${Object.keys(map).length} total | ${planets} planets | ${moons} moons`);
+            const ownerColorMap = {};
+            Object.values(map).forEach(b => {
+                if (b.owner) ownerColors[b.owner.trim()] = b.color;
+            });
+            // Assegna ownerColor a ogni corpo
+            Object.values(map).forEach(b => { b.ownerColor = ownerColorMap[b.owner.trim()] || b.color || '#aaaaaa'; });
+            return map;
+        }
+
+        // ── ORBITAL ENGINE ────────────────────────────────────────────────────────────
+        function computeAllPositions(t) {
+            const cache = {};
+            function pos(id) {
+                if (cache[id]) return cache[id];
+                const b = byId[id];
+                if (!b || !b.anchor) { cache[id] = { x: CENTER, y: CENTER }; return cache[id]; }
+                const parent = pos(b.anchor);
+                const r = b.anchor === 'sun' ? b.distance * DIST_SCALE : MOON_START + b.moonSlot * MOON_GAP;
+                const angle = b.speed > 0 ? (t / b.speed) * Math.PI * 2 : 0;
+                cache[id] = { x: parent.x + r * Math.cos(angle), y: parent.y + r * Math.sin(angle), orbitR: r, parentX: parent.x, parentY: parent.y };
+                return cache[id];
+            }
+            Object.keys(byId).forEach(id => pos(id));
+            return cache;
+        }
+
+        // ── GRADIENT ──────────────────────────────────────────────────────────────────
+        function ensureGradient(id, color) {
+            const defs = document.getElementById('svg-defs');
+            const gradId = `grad-${id}`;
+            if (defs.querySelector(`#${gradId}`)) return gradId;
+            const grad = el('radialGradient', { id: gradId, cx: '35%', cy: '35%', r: '60%' });
+            grad.appendChild(el('stop', { offset: '0%', 'stop-color': lighten(color, 1.8) }));
+            grad.appendChild(el('stop', { offset: '50%', 'stop-color': color }));
+            grad.appendChild(el('stop', { offset: '100%', 'stop-color': darken(color, 0.3) }));
+            defs.appendChild(grad);
+            return gradId;
+        }
+
+        // ── BUILD SCENE ───────────────────────────────────────────────────────────────
+        let bodyGroups = {};
+        function buildScene() {
+            document.getElementById('orbit-layer').innerHTML = '';
+            const bodyLayer = document.getElementById('body-layer');
+            bodyLayer.innerHTML = '';
+            bodyGroups = {};
+
+            const sunG = el('g', { 'data-id': 'sun', class: 'body-group' });
+            sunG.appendChild(el('circle', { r: SUN_R * 2.8, fill: 'url(#sunGrad)', opacity: '0.5', filter: 'url(#glow-strong)' }));
+            sunG.appendChild(el('circle', { r: SUN_R, fill: 'url(#sunGrad)', filter: 'url(#glow-strong)', stroke: 'rgba(255,240,180,0.3)', 'stroke-width': '2' }));
+            const sunLbl = el('text', { x: SUN_R + 8, y: 0, class: 'body-label', 'dominant-baseline': 'middle' });
+            sunLbl.textContent = 'Sun'; sunG.appendChild(sunLbl);
+            sunG.addEventListener('click', () => showInfo(byId['sun']));
+            sunG.setAttribute('transform', `translate(${CENTER},${CENTER})`);
+            bodyLayer.appendChild(sunG); bodyGroups['sun'] = sunG;
+
+            Object.values(byId).forEach(b => {
+                if (b.id === 'sun') return;
+                const isMain = b.anchor === 'sun';
+                const r = isMain ? PLANET_R : MOON_R;
+                const gradId = ensureGradient(b.id, b.color);
+                const g = el('g', { 'data-id': b.id, class: 'body-group' });
+                const halo = el('circle', { r: r * 2.2, fill: b.color, opacity: '0.0', style: 'transition:opacity .2s' });
+                g.appendChild(halo);
+                g.appendChild(el('circle', { r, fill: `url(#${gradId})`, stroke: 'rgba(255,255,255,0.25)', 'stroke-width': '1.5', filter: isMain ? 'url(#glow-soft)' : 'url(#glow-moon)' }));
+                const lbl = el('text', { x: r + 7, y: 0, class: isMain ? 'body-label' : 'moon-label', 'dominant-baseline': 'middle' });
+                lbl.textContent = b.name; g.appendChild(lbl);
+                g.addEventListener('mouseenter', () => halo.setAttribute('opacity', '0.25'));
+                g.addEventListener('mouseleave', () => halo.setAttribute('opacity', '0.0'));
+                g.addEventListener('click', e => { e.stopPropagation(); showInfo(b); });
+                // Fleet icons
+                if (b.fleets && b.fleets.trim()) {
+                const fleets = b.fleets.split('-').map(f => f.trim()).filter(f => f);
+                const iconSize = isMain ? 14 : 10;
+                const iconGap  = isMain ? 16 : 12;
+                const startX   = r - (fleets.length - 1) * iconGap / 2;
+                const topY     = -(r + 10);
+                fleets.forEach((fleetOwner, i) => {
+                    const ownerColor = byId[Object.keys(byId).find(k => byId[k].owner === fleetOwner)]?.color || b.ownerColor || '#aaaaaa';
+                    const img = el('image', {
+                    href: 'images/attack.svg',
+                    x: startX + i * iconGap - iconSize / 2,
+                    y: topY - iconSize / 2,
+                    width: iconSize,
+                    height: iconSize,
+                    style: `filter: drop-shadow(0 0 2px ${ownerColor}); opacity: 0.9;`,
+                    });
+                    // Colora l'SVG via CSS color-override con un rect colorato sottostante
+                    const colorDot = el('circle', {
+                    cx: startX + i * iconGap,
+                    cy: topY,
+                    r: iconSize / 2 + 1,
+                    fill: ownerColor,
+                    opacity: '0.25',
+                    });
+                    g.appendChild(colorDot);
+                    g.appendChild(img);
+                });
+                }
+                bodyLayer.appendChild(g); bodyGroups[b.id] = g;
+            });
+        }
+
+        // ── UPDATE SCENE ──────────────────────────────────────────────────────────────
+        function updateScene(t) {
+            if (!ready) return;
+            const positions = computeAllPositions(t);
+            const orbitLayer = document.getElementById('orbit-layer');
+            orbitLayer.innerHTML = '';
+            Object.values(byId).forEach(b => {
+                if (b.id === 'sun') return;
+                const p = positions[b.id]; if (!p) return;
+                orbitLayer.appendChild(el('circle', { cx: p.parentX, cy: p.parentY, r: p.orbitR, class: b.anchor === 'sun' ? 'orbit-ring' : 'moon-orbit-ring' }));
+                const g = bodyGroups[b.id];
+                if (g) g.setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
+            });
+            if (bodyGroups['sun']) bodyGroups['sun'].setAttribute('transform', `translate(${CENTER},${CENTER})`);
+        }
+
+        // ── LOAD MAP ──────────────────────────────────────────────────────────────────
+        function loadMap(bodyRows, timelineRows) {
+            byId = normalise(bodyRows);
+            if (timelineRows && timelineRows.length > 0) {
+                const cur = timelineRows.find(r => Object.values(r).some(v => v.toLowerCase() === 'current'));
+                if (cur) { const mk = Object.keys(cur).find(k => ['month', 'Month', 'tick'].includes(k)); if (mk) { tick = parseInt(cur[mk], 10) || 0; document.getElementById('tickInput').value = tick; } }
+            }
+            buildScene(); ready = true; updateScene(tick);
+            document.getElementById('status').textContent = `Tick ${tick} · ${Object.keys(byId).length} corpi`;
+        }
+
+        // ── INFO PANEL ────────────────────────────────────────────────────────────────
+        function showInfo(b) {
+            document.getElementById('info-name').textContent = b.name || b.id;
+            const oe = document.getElementById('info-owner'); oe.textContent = b.owner ? `⚑ ${b.owner}` : ''; oe.style.color = b.color || '#aaa';
+            document.getElementById('info-desc').textContent = b.descr || '—';
+            let meta = ''; if (b.fleets) meta += `⚔ Fleets: ${b.fleets}\n`; if (b.anchor) meta += `↩ Orbits: ${b.anchor}`;
+            document.getElementById('info-meta').textContent = meta;
+            document.getElementById('info-panel').style.display = 'block';
+        }
+        document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').style.display = 'none'; });
+        document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').style.display = 'none'; });
+
+        // ── TICK ──────────────────────────────────────────────────────────────────────
+        const tickInput = document.getElementById('tickInput');
+        function onTickChange() { tick = parseInt(tickInput.value, 10) || 0; document.getElementById('status').textContent = `Tick ${tick}`; updateScene(tick); }
+        tickInput.addEventListener('input', onTickChange);
+        tickInput.addEventListener('change', onTickChange);
+
+        // ── PASTE MODAL ───────────────────────────────────────────────────────────────
+        const modal = document.getElementById('paste-modal');
+        document.getElementById('pasteBtn').addEventListener('click', () => modal.classList.add('open'));
+        document.getElementById('paste-cancel').addEventListener('click', () => modal.classList.remove('open'));
+        modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+        document.getElementById('paste-load').addEventListener('click', () => {
+            const bodyRows = parsePaste(document.getElementById('paste-bodies').value);
+            const timeRows = parsePaste(document.getElementById('paste-timeline').value);
+            if (bodyRows.length === 0) { alert('Nessuna riga trovata.\nIncolla il contenuto del foglio con la prima riga come header (id, name, anchor, distance, color, node…)'); return; }
+            modal.classList.remove('open');
+            loadMap(bodyRows, timeRows);
+        });
+
+        // ── RULER ─────────────────────────────────────────────────────────────────────
+        let rulerActive = false, rulerStart = null;
+        const rulerBtn     = document.getElementById('rulerBtn');
+        const rulerTooltip = document.getElementById('ruler-tooltip');
+        const rulerLayer   = document.createElementNS(NS, 'g');
+        rulerLayer.setAttribute('id', 'ruler-layer');
+        svg.appendChild(rulerLayer);
+
+        rulerBtn.addEventListener('click', () => {
+            rulerActive = !rulerActive;
+            rulerBtn.classList.toggle('active', rulerActive);
+            rulerStart = null;
+            rulerLayer.innerHTML = '';
+            rulerTooltip.style.display = 'none';
+            svg.style.cursor = rulerActive ? 'crosshair' : 'grab';
+        });
+
+        function svgPoint(e) {
+            const rect = svg.getBoundingClientRect();
+            const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+            return {
+                x: vb.x + (cx / rect.width)  * vb.w,
+                y: vb.y + (cy / rect.height) * vb.h,
+            };
+        }
+
+        function pxToWeeks(dx, dy) {
+            const dist = Math.hypot(dx, dy);          // SVG units
+            return (dist / DIST_SCALE).toFixed(2);    // 1 unit = 1 week
+        }
+
+        svg.addEventListener('click', e => {
+            if (!rulerActive) return;
+            e.stopPropagation();
+            const pt = svgPoint(e);
+            if (!rulerStart) {
+                rulerStart = pt;
+                rulerLayer.innerHTML = '';
+                // start dot
+                const dot = el('circle', { cx: pt.x, cy: pt.y, r: 8, fill: '#ffc840', opacity: '0.9' });
+                rulerLayer.appendChild(dot);
+            } else {
+                // draw final line + label, then reset
+                drawRulerLine(rulerStart, pt, true);
+                rulerStart = null;
+            }
+        });
+
+        svg.addEventListener('mousemove', e => {
+            if (!rulerActive || !rulerStart) return;
+            const pt = svgPoint(e);
+            drawRulerLine(rulerStart, pt, false);
+            const weeks = pxToWeeks(pt.x - rulerStart.x, pt.y - rulerStart.y);
+            rulerTooltip.style.display = 'block';
+            rulerTooltip.style.left = (e.clientX + 14) + 'px';
+            rulerTooltip.style.top  = (e.clientY - 10) + 'px';
+            rulerTooltip.textContent = `${weeks} weeks`;
+        });
+
+        function drawRulerLine(a, b, final) {
+            rulerLayer.innerHTML = '';
+            const weeks = pxToWeeks(b.x - a.x, b.y - a.y);
+
+            // start dot
+            rulerLayer.appendChild(el('circle', { cx: a.x, cy: a.y, r: 8, fill: '#ffc840', opacity: '0.9' }));
+
+            // dashed line
+            const line = el('line', {
+                x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+                stroke: '#ffc840', 'stroke-width': '3',
+                'stroke-dasharray': '12 8', opacity: '0.85',
+            });
+            rulerLayer.appendChild(line);
+
+            // end dot
+            rulerLayer.appendChild(el('circle', { cx: b.x, cy: b.y, r: 8, fill: '#ffc840', opacity: final ? '1' : '0.6' }));
+
+            if (final) {
+                // midpoint label pinned on the map
+                const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+                const bg = el('rect', { x: mx - 60, y: my - 22, width: 120, height: 28, rx: 6, fill: 'rgba(8,8,22,0.88)', stroke: 'rgba(255,200,80,0.4)', 'stroke-width': '1.5' });
+                const txt = el('text', { x: mx, y: my - 3, 'text-anchor': 'middle', 'dominant-baseline': 'middle', fill: '#ffc840', 'font-size': '20', 'font-family': 'Courier New, monospace', 'font-weight': '600' });
+                txt.textContent = `${weeks} wk`;
+                rulerLayer.appendChild(bg);
+                rulerLayer.appendChild(txt);
+                rulerTooltip.style.display = 'none';
+
+                // click again anywhere to clear
+                rulerStart = null;
+            }
+        }
+
+        // clear ruler on Escape
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && rulerActive) {
+                rulerActive = false;
+                rulerBtn.classList.remove('active');
+                rulerLayer.innerHTML = '';
+                rulerStart = null;
+                rulerTooltip.style.display = 'none';
+                svg.style.cursor = 'grab';
+            }
+        });
+
+        // ── INIT ──────────────────────────────────────────────────────────────────────
+        async function init() {
+            const status = document.getElementById('status');
+            try {
+                const [bodyRows, timelineRows] = await Promise.all([fetchTable(SHEET_BODIES_URL), fetchTable(SHEET_TIMELINE_URL)]);
+                if (bodyRows.length === 0) { status.textContent = '⚠ Fetch fallito — usa 📋 Paste data'; dbg('0 rows from fetch — usa il pulsante Paste data'); return; }
+                loadMap(bodyRows, timelineRows);
+            } catch (err) {
+                status.textContent = '⚠ Errore fetch — usa 📋 Paste data';
+                dbg('EXCEPTION: ' + err.message); console.error(err);
+            }
+        }
+        window.addEventListener('resize', () => { vb.w = window.innerWidth; vb.h = window.innerHeight; applyVB(); });
+        init();
+    </script>
+</body>
+
+</html>
