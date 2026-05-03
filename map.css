@@ -461,14 +461,26 @@ svg {
     white-space: nowrap;
 }
 
-/* ── DEBUG ───────────────────────────────────────────────────────────────────── */
-#debug {
-    position: fixed;
-    bottom: 8px;
-    left: 10px;
-    z-index: 300;
+#tickPrevBtn, #tickNextBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ccc;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
     font-size: 10px;
-    color: #333;
-    pointer-events: none;
-    max-width: 500px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+    user-select: none;
+}
+#tickPrevBtn:hover, #tickNextBtn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+#tickPrevBtn:active, #tickNextBtn:active {
+    background: rgba(79, 152, 163, 0.3);
+    border-color: rgba(79, 152, 163, 0.6);
 }

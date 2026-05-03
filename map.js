@@ -453,6 +453,40 @@ function updateScene(t) {
 // ── LOAD MAP ──────────────────────────────────────────────────────────────────
 let baseTick = 0;  // ← NEW: stores the "current" month from timeline
 
+// ── TICK PREV/NEXT BUTTONS ────────────────────────────────────────────────────
+let tickHoldInterval = null;
+
+function stepTick() {
+    onTickChange(tick + .03);
+}
+
+function startHold(delta) {
+    stepTick(delta); // primo step immediato al click
+    tickHoldInterval = setInterval(() => stepTick(delta), 150);
+}
+
+function stopHold() {
+    clearInterval(tickHoldInterval);
+    tickHoldInterval = null;
+}
+
+const tickPrevBtn = document.getElementById('tickPrevBtn');
+const tickNextBtn = document.getElementById('tickNextBtn');
+
+tickPrevBtn.addEventListener('mousedown', () => startHold(-1));
+tickNextBtn.addEventListener('mousedown', () => startHold(1));
+
+// Stop su mouseup/mouseleave ovunque
+window.addEventListener('mouseup', stopHold);
+tickPrevBtn.addEventListener('mouseleave', stopHold);
+tickNextBtn.addEventListener('mouseleave', stopHold);
+
+// Touch support
+tickPrevBtn.addEventListener('touchstart', e => { e.preventDefault(); startHold(-1); }, { passive: false });
+tickNextBtn.addEventListener('touchstart', e => { e.preventDefault(); startHold(1); }, { passive: false });
+tickPrevBtn.addEventListener('touchend', stopHold);
+tickNextBtn.addEventListener('touchend', stopHold);
+
 function loadMap(bodyRows, timelineRows) {
     byId = normalise(bodyRows);
     if (timelineRows && timelineRows.length > 0) {
@@ -465,7 +499,7 @@ function loadMap(bodyRows, timelineRows) {
     // ← NEW: slider range centered on current month ±12
     tickSlider.min = baseTick - 24;
     tickSlider.max = baseTick + 24;
-    tickSlider.step = 0.01;
+    tickSlider.step = 0.03125;
     tickSlider.value = tick;
     document.querySelector('#tick-label span').textContent = tick;
     buildScene(); buildAssetsPanel(); ready = true; updateScene(tick);
