@@ -81,10 +81,76 @@ svg {
     font-size: 12px;
 }
 
+/* Reset native appearance */
 #tickSlider {
     cursor: pointer;
-    height: 18px;
-    accent-color: #4f98a3;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 140px;
+    height: 4px;
+    background: transparent;
+    border-radius: 2px;
+    outline: none;
+    padding: 0;
+    margin: 0 4px;
+}
+
+/* Thin track */
+#tickSlider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+#tickSlider::-moz-range-track {
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+
+/* Dot thumb */
+#tickSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4f98a3;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    margin-top: -5px;
+    box-shadow: 0 0 6px rgba(79,152,163,0.6);
+    transition: transform .15s, box-shadow .15s;
+}
+#tickSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(79,152,163,0.9);
+}
+#tickSlider::-moz-range-thumb {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #4f98a3;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(79,152,163,0.6);
+    transition: transform .15s, box-shadow .15s;
+}
+#tickSlider::-moz-range-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(79,152,163,0.9);
+}
+
+/* NEW: label with teal month number */
+#tick-label {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+#tick-label span {
+    color: #4f98a3;
+    font-weight: 600;
+    font-size: 12px;
+    margin-left: 2px;
 }
 
 #status {
@@ -97,7 +163,7 @@ svg {
 }
 
 /* Bottoni nella barra */
-#pasteBtn, #rulerBtn {
+#pasteBtn, #rulerBtn, #resetBtn {
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ccc;
@@ -222,12 +288,17 @@ svg {
 
 /* ── ORBIT / LABELS ──────────────────────────────────────────────────────────── */
 .orbit-ring {
-    stroke: rgba(255, 255, 255, 0.13);  /* ← era 0.055 */
+    stroke: rgba(255, 255, 255, 0.35);   /* era 0.13 */
     stroke-width: 1.5;
+    fill: none;
+    filter: drop-shadow(0 0 3px rgba(180, 220, 255, 0.25));
 }
+
 .moon-orbit-ring {
-    stroke: rgba(255, 255, 255, 0.07);  /* ← era 0.028 */
+    stroke: rgba(255, 255, 255, 0.18);   /* era 0.07 */
     stroke-width: 1;
+    fill: none;
+    filter: drop-shadow(0 0 2px rgba(180, 220, 255, 0.15));
 }
 
 .body-group { cursor: pointer; }
@@ -309,86 +380,6 @@ svg {
 
 #info-panel .close-btn:hover { color: #ccc; }
 
-/* ── PASTE MODAL ─────────────────────────────────────────────────────────────── */
-#paste-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.82);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 500;
-    backdrop-filter: blur(6px);
-}
-
-#paste-modal.open { display: flex; }
-
-#paste-box {
-    background: rgba(10, 10, 20, 0.97);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 24px;
-    width: 92%;
-    max-width: 680px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    font-family: 'Josefin Sans', sans-serif;
-}
-
-#paste-box h3 { color: #fff; font-size: 14px; font-weight: 600; }
-#paste-box p { font-size: 11px; color: #666; line-height: 1.65; }
-#paste-box code {
-    background: rgba(255,255,255,0.08);
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-size: 10px;
-    color: #aaa;
-}
-
-.paste-row { display: flex; gap: 10px; align-items: flex-start; }
-.paste-row label { font-size: 11px; color: #888; min-width: 90px; padding-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-.paste-row textarea {
-    flex: 1;
-    min-height: 110px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #ddd;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    resize: vertical;
-}
-.paste-row textarea:focus { outline: none; border-color: rgba(80,180,255,0.4); }
-
-.paste-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-.btn-load {
-    background: rgba(80,180,255,0.15);
-    border: 1px solid rgba(80,180,255,0.35);
-    color: #80ccff;
-    padding: 6px 18px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background .2s;
-}
-.btn-load:hover { background: rgba(80,180,255,0.28); }
-
-.btn-cancel {
-    background: none;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #666;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    cursor: pointer;
-}
-.btn-cancel:hover { background: rgba(255,255,255,0.06); color: #aaa; }
-
 /* ── SEARCH ──────────────────────────────────────────────────────────────────── */
 #searchWrapper { position: relative; }
 
@@ -418,7 +409,7 @@ svg {
 
 #searchResults {
     position: absolute;
-    top: calc(100% + 6px);
+    bottom: calc(100% + 6px);
     left: 0;
     min-width: 220px;
     background: rgba(0,0,0,0.95);

@@ -1,9 +1,9 @@
 const CANVAS = 10000, CENTER = CANVAS / 2, DIST_SCALE = 250, MOON_GAP = 60, MOON_START = 60, PLANET_R = 28, MOON_R = 12, SUN_R = 55;
 const ZOOM_MIN = 400;     // max zoom in: viewport di 400 SVG units (~un pianeta riempie lo schermo)
 const ZOOM_MAX = 12000;   // max zoom out: poco più del canvas intero (10000)
-const PAN_MARGIN = 1500;
-const SHEET_BODIES_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pubhtml?gid=204162722&single=true';
-const SHEET_TIMELINE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pubhtml?gid=1188539103&single=true';
+const PAN_MARGIN = 20000;
+const SHEET_BODIES_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=204162722&single=true&output=csv';
+const SHEET_TIMELINE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=1188539103&single=true&output=csv';
 
 const resConfig = [
     { key: 'shards', label: 'Shards', color: '#88ccff', icon: '💎' },
@@ -38,12 +38,12 @@ svg.addEventListener('mouseleave', () => { panning = false; });
 svg.addEventListener('wheel', e => {
     e.preventDefault();
     const f = e.deltaY > 0 ? 1.12 : 0.88;
-    const mx = e.offsetX / svg.clientWidth, my = e.offsetY / svg.clientHeight;
+    const mx = e.offsetX / svg.clientWidth;
+    const my = e.offsetY / svg.clientHeight;
 
     const newW = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, vb.w * f));
     const newH = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, vb.h * f));
 
-    // Sposta vb.x/y in base al delta reale delle dimensioni, non al fattore teorico
     vb.x += (vb.w - newW) * mx;
     vb.y += (vb.h - newH) * my;
     vb.w = newW;
@@ -58,12 +58,8 @@ svg.addEventListener('touchmove', e => { e.preventDefault(); if (e.touches.lengt
 svg.addEventListener('touchend', () => { panning = false; lastTD = null; });
 
 function clampVB() {
-    // Zoom limits
     vb.w = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, vb.w));
     vb.h = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, vb.h));
-    // Pan limits: non uscire oltre PAN_MARGIN fuori dal canvas
-    vb.x = Math.max(-PAN_MARGIN, Math.min(CANVAS + PAN_MARGIN - vb.w, vb.x));
-    vb.y = Math.max(-PAN_MARGIN, Math.min(CANVAS + PAN_MARGIN - vb.h, vb.y));
 }
 
 
@@ -94,23 +90,39 @@ function parsePaste(text) {
 // ── FETCH GOOGLE SHEET HTML ───────────────────────────────────────────────────
 async function fetchTable(url) {
     const res = await fetch(url, { cache: 'no-store' });
-    const html = await res.text();
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const tables = Array.from(doc.querySelectorAll('table'));
-    let best = null, bestRows = 0;
-    for (const t of tables) { const rc = t.querySelectorAll('tr').length; if (rc > bestRows) { bestRows = rc; best = t; } }
-    if (!best || bestRows < 2) { return []; }
-    const allRows = Array.from(best.querySelectorAll('tr'));
-    // find header row (first with text)
-    let hi = 0;
-    for (let i = 0; i < Math.min(5, allRows.length); i++) { if (Array.from(allRows[i].querySelectorAll('th,td')).some(c => c.textContent.trim())) { hi = i; break; } }
-    const headers = Array.from(allRows[hi].querySelectorAll('th,td')).map(td => td.textContent.trim().toLowerCase().replace(/\s+/g, '_'));
-    return allRows.slice(hi + 1).map(row => {
-        const cells = Array.from(row.querySelectorAll('td'));
+    const text = await res.text();
+    return parseCsv(text);
+}
+
+function parseCsv(text) {
+    if (!text || !text.trim()) return [];
+    // Gestisce \r\n e \n
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) return [];
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        const cells = splitCsvLine(lines[i]);
+        if (cells.every(c => !c.trim())) continue;
         const obj = {};
-        headers.forEach((h, i) => { obj[h] = cells[i] ? cells[i].textContent.trim() : ''; });
-        return obj;
-    }).filter(r => Object.values(r).some(v => v !== ''));
+        headers.forEach((h, j) => { obj[h] = (cells[j] || '').trim(); });
+        rows.push(obj);
+    }
+    return rows;
+}
+
+// Split CSV rispettando le virgolette (es. celle con virgola dentro)
+function splitCsvLine(line) {
+    const result = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
+        else { cur += ch; }
+    }
+    result.push(cur);
+    return result;
 }
 
 // ── NORMALISE ─────────────────────────────────────────────────────────────────
@@ -210,14 +222,6 @@ function buildScene() {
     // --- SFONDO STELLATO DENTRO L'SVG ---
     if (bgStars) {
         bgStars.innerHTML = '';
-        bgStars.appendChild(el('image', {
-            href: 'images/space-background.jpg',
-            x: 0,
-            y: 0,
-            width: CANVAS,
-            height: CANVAS,
-            preserveAspectRatio: 'xMidYMid slice'
-        }));
     }
 
     const sunG = el('g', { 'data-id': 'sun', class: 'body-group' });
@@ -423,15 +427,29 @@ function updateScene(t) {
 }
 
 // ── LOAD MAP ──────────────────────────────────────────────────────────────────
+let baseTick = 0;  // ← NEW: stores the "current" month from timeline
+
 function loadMap(bodyRows, timelineRows) {
     byId = normalise(bodyRows);
     if (timelineRows && timelineRows.length > 0) {
         const cur = timelineRows.find(r => Object.values(r).some(v => v.toLowerCase() === 'current'));
-        if (cur) { const mk = Object.keys(cur).find(k => ['month', 'Month', 'tick'].includes(k)); if (mk) { tick = parseInt(cur[mk], 10) || 0; document.getElementById('tickInput').value = tick; } }
+        if (cur) {
+            const mk = Object.keys(cur).find(k => ['month', 'Month', 'tick'].includes(k));
+            if (mk) { tick = parseInt(cur[mk], 10) || 0; baseTick = tick; }  // ← saves baseTick
+        }
     }
+    // ← NEW: slider range centered on current month ±12
+    tickSlider.min = baseTick - 24;
+    tickSlider.max = baseTick + 24;
+    tickSlider.step = 0.01;
+    tickSlider.value = tick;
+    document.querySelector('#tick-label span').textContent = tick;
     buildScene(); buildAssetsPanel(); ready = true; updateScene(tick);
-    document.getElementById('status').textContent = `Tick ${tick} · ${Object.keys(byId).length} corpi`;
 }
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+    onTickChange(baseTick);
+});
 
 // ── INFO PANEL ────────────────────────────────────────────────────────────────
 
@@ -449,7 +467,6 @@ function showInfo(b) {
         const resMeta = document.getElementById('info-meta');
         const resDiv = document.createElement('div');
         resDiv.className = 'res-block';
-        resDiv.style.cssText = '...';
         resDiv.style.cssText = 'margin-top:8px; border-top:1px solid rgba(255,255,255,0.07); padding-top:8px; font-size:11px; display:flex; flex-direction:column; gap:3px;';
         resLines.forEach(rc => {
             const items = splitRes(b[rc.key]);
@@ -490,33 +507,16 @@ document.getElementById('info-close').addEventListener('click', () => { document
 document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').style.display = 'none'; });
 
 // ── TICK ──────────────────────────────────────────────────────────────────────
-const tickInput = document.getElementById('tickInput');
 const tickSlider = document.getElementById('tickSlider');
 
 function onTickChange(val) {
     tick = Math.round(parseFloat(val) * 100) / 100 || 0;
-    tickInput.value = tick;
     tickSlider.value = tick;
-    document.getElementById('status').textContent = `Mese ${tick}`;
+    document.querySelector('#tick-label span').textContent = tick;
     updateScene(tick);
 }
 
-tickInput.addEventListener('input', e => onTickChange(e.target.value));
-tickInput.addEventListener('change', e => onTickChange(e.target.value));
 tickSlider.addEventListener('input', e => onTickChange(e.target.value));
-
-// ── PASTE MODAL ───────────────────────────────────────────────────────────────
-const modal = document.getElementById('paste-modal');
-document.getElementById('pasteBtn').addEventListener('click', () => modal.classList.add('open'));
-document.getElementById('paste-cancel').addEventListener('click', () => modal.classList.remove('open'));
-modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
-document.getElementById('paste-load').addEventListener('click', () => {
-    const bodyRows = parsePaste(document.getElementById('paste-bodies').value);
-    const timeRows = parsePaste(document.getElementById('paste-timeline').value);
-    if (bodyRows.length === 0) { alert('Nessuna riga trovata.\nIncolla il contenuto del foglio con la prima riga come header (id, name, anchor, distance, color, node…)'); return; }
-    modal.classList.remove('open');
-    loadMap(bodyRows, timeRows);
-});
 
 // ── BUILD PANEL ───────────────────────────────────────────────────────────────
 function buildAssetsPanel() {
@@ -786,13 +786,11 @@ searchInput.addEventListener('keydown', e => {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
-    const status = document.getElementById('status');
     try {
         const [bodyRows, timelineRows] = await Promise.all([fetchTable(SHEET_BODIES_URL), fetchTable(SHEET_TIMELINE_URL)]);
-        if (bodyRows.length === 0) { status.textContent = '⚠ Fetch fallito — usa 📋 Paste data'; return; }
+        if (bodyRows.length === 0) { return; }
         loadMap(bodyRows, timelineRows);
     } catch (err) {
-        status.textContent = '⚠ Errore fetch — usa 📋 Paste data';
     }
 }
 window.addEventListener('resize', () => { vb.w = window.innerWidth; vb.h = window.innerHeight; applyVB(); });
