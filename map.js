@@ -178,7 +178,12 @@ function computeAllPositions(t) {
         if (!b || !b.anchor) { cache[id] = { x: CENTER, y: CENTER }; return cache[id]; }
         const parent = pos(b.anchor);
         const r = b.anchor === 'sun' ? b.distance * DIST_SCALE : MOON_START + b.moonSlot * MOON_GAP;
-        const angle = (b.speed > 0 ? (t / b.speed) * Math.PI * 2 : 0) + (b.offset || 0) * Math.PI / 180;
+
+        // ← Points are static: use only offset as fixed angle, ignore speed for movement
+        const angle = b.type === 'point'
+            ? (b.offset || 0) * Math.PI / 180
+            : (b.speed > 0 ? (t / b.speed) * Math.PI * 2 : 0) + (b.offset || 0) * Math.PI / 180;
+
         cache[id] = { x: parent.x + r * Math.cos(angle), y: parent.y + r * Math.sin(angle), orbitR: r, parentX: parent.x, parentY: parent.y };
         return cache[id];
     }
@@ -248,6 +253,19 @@ function buildScene() {
         const cfId = ensureColorFilter(b.id, b.color);
 
         const g = el('g', { 'data-id': b.id, class: 'body-group' });
+        if (b.type === 'point' && b.speed > 0) {
+            const zoneR = b.speed * DIST_SCALE;
+            const { r: cr, g: cg, b: cb } = hexToRgb(b.color);
+            const zone = el('circle', {
+                r: zoneR,
+                fill: `rgba(${Math.round(cr * 0.4)},${Math.round(cg * 0.4)},${Math.round(cb * 0.4)},0.18)`,
+                stroke: `rgba(${Math.round(cr * 0.6)},${Math.round(cg * 0.6)},${Math.round(cb * 0.6)},0.35)`,
+                'stroke-width': '2',
+                'stroke-dasharray': '8 6',
+                'pointer-events': 'none',
+            });
+            g.insertBefore(zone, g.firstChild); // render behind everything else in the group
+        }
         const halo = el('circle', {
             r: r * 2.2, fill: b.color, opacity: '0.0',
             style: 'transition:opacity .2s'
@@ -312,8 +330,12 @@ function updateScene(t) {
     Object.values(byId).forEach(b => {
         if (b.id === 'sun') return;
         const p = positions[b.id]; if (!p) return;
-        orbitLayer.appendChild(el('circle', { cx: p.parentX, cy: p.parentY, r: p.orbitR, class: b.anchor === 'sun' ? 'orbit-ring' : 'moon-orbit-ring' }));
-        const g = bodyGroups[b.id];
+        if (b.type !== 'base' && b.type !== 'point') {
+            orbitLayer.appendChild(el('circle', {
+                cx: p.parentX, cy: p.parentY, r: p.orbitR,
+                class: b.anchor === 'sun' ? 'orbit-ring' : 'moon-orbit-ring'
+            }));
+        } const g = bodyGroups[b.id];
         if (g) g.setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
     });
     if (bodyGroups['sun']) bodyGroups['sun'].setAttribute('transform', `translate(${CENTER},${CENTER})`);
@@ -505,7 +527,7 @@ function showPathInfo(path, totalLen) {
     document.getElementById('info-meta').textContent = meta;
     document.getElementById('info-panel').classList.add('visible');
 }
-document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').classList.remove('visible');});
+document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').classList.remove('visible'); });
 document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').classList.remove('visible'); });
 
 // ── TICK ──────────────────────────────────────────────────────────────────────
