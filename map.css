@@ -288,17 +288,16 @@ svg {
 
 /* ── ORBIT / LABELS ──────────────────────────────────────────────────────────── */
 .orbit-ring {
-    stroke: rgba(255, 255, 255, 0.35);   /* era 0.13 */
-    stroke-width: 1.5;
+    stroke: rgba(120, 180, 255, 0.55);
+    stroke-width: 2;
+    fill: none;
+    filter: drop-shadow(0 0 5px rgba(120, 180, 255, 0.4));
+}
+.moon-orbit-ring {
+    stroke: rgba(180, 220, 255, 0.35);
+    stroke-width: 1.2;
     fill: none;
     filter: drop-shadow(0 0 3px rgba(180, 220, 255, 0.25));
-}
-
-.moon-orbit-ring {
-    stroke: rgba(255, 255, 255, 0.18);   /* era 0.07 */
-    stroke-width: 1;
-    fill: none;
-    filter: drop-shadow(0 0 2px rgba(180, 220, 255, 0.15));
 }
 
 .body-group { cursor: pointer; }
@@ -324,17 +323,23 @@ svg {
 /* ── INFO PANEL ──────────────────────────────────────────────────────────────── */
 #info-panel {
     position: fixed;
-    right: 18px;
-    top: 60px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) translateX(100%);  /* nascosto a destra */
     width: 270px;
     background: rgba(0, 0, 0, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;  /* angoli solo a sinistra */
     padding: 18px 16px 14px;
     backdrop-filter: blur(10px);
-    display: none;
+    display: block;  /* sempre nel DOM, è il transform che lo nasconde */
     z-index: 200;
     font-family: 'Josefin Sans', sans-serif;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#info-panel.visible {
+    transform: translateY(-50%) translateX(0);  /* slide in */
 }
 
 #info-panel h2 {

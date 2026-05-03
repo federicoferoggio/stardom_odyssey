@@ -291,7 +291,9 @@ function buildScene() {
                     cy: topY,
                     r: iconSize / 2 + 1,
                     fill: ownerColor,
-                    opacity: '0.25',
+                    opacity: '0.6',
+                    stroke: 'rgba(255,255,255,0.4)',
+                    'stroke-width': '1',
                 });
                 g.appendChild(colorDot);
                 g.appendChild(img);
@@ -410,12 +412,12 @@ function updateScene(t) {
                     const iconG = el('g', {
                         transform: `translate(${tokenPos.x.toFixed(1)},${tokenPos.y.toFixed(1)}) rotate(${tokenAngle.toFixed(1)})`
                     });
-                    iconG.appendChild(el('circle', { r: iconSize / 2 + 2, cx: 0, cy: offsetY, fill: ownerColor, opacity: '0.2' }));
+                    iconG.appendChild(el('circle', { r: iconSize / 2 + 2, cx: 0, cy: offsetY, fill: ownerColor, opacity: '0.55', stroke: 'rgba(255,255,255,0.5)', 'stroke-width': '1.5' }));
                     iconG.appendChild(el('image', {
                         href: 'images/attack.svg',
                         x: -iconSize / 2, y: offsetY - iconSize / 2,
                         width: iconSize, height: iconSize,
-                        style: `filter: drop-shadow(0 0 3px ${ownerColor}); opacity: 0.9;`
+                        style: `filter: drop-shadow(0 0 6px ${ownerColor}) brightness(1.8); opacity: 1;`
                     }));
                     pathG.appendChild(iconG);
                 });
@@ -479,7 +481,7 @@ function showInfo(b) {
         resMeta.appendChild(resDiv);
     }
 
-    document.getElementById('info-panel').style.display = 'block';
+    document.getElementById('info-panel').classList.add('visible');
 }
 function showPathInfo(path, totalLen) {
     document.getElementById('info-name').textContent = path.name || path.ids.join(' → ');
@@ -501,10 +503,10 @@ function showPathInfo(path, totalLen) {
         meta += `\n⏱ Distanza rimanente: ${remainingWeeks} wk (~${remainingMonths} mesi)`;
     }
     document.getElementById('info-meta').textContent = meta;
-    document.getElementById('info-panel').style.display = 'block';
+    document.getElementById('info-panel').classList.add('visible');
 }
-document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').style.display = 'none'; });
-document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').style.display = 'none'; });
+document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').classList.remove('visible');});
+document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').classList.remove('visible'); });
 
 // ── TICK ──────────────────────────────────────────────────────────────────────
 const tickSlider = document.getElementById('tickSlider');
