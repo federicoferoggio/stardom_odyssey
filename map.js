@@ -319,6 +319,45 @@ function buildScene() {
         }
         bodyLayer.appendChild(g); bodyGroups[b.id] = g;
     });
+    // ── BACKGROUND MAP IMAGE ────────────────────────────────────────────────────
+    // Allinea images/maponlyasteroid.svg usando il sole (CENTER,CENTER)
+    // e l'orbita di brion7 come riferimento di scala.
+    (function injectMapBackground() {
+        // Rimuovi eventuale background precedente
+        const existing = document.getElementById('map-bg-image');
+        if (existing) existing.remove();
+
+        // Trova brion7 nel byId
+        const brion = byId['brion7'];
+        if (!brion) return; // se il corpo non esiste, salta
+
+        // Il raggio dell'orbita di brion7 in unità SVG
+        // (stessa formula usata in computeAllPositions per pianeti principali)
+        const orbitR = brion.distance * DIST_SCALE;
+
+        // Il SVG della mappa è un quadrato centrato sul sole:
+        // il punto a4 è sul bordo dell'orbita di brion7,
+        // quindi il lato del quadrato = orbitR * 2
+        const side = orbitR * 2;
+        const x = CENTER - orbitR;
+        const y = CENTER - orbitR;
+
+        // Crea l'elemento <image> e inseriscilo PRIMA di tutto nel body-layer
+        // (oppure in un layer dedicato sotto orbit-layer)
+        const bgImg = document.createElementNS(NS, 'image');
+        bgImg.setAttribute('id', 'map-bg-image');
+        bgImg.setAttribute('href', 'images/maponlyasteroids.svg');
+        bgImg.setAttribute('x', x);
+        bgImg.setAttribute('y', y);
+        bgImg.setAttribute('width', side);
+        bgImg.setAttribute('height', side);
+        bgImg.setAttribute('opacity', '0.35');
+        bgImg.setAttribute('pointer-events', 'none');
+
+        // Inserisci come primo figlio di orbit-layer (sotto le orbite e i pianeti)
+        const orbitLayer = document.getElementById('orbit-layer');
+        orbitLayer.insertBefore(bgImg, orbitLayer.firstChild);
+    })();
 }
 
 // ── UPDATE SCENE ──────────────────────────────────────────────────────────────
