@@ -37,7 +37,7 @@ svg.addEventListener('mouseup', () => { panning = false; });
 svg.addEventListener('mouseleave', () => { panning = false; });
 svg.addEventListener('wheel', e => {
     e.preventDefault();
-    const f = e.deltaY > 0 ? 1.12 : 0.88;
+    const f = e.deltaY > 0 ? 1.04 : 0.96;
     const mx = e.offsetX / svg.clientWidth;
     const my = e.offsetY / svg.clientHeight;
 
@@ -344,19 +344,21 @@ function buildScene() {
 
         // Crea l'elemento <image> e inseriscilo PRIMA di tutto nel body-layer
         // (oppure in un layer dedicato sotto orbit-layer)
+        const svg = document.getElementById('solar-svg');
         const bgImg = document.createElementNS(NS, 'image');
+
         bgImg.setAttribute('id', 'map-bg-image');
         bgImg.setAttribute('href', 'images/maponlyasteroids.svg');
         bgImg.setAttribute('x', x);
         bgImg.setAttribute('y', y);
         bgImg.setAttribute('width', side);
         bgImg.setAttribute('height', side);
-        bgImg.setAttribute('opacity', '0.35');
+        bgImg.setAttribute('opacity', '1');
         bgImg.setAttribute('pointer-events', 'none');
 
         // Inserisci come primo figlio di orbit-layer (sotto le orbite e i pianeti)
         const orbitLayer = document.getElementById('orbit-layer');
-        orbitLayer.insertBefore(bgImg, orbitLayer.firstChild);
+        svg.insertBefore(bgImg, orbitLayer);
     })();
 }
 
