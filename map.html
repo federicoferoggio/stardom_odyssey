@@ -66,12 +66,18 @@
         </svg>
     </div>
 
-    <div id="info-panel">
-        <button class="close-btn" id="info-close">✕</button>
-        <h2 id="info-name">—</h2>
-        <div class="owner" id="info-owner"></div>
-        <div class="desc" id="info-desc">—</div>
-        <div class="meta" id="info-meta"></div>
+    <div id="info-tab">
+        <div id="info-handle">
+            <span class="drag-bar"></span>
+            <span id="info-handle-label">⬡ Seleziona un corpo</span>
+            <span id="info-toggle-label" style="margin-left:4px;font-size:10px;color:#444">▶ apri</span>
+        </div>
+        <div id="info-body">
+            <h2 id="info-name">—</h2>
+            <div class="owner" id="info-owner"></div>
+            <div class="desc" id="info-desc">—</div>
+            <div class="meta" id="info-meta"></div>
+        </div>
     </div>
 
     <div id="ruler-tooltip"></div>
@@ -86,6 +92,21 @@
         <div id="assets-body">
             <h3>Risorse per tipo</h3>
             <div class="assets-grid" id="assets-grid"></div>
+        </div>
+    </div>
+    <div id="craft-tab">
+        <div id="craft-handle">
+            <span class="drag-bar"></span>
+            <span id="craft-handle-label">⚗ Asset Generabili</span>
+            <span id="craft-toggle-label" style="margin-left:4px;font-size:10px;color:#444">▶ apri</span>
+        </div>
+        <div id="craft-body">
+            <div id="craft-search-wrapper">
+                <span id="craft-search-icon">🔍</span>
+                <input type="text" id="craft-search-input" placeholder="Cerca asset…" autocomplete="off">
+            </div>
+            <div id="craft-empty"></div>
+            <div id="craft-list"></div>
         </div>
     </div>
     <script src="map.js"></script>

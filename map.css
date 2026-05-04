@@ -320,70 +320,119 @@ svg {
 .body-group:hover .body-label,
 .body-group:hover .moon-label { fill: #fff; }
 
-/* ── INFO PANEL ──────────────────────────────────────────────────────────────── */
-#info-panel {
+/* ── INFO TAB — right-side drawer (mirrors assets-tab) ──────────────────────── */
+#info-tab {
     position: fixed;
-    right: 0;
     top: 50%;
-    transform: translateY(-50%) translateX(100%);  /* nascosto a destra */
-    width: 270px;
-    background: rgba(0, 0, 0, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px 0 0 10px;  /* angoli solo a sinistra */
-    padding: 18px 16px 14px;
+    right: 0;
+    transform: translateY(-50%) translateX(calc(100% - 32px)); /* collapsed: only handle visible */
+    width: 290px;
     backdrop-filter: blur(10px);
-    display: block;  /* sempre nel DOM, è il transform che lo nasconde */
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px 0 0 10px;
+    backdrop-filter: blur(10px);
     z-index: 200;
     font-family: 'Josefin Sans', sans-serif;
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    max-height: 80vh;
 }
 
-#info-panel.visible {
-    transform: translateY(-50%) translateX(0);  /* slide in */
+#info-tab.open {
+    transform: translateY(-50%) translateX(0);
 }
 
-#info-panel h2 {
+/* Vertical tab handle on the left edge */
+#info-handle {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    width: 32px;
+    min-width: 32px;
+    padding: 14px 8px;
+    cursor: pointer;
+    font-size: 10px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    background: rgba(255, 255, 255, 0.03);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    transition: background .2s, color .2s;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+}
+
+#info-handle:hover { background: rgba(255,255,255,0.07); color: #ddd; }
+
+#info-handle .drag-bar {
+    writing-mode: unset;
+    transform: rotate(90deg);
+    display: inline-block;
+    width: 16px;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+#info-handle-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-height: 160px;
+}
+
+#info-toggle-label {
+    writing-mode: unset;
+    transform: none;
+    font-size: 10px;
+    color: #444;
+    flex-shrink: 0;
+}
+
+#info-body {
+    flex: 1;
+    padding: 16px 14px 16px 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#info-body h2 {
     font-size: 16px;
     color: #fff;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
     letter-spacing: 0.04em;
 }
 
-#info-panel .owner {
-    font-size: 12px;
-    margin-bottom: 10px;
+#info-body .owner {
+    font-size: 11px;
+    margin-bottom: 8px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
-#info-panel .desc {
+#info-body .desc {
     font-size: 11px;
-    color: #999;
+    color: #fff;
     line-height: 1.6;
 }
 
-#info-panel .meta {
+#info-body .meta {
     font-size: 10px;
-    color: #555;
-    margin-top: 10px;
+    color: #999;
+    margin-top: 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
     padding-top: 8px;
     white-space: pre-line;
 }
-
-#info-panel .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#info-panel .close-btn:hover { color: #ccc; }
 
 /* ── SEARCH ──────────────────────────────────────────────────────────────────── */
 #searchWrapper { position: relative; }
@@ -484,3 +533,77 @@ svg {
     background: rgba(79, 152, 163, 0.3);
     border-color: rgba(79, 152, 163, 0.6);
 }
+
+/* ── CRAFT TAB (left side) ── */
+#craft-tab {
+    position: fixed; top: 50%; left: 0;
+    transform: translateY(-50%) translateX(calc(-100% + 32px));
+    width: 300px;
+    background: rgba(0,0,0,0.72);
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 0 10px 10px 0;
+    z-index: 200; font-family: 'Josefin Sans', sans-serif;
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    display: flex; flex-direction: row; overflow: hidden; max-height: 80vh;
+    backdrop-filter: blur(10px);
+}
+#craft-tab.open { transform: translateY(-50%) translateX(0); }
+
+#craft-handle {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    width: 32px; min-width: 32px; padding: 14px 8px;
+    cursor: pointer; font-size: 10px; color: #999;
+    display: flex; align-items: center; gap: 6px;
+    user-select: none; background: rgba(255,255,255,0.03);
+    border-left: 1px solid rgba(255,255,255,0.07);
+    transition: background .2s, color .2s;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    flex-shrink: 0; order: 2;
+}
+#craft-handle:hover { background: rgba(255,255,255,0.07); color: #ddd; }
+#craft-handle .drag-bar { writing-mode: unset; transform: rotate(90deg); display: inline-block; width: 16px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; flex-shrink: 0; }
+#craft-handle-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-height: 160px; }
+#craft-toggle-label { writing-mode: unset; transform: none; font-size: 10px; color: #444; flex-shrink: 0; }
+
+#craft-body {
+    flex: 1; padding: 12px 10px 16px 14px;
+    overflow-y: auto; display: flex; flex-direction: column;
+    gap: 8px; order: 1;
+}
+
+#craft-search-wrapper { position: relative; flex-shrink: 0; }
+#craft-search-input {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18); color: #eee;
+    padding: 5px 8px 5px 26px; border-radius: 5px;
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    outline: none; transition: border-color .2s;
+}
+#craft-search-input:focus { border-color: rgba(80,180,255,0.45); }
+#craft-search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 10px; pointer-events: none; opacity: 0.4; }
+
+#craft-list { display: flex; flex-direction: column; gap: 3px; }
+#craft-empty { font-size: 10px; color: #444; text-align: center; padding: 20px 0; display: none; }
+
+.craft-item { border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color .2s; }
+.craft-item:hover { border-color: rgba(255,255,255,0.14); }
+.craft-item.expanded { border-color: rgba(79,152,163,0.35); }
+
+.craft-item-header { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px; cursor: pointer; background: rgba(255,255,255,0.03); transition: background .15s; user-select: none; }
+.craft-item-header:hover { background: rgba(255,255,255,0.07); }
+.craft-item.expanded .craft-item-header { background: rgba(79,152,163,0.1); }
+
+.craft-item-name { font-size: 11px; color: #ddd; flex: 1; line-height: 1.4; }
+.craft-item-type { font-size: 9px; color: #4f98a3; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(79,152,163,0.3); border-radius: 3px; padding: 1px 5px; }
+.craft-item-chevron { font-size: 8px; color: #555; flex-shrink: 0; transition: transform .2s; }
+.craft-item.expanded .craft-item-chevron { transform: rotate(90deg); color: #4f98a3; }
+
+.craft-item-detail { display: none; padding: 8px 10px 10px; background: rgba(0,0,0,0.3); font-size: 10px; line-height: 1.6; color: #aaa; border-top: 1px solid rgba(255,255,255,0.05); }
+.craft-item.expanded .craft-item-detail { display: block; }
+
+.craft-detail-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: flex-start; }
+.craft-detail-label { color: #555; text-transform: uppercase; letter-spacing: 0.05em; font-size: 9px; white-space: nowrap; padding-top: 1px; min-width: 70px; }
+.craft-detail-value { color: #ccc; font-size: 10px; }
+.craft-detail-desc { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); color: #bbb; font-size: 10px; line-height: 1.65; font-style: italic; }
+
+.craft-req-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.craft-req-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 1px 6px; font-size: 9px; color: #ccc; }

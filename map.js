@@ -537,7 +537,10 @@ function showInfo(b) {
         resMeta.appendChild(resDiv);
     }
 
-    document.getElementById('info-panel').classList.add('visible');
+    document.getElementById('info-handle-label').textContent = `⬡ ${b.name || b.id}`;
+    const tab = document.getElementById('info-tab');
+    tab.classList.add('open');
+    document.getElementById('info-toggle-label').textContent = '◀ chiudi';
 }
 function showPathInfo(path, totalLen) {
     document.getElementById('info-name').textContent = path.name || path.ids.join(' → ');
@@ -559,10 +562,15 @@ function showPathInfo(path, totalLen) {
         meta += `\n⏱ Distanza rimanente: ${remainingWeeks} wk (~${remainingMonths} mesi)`;
     }
     document.getElementById('info-meta').textContent = meta;
-    document.getElementById('info-panel').classList.add('visible');
+    document.getElementById('info-handle-label').textContent = `→ ${path.name || path.ids.join('→')}`;
+    const tab = document.getElementById('info-tab');
+    tab.classList.add('open');
+    document.getElementById('info-toggle-label').textContent = '◀ chiudi';
 }
-document.getElementById('info-close').addEventListener('click', () => { document.getElementById('info-panel').classList.remove('visible'); });
-document.getElementById('map-container').addEventListener('click', e => { if (!e.target.closest('.body-group') && !e.target.closest('#info-panel')) document.getElementById('info-panel').classList.remove('visible'); });
+document.getElementById('info-handle').addEventListener('click', () => {
+    const open = document.getElementById('info-tab').classList.toggle('open');
+    document.getElementById('info-toggle-label').textContent = open ? '◀ chiudi' : '▶ apri';
+});
 
 // ── TICK ──────────────────────────────────────────────────────────────────────
 const tickSlider = document.getElementById('tickSlider');
@@ -858,4 +866,104 @@ document.getElementById('assets-handle').addEventListener('click', () => {
     const open = assetsTab.classList.toggle('open');
     assetsLabel.textContent = open ? '▼ chiudi' : '▲ apri';
 });
+
+// Asset tab
+
+// ── CRAFTABLE ASSETS TAB ─────────────────────────────────────────────────────
+const SHEET_CRAFT_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub?gid=913311695&single=true&output=tsv';
+
+let craftData = [];
+
+async function fetchCraftAssets() {
+    try {
+        const res = await fetch(SHEET_CRAFT_URL, { cache: 'no-store' });
+        const text = await res.text();
+        craftData = parseTsv(text);
+        buildCraftPanel();
+    } catch (err) {
+        console.warn('[MAP] craft fetch error', err);
+    }
+}
+
+function parseTsv(text) {
+    if (!text || !text.trim()) return [];
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) return [];
+    const headers = lines[0].split('\t').map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+        const cells = lines[i].split('\t');
+        if (cells.every(c => !c.trim())) continue;
+        const obj = {};
+        headers.forEach((h, j) => { obj[h] = (cells[j] || '').trim(); });
+        rows.push(obj);
+    }
+    return rows;
+}
+
+function buildCraftPanel(filter = '') {
+    const list = document.getElementById('craft-list');
+    const empty = document.getElementById('craft-empty');
+    if (!list) return;
+    list.innerHTML = '';
+
+    const q = filter.toLowerCase().trim();
+    const filtered = q
+        ? craftData.filter(r =>
+            (r.name || '').toLowerCase().includes(q) ||
+            (r.type || '').toLowerCase().includes(q) ||
+            (r.requirements || '').toLowerCase().includes(q))
+        : craftData;
+
+    if (filtered.length === 0) {
+        if (empty) { empty.style.display = 'block'; empty.textContent = q ? 'Nessun risultato.' : 'Nessun asset disponibile.'; }
+        return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    filtered.forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'craft-item';
+        const reqs = (r.requirements || '').split(',').map(s => s.trim()).filter(Boolean);
+        const pillsHtml = reqs.map(req => `<span class="craft-req-pill">${req}</span>`).join('');
+
+        item.innerHTML = `
+            <div class="craft-item-header">
+                <span class="craft-item-name">${r.name || '—'}</span>
+                <span class="craft-item-type">${r.type || ''}</span>
+                <span class="craft-item-chevron">▶</span>
+            </div>
+            <div class="craft-item-detail">
+                <div class="craft-detail-row">
+                    <span class="craft-detail-label">⏱ Tempo</span>
+                    <span class="craft-detail-value">${r.generation_time || '—'}</span>
+                </div>
+                <div class="craft-detail-row">
+                    <span class="craft-detail-label">🔩 Requisiti</span>
+                    <div class="craft-req-list">${pillsHtml || '<span style="color:#444">—</span>'}</div>
+                </div>
+                <div class="craft-detail-desc">${r.description || '—'}</div>
+            </div>`;
+
+        item.querySelector('.craft-item-header').addEventListener('click', () => {
+            const wasOpen = item.classList.contains('expanded');
+            list.querySelectorAll('.craft-item.expanded').forEach(el => el.classList.remove('expanded'));
+            if (!wasOpen) item.classList.add('expanded');
+        });
+
+        list.appendChild(item);
+    });
+}
+
+document.getElementById('craft-handle').addEventListener('click', () => {
+    const open = document.getElementById('craft-tab').classList.toggle('open');
+    document.getElementById('craft-toggle-label').textContent = open ? '◀ chiudi' : '▶ apri';
+});
+
+document.getElementById('craft-search-input').addEventListener('input', e => {
+    buildCraftPanel(e.target.value);
+});
+
+fetchCraftAssets();
+
 init();
