@@ -15,42 +15,31 @@
 
 <body>
 
+    <!-- Start Navigation Menu -->
+    <nav class="navigation-menu"></nav>
+    <script src="nav.js"></script>
+    <link rel="stylesheet" href="nav.css">
+    <!-- End Navigation Menu-->
+
     <!-- Header -->
     <header class="app-header">
         <div class="header-side">
+            <!-- Army builder + Dice roller + Rules moved to left side -->
             <button id="army-trigger" class="panel-trigger" aria-label="Open army builder">
-                <svg class="logo-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                    <path d="M2 17l10 5 10-5" />
-                    <path d="M2 12l10 5 10-5" />
-                </svg>
                 <span>Army</span>
+            </button>
+            <button id="dice-trigger" class="panel-trigger" aria-label="Open dice roller">
+                <span>Dice</span>
+            </button>
+            <button id="rules-trigger" class="panel-trigger" aria-label="Open rules recap">
+                <span>Rules</span>
             </button>
         </div>
         <h1 class="header-title">
-            <svg class="logo-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="1.8">
-                <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
-            </svg>
-            Warscroll Library
+            Army of the Hand
         </h1>
         <div class="header-side header-right">
-            <button id="dice-trigger" class="panel-trigger" aria-label="Open dice roller">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="2" width="20" height="20" rx="3" />
-                    <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-                    <circle cx="16" cy="8" r="1.5" fill="currentColor" />
-                    <circle cx="8" cy="16" r="1.5" fill="currentColor" />
-                    <circle cx="16" cy="16" r="1.5" fill="currentColor" />
-                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                </svg>
-                <span>Dice</span>
-            </button>
+            <!-- intentionally empty — all triggers are now on the left -->
         </div>
     </header>
 
@@ -96,7 +85,7 @@
         </aside>
 
         <!-- Dice Roller -->
-        <aside class="side-panel right-panel" id="dice-panel" aria-label="Dice Roller">
+        <aside class="side-panel left-panel" id="dice-panel" aria-label="Dice Roller">
             <div class="panel-header">
                 <h2>Dice Roller</h2>
                 <button id="close-dice-panel" class="close-panel-btn" aria-label="Close">
@@ -139,6 +128,44 @@
             </div>
         </aside>
 
+        <!-- Rules Recap -->
+        <aside class="side-panel left-panel" id="rules-panel" aria-label="Rules Recap">
+            <div class="panel-header">
+                <h2>Rules Recap</h2>
+                <button id="close-rules-panel" class="close-panel-btn" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="panel-body">
+
+                <!-- ═══════════════════════════════════════════════════
+                     RULES RECAP — fill in your paragraphs below.
+                     Each .rules-section has a title and a body.
+                     Duplicate a section block to add more entries.
+                ════════════════════════════════════════════════════ -->
+
+                <div class="rules-section">
+                    <p class="rules-section-title">Section Title</p>
+                    <p class="rules-section-body">
+                        Write your rule description here. You can add as many paragraphs as needed inside this block.
+                    </p>
+                </div>
+
+                <div class="rules-section">
+                    <p class="rules-section-title">Section Title</p>
+                    <p class="rules-section-body">
+                        Write your rule description here.
+                    </p>
+                </div>
+
+                <!-- Add more .rules-section blocks as needed -->
+
+            </div>
+        </aside>
+
         <!-- Units -->
         <main class="units-main">
             <ul id="units-list" class="units-list" aria-label="Warscroll units"></ul>
@@ -149,10 +176,6 @@
     <div class="cards-drawer" id="cards-drawer">
         <button class="cards-toggle" id="cards-toggle" aria-expanded="false" aria-controls="cards-body">
             <span class="cards-toggle-label">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <path d="M8 21h8M12 17v4" />
-                </svg>
                 Cards Collection
             </span>
             <span class="card-count-badge" id="card-count-badge">0</span>
@@ -170,6 +193,9 @@
     <div class="card-modal-backdrop" id="card-modal-backdrop" role="dialog" aria-modal="true" aria-label="Card detail">
         <div class="card-modal" id="card-modal"></div>
     </div>
+
+    <!-- Keyword Tooltip -->
+    <div id="keyword-tooltip" class="keyword-tooltip" role="tooltip" aria-hidden="true"></div>
 
     <script src="scrolls.js"></script>
 </body>

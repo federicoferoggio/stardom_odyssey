@@ -22,6 +22,23 @@ const CARD_FILES = [
 const SHARED_ABILITIES_FILE = 'warscrolls/shared-abilities.json';
 const MAX_POINTS = 2000;
 
+// ─── Keyword Tooltip Definitions ─────────────────────────────────────────────
+// Populate the description strings with your rule text.
+const KEYWORD_DESCRIPTIONS = {
+    'Companion':        'This weapon is not affected by friendly abilities that affect weapon characteristics or the attack sequence, except for those that apply negative modifiers to it',
+    'Shoot in Combat':  'This weapon can be used to shoot even while the unit is in combat.',
+    'Anti-Infantry':  'Add 1 to this weapon\'s Rend characteristic if the target has the Infantry keyword. Multiples of this ability are cumulative.',
+    'Anti-Cavalry':  'Add 1 to this weapon\'s Rend characteristic if the target has the Cavalry keyword. Multiples of this ability are cumulative.',
+    'Anti-Monster':  'Add 1 to this weapon\'s Rend characteristic if the target has the Monster keyword. Multiples of this ability are cumulative.',
+    'Charge (+1 Damage)': 'Add 1 to this weapon\'s Damage characteristic if the attacking unit charged this turn.',
+    'Crit (2 Hits)': 'If an attack made with this weapon scores a critical hit, that attack scores 2 hits on the target unit instead of 1. Make a wound roll for each hit.',
+    'Crit (Auto-wound)': 'If an attack made with this weapon scores a critical hit, that attack automatically wounds the target. Make a save roll as normal.',
+    'Crit (Mortal)': 'If an attack made with this weapon scores a critical hit, that attack automatically damages the target.',
+    // Add more keywords below as needed:
+    // 'Crit (Auto-wound)': 'A Critical Hit (roll of 6) on the Hit roll automatically counts as a wound without needing a Wound roll.',
+    // 'Charge Bonus':     'Add 1 to the Attacks characteristic of this weapon if the attacking unit made a Charge move this turn.',
+};
+
 // ─── Phase map ───────────────────────────────────────────────────────────────
 const PHASE_ALIASES = {
     'startturn': 'Start Turn',
@@ -48,6 +65,7 @@ let army = {};
 let rollHistory = [];
 let openUnitCard = null;
 let activePhase = null;
+let activePanel = null; // tracks which left panel is open
 
 // ─── DOM ─────────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -58,6 +76,9 @@ const dom = {
     diceTrigger: $('dice-trigger'),
     dicePanel: $('dice-panel'),
     closeDicePanel: $('close-dice-panel'),
+    rulesTrigger: $('rules-trigger'),
+    rulesPanel: $('rules-panel'),
+    closeRulesPanel: $('close-rules-panel'),
     overlay: $('panel-overlay'),
     unitsList: $('units-list'),
     armyUnitsList: $('army-units-list'),
@@ -82,6 +103,7 @@ const dom = {
     phaseBar: $('phase-bar'),
     cardModal: $('card-modal'),
     cardModalBd: $('card-modal-backdrop'),
+    keywordTooltip: $('keyword-tooltip'),
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -107,7 +129,6 @@ function phaseClass(phase) {
     return map[phase] || '';
 }
 
-// Always-coloured phase tag — used in abilities, card items, and the card modal
 function phaseTag(phase) {
     if (!phase) return '';
     const cls = phaseClass(phase);
@@ -142,24 +163,60 @@ function createStatBlock(val, lbl) {
   </div>`;
 }
 
-function renderWeaponTable(weapons, label) {
-    if (!weapons || !weapons.length) return '';
-    const rows = weapons.map(w => {
-        const props = (w.properties || []).map(p => `<span class="weapon-prop">${escHtml(p)}</span>`).join('');
+/**
+ * Renders a single unified weapon table.
+ * - melee weapons: first column shows "Melee"
+ * - ranged weapons: first column shows "Ranged" and an extra Range column is included
+ * Both weapon sets are listed in one table if a unit has both types.
+ */
+function renderWeaponTables(meleeWeapons, rangedWeapons) {
+    const hasMelee  = meleeWeapons  && meleeWeapons.length;
+    const hasRanged = rangedWeapons && rangedWeapons.length;
+    if (!hasMelee && !hasRanged) return '';
+
+    // Show Range column only when there are ranged weapons
+    const rangeHeader = hasRanged ? '<th>Rng</th>' : '';
+
+    function weaponRow(w, type) {
+        const propsHtml = (w.properties || []).map(p => {
+            const key = p.trim();
+            const hasDesc = KEYWORD_DESCRIPTIONS[key] !== undefined;
+            return hasDesc
+                ? `<span class="weapon-prop weapon-prop--keyword" data-keyword="${escHtml(key)}">${escHtml(key)}</span>`
+                : `<span class="weapon-prop">${escHtml(key)}</span>`;
+        }).join('');
+
+        const rangeCell = hasRanged
+            ? `<td>${type === 'ranged' ? escHtml(String(w.range ?? '–')) + '"' : '–'}</td>`
+            : '';
+
         return `<tr>
-      <td>${escHtml(w.name)}</td>
+      <td class="weapon-type-cell weapon-type--${type}">${type === 'melee' ? 'Melee' : 'Ranged'}</td>
+      <td class="weapon-name-cell">${escHtml(w.name)}</td>
+      ${rangeCell}
       <td>${escHtml(String(w.attack ?? '–'))}</td>
       <td>${escHtml(String(w.hit ?? '–'))}+</td>
       <td>${escHtml(String(w.wound ?? '–'))}+</td>
       <td>${escHtml(String(w.rend ?? '–'))}</td>
       <td>${escHtml(String(w.damage ?? '–'))}</td>
-      <td><div class="weapon-properties">${props}</div></td>
+      <td><div class="weapon-properties">${propsHtml}</div></td>
     </tr>`;
-    }).join('');
-    return `<p class="detail-section-title">${escHtml(label)}</p>
+    }
+
+    const meleeRows  = hasMelee  ? meleeWeapons.map(w  => weaponRow(w,  'melee')).join('') : '';
+    const rangedRows = hasRanged ? rangedWeapons.map(w => weaponRow(w, 'ranged')).join('') : '';
+
+    return `<p class="detail-section-title">Weapons</p>
     <table class="weapon-table">
-      <thead><tr><th>Weapon</th><th>Atk</th><th>Hit</th><th>Wnd</th><th>Rnd</th><th>Dmg</th><th>Prop</th></tr></thead>
-      <tbody>${rows}</tbody>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th class="weapon-name-header">Weapon</th>
+          ${rangeHeader}
+          <th>Atk</th><th>Hit</th><th>Wnd</th><th>Rnd</th><th>Dmg</th><th>Prop</th>
+        </tr>
+      </thead>
+      <tbody>${meleeRows}${rangedRows}</tbody>
     </table>`;
 }
 
@@ -221,8 +278,7 @@ function buildUnitCard(unit) {
       </svg>
     </div>`;
 
-    const meleeHtml = renderWeaponTable(unit.melee_weapons, 'Melee Weapons');
-    const rangedHtml = renderWeaponTable(unit.ranged_weapons, 'Ranged Weapons');
+    const weaponsHtml = renderWeaponTables(unit.melee_weapons, unit.ranged_weapons);
     const unitAbils = (unit.abilities || []).map(a => renderAbilityBlock(a, false)).join('');
     const sharedAbils = sharedAbilities.map(a => renderAbilityBlock(a, true)).join('');
     const abilitiesSection = (unitAbils || sharedAbils)
@@ -236,7 +292,7 @@ function buildUnitCard(unit) {
         if (li.classList.contains('expanded')) { collapseCard(li); }
         else {
             if (openUnitCard && openUnitCard !== li) collapseCard(openUnitCard);
-            expandCard(li, meleeHtml, rangedHtml, abilitiesSection);
+            expandCard(li, weaponsHtml, abilitiesSection);
         }
     }
     top.addEventListener('click', toggleCard);
@@ -245,14 +301,14 @@ function buildUnitCard(unit) {
     return li;
 }
 
-function expandCard(li, meleeHtml, rangedHtml, abilitiesSection) {
+function expandCard(li, weaponsHtml, abilitiesSection) {
     li.classList.add('expanded');
     const wrap = document.createElement('div');
     wrap.className = 'card-detail-wrap';
     const detail = document.createElement('div');
     detail.className = 'card-detail';
     detail.innerHTML = `
-    ${meleeHtml}${rangedHtml}${abilitiesSection}`;
+    ${weaponsHtml}${abilitiesSection}`;
     wrap.appendChild(detail);
     li.appendChild(wrap);
 
@@ -278,7 +334,51 @@ function renderUnits(units) {
     units.forEach(u => dom.unitsList.appendChild(buildUnitCard(u)));
 }
 
-// ─── Card Modal (click to open full popup) ───────────────────────────────────
+// ─── Keyword Tooltip ─────────────────────────────────────────────────────────
+function initKeywordTooltips() {
+    const tooltip = dom.keywordTooltip;
+
+    document.addEventListener('mouseover', e => {
+        const el = e.target.closest('.weapon-prop--keyword');
+        if (!el) return;
+        const key = el.dataset.keyword;
+        const desc = KEYWORD_DESCRIPTIONS[key];
+        if (!desc) return;
+
+        tooltip.textContent = desc;
+        tooltip.setAttribute('aria-hidden', 'false');
+        tooltip.classList.add('visible');
+        positionTooltip(el, tooltip);
+    });
+
+    document.addEventListener('mouseout', e => {
+        if (!e.target.closest('.weapon-prop--keyword')) return;
+        tooltip.classList.remove('visible');
+        tooltip.setAttribute('aria-hidden', 'true');
+    });
+
+    document.addEventListener('mousemove', e => {
+        if (!tooltip.classList.contains('visible')) return;
+        const el = e.target.closest('.weapon-prop--keyword');
+        if (el) positionTooltip(el, tooltip);
+    });
+}
+
+function positionTooltip(anchor, tooltip) {
+    const rect = anchor.getBoundingClientRect();
+    const tipW = tooltip.offsetWidth || 220;
+    const tipH = tooltip.offsetHeight || 60;
+    let left = rect.left + rect.width / 2 - tipW / 2;
+    let top  = rect.top - tipH - 8;
+    // Clamp horizontally
+    left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+    // Flip below if not enough room above
+    if (top < 8) top = rect.bottom + 8;
+    tooltip.style.left = left + 'px';
+    tooltip.style.top  = top  + 'px';
+}
+
+// ─── Card Modal ───────────────────────────────────────────────────────────────
 function showCardModal(card) {
     const phase = normalisePhase(card.phase);
     const cls = phaseClass(phase);
@@ -452,17 +552,28 @@ function initDiceRoller() {
 }
 
 // ─── Panels ──────────────────────────────────────────────────────────────────
-function openPanel(panel) { panel.classList.add('open'); dom.overlay.classList.add('visible'); }
-function closeAllPanels() {
-    dom.armyPanel.classList.remove('open');
-    dom.dicePanel.classList.remove('open');
-    dom.overlay.classList.remove('visible');
+const ALL_PANELS = ['armyPanel', 'dicePanel', 'rulesPanel'];
+
+function openPanel(panelKey) {
+    ALL_PANELS.forEach(k => dom[k].classList.remove('open'));
+    dom[panelKey].classList.add('open');
+    dom.overlay.classList.add('visible');
+    activePanel = panelKey;
 }
+
+function closeAllPanels() {
+    ALL_PANELS.forEach(k => dom[k].classList.remove('open'));
+    dom.overlay.classList.remove('visible');
+    activePanel = null;
+}
+
 function initPanels() {
-    dom.armyTrigger.addEventListener('click', () => openPanel(dom.armyPanel));
+    dom.armyTrigger.addEventListener('click', () => openPanel('armyPanel'));
     dom.closeArmyPanel.addEventListener('click', closeAllPanels);
-    dom.diceTrigger.addEventListener('click', () => openPanel(dom.dicePanel));
+    dom.diceTrigger.addEventListener('click', () => openPanel('dicePanel'));
     dom.closeDicePanel.addEventListener('click', closeAllPanels);
+    dom.rulesTrigger.addEventListener('click', () => openPanel('rulesPanel'));
+    dom.closeRulesPanel.addEventListener('click', closeAllPanels);
     dom.overlay.addEventListener('click', closeAllPanels);
     dom.clearArmyBtn.addEventListener('click', () => { army = {}; updateArmyPanel(); });
     document.addEventListener('keydown', e => {
@@ -473,13 +584,13 @@ function initPanels() {
         }
     });
 }
+
 function initCardsDrawer() {
     dom.cardsToggle.addEventListener('click', () => {
         const o = dom.cardsDrawer.classList.toggle('open');
         dom.cardsToggle.setAttribute('aria-expanded', o);
         dom.cardsBody.setAttribute('aria-hidden', !o);
     });
-    // Close modal when clicking backdrop
     dom.cardModalBd.addEventListener('click', e => {
         if (e.target === dom.cardModalBd) hideCardModal();
     });
@@ -491,6 +602,7 @@ async function init() {
     initCardsDrawer();
     initDiceRoller();
     initPhaseBar();
+    initKeywordTooltips();
     try {
         [allUnits, allCards, sharedAbilities] = await Promise.all([
             loadAllWarscrolls(), loadAllCards(), loadSharedAbilities()

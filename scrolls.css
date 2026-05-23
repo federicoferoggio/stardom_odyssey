@@ -90,7 +90,7 @@
     --header-h: 52px;
     --phase-bar-h: 46px;
     --drawer-h: 52px;
-    --drawer-open-h: 240px;
+    --drawer-open-h: 180px;
 
     --shadow-sm: 0 0 8px rgba(255, 255, 255, 0.08);
     --shadow-md: 0 0 10px rgba(255, 255, 255, 0.2);
@@ -188,7 +188,6 @@ h4 {
     justify-content: space-between;
     padding: 0 var(--space-4);
     z-index: 200;
-    box-shadow: var(--shadow-md);
 }
 
 .header-side {
@@ -1502,4 +1501,81 @@ h4 {
         animation-duration: .01ms !important;
         transition-duration: .01ms !important;
     }
+}
+
+/* ─── Rules Panel ──────────────────────────────────────────────────────────── */
+
+.rules-section {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.rules-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.rules-section-title {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+.rules-section-body {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ─── Weapon table — unified type column ───────────────────────────────────── */
+
+.weapon-type-cell {
+  font-size: calc(var(--text-xs) * 0.85);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: var(--space-2) var(--space-2);
+}
+.weapon-type--melee  { color: var(--red);  }
+.weapon-type--ranged { color: var(--blue); }
+
+.weapon-name-cell { text-align: left; color: var(--text); font-weight: 600; }
+.weapon-name-header { text-align: left; }
+
+/* ─── Keyword Tooltip ──────────────────────────────────────────────────────── */
+
+.weapon-prop--keyword {
+  cursor: help;
+  border-color: rgba(201, 168, 76, 0.55);
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.08);
+  transition: background var(--transition), border-color var(--transition);
+}
+.weapon-prop--keyword:hover {
+  background: rgba(201, 168, 76, 0.18);
+  border-color: var(--gold);
+}
+
+.keyword-tooltip {
+  position: fixed;
+  z-index: 9999;
+  max-width: 260px;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(10, 10, 10, 0.96);
+  border: 1px solid var(--gold-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.55;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+.keyword-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
