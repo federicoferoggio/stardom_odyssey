@@ -1,0 +1,9 @@
+{
+  "id": "i-can-do-that-too",
+  "name": "I Can do That too!",
+  "type": "General",
+  "cost": "Two uses of any lmited ability (spells not included) that recharge every long rest.",
+  "phase": "charge",
+  "use": "Your own unit during the enemy's charge phase if it is not in combat.",
+  "effect": "That unit can use a Charge ability as if it were your charge phase."
+}

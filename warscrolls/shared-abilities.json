@@ -1,0 +1,76 @@
+{
+  "abilities": [
+    {
+      "name": "Mercenary Training",
+      "phase": "deployment",
+      "uses_per_round": 999,
+      "description": "Pick an enemy unit. This unit gains a +1 to any wound roll against that creature."
+    },
+    {
+      "name": "Move",
+      "phase": "movement",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that is not in combat to use this ability. That unit can move a distance up to its Move characteristic. That unit cannot move into combat during any part of that move."
+    },
+    {
+      "name": "Run",
+      "phase": "movement",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that is not in combat to use this ability. Make a run roll of D6. That unit can move a distance up to its Move characteristic added to the run roll. That unit cannot move into combat during any part of that move."
+    },
+    {
+      "name": "Retreat",
+      "phase": "movement",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that is in combat to use this ability. Inflict D3 mortal damage on that unit. That unit can move a distance up to its Move characteristic. That unit can move through the combat ranges of any enemy units but cannot end that move within an enemy unit's combat range."
+    },
+    {
+      "name": "Shoot",
+      "phase": "shooting",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that has not used a Run or Retreat ability this turn to use this ability. Then, pick one or more enemy units as the ability. Then, pick one or more enemy units as the target(s) of that unit's attacks. Resolve shooting attacks against the target unit(s)."
+    },
+    {
+      "name": "Cover Fire",
+      "phase": "shooting",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that has not used a Run or Retreat ability this turn to use this ability. Then, pick one or more enemy units as the ability. Then, pick one or more enemy units as the target(s) of that unit's attacks. Resolve shooting attacks against the target unit(s), but subtract -1 to their hit rolls. If the target unit is damaged, it can roll only 1D6 if it takes the Charge ability this round."
+    },
+    {
+      "name": "Charge",
+      "phase": "charge",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that is not in combat and has not used a Run or Retreat ability this turn to use this ability. Then, make a charge roll of 2D6. That unit can move a distance up to the value of the charge roll. That unit can move through the combat ranges of any enemy units and must end that move adjacent to a visible enemy unit. If it does so, the unit using this ability enemy unit. If it does so, the unit using this ability has charged."
+    },
+    {
+      "name": "Fight",
+      "phase": "fight",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit that is in combat or that charged charged this turn to use this ability. That unit can make a unit can make a reshuffle move. Then, if that unit is that unit is in combat, you must pick one or more , you must pick one or more enemy units as the target(s) of that unit's attacks enemy units as the target(s) of that unit's attacks. Resolve Resolve combat attacks against the target unit(s)."
+    },
+    {
+      "name": "Activate Place of Power",
+      "phase": "startturn",
+      "uses_per_round": 999,
+      "description": "Pick a friendly unit controlling a Place of Power to use this ability. Roll a dice. On a 1, inflict D3 mortal damage to the unit. On any other result, you gain the benefits indicated by the place of power."
+    },
+    {
+      "name": "Counterspelling (if Wizard)",
+      "phase": "power",
+      "uses_per_round": 1,
+      "description": "Make an counterspell roll of 2D6. If the roll exceeds the casting roll for the spell, then spell's effect is not resolved. After resolving this reaction, it cannot be used anymore by this unit."
+    },
+    {
+      "name": "Religious Conviction (if Priest)",
+      "phase": "power",
+      "uses_per_round": 1,
+      "description": "Make an prayer roll of 2D6 for this unit. On a 8+, this unit gains Ward (6+) for the rest of the round. After resolving this action, it cannot be used anymore by this unit."
+    },
+    {
+      "name": "Domination (if Warrior)",
+      "phase": "power",
+      "uses_per_round": 1,
+      "description": "For the rest of this turn, increase by 2 the control score of each token in this unit. After resolving this action, it cannot be used anymore by this unit."
+    }
+  ]
+}

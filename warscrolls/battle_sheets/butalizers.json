@@ -1,0 +1,77 @@
+{
+  "id": "butalizers",
+  "name": "Butalizers",
+  "tags": [
+    "Cavalry",
+    "Akbe",
+    "The Hand"
+  ],
+  "health": 5,
+  "save": 3,
+  "move": 14,
+  "control": 2,
+  "morale": 4,
+  "points": 80,
+  "melee_weapons": [
+    {
+      "name": "Greatswords",
+      "attack": 1,
+      "hit": 3,
+      "wound": 3,
+      "rend": 1,
+      "damage": 2,
+      "properties": [
+      ]
+    },
+    {
+      "name": "Tiger's Claws",
+      "attack": 3,
+      "hit": 4,
+      "wound": 3,
+      "rend": 0,
+      "damage": 1,
+      "properties": [
+        "Companion"
+      ]
+    }
+  ],
+  "ranged_weapons": [
+    {
+      "name": "Hand-Cannon",
+      "range": 10,
+      "attack": 2,
+      "hit": 4,
+      "wound": 4,
+      "rend": 0,
+      "damage": 1,
+      "properties": [
+        "Shoot in Combat"
+      ]
+    },
+    {
+      "name": "Starred Javelin",
+      "range": 6,
+      "attack": 1,
+      "hit": 3,
+      "wound": 3,
+      "rend": 0,
+      "damage": 2,
+      "properties": [
+      ]
+    }
+  ],
+  "abilities": [
+    {
+      "name": "Readings of the Future",
+      "phase": "Passive",
+      "uses_per_round": 999,
+      "description": "This unit can use its Shooting ability even if it has used the Run or Retreat abilities this round."
+    },
+    {
+      "name": "Charging Volley",
+      "phase": "Charge",
+      "uses_per_round": 1,
+      "description": "Declare an enemy unit that you are not in combat with to be the target of this ability. This unit can use a Shoot ability as if it were your shooting phase against that target. You must then charge against that unit."
+    }
+  ]
+}

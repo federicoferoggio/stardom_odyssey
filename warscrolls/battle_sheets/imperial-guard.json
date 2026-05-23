@@ -1,0 +1,34 @@
+{
+  "id": "imperial-guard",
+  "name": "Imperial Guard",
+  "tags": [
+    "Infantry",
+    "The Hand"
+  ],
+  "health": 1,
+  "save": 3,
+  "move": 4,
+  "control": 2,
+  "morale": 10,
+  "points": 11,
+  "melee_weapons": [
+    {
+      "name": "Golden Blades",
+      "attack": 2,
+      "hit": 3,
+      "wound": 4,
+      "rend": 1,
+      "damage": 1,
+      "properties": []
+    }
+  ],
+  "ranged_weapons": [],
+  "abilities": [
+    {
+      "name": "Defensive Wall",
+      "phase": "Passive",
+      "uses_per_round": 999,
+      "description": "If this unit did not charge this turn, all of its weapons have the Strike-First property."
+    }
+  ]
+}

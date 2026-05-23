@@ -1,0 +1,9 @@
+{
+  "id": "tatakae-tatakae",
+  "name": "Tatakae, Tatakae!",
+  "type": "General",
+  "cost": "Reduce until your next long rest your health point maximum by 20%.",
+  "phase": "fight",
+  "use": "Your own unit when it is receiving enough damage to be completely disbanded.",
+  "effect": "Your unit does not disband, retaining instead D3 tokens."
+}

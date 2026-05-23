@@ -1,0 +1,9 @@
+{
+  "id": "tactical-walkback",
+  "name": "'Tactical Walkback'",
+  "type": "General",
+  "cost": "You gain one point of exhaustion.",
+  "phase": "movement",
+  "use": "Your own unit, if not in combat, during the enemy's movement phase. Roll a D6",
+  "effect": "That unit can move up to a distance equal to the number you rolled."
+}

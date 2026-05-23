@@ -1,0 +1,9 @@
+{
+  "id": "i-studied-for-this",
+  "name": "I studied for this!",
+  "type": "General",
+  "cost": "Reduce your highest attribute score by 6 points until the end of your next long rest",
+  "phase": "deployment",
+  "use": "A visibile friendly unit wholly withing 12\" of your units.",
+  "effect": "That unit gains Ward (6+) until your next powers phase."
+}

@@ -4,107 +4,173 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light only">
-    <title>Warscroll & Card Viewer</title>
-
+    <title>Warscroll Library</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="scrolls.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Josefin+Sans:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="scrolls.css" />
 </head>
 
-<body id="container_all">
-    <!-- Start Navigation Menu -->
-    <nav class="navigation-menu"></nav>
-    <script src="nav.js"></script>
-    <link rel="stylesheet" href="nav.css">
-    <!-- End Navigation Menu-->
+<body>
 
-    <div class="side-buttons" style="position:fixed; left:16px; top:16px; display:flex; flex-direction:column; gap:8px; z-index:1000;">
-        <button class="side-menu-button">Open Army Builder</button>
-        <button class="dice-menu-button">Open Dice Roller</button>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-side">
+            <button id="army-trigger" class="panel-trigger" aria-label="Open army builder">
+                <svg class="logo-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                </svg>
+                <span>Army</span>
+            </button>
+        </div>
+        <h1 class="header-title">
+            <svg class="logo-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.8">
+                <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Warscroll Library
+        </h1>
+        <div class="header-side header-right">
+            <button id="dice-trigger" class="panel-trigger" aria-label="Open dice roller">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="3" />
+                    <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+                    <circle cx="16" cy="8" r="1.5" fill="currentColor" />
+                    <circle cx="8" cy="16" r="1.5" fill="currentColor" />
+                    <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                </svg>
+                <span>Dice</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Phase Selector Bar -->
+    <div class="phase-bar" id="phase-bar" role="toolbar" aria-label="Phase filter">
+        <button class="phase-btn" data-phase="Deployment" aria-pressed="false">Deployment</button>
+        <button class="phase-btn" data-phase="Start Turn" aria-pressed="false">Start Turn</button>
+        <button class="phase-btn" data-phase="Power" aria-pressed="false">Power</button>
+        <button class="phase-btn" data-phase="Movement" aria-pressed="false">Movement</button>
+        <button class="phase-btn" data-phase="Shooting" aria-pressed="false">Shooting</button>
+        <button class="phase-btn" data-phase="Charge" aria-pressed="false">Charge</button>
+        <button class="phase-btn" data-phase="Fight" aria-pressed="false">Fight</button>
+        <button class="phase-btn" data-phase="End Turn" aria-pressed="false">End Turn</button>
     </div>
 
-    <div id="side-menu" class="side-menu">
-        <button class="close-side-menu-button">X</button>
-        <div class="side-menu-content">
-            <div class="army-builder-section">
-                <h3>Create Your Own Army</h3>
-                <div id="unitQuantityInputs">
+    <!-- App Body -->
+    <div class="app-body">
+        <div class="panel-overlay" id="panel-overlay"></div>
+
+        <!-- Army Builder -->
+        <aside class="side-panel left-panel" id="army-panel" aria-label="Army Builder">
+            <div class="panel-header">
+                <h2>Army Builder</h2>
+                <button id="close-army-panel" class="close-panel-btn" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="points-wrap">
+                    <div class="points-bar-wrap">
+                        <div class="points-bar-track">
+                            <div class="points-bar-fill" id="points-fill"></div>
+                        </div>
+                        <span class="points-label" id="points-label">0 / 2000 pts</span>
                     </div>
-                <div id="armyTotals"></div>
-                <div class="points-bar-container">
-                    <div class="points-bar-fill" id="pointsProgressBar"></div>
-                    <div class="points-bar-text" id="pointsProgressText">0 / 500 Points</div>
+                </div>
+                <ul id="army-units-list" class="army-units-list"></ul>
+                <button id="clear-army-btn" class="clear-army-btn">Clear Army</button>
+            </div>
+        </aside>
+
+        <!-- Dice Roller -->
+        <aside class="side-panel right-panel" id="dice-panel" aria-label="Dice Roller">
+            <div class="panel-header">
+                <h2>Dice Roller</h2>
+                <button id="close-dice-panel" class="close-panel-btn" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="panel-body">
+                <div class="dice-quick">
+                    <p class="section-label">Quick Roll</p>
+                    <div class="dice-quick-btns">
+                        <button class="dice-quick-btn" data-sides="4">D4</button>
+                        <button class="dice-quick-btn" data-sides="6">D6</button>
+                        <button class="dice-quick-btn" data-sides="8">D8</button>
+                        <button class="dice-quick-btn" data-sides="10">D10</button>
+                        <button class="dice-quick-btn" data-sides="12">D12</button>
+                        <button class="dice-quick-btn" data-sides="20">D20</button>
+                    </div>
+                    <div id="quick-result" class="quick-result" aria-live="polite"></div>
+                </div>
+                <div class="dice-calc">
+                    <p class="section-label">Attack Calculator</p>
+                    <div class="calc-grid">
+                        <label>Tokens<input id="tok-input" type="number" min="1" max="100" value="10" /></label>
+                        <label>Attacks<input id="atk-input" type="number" min="1" max="20" value="2" /></label>
+                        <label>Hit<input id="hit-input" type="number" min="2" max="6" value="3" /></label>
+                        <label>Wound<input id="wnd-input" type="number" min="2" max="6" value="4" /></label>
+                        <label>Rend<input id="rnd-input" type="number" min="0" max="3" value="1" /></label>
+                        <label>Damage<input id="dmg-input" type="number" min="1" max="10" value="1" /></label>
+                    </div>
+                    <button id="roll-dice-btn" class="roll-btn">Roll Attack</button>
+                    <div id="roll-result" class="roll-result" aria-live="polite"></div>
+                </div>
+                <div class="dice-history">
+                    <p class="section-label">History</p>
+                    <ul id="roll-history" class="roll-history-list"></ul>
                 </div>
             </div>
+        </aside>
+
+        <!-- Units -->
+        <main class="units-main">
+            <ul id="units-list" class="units-list" aria-label="Warscroll units"></ul>
+        </main>
+    </div>
+
+    <!-- Cards Drawer -->
+    <div class="cards-drawer" id="cards-drawer">
+        <button class="cards-toggle" id="cards-toggle" aria-expanded="false" aria-controls="cards-body">
+            <span class="cards-toggle-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                </svg>
+                Cards Collection
+            </span>
+            <span class="card-count-badge" id="card-count-badge">0</span>
+            <svg class="drawer-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <polyline points="18 15 12 9 6 15" />
+            </svg>
+        </button>
+        <div class="cards-body" id="cards-body" aria-hidden="true">
+            <div class="card-scroller" id="card-scroller"></div>
         </div>
     </div>
 
-    <div id="dice-menu" class="side-menu dice-menu">
-        <button class="close-dice-menu-button">X</button>
-        <div class="side-menu-content">
-            <div class="dice-roller-section">
-                <h3>Dice Roller</h3>
-                <div class="dice-input-group">
-                    <label for="tok-input">TOK:</label>
-                    <input type="number" id="tok-input" value="1" min="1">
-                </div>
-                <div class="dice-input-group">
-                    <label for="atk-input">ATK:</label>
-                    <input type="number" id="atk-input" value="1" min="1">
-                </div>
-                <div class="dice-input-group">
-                    <label for="hit-input">HIT:</label>
-                    <input type="number" id="hit-input" value="1" min="1">
-                </div>
-                <div class="dice-input-group">
-                    <label for="wnd-input">WND:</label>
-                    <input type="number" id="wnd-input" value="1" min="1">
-                </div>
-
-                <div style="margin-top:12px;">
-                    <button id="roll-dice-btn">Roll Dice</button>
-                </div>
-
-                <div id="roll-result" style="margin-top:12px;">
-                    <p class="muted">No roll yet.</p>
-                </div>
-            </div>
-        </div>
+    <!-- Card Modal -->
+    <div class="card-modal-backdrop" id="card-modal-backdrop" role="dialog" aria-modal="true" aria-label="Card detail">
+        <div class="card-modal" id="card-modal"></div>
     </div>
 
-    <div class="container">
-        <h1 class="header-title">Warscroll Library</h1>
-
-        <div class="warscroll-section">
-            <button id="prev-btn" class="nav-btn hidden">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div id="warscroll-container" class="warscroll-container">
-                <p id="warscroll-loader" class="loader-text">Loading Warscrolls...</p>
-            </div>
-            <button id="next-btn" class="nav-btn hidden">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-
-        <div class="cards-section">
-            <h2 class="header-title">Available Cards</h2>
-
-            <div class="card-scroller-container">
-                <div id="card-scroller" class="card-scroller">
-                    <p id="card-loader" class="loader-text">Loading Cards...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
     <script src="scrolls.js"></script>
 </body>
 

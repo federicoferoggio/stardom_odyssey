@@ -1,0 +1,54 @@
+{
+  "id": "steel-master",
+  "name": "Steel Masters",
+  "tags": [
+    "The Hand",
+    "Samarkhoy",
+    "Infantry"
+  ],
+  "health": 1,
+  "save": 5,
+  "move": 6,
+  "control": 1,
+  "morale": 10,
+  "points": 15,
+  "melee_weapons": [
+    {
+      "name": "Emergency Machete",
+      "attack": 1,
+      "hit": 5,
+      "wound": 3,
+      "rend": 0,
+      "damage": 1,
+      "properties": []
+    }
+  ],
+  "ranged_weapons": [
+    {
+      "name": "Muskets",
+      "range": 16,
+      "attack": 2,
+      "hit": 3,
+      "wound": 3,
+      "rend": 0,
+      "damage": 1,
+      "properties": [
+        "Anti-Infantry"
+      ]
+    }
+  ],
+  "abilities": [
+    {
+      "name": "Firing line",
+      "phase": "shooting",
+      "uses_per_round": 1,
+      "description": "If this unit has not moved this round and was not deployed at the start of the turn, add 1 to the attack characteristic of this unit's Muskets for the rest of the turn."
+    },
+    {
+      "name": "Curved Armored Plating",
+      "phase": "passive",
+      "uses_per_round": 999,
+      "description": "When saving against wounds from attacks, this unit can add +1 on its save roll."
+    }
+  ]
+}

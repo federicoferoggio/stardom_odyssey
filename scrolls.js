@@ -1,274 +1,506 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const warscrollFiles = [
-        'Imperial Guard.svg',
-        'Spiderlings.svg',
-        'Korrian Cultist.svg',
-        'Steel Master.svg',
-        'Butalizers.svg'
-    ];
-    const cardFiles = ['1.svg', '2.svg', '3.svg', '4.svg', '5.svg', '6.svg', '7.svg', '8.svg'];
+/* ===================================================
+   WARSCROLL LIBRARY — scrolls.js
+=================================================== */
+'use strict';
 
-    async function fetchAndDisplaySVGs(directory, fileList, containerId, itemClass, loaderId) {
-        const container = document.getElementById(containerId);
-        const loader = document.getElementById(loaderId);
+const WARSCROLL_FILES = [
+    'warscrolls/battle_sheets/imperial-guard.json',
+    'warscrolls/battle_sheets/steel-master.json',
+    'warscrolls/battle_sheets/spiderlings.json',
+    'warscrolls/battle_sheets/korrian-cultist.json',
+    'warscrolls/battle_sheets/butalizers.json',
+];
+const CARD_FILES = [
+    'warscrolls/cards/i-can-do-that-too.json',
+    'warscrolls/cards/tactical-walkback.json',
+    'warscrolls/cards/tatakae-tatakae.json',
+    'warscrolls/cards/i-studied-for-this.json',
+    'warscrolls/cards/mayhaps-nope.json',
+    'warscrolls/cards/sexy-blue-tigers.json',
+    'warscrolls/cards/throw-away-your-trash.json'
+];
+const SHARED_ABILITIES_FILE = 'warscrolls/shared-abilities.json';
+const MAX_POINTS = 2000;
 
-        if (fileList.length === 0) {
-            container.innerHTML = `<p class="text-gray-400">No files listed for this section.</p>`;
-            container.classList.add('p-4', 'items-center', 'justify-center');
-            return;
-        }
+// ─── Phase map ───────────────────────────────────────────────────────────────
+const PHASE_ALIASES = {
+    'startturn': 'Start Turn',
+    'power': 'Power',
+    'movement': 'Movement',
+    'shooting': 'Shooting',
+    'charge': 'Charge',
+    'fight': 'Fight',
+    'endturn': 'End Turn',
+    'passive': 'Passive',
+    'deployment': 'Deployment'
+};
+function normalisePhase(raw) {
+    if (!raw) return null;
+    const key = raw.trim().toLowerCase();
+    return PHASE_ALIASES[key] || raw.trim();
+}
 
-        if (loader) loader.style.display = 'none';
-        if (containerId === "card-scroller") container.innerHTML = '';
+// ─── State ───────────────────────────────────────────────────────────────────
+let allUnits = [];
+let allCards = [];
+let sharedAbilities = [];
+let army = {};
+let rollHistory = [];
+let openUnitCard = null;
+let activePhase = null;
 
-        for (const fileName of fileList) {
-            try {
-                const response = await fetch(`./${directory}/${fileName}`);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const svgContent = await response.text();
+// ─── DOM ─────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const dom = {
+    armyTrigger: $('army-trigger'),
+    armyPanel: $('army-panel'),
+    closeArmyPanel: $('close-army-panel'),
+    diceTrigger: $('dice-trigger'),
+    dicePanel: $('dice-panel'),
+    closeDicePanel: $('close-dice-panel'),
+    overlay: $('panel-overlay'),
+    unitsList: $('units-list'),
+    armyUnitsList: $('army-units-list'),
+    pointsFill: $('points-fill'),
+    pointsLabel: $('points-label'),
+    clearArmyBtn: $('clear-army-btn'),
+    cardsDrawer: $('cards-drawer'),
+    cardsToggle: $('cards-toggle'),
+    cardsBody: $('cards-body'),
+    cardScroller: $('card-scroller'),
+    cardCountBadge: $('card-count-badge'),
+    rollDiceBtn: $('roll-dice-btn'),
+    rollResult: $('roll-result'),
+    rollHistory: $('roll-history'),
+    quickResult: $('quick-result'),
+    tokInput: $('tok-input'),
+    atkInput: $('atk-input'),
+    hitInput: $('hit-input'),
+    wndInput: $('wnd-input'),
+    rndInput: $('rnd-input'),
+    dmgInput: $('dmg-input'),
+    phaseBar: $('phase-bar'),
+    cardModal: $('card-modal'),
+    cardModalBd: $('card-modal-backdrop'),
+};
 
-                const wrapper = document.createElement('div');
-                wrapper.className = itemClass;
-                wrapper.innerHTML = svgContent;
-                container.appendChild(wrapper);
-            } catch (error) {
-                const errorWrapper = document.createElement('div');
-                errorWrapper.className = itemClass;
-                errorWrapper.innerHTML = `<div class="error-message"><p>Error loading<br>${fileName}</p></div>`;
-                container.appendChild(errorWrapper);
-            }
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function escHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function phaseClass(phase) {
+    if (!phase) return '';
+    const map = {
+        'Start Turn': 'startturn',
+        'Power': 'power',
+        'Movement': 'movement',
+        'Shooting': 'shooting',
+        'Charge': 'charge',
+        'Fight': 'fight',
+        'End Turn': 'endturn',
+        'Passive': 'passive',
+        'Deployment': 'deployment',
+    };
+    return map[phase] || '';
+}
+
+// Always-coloured phase tag — used in abilities, card items, and the card modal
+function phaseTag(phase) {
+    if (!phase) return '';
+    const cls = phaseClass(phase);
+    const label = phase === 'passive' ? 'Passive' : phase;
+    return `<span class="phase-tag phase-tag--${cls}" data-phase="${escHtml(phase)}">${escHtml(label)}</span>`;
+}
+
+// ─── Data Loading ────────────────────────────────────────────────────────────
+async function loadJSON(path) {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+    return res.json();
+}
+async function loadAllWarscrolls() {
+    const r = await Promise.allSettled(WARSCROLL_FILES.map(loadJSON));
+    return r.filter(x => x.status === 'fulfilled').map(x => x.value);
+}
+async function loadAllCards() {
+    const r = await Promise.allSettled(CARD_FILES.map(loadJSON));
+    return r.filter(x => x.status === 'fulfilled').map(x => x.value);
+}
+async function loadSharedAbilities() {
+    try { const d = await loadJSON(SHARED_ABILITIES_FILE); return d.abilities || []; }
+    catch { return []; }
+}
+
+// ─── Unit Rendering ──────────────────────────────────────────────────────────
+function createStatBlock(val, lbl) {
+    return `<div class="stat-block">
+    <span class="stat-value">${escHtml(String(val))}</span>
+    <span class="stat-label">${escHtml(lbl)}</span>
+  </div>`;
+}
+
+function renderWeaponTable(weapons, label) {
+    if (!weapons || !weapons.length) return '';
+    const rows = weapons.map(w => {
+        const props = (w.properties || []).map(p => `<span class="weapon-prop">${escHtml(p)}</span>`).join('');
+        return `<tr>
+      <td>${escHtml(w.name)}</td>
+      <td>${escHtml(String(w.attack ?? '–'))}</td>
+      <td>${escHtml(String(w.hit ?? '–'))}+</td>
+      <td>${escHtml(String(w.wound ?? '–'))}+</td>
+      <td>${escHtml(String(w.rend ?? '–'))}</td>
+      <td>${escHtml(String(w.damage ?? '–'))}</td>
+      <td><div class="weapon-properties">${props}</div></td>
+    </tr>`;
+    }).join('');
+    return `<p class="detail-section-title">${escHtml(label)}</p>
+    <table class="weapon-table">
+      <thead><tr><th>Weapon</th><th>Atk</th><th>Hit</th><th>Wnd</th><th>Rnd</th><th>Dmg</th><th>Prop</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderAbilityBlock(a, isShared = false) {
+    const phase = normalisePhase(a.phase);
+    const uses = (!a.uses_per_round || a.uses_per_round >= 999) ? '∞' : `${a.uses_per_round}×`;
+    const sharedBadge = isShared
+        ? `<div class="shared-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>Shared ability</div>`
+        : '';
+    return `<div class="ability-block${isShared ? ' shared-ability' : ''}" data-phase="${escHtml(phase || '')}">
+    ${sharedBadge}
+    <div class="ability-header">
+      <span class="ability-name">${escHtml(a.name)}</span>
+      <div class="ability-meta">
+        ${phase ? phaseTag(phase) : ''}
+        <span class="ability-uses">${uses}</span>
+      </div>
+    </div>
+    <p class="ability-desc">${escHtml(a.description)}</p>
+  </div>`;
+}
+
+function buildUnitCard(unit) {
+    const li = document.createElement('li');
+    li.className = 'unit-card';
+    li.dataset.unitId = unit.id;
+
+    const top = document.createElement('div');
+    top.className = 'unit-card-top';
+    top.setAttribute('role', 'button');
+    top.setAttribute('aria-expanded', 'false');
+    top.setAttribute('tabindex', '0');
+
+    const tagsHtml = (unit.tags || []).map(t => `<span class="unit-tag">${escHtml(t)}</span>`).join('');
+    const statsHtml = [
+        createStatBlock(unit.move ?? '–', 'Move'),
+        createStatBlock(unit.health ?? '–', 'HP'),
+        createStatBlock(unit.save ?? '–', 'Save'),
+        createStatBlock(unit.control ?? '–', 'Ctrl'),
+        createStatBlock(unit.morale ?? '–', 'Morale'),
+    ].join('');
+
+    top.innerHTML = `
+    <div class="unit-card-info">
+      <h3 class="unit-card-name">${escHtml(unit.name)}</h3>
+      <div class="unit-tags">${tagsHtml}</div>
+      <div class="unit-stats">${statsHtml}</div>
+    </div>
+    <div class="unit-card-actions">
+      <span class="unit-pts">${escHtml(String(unit.points ?? 0))} pts</span>
+      <button class="add-unit-btn" aria-label="Add ${escHtml(unit.name)} to army">+</button>
+      <svg class="expand-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>`;
+
+    const meleeHtml = renderWeaponTable(unit.melee_weapons, 'Melee Weapons');
+    const rangedHtml = renderWeaponTable(unit.ranged_weapons, 'Ranged Weapons');
+    const unitAbils = (unit.abilities || []).map(a => renderAbilityBlock(a, false)).join('');
+    const sharedAbils = sharedAbilities.map(a => renderAbilityBlock(a, true)).join('');
+    const abilitiesSection = (unitAbils || sharedAbils)
+        ? `<p class="detail-section-title">Abilities</p>${unitAbils}${sharedAbils}` : '';
+
+    li.appendChild(top);
+    li._unitData = unit;
+
+    function toggleCard(e) {
+        if (e.target.closest('.add-unit-btn')) return;
+        if (li.classList.contains('expanded')) { collapseCard(li); }
+        else {
+            if (openUnitCard && openUnitCard !== li) collapseCard(openUnitCard);
+            expandCard(li, meleeHtml, rangedHtml, abilitiesSection);
         }
     }
+    top.addEventListener('click', toggleCard);
+    top.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCard(e); } });
+    top.querySelector('.add-unit-btn').addEventListener('click', e => { e.stopPropagation(); addUnitToArmy(unit); });
+    return li;
+}
 
-    await fetchAndDisplaySVGs('warscrolls/battle_sheets', warscrollFiles, 'warscroll-container', 'warscroll', 'warscroll-loader');
-    await fetchAndDisplaySVGs('warscrolls/cards', cardFiles, 'card-scroller', 'card', 'card-loader');
-    const warscrollContainer = document.getElementById('warscroll-container');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const warscrolls = document.querySelectorAll('.warscroll');
+function expandCard(li, meleeHtml, rangedHtml, abilitiesSection) {
+    li.classList.add('expanded');
+    const wrap = document.createElement('div');
+    wrap.className = 'card-detail-wrap';
+    const detail = document.createElement('div');
+    detail.className = 'card-detail';
+    detail.innerHTML = `
+    ${meleeHtml}${rangedHtml}${abilitiesSection}`;
+    wrap.appendChild(detail);
+    li.appendChild(wrap);
 
-    if (warscrolls.length > 1) {
-        prevBtn.classList.remove('hidden');
-        nextBtn.classList.remove('hidden');
+    const top = li.querySelector('.unit-card-top');
+    top.setAttribute('aria-expanded', 'true');
+    top.addEventListener('click', () => collapseCard(li), { once: true });
 
-        let currentIndex = 0;
-        const totalWarscrolls = warscrolls.length;
+    openUnitCard = li;
+    applyPhaseFilter();
+}
 
-        function updateWarscrollPosition() {
-            if (warscrolls[currentIndex]) {
-                const scrollAmount = warscrolls[currentIndex].offsetLeft;
-                warscrollContainer.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+function collapseCard(li) {
+    li.classList.remove('expanded');
+    const wrap = li.querySelector('.card-detail-wrap');
+    if (wrap) li.removeChild(wrap);
+    li.querySelector('.unit-card-top').setAttribute('aria-expanded', 'false');
+    if (openUnitCard === li) openUnitCard = null;
+}
+
+function renderUnits(units) {
+    dom.unitsList.innerHTML = '';
+    if (!units || !units.length) { dom.unitsList.innerHTML = '<li class="empty-list">No units found.</li>'; return; }
+    units.forEach(u => dom.unitsList.appendChild(buildUnitCard(u)));
+}
+
+// ─── Card Modal (click to open full popup) ───────────────────────────────────
+function showCardModal(card) {
+    const phase = normalisePhase(card.phase);
+    const cls = phaseClass(phase);
+    dom.cardModal.innerHTML = `
+    <div class="cm-header phase-header--${cls}">
+      <div class="cm-header-text">
+        <h2 class="cm-name">${escHtml(card.name)}</h2>
+        <div class="cm-meta">
+          ${card.type ? `<span class="cm-type">${escHtml(card.type)}</span>` : ''}
+          ${phase ? phaseTag(phase) : ''}
+        </div>
+      </div>
+      <button class="cm-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cm-body">
+      ${card.cost ? `
+        <div class="cm-row">
+          <span class="cm-row-label">Cost</span>
+          <p class="cm-row-value">${escHtml(card.cost)}</p>
+        </div>` : ''}
+      ${card.use ? `
+        <div class="cm-row">
+          <span class="cm-row-label">Use</span>
+          <p class="cm-row-value">${escHtml(card.use)}</p>
+        </div>` : ''}
+      ${card.effect ? `
+        <div class="cm-row">
+          <span class="cm-row-label">Effect</span>
+          <p class="cm-row-value cm-effect">${escHtml(card.effect)}</p>
+        </div>` : ''}
+    </div>`;
+
+    dom.cardModal.querySelector('.cm-close').addEventListener('click', hideCardModal);
+    dom.cardModalBd.classList.add('open');
+}
+
+function hideCardModal() {
+    dom.cardModalBd.classList.remove('open');
+}
+
+// ─── Phase Filter ────────────────────────────────────────────────────────────
+function applyPhaseFilter() {
+    document.querySelectorAll('.ability-block').forEach(block => {
+        if (!activePhase) { block.classList.remove('phase-hidden'); return; }
+        const bp = (block.dataset.phase || '').toLowerCase();
+        const ap = activePhase.toLowerCase();
+        block.classList.toggle('phase-hidden', !(bp === 'passive' || bp === ap));
+    });
+    document.querySelectorAll('.card-item').forEach(item => {
+        if (!activePhase) { item.style.display = ''; return; }
+        const cp = (item.dataset.phase || '').toLowerCase();
+        item.style.display = (cp === 'passive' || cp === activePhase.toLowerCase()) ? '' : 'none';
+    });
+}
+
+function initPhaseBar() {
+    dom.phaseBar.querySelectorAll('.phase-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const phase = btn.dataset.phase;
+            if (activePhase === phase) {
+                activePhase = null;
+                btn.setAttribute('aria-pressed', 'false');
+            } else {
+                dom.phaseBar.querySelectorAll('.phase-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+                activePhase = phase;
+                btn.setAttribute('aria-pressed', 'true');
             }
-        }
-
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % totalWarscrolls;
-            updateWarscrollPosition();
-        });
-
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + totalWarscrolls) % totalWarscrolls;
-            updateWarscrollPosition();
-        });
-
-        window.addEventListener('resize', updateWarscrollPosition);
-    }
-
-    document.querySelectorAll('.card').forEach(card => {
-        let floatingClone;
-
-        card.addEventListener('mouseenter', (e) => {
-            const svg = card.querySelector('svg');
-            if (!svg) return;
-
-            const clone = svg.cloneNode(true);
-            floatingClone = document.createElement('div');
-            floatingClone.style.position = 'fixed';
-            floatingClone.style.pointerEvents = 'none';
-            floatingClone.style.zIndex = '99999';
-            floatingClone.style.transform = 'scale(0.4)';
-            floatingClone.style.transformOrigin = 'center';
-            floatingClone.style.opacity = '0';
-            floatingClone.style.transition = 'opacity 0.2s ease-out';
-
-            floatingClone.appendChild(clone);
-            document.body.appendChild(floatingClone);
-
-            const cloneWidth = floatingClone.offsetWidth;
-            const cloneHeight = floatingClone.offsetHeight;
-            floatingClone.style.left = `${e.clientX - cloneWidth / 2}px`;
-            floatingClone.style.top = `${e.clientY - cloneHeight / 2}px`;
-
-            requestAnimationFrame(() => {
-                floatingClone.style.opacity = '1';
-            });
-        });
-
-        card.addEventListener('mousemove', (e) => {
-            if (!floatingClone) return;
-            const cloneWidth = floatingClone.offsetWidth;
-            const cloneHeight = floatingClone.offsetHeight;
-            floatingClone.style.left = `${e.clientX - cloneWidth / 2}px`;
-            floatingClone.style.top = `${e.clientY - cloneHeight / 2}px`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            if (floatingClone) {
-                floatingClone.remove();
-                floatingClone = null;
-            }
+            applyPhaseFilter();
         });
     });
+}
 
-    // New Side Menu Functionality
-    const sideMenuButton = document.querySelector('.side-menu-button');
-    const sideMenu = document.getElementById('side-menu');
-    const closeSideMenuButton = document.querySelector('.close-side-menu-button');
+// ─── Cards Drawer ────────────────────────────────────────────────────────────
+function renderCards(cards) {
+    dom.cardCountBadge.textContent = cards.length;
+    dom.cardScroller.innerHTML = '';
+    if (!cards || !cards.length) { dom.cardScroller.innerHTML = '<p class="empty-panel">No cards found.</p>'; return; }
 
-    sideMenuButton.addEventListener('click', () => {
-        sideMenu.classList.add('open');
+    cards.forEach(card => {
+        const phase = normalisePhase(card.phase);
+        const cls = phaseClass(phase);
+        const el = document.createElement('div');
+        el.className = `card-item card-item--${cls}`;
+        el.dataset.phase = (phase || '').toLowerCase();
+        el.innerHTML = `
+      <p class="card-item-name">${escHtml(card.name)}</p>
+      <div class="card-item-footer">
+        ${card.type ? `<span class="card-item-type">${escHtml(card.type)}</span>` : ''}
+        ${phase ? phaseTag(phase) : ''}
+      </div>`;
+        el.addEventListener('click', () => showCardModal(card));
+        dom.cardScroller.appendChild(el);
     });
+}
 
-    closeSideMenuButton.addEventListener('click', () => {
-        sideMenu.classList.remove('open');
+// ─── Army Builder ────────────────────────────────────────────────────────────
+function addUnitToArmy(unit) {
+    army[unit.id] ? army[unit.id].qty++ : (army[unit.id] = { unit, qty: 1 });
+    updateArmyPanel();
+}
+function removeUnitFromArmy(id) { delete army[id]; updateArmyPanel(); }
+function changeUnitQty(id, d) {
+    if (!army[id]) return;
+    army[id].qty = Math.max(0, army[id].qty + d);
+    if (!army[id].qty) delete army[id];
+    updateArmyPanel();
+}
+function updateArmyPanel() {
+    const entries = Object.values(army);
+    const totalPts = entries.reduce((s, e) => s + e.unit.points * e.qty, 0);
+    dom.pointsFill.style.width = Math.min(100, (totalPts / MAX_POINTS) * 100) + '%';
+    dom.pointsFill.classList.toggle('over-budget', totalPts > MAX_POINTS);
+    dom.pointsLabel.textContent = `${totalPts} / ${MAX_POINTS} pts`;
+    dom.armyUnitsList.innerHTML = '';
+    if (!entries.length) {
+        dom.armyUnitsList.innerHTML = '<li class="empty-panel">No units yet.<br>Click <strong>+</strong> on any unit.</li>';
+        return;
+    }
+    entries.forEach(({ unit, qty }) => {
+        const li = document.createElement('li');
+        li.className = 'army-unit-row';
+        li.innerHTML = `
+      <span class="army-unit-name">${escHtml(unit.name)}</span>
+      <span class="army-unit-pts">${unit.points * qty} pts</span>
+      <div class="qty-controls">
+        <button class="qty-btn" data-action="dec">−</button>
+        <span class="qty-val">${qty}</span>
+        <button class="qty-btn" data-action="inc">+</button>
+      </div>
+      <button class="remove-unit-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>`;
+        li.querySelector('[data-action="dec"]').addEventListener('click', () => changeUnitQty(unit.id, -1));
+        li.querySelector('[data-action="inc"]').addEventListener('click', () => changeUnitQty(unit.id, 1));
+        li.querySelector('.remove-unit-btn').addEventListener('click', () => removeUnitFromArmy(unit.id));
+        dom.armyUnitsList.appendChild(li);
     });
+}
 
-    // Dice Roller Side Menu Functionality
-    const diceMenuButton = document.querySelector('.dice-menu-button');
-    const diceMenu = document.getElementById('dice-menu');
-    const closeDiceMenuButton = document.querySelector('.close-dice-menu-button');
-
-    if (diceMenuButton && diceMenu && closeDiceMenuButton) {
-        diceMenuButton.addEventListener('click', () => {
-            diceMenu.classList.add('open');
+// ─── Dice Roller ─────────────────────────────────────────────────────────────
+function rollD(s) { return Math.floor(Math.random() * s) + 1; }
+function addToHistory(t) {
+    rollHistory.unshift(t);
+    if (rollHistory.length > 20) rollHistory.pop();
+    dom.rollHistory.innerHTML = rollHistory.map(h => `<li class="roll-history-item">${escHtml(h)}</li>`).join('');
+}
+function initDiceRoller() {
+    document.querySelectorAll('.dice-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const s = parseInt(btn.dataset.sides, 10), r = rollD(s);
+            dom.quickResult.textContent = r; addToHistory(`D${s}: ${r}`);
         });
+    });
+    dom.rollDiceBtn.addEventListener('click', () => {
+        const tok = +dom.tokInput.value || 10, atk = +dom.atkInput.value || 2,
+            hit = +dom.hitInput.value || 3, wnd = +dom.wndInput.value || 4,
+            rnd = +dom.rndInput.value || 1, dmg = +dom.dmgInput.value || 1;
+        const rolls = tok * atk; let hits = 0, wounds = 0;
+        for (let i = 0; i < rolls; i++) if (rollD(6) >= hit) hits++;
+        for (let i = 0; i < hits; i++)  if (rollD(6) >= wnd) wounds++;
+        const td = wounds * dmg;
+        dom.rollResult.innerHTML = `<strong>${rolls}</strong> dice → <strong>${hits}</strong> hits → <strong>${wounds}</strong> wounds → <strong>${td}</strong> dmg (Rend ${rnd})`;
+        addToHistory(`${tok}×${atk} atk ${hit}+/${wnd}+ → ${td} dmg`);
+    });
+}
 
-        closeDiceMenuButton.addEventListener('click', () => {
-            diceMenu.classList.remove('open');
-        });
-    }
-
-    function rollDiceOnce() {
-        return Math.floor(Math.random() * 6) + 1;
-    }
-
-    function performDiceRoll(tok, atk, hit, wnd) {
-        // Roll tok*atk dice
-        let rolls = Array.from({ length: tok * atk }, rollDiceOnce);
-        console.log('Initial Rolls:', rolls);
-
-        // Filter for hits
-        rolls = rolls.filter(roll => roll >= hit);
-        console.log('After Hit Filter:', rolls);
-
-        // Reroll hits
-        rolls = rolls.map(roll => rollDiceOnce());
-        console.log('After Rerolling Hits:', rolls);
-
-        // Filter for wnd
-        rolls = rolls.filter(roll => roll >= wnd);
-        console.log('After Wound Filter:', rolls);
-
-        // Total damage is number of successful wnd rolls
-        return rolls.length;
-    }
-
-    const rollBtn = document.getElementById('roll-dice-btn');
-    const tokInput = document.getElementById('tok-input');
-    const atkInput = document.getElementById('atk-input');
-    const hitInput = document.getElementById('hit-input');
-    const wndInput = document.getElementById('wnd-input');
-    const rollResult = document.getElementById('roll-result');
-
-    if (rollBtn) {
-        rollBtn.addEventListener('click', () => {
-            const tok = parseInt(tokInput.value, 10) || 1;
-            const atk = parseInt(atkInput.value, 10) || 0;
-            const hit = parseInt(hitInput.value, 10) || 0;
-            const wnd = parseInt(wndInput.value, 10) || 0;
-
-            const res = performDiceRoll(tok, atk, hit, wnd);
-
-            rollResult.innerHTML = `<strong>Resulting Damage:</strong> ${res}`;
-        });
-    }
-
-    // Unit Data with points (updated as per user request)
-    const unitsData = [
-        {
-            id: "unit1",
-            name: "Imperial Guard",
-            points: 11, 
-        },
-        {
-            id: "unit2",
-            name: "Korrian Cultist",
-            points: 8, 
-        },
-        {
-            id: "unit3",
-            name: "Steel Master",
-            points: 15,
-        },
-        {
-            id: "unit4",
-            name: "Spiderlings",
-            points: 10, 
-        },
-        {
-            id: "unit5",
-            name: "Brutalizers",
-            points: 80, 
-        },
-    ];
-
-    // Army Builder Functionality
-    const unitQuantityInputs = document.getElementById('unitQuantityInputs');
-    const pointsProgressBar = document.getElementById('pointsProgressBar');
-    const pointsProgressText = document.getElementById('pointsProgressText');
-    const maxPoints = 600;
-
-    function populateUnitsForArmyBuilder() {
-        unitQuantityInputs.innerHTML = ''; // Clear previous inputs
-        unitsData.forEach(unit => {
-            const div = document.createElement('div');
-            div.classList.add('unit-input-group');
-            div.innerHTML = `
-                <label for="qty-${unit.id}">${unit.name} (${unit.points} pts):</label>
-                <input type="number" id="qty-${unit.id}" value="0" min="0">
-            `;
-            unitQuantityInputs.appendChild(div);
-
-            // Add event listener to recalculate totals on quantity change
-            div.querySelector(`#qty-${unit.id}`).addEventListener('input', calculateArmyTotals);
-        });
-        calculateArmyTotals(); // Initial calculation
-    }
-
-    function calculateArmyTotals() {
-        let totalPoints = 0;
-
-        unitsData.forEach(unit => {
-            const quantityInput = document.getElementById(`qty-${unit.id}`);
-            const quantity = parseInt(quantityInput.value, 10) || 0;
-
-            totalPoints += (unit.points * quantity);
-        });
-
-        // Update progress bar
-        const percentage = (totalPoints / maxPoints) * 100;
-        pointsProgressBar.style.width = `${Math.min(percentage, 100)}%`;
-        pointsProgressText.textContent = `${totalPoints} / ${maxPoints} Points`;
-
-        if (totalPoints > maxPoints) {
-            pointsProgressBar.style.backgroundColor = '#dc3545'; // Red if over limit
-            pointsProgressText.style.color = 'red';
-        } else {
-            pointsProgressBar.style.backgroundColor = '#4CAF50'; // Green
-            pointsProgressText.style.color = 'white';
+// ─── Panels ──────────────────────────────────────────────────────────────────
+function openPanel(panel) { panel.classList.add('open'); dom.overlay.classList.add('visible'); }
+function closeAllPanels() {
+    dom.armyPanel.classList.remove('open');
+    dom.dicePanel.classList.remove('open');
+    dom.overlay.classList.remove('visible');
+}
+function initPanels() {
+    dom.armyTrigger.addEventListener('click', () => openPanel(dom.armyPanel));
+    dom.closeArmyPanel.addEventListener('click', closeAllPanels);
+    dom.diceTrigger.addEventListener('click', () => openPanel(dom.dicePanel));
+    dom.closeDicePanel.addEventListener('click', closeAllPanels);
+    dom.overlay.addEventListener('click', closeAllPanels);
+    dom.clearArmyBtn.addEventListener('click', () => { army = {}; updateArmyPanel(); });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            closeAllPanels();
+            hideCardModal();
+            if (openUnitCard) collapseCard(openUnitCard);
         }
-    }
+    });
+}
+function initCardsDrawer() {
+    dom.cardsToggle.addEventListener('click', () => {
+        const o = dom.cardsDrawer.classList.toggle('open');
+        dom.cardsToggle.setAttribute('aria-expanded', o);
+        dom.cardsBody.setAttribute('aria-hidden', !o);
+    });
+    // Close modal when clicking backdrop
+    dom.cardModalBd.addEventListener('click', e => {
+        if (e.target === dom.cardModalBd) hideCardModal();
+    });
+}
 
-    // Initialize new functionalities
-    populateUnitsForArmyBuilder();
-});
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+async function init() {
+    initPanels();
+    initCardsDrawer();
+    initDiceRoller();
+    initPhaseBar();
+    try {
+        [allUnits, allCards, sharedAbilities] = await Promise.all([
+            loadAllWarscrolls(), loadAllCards(), loadSharedAbilities()
+        ]);
+        renderUnits(allUnits);
+        renderCards(allCards);
+        updateArmyPanel();
+    } catch (err) {
+        dom.unitsList.innerHTML = `<li class="error-block">Failed to load warscrolls.<br>${escHtml(err.message)}</li>`;
+        console.error(err);
+    }
+}
+document.addEventListener('DOMContentLoaded', init);

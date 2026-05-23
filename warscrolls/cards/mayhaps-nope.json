@@ -1,0 +1,9 @@
+{
+  "id": "mayhaps-nope",
+  "name": "Mayhaps, Nope!",
+  "type": "Hor",
+  "cost": "Consume spellslots up to 8 total final points.",
+  "phase": "power",
+  "use": "A visibile friendly unit wholly withing 12\" of your units.",
+  "effect": "That unit gains Ward (6+) until your next powers phase."
+}

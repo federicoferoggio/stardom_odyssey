@@ -1,0 +1,9 @@
+{
+  "id": "throw-away-your-trash",
+  "name": "Throw away your trash",
+  "type": "General",
+  "cost": "Remove one saving throw proficiency until your next long rest.",
+  "phase": "startturn",
+  "use": "During your own Start of the Turn, any unit you control that has less than half (rounded down) of its morale units.",
+  "effect": "Completey remove the unit from the battlefield. During your next start turn you can redeploy this unit with a number of tokens added equal to one third of its morale."
+}

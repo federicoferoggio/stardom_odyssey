@@ -1,0 +1,44 @@
+{
+  "id": "spiderlings",
+  "name": "Spiderlings Masters",
+  "tags": [
+    "Monster",
+    "Silk of Mylodra",
+    "The Hand"
+  ],
+  "health": 1,
+  "save": 6,
+  "move": 10,
+  "control": 0,
+  "morale": 20,
+  "points": 6,
+  "melee_weapons": [
+    {
+      "name": "Bite",
+      "attack": 1,
+      "hit": 5,
+      "wound": 5,
+      "rend": 0,
+      "damage": 1,
+      "properties": [
+        "Crit (2 Hits)",
+        "Anti-Infantry"
+      ]
+    }
+  ],
+  "ranged_weapons": [],
+  "abilities": [
+    {
+      "name": "Skittering disappearance",
+      "phase": "endturn",
+      "uses_per_round": 999,
+      "description": "Remove all tokens of this unit from the battlefield, and place a skittering-hole token in the place of one of the tokens."
+    },
+    {
+      "name": "Skittering reapparition",
+      "phase": "startturn",
+      "uses_per_round": 999,
+      "description": "Redeploy all tokens of this unit within 6\" of any skittering-hole token."
+    }
+  ]
+}
