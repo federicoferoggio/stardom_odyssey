@@ -1525,7 +1525,39 @@ h4 {
 .rules-section-body {
   font-size: var(--text-sm);
   color: var(--text-muted);
+  list-style: circle;
   line-height: 1.65;
+}
+
+
+.rules-section h2 {
+	font-size: var(--text-sm);
+	margin: 1.5rem 0 0.75rem;
+	color: var(--text-faint);
+}
+
+.rules-section h3 {
+	font-size: var(--text-sm);
+	margin: 1rem 0 0.5rem;
+	color: var(--text-faint);
+}
+
+.rules-section ul {
+	margin: 0.5rem 0;
+	padding-left: 1.5rem;
+}
+
+.rules-section ul ul {
+	margin: 0.2rem 0;
+}
+
+.rules-section li {
+	margin-bottom: 0.2rem;
+    list-style: circle;
+}
+
+.rules-section b {
+	font-weight: bold;
 }
 
 /* ─── Weapon table — unified type column ───────────────────────────────────── */
