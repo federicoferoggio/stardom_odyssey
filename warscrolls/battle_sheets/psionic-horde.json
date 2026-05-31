@@ -33,7 +33,7 @@
   "abilities": [
     {
       "name": "Psionic Defenses",
-      "phase": "powers",
+      "phase": "power",
       "uses_per_round": 999,
       "description": "The horde focuses its psionic energy onto an eney unit, confusing it. Choose an enemy unit that the Thrikreen can see within 12' and do a casting roll of 2d6: if you roll higher than (12 - the number of tokens in this unit)+, the chosen target gains a -1 on its hit rolls and -1 on its save rolls until the end of the turn."
     },
