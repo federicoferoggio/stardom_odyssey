@@ -2,8 +2,8 @@
   "id": "tatakae-tatakae",
   "name": "Tatakae, Tatakae!",
   "type": "General",
-  "cost": "Reduce until your next long rest your health point maximum by 20%.",
-  "phase": "fight",
-  "use": "Your own unit when it is receiving enough damage to be completely disbanded.",
-  "effect": "Your unit does not disband, retaining instead D3 tokens."
+  "cost": "Deal to your character 30 points of damage.",
+  "phase": "passive",
+  "use": "As a reaction when one of your units is targeted by an Attack ability.",
+  "effect": "Add 1 to save rolls for that unit in this phase."
 }

@@ -48,7 +48,13 @@
       "name": "Curved Armored Plating",
       "phase": "passive",
       "uses_per_round": 999,
-      "description": "When saving against wounds from attacks, this unit can add +1 on its save roll."
+      "description": "When saving against wounds from Archery attacks, this unit can add +1 on its save roll."
+    },
+    {
+      "name": "Mercenary Training",
+      "phase": "deployment",
+      "uses_per_round": 999,
+      "description": "You can use one point of personal wealth on this unit to increase each tokens health by 1, their control by 2, and their movement by 2. Furthermore, all of the weapons of that unit gain Crit (Auto-wound)."
     }
   ]
 }

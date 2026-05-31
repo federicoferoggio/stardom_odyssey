@@ -1,0 +1,16 @@
+[
+    {
+        "Family": "Wueng",
+        "Against": "Caillot",
+        "Date": 2345,
+        "Opinion": -300,
+        "Reason": "Smelly Feet"
+    },
+    {
+        "Family": "Wueng",
+        "Against": "Oussek",
+        "Date": 2345,
+        "Opinion": 300,
+        "Reason": "Good Feet"
+    }
+]

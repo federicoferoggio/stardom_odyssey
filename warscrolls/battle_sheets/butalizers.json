@@ -20,8 +20,7 @@
       "wound": 3,
       "rend": 1,
       "damage": 2,
-      "properties": [
-      ]
+      "properties": []
     },
     {
       "name": "Tiger's Claws",
@@ -38,14 +37,15 @@
   "ranged_weapons": [
     {
       "name": "Hand-Cannon",
-      "range": 10,
+      "range": 8,
       "attack": 2,
       "hit": 4,
       "wound": 4,
       "rend": 0,
       "damage": 1,
       "properties": [
-        "Shoot in Combat"
+        "Shoot in Combat",
+        "Gunpowder"
       ]
     },
     {
@@ -57,6 +57,7 @@
       "rend": 0,
       "damage": 2,
       "properties": [
+        "Requires Charging Volley"
       ]
     }
   ],
@@ -72,6 +73,12 @@
       "phase": "Charge",
       "uses_per_round": 1,
       "description": "Declare an enemy unit that you are not in combat with to be the target of this ability. This unit can use a Shoot ability as if it were your shooting phase against that target. You must then charge against that unit."
+    },
+    {
+      "name": "Mercenary Training",
+      "phase": "deployment",
+      "uses_per_round": 999,
+      "description": "You can use one point of personal wealth on this unit to increase each tokens health by 1, their control by 2, and their movement by 2. Furthermore, all of the weapons of that unit gain Crit (Auto-wound)."
     }
   ]
 }

@@ -29,7 +29,7 @@
       "name": "Glorius Martyrs",
       "phase": "fight",
       "uses_per_round": 999,
-      "description": "Each time a model is slain in a combat attack and that model was in combat with the attacking unit, roll a dice. Add 1 to the roll if this unit is whitin 12\" of a uunit controlled by Demir. On a 5+, inflict 1 mortal damage on the attacking unit at the end of the Fight phase."
+      "description": "Each time a model is slain in a combat attack and that model was in combat with the attacking unit, roll a dice. Add 1 to the roll if this unit is whitin 12\" of a unit controlled by Demir. On a 6+, inflict 1 mortal damage on the attacking unit at the end of the Fight phase."
     }
   ]
 }

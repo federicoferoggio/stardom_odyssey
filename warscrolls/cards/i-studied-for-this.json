@@ -2,8 +2,8 @@
   "id": "i-studied-for-this",
   "name": "I studied for this!",
   "type": "General",
-  "cost": "Reduce your highest attribute score by 6 points until the end of your next long rest",
-  "phase": "powers",
+  "cost": "Reduce your two highest attribute score by 6 points until the end of your next long rest.",
+  "phase": "deployment",
   "use": "An objective point on the map.",
-  "effect": "If you control that objctive, you gain an extra victory point at the end of each round."
+  "effect": "For the rest of the battle, whomever controls that objctive gains an extra victory point at the end of each round."
 }

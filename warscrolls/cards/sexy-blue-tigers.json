@@ -2,8 +2,8 @@
   "id": "sexy-blue-tigers",
   "name": "Sexy blue tigers",
   "type": "Arren",
-  "cost": "Use all abilities of Inka's Claw",
+  "cost": "Consume all abilities of Inka's Claw, or one Rage use",
   "phase": "charge",
-  "use": "During your movement phase, any unit that you control and has the Infantry tag.",
-  "effect": "Double any charge roll for the rest of the battle."
+  "use": "During the enemy's charge phase, any unit that you control and that is not in combat.",
+  "effect": "That unit can use a Charge ability as if it were your charge phase."
 }

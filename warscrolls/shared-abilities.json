@@ -1,12 +1,6 @@
 {
   "abilities": [
     {
-      "name": "Mercenary Training",
-      "phase": "deployment",
-      "uses_per_round": 999,
-      "description": "Pick an enemy unit. This unit gains a +1 to any wound roll against that creature."
-    },
-    {
       "name": "Move",
       "phase": "movement",
       "uses_per_round": 999,

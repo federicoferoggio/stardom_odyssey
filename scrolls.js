@@ -9,6 +9,7 @@ const WARSCROLL_FILES = [
     'warscrolls/battle_sheets/spiderlings.json',
     'warscrolls/battle_sheets/korrian-cultist.json',
     'warscrolls/battle_sheets/butalizers.json',
+    'warscrolls/battle_sheets/psionic-horde.json'
 ];
 const CARD_FILES = [
     'warscrolls/cards/i-can-do-that-too.json',
@@ -17,7 +18,8 @@ const CARD_FILES = [
     'warscrolls/cards/i-studied-for-this.json',
     'warscrolls/cards/mayhaps-nope.json',
     'warscrolls/cards/sexy-blue-tigers.json',
-    'warscrolls/cards/throw-away-your-trash.json'
+    'warscrolls/cards/throw-away-your-trash.json',
+    'warscrolls/cards/religious-commitment.json'
 ];
 const SHARED_ABILITIES_FILE = 'warscrolls/shared-abilities.json';
 const MAX_POINTS = 2000;
@@ -34,6 +36,13 @@ const KEYWORD_DESCRIPTIONS = {
     'Crit (2 Hits)': 'If an attack made with this weapon scores a critical hit, that attack scores 2 hits on the target unit instead of 1. Make a wound roll for each hit.',
     'Crit (Auto-wound)': 'If an attack made with this weapon scores a critical hit, that attack automatically wounds the target. Make a save roll as normal.',
     'Crit (Mortal)': 'If an attack made with this weapon scores a critical hit, that attack automatically damages the target.',
+    'Psionic': 'This attack does not require any line of sight and ignores all cover properties of terrains.',
+    'Gunpowder': 'This attack does require line of sight and is subject to all cover properties of terrains.',
+    'Archery':'This attack does not require any line of sight and is subject to all cover properties of terrains.',
+    'Limited':'This attack cannot be used normally during its appropriate phase. See the ability section to read its limitations.',
+    'Fire': 'This attack sets fire to enemy units. At the end of a turn, all units on fire that received damage from this weapon receive and additional 1D3 mortal damage if the fire is still active. Then the fire is extinguished.',
+    'Lightning': 'This attack sets shocks enemy units. Until the end of the turn, units hit by this attack have -1 on their save rolls.',
+    'Watery': 'This attack wets enemy units. Until the end of the turn, the unit targeted by this weapon cannot be set on fire, but receives +1 damage from all attacks that have the "Lightning" tag.',
     // Add more keywords below as needed:
     // 'Crit (Auto-wound)': 'A Critical Hit (roll of 6) on the Hit roll automatically counts as a wound without needing a Wound roll.',
     // 'Charge Bonus':     'Add 1 to the Attacks characteristic of this weapon if the attacking unit made a Charge move this turn.',
