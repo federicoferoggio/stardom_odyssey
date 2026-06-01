@@ -107,8 +107,14 @@ const dom = {
     atkInput: $('atk-input'),
     hitInput: $('hit-input'),
     wndInput: $('wnd-input'),
+    critThresholdInput: $('crit-threshold-input'),
     rndInput: $('rnd-input'),
+    saveInput: $('save-input'),
+    wardInput: $('ward-input'),
     dmgInput: $('dmg-input'),
+    crit2HitsInput: $('crit-2-hits-input'),
+    critAutoWoundInput: $('crit-auto-wound-input'),
+    critMortalInput: $('crit-mortal-input'),
     phaseBar: $('phase-bar'),
     cardModal: $('card-modal'),
     cardModalBd: $('card-modal-backdrop'),
@@ -535,6 +541,86 @@ function updateArmyPanel() {
 
 // ─── Dice Roller ─────────────────────────────────────────────────────────────
 function rollD(s) { return Math.floor(Math.random() * s) + 1; }
+function readIntInput(input, fallback, min, max) {
+    const parsed = Number.parseInt(input?.value, 10);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.max(min, Math.min(max, parsed));
+}
+function simulateAttack(tokensNum, atk, hit, wnd, dmg = 1, critThreshold = 6, crit2Hits = false, critAutoWound = false, critMortal = false) {
+    const attackRolls = tokensNum * atk;
+    let hitRolls = 0;
+    let woundRolls = 0;
+    let wounds = 0;
+    let damage = 0;
+    let mortalDamage = 0;
+    let crits = 0;
+    let autoWounds = 0;
+    let extraHits = 0;
+
+    for (let i = 0; i < attackRolls; i++) {
+        let hitCount = 1;
+        const hitRoll = rollD(6);
+
+        if (hitRoll < hit) continue;
+        hitRolls++;
+
+        if (hitRoll >= critThreshold) {
+            crits++;
+
+            if (critMortal) {
+                mortalDamage += dmg;
+                continue;
+            }
+
+            if (critAutoWound) {
+                damage += dmg;
+                autoWounds++;
+                continue;
+            }
+
+            if (crit2Hits) {
+                hitCount = 2;
+                extraHits++;
+            }
+        }
+
+        for (let j = 0; j < hitCount; j++) {
+            woundRolls++;
+            if (rollD(6) < wnd) continue;
+            wounds++;
+            damage += dmg;
+        }
+    }
+
+    return { attackRolls, hitRolls, woundRolls, wounds, damage, mortalDamage, crits, autoWounds, extraHits };
+}
+function simulateDefense(damage, mortalDamage, save, ward, rend = 0) {
+    let toBeWardedDamage = mortalDamage;
+    let failedSaves = 0;
+    let armorSaves = 0;
+    const effectiveSave = Math.min(save + rend, 6);
+
+    for (let i = 0; i < damage; i++) {
+        if (rollD(6) < effectiveSave) {
+            toBeWardedDamage++;
+            failedSaves++;
+        } else {
+            armorSaves++;
+        }
+    }
+
+    let finalDamage = 0;
+    let wardSaves = 0;
+    for (let i = 0; i < toBeWardedDamage; i++) {
+        if (rollD(6) < ward) {
+            finalDamage++;
+        } else {
+            wardSaves++;
+        }
+    }
+
+    return { effectiveSave, failedSaves, armorSaves, wardRolls: toBeWardedDamage, wardSaves, finalDamage };
+}
 function addToHistory(t) {
     rollHistory.unshift(t);
     if (rollHistory.length > 20) rollHistory.pop();
@@ -548,15 +634,43 @@ function initDiceRoller() {
         });
     });
     dom.rollDiceBtn.addEventListener('click', () => {
-        const tok = +dom.tokInput.value || 10, atk = +dom.atkInput.value || 2,
-            hit = +dom.hitInput.value || 3, wnd = +dom.wndInput.value || 4,
-            rnd = +dom.rndInput.value || 1, dmg = +dom.dmgInput.value || 1;
-        const rolls = tok * atk; let hits = 0, wounds = 0;
-        for (let i = 0; i < rolls; i++) if (rollD(6) >= hit) hits++;
-        for (let i = 0; i < hits; i++)  if (rollD(6) >= wnd) wounds++;
-        const td = wounds * dmg;
-        dom.rollResult.innerHTML = `<strong>${rolls}</strong> dice → <strong>${hits}</strong> hits → <strong>${wounds}</strong> wounds → <strong>${td}</strong> dmg (Rend ${rnd})`;
-        addToHistory(`${tok}×${atk} atk ${hit}+/${wnd}+ → ${td} dmg`);
+        const tok = readIntInput(dom.tokInput, 10, 1, 100);
+        const atk = readIntInput(dom.atkInput, 2, 1, 20);
+        const hit = readIntInput(dom.hitInput, 3, 2, 6);
+        const wnd = readIntInput(dom.wndInput, 4, 2, 6);
+        const critThreshold = readIntInput(dom.critThresholdInput, 6, 2, 6);
+        const rnd = readIntInput(dom.rndInput, 0, 0, 6);
+        const save = readIntInput(dom.saveInput, 4, 2, 6);
+        const ward = readIntInput(dom.wardInput, 7, 2, 7);
+        const dmg = readIntInput(dom.dmgInput, 1, 1, 10);
+        const attack = simulateAttack(
+            tok,
+            atk,
+            hit,
+            wnd,
+            dmg,
+            critThreshold,
+            dom.crit2HitsInput.checked,
+            dom.critAutoWoundInput.checked,
+            dom.critMortalInput.checked
+        );
+        const defense = simulateDefense(attack.damage, attack.mortalDamage, save, ward, rnd);
+        const critFlags = [
+            dom.crit2HitsInput.checked ? '2 Hits' : '',
+            dom.critAutoWoundInput.checked ? 'Auto-wound' : '',
+            dom.critMortalInput.checked ? 'Mortal' : '',
+        ].filter(Boolean);
+        const wardLabel = ward === 7 ? 'none' : `${ward}+`;
+
+        dom.rollResult.innerHTML = `
+            <strong>${attack.attackRolls}</strong> attacks → <strong>${attack.hitRolls}</strong> hits
+            (<strong>${attack.crits}</strong> crits on ${critThreshold}+) → <strong>${attack.wounds}</strong> wounds
+            ${attack.autoWounds ? `+ <strong>${attack.autoWounds}</strong> auto` : ''}
+            → <strong>${attack.damage}</strong> normal + <strong>${attack.mortalDamage}</strong> mortal dmg<br>
+            Save <strong>${defense.effectiveSave}+</strong> blocked <strong>${defense.armorSaves}</strong>;
+            Ward <strong>${wardLabel}</strong> blocked <strong>${defense.wardSaves}</strong>
+            → <strong>${defense.finalDamage}</strong> final dmg`;
+        addToHistory(`${tok}×${atk} ${hit}+/${wnd}+ crit ${critThreshold}+ rend ${rnd} save ${save}+ ward ${wardLabel}${critFlags.length ? ` [Crit ${critFlags.join(', ')}]` : ''} → ${defense.finalDamage} dmg`);
     });
 }
 

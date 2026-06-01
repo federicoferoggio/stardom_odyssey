@@ -657,6 +657,31 @@ h4 {
     outline: none;
 }
 
+.calc-flags {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+.calc-flag {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.calc-flag input {
+    accent-color: var(--gold);
+}
+
 .roll-btn {
     width: 100%;
     padding: var(--space-2) var(--space-4);
@@ -1343,7 +1368,7 @@ h4 {
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(0.5px);
 }
 
 .panel-overlay.visible {

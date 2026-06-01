@@ -115,8 +115,16 @@
                         <label>Attacks<input id="atk-input" type="number" min="1" max="20" value="2" /></label>
                         <label>Hit<input id="hit-input" type="number" min="2" max="6" value="3" /></label>
                         <label>Wound<input id="wnd-input" type="number" min="2" max="6" value="4" /></label>
-                        <label>Rend<input id="rnd-input" type="number" min="0" max="3" value="1" /></label>
+                        <label>Crit<input id="crit-threshold-input" type="number" min="1" max="6" value="6" /></label>
+                        <label>Rend<input id="rnd-input" type="number" min="0" max="6" value="0" /></label>
+                        <label>Save<input id="save-input" type="number" min="2" max="6" value="4" /></label>
+                        <label>Ward<input id="ward-input" type="number" min="2" max="7" value="7" /></label>
                         <label>Damage<input id="dmg-input" type="number" min="1" max="10" value="1" /></label>
+                    </div>
+                    <div class="calc-flags" aria-label="Critical hit options">
+                        <label class="calc-flag"><input id="crit-2-hits-input" type="checkbox" />Crit (2 Hits)</label>
+                        <label class="calc-flag"><input id="crit-auto-wound-input" type="checkbox" />Crit (Auto-wound)</label>
+                        <label class="calc-flag"><input id="crit-mortal-input" type="checkbox" />Crit (Mortal)</label>
                     </div>
                     <button id="roll-dice-btn" class="roll-btn">Roll Attack</button>
                     <div id="roll-result" class="roll-result" aria-live="polite"></div>
