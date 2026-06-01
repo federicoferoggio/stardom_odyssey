@@ -10,17 +10,19 @@
   "save": 3,
   "move": 14,
   "control": 2,
-  "morale": 4,
-  "points": 80,
+  "morale": 5,
+  "points": 60,
   "melee_weapons": [
     {
       "name": "Greatswords",
-      "attack": 1,
-      "hit": 3,
-      "wound": 3,
+      "attack": 2,
+      "hit": 4,
+      "wound": 4,
       "rend": 1,
       "damage": 2,
-      "properties": []
+      "properties": [
+        "Charge (+1 Damage)"
+      ]
     },
     {
       "name": "Tiger's Claws",
