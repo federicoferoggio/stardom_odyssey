@@ -107,6 +107,7 @@ const dom = {
     atkInput: $('atk-input'),
     hitInput: $('hit-input'),
     wndInput: $('wnd-input'),
+    critThresholdInput: $('crit-threshold-input'),
     rndInput: $('rnd-input'),
     saveInput: $('save-input'),
     wardInput: $('ward-input'),
@@ -545,7 +546,7 @@ function readIntInput(input, fallback, min, max) {
     if (!Number.isFinite(parsed)) return fallback;
     return Math.max(min, Math.min(max, parsed));
 }
-function simulateAttack(tokensNum, atk, hit, wnd, dmg = 1, crit2Hits = false, critAutoWound = false, critMortal = false) {
+function simulateAttack(tokensNum, atk, hit, wnd, dmg = 1, critThreshold = 6, crit2Hits = false, critAutoWound = false, critMortal = false) {
     const attackRolls = tokensNum * atk;
     let hitRolls = 0;
     let woundRolls = 0;
@@ -563,7 +564,7 @@ function simulateAttack(tokensNum, atk, hit, wnd, dmg = 1, crit2Hits = false, cr
         if (hitRoll < hit) continue;
         hitRolls++;
 
-        if (hitRoll === 6) {
+        if (hitRoll >= critThreshold) {
             crits++;
 
             if (critMortal) {
@@ -637,6 +638,7 @@ function initDiceRoller() {
         const atk = readIntInput(dom.atkInput, 2, 1, 20);
         const hit = readIntInput(dom.hitInput, 3, 2, 6);
         const wnd = readIntInput(dom.wndInput, 4, 2, 6);
+        const critThreshold = readIntInput(dom.critThresholdInput, 6, 2, 6);
         const rnd = readIntInput(dom.rndInput, 0, 0, 6);
         const save = readIntInput(dom.saveInput, 4, 2, 6);
         const ward = readIntInput(dom.wardInput, 7, 2, 7);
@@ -647,6 +649,7 @@ function initDiceRoller() {
             hit,
             wnd,
             dmg,
+            critThreshold,
             dom.crit2HitsInput.checked,
             dom.critAutoWoundInput.checked,
             dom.critMortalInput.checked
@@ -661,13 +664,13 @@ function initDiceRoller() {
 
         dom.rollResult.innerHTML = `
             <strong>${attack.attackRolls}</strong> attacks → <strong>${attack.hitRolls}</strong> hits
-            (<strong>${attack.crits}</strong> crits) → <strong>${attack.wounds}</strong> wounds
+            (<strong>${attack.crits}</strong> crits on ${critThreshold}+) → <strong>${attack.wounds}</strong> wounds
             ${attack.autoWounds ? `+ <strong>${attack.autoWounds}</strong> auto` : ''}
             → <strong>${attack.damage}</strong> normal + <strong>${attack.mortalDamage}</strong> mortal dmg<br>
             Save <strong>${defense.effectiveSave}+</strong> blocked <strong>${defense.armorSaves}</strong>;
             Ward <strong>${wardLabel}</strong> blocked <strong>${defense.wardSaves}</strong>
             → <strong>${defense.finalDamage}</strong> final dmg`;
-        addToHistory(`${tok}×${atk} ${hit}+/${wnd}+ rend ${rnd} save ${save}+ ward ${wardLabel}${critFlags.length ? ` [Crit ${critFlags.join(', ')}]` : ''} → ${defense.finalDamage} dmg`);
+        addToHistory(`${tok}×${atk} ${hit}+/${wnd}+ crit ${critThreshold}+ rend ${rnd} save ${save}+ ward ${wardLabel}${critFlags.length ? ` [Crit ${critFlags.join(', ')}]` : ''} → ${defense.finalDamage} dmg`);
     });
 }
 
