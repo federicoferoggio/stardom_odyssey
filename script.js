@@ -1,51 +1,35 @@
 const actions = {
     "Attacco": {
-        description: "Coinvolge le forze nemiche o le difese per razziare, annettere territori o ottenere una vittoria simbolica. Comunque la si voglia chiamare, si tratta di attaccare le truppe e le difese di qualcun altro. Il difensore usa Potenza e Territorio.",
+        description: "Azione di Forza Militare. Prima del tiro, segliere l'obbiettivo desiderato fra Conquista (+1 al proprio territorio se avversario =>), Umiliazione (+1 alla propria influence se avversario =>), Razzia (+1 al proprio treasure se avversario =>), Destabilizzazione (-1 Sovereignty), Difesa (-1 Might), Conquista Risorsa (acquisisci risorsa) o Disingaggio (rimuovi flotta nemica).",
         rolls: ["might", "treasure"]
     },
     "Difesa": {
-        description: "Quando si è sulla difensiva, proteggendo il proprio territorio e la propria gente. L'attaccante userà Potenza e Tesoro.",
+        description: "Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest, -1 Might nemica se successo, -1 might aggiuntiva per se stessi su fallimento).",
         rolls: ["might", "territory"]
     },
     "Spionaggio": {
-        description: "Raccoglie informazioni sui rivali o influenza le opinioni segretamente. Diverso dal semplice essere informati, qui si usa il sotterfugio per convertire opinioni e raccogliere informazioni. Il bersaglio si difenderà con Influenza e Territorio.",
+        description: "Azione Diplomatica. Width determina il numero di informazioni ricevute, Height la loro qualità.",
         rolls: ["influence", "treasure"]
     },
     "Controspionaggio": {
-        description: "Rileva e contrasta le operazioni di intelligence rivali. Questo è quando si sta specificamente cacciando infiltrati tra i propri ranghi. I nemici (percepiti) si difenderanno con Influenza e Tesoro.",
+        description: "Azione Diplomatica. La difesa sceglie se usare crittografia (Gobble Dice, non consuma risorse per il mese) o caccia (Dynamic Contest, rimuove 1 Influence all'avversario per un mese).",
         rolls: ["influence", "territory"]
     },
     "Controllo dell'Ordine": {
-        description: "Affronta le minacce interne e mantiene l'ordine. Si tratta essenzialmente di usare la forza diretta contro un gruppo all'interno dei propri territori, che siano banditi, ribelli o infiltrati. Il bersaglio si difenderà con Influenza e Potenza.",
+        description: "Azione di Forza Militare. Usa la polizia per contrattaccare guerra non convenzionale. Tira per fermare (Gobble, successo no malus) e tira per catturare (Dynamic Contest, successo leader catturato). Se conosci del plot in anticipo, hai un tiro aggiuntivo (gobble): su un successo la azione non prende luogo.",
         rolls: ["might", "sovereignty"]
     },
-    "Guerra Non Convenzionale": {
-        description: "Esegue sabotaggi, assassinii o altre azioni militari non convenzionali. È un affare sporco, e farsi scoprire significa disastro. Il bersaglio si difenderà con Potenza e Sovranità.",
+    "Guerra Non Convenzionale (requires Leader)": {
+        description: "Azione di Forza Militare. Usa violenza furba per attaccare. Tira per colpire (successo -2 stat a scelta per due mesi o leader fuori gioco per 6 mesi) e tira per scappare (Dynamic Contest, successo leader sfigge).",
         rolls: ["influence", "might"]
     },
     "Raccolta Informazioni": {
-        description: "Quando si vogliono raccogliere informazioni su una compagnia o una persona. Non è spionaggio, quello sarebbe scortese: solo fare domande. Se si tira contro qualcun altro, userà Influenza e Tesoro per difendersi.",
+        description: "Azione Diplomatica. Rivela stat della famiglia (non individuali).",
         rolls: ["influence", "sovereignty"]
     },
-    "Aumento: Might": {
-        description: "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Might contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
+    "Aumento Stat": {
+        description: "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro della stessa stat + una a scelta contro una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
         rolls: ["might"]
-    },
-    "Aumento: Influence": {
-        description: "Espande la rete di contatti e il prestigio della compagnia. Richiede un tiro di Influence contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
-        rolls: ["influence"]
-    },
-    "Aumento: Treasure": {
-        description: "Migliora l'infrastruttura economica e le risorse finanziarie della compagnia. Richiede un tiro di Treasure contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
-        rolls: ["treasure"]
-    },
-    "Aumento: Territory": {
-        description: "Sviluppa e consolida il controllo territoriale della compagnia. Richiede un tiro di Territory contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
-        rolls: ["territory"]
-    },
-    "Aumento: Sovereignty": {
-        description: "Rafforza la coesione interna e la lealtà dei membri della compagnia. Richiede un tiro di Sovereignty contro una Difficoltà pari al livello attuale. Tempo necessario: da 1→2 (1 mese), da 2→3 (2 mesi), da 3→4 (4 mesi), da 4→5 (8 mesi). La width del tiro riduce la durata di 1 mese per ogni punto superiore a 2. Massimo livello: 5.",
-        rolls: ["sovereignty"]
     }
 };
 
