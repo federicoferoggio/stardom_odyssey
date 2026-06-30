@@ -19,7 +19,7 @@ const actions = {
         description: "Azione di Forza Militare. Usa la polizia per contrattaccare guerra non convenzionale. Tira per fermare (Gobble, successo no malus) e tira per catturare (Dynamic Contest, successo leader catturato). Se conosci del plot in anticipo, hai un tiro aggiuntivo (gobble): su un successo la azione non prende luogo.",
         rolls: ["might", "sovereignty"]
     },
-    "Guerra Non Convenzionale (requires Leader)": {
+    "Guerra Non Convenzionale (richiede un leader)": {
         description: "Azione di Forza Militare. Usa violenza furba per attaccare. Tira per colpire (successo -2 stat a scelta per due mesi o leader fuori gioco per 6 mesi) e tira per scappare (Dynamic Contest, successo leader sfigge).",
         rolls: ["influence", "might"]
     },
@@ -338,48 +338,6 @@ function loadTimeline(events) {
     container.scrollLeft = container.scrollWidth;
 }
 
-const qualities = {
-    Might: [
-        "little more than farmers",       // 1
-        "comparable to well armed militias",     // 2
-        "well trained and prepared",     // 3
-        "tough to battle for almost everyone",       // 4
-        "a deadly challenge to anyone",        // 5
-        "terrifying to face in battle"               // 6
-    ],
-    Treasure: [
-        "copper coins",           // 1
-        "silver coins",           // 2
-        "gold coins",             // 3
-        "platinum coins",         // 4
-        "gold ingots",            // 5
-        "trucks of platinum"             // 6
-    ],
-    Influence: [
-        "unknown",            // 1
-        "irrelevant",         // 2
-        "respected",          // 3
-        "influential",        // 4
-        "a cornerstone",      // 5
-        "legendary"           // 6
-    ],
-    Territory: [
-        "a barely populated El-Beth-El",               // 1
-        "a sparsely populated El-Beth-El",             // 2
-        "El-Beth-El and some colonies", // 3
-        "El-Beth-El and numerous colonies",              // 4
-        "densly poupulated lands that stretch through planets and colonies",               // 5
-        "planets, stars, colonies, and even more"             // 6
-    ],
-    Sovereignty: [
-        "hate",             // 1
-        "resent",          // 2
-        "accept",          // 3
-        "support",          // 4
-        "love",          // 5
-        "worship"             // 6
-    ]
-};
 
 ["might", "treasure", "influence", "territory", "sovereignty"].forEach(id => {
     document.getElementById(id).addEventListener("input", generateDescription);

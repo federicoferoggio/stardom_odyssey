@@ -1,0 +1,214 @@
+{
+  "governi": [
+    {
+      "nome": "Stratocracy",
+      "nome_italiano": "Governo militare diretto",
+      "statistiche": {
+        "Might": 5,
+        "Territory": 4,
+        "Sovereignty": 4,
+        "Influence": 3,
+        "Treasure": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Dottrina del Comando Unificato",
+          "descrizione": "Non puoi mai avere più di un leader attivo per le azioni della Compagnia."
+        },
+        {
+          "nome": "Requisizione Militare",
+          "descrizione": "Una volta per mese, puoi 'rubare' 1d da qualsiasi altro set di un tuo tiro e aggiungerlo a un tiro Might. Il tiro originale perde permanentemente quel dado."
+        }
+      ]
+    },
+    {
+      "nome": "Martial Empire",
+      "nome_italiano": "Impero sostenuto dalla forza delle armi",
+      "statistiche": {
+        "Might": 5,
+        "Treasure": 4,
+        "Territory": 4,
+        "Sovereignty": 3,
+        "Influence": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Economia di Guerra Perpetua",
+          "descrizione": "La tua Treasure non può mai superare il tuo Might. Se dovesse succedere, l'eccesso viene automaticamente 'convertito' in equipaggiamento militare e perso."
+        },
+        {
+          "nome": "Mobilitazione Totale",
+          "descrizione": "Puoi sacrificare permanentemente 1 punto di Territory per avere un bonus su Might di +2d per tutto il mese successivo."
+        }
+      ]
+    },
+    {
+      "nome": "Space Crusaders",
+      "nome_italiano": "Democrazia espansionista",
+      "statistiche": {
+        "Territory": 5,
+        "Sovereignty": 4,
+        "Influence": 4,
+        "Might": 3,
+        "Treasure": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Votazioni Obbligatorie",
+          "descrizione": "Prima di ogni azione importante, devi 'votare' lanciando 1d10. Su 1-3 l'azione è bloccata dalla burocrazia democratica e non puoi farla questo mese."
+        },
+        {
+          "nome": "Mandato Popolare",
+          "descrizione": "Se la tua Sovereignty è la più alta di tutte le tue altre statistiche, ottieni +1d a tutti i tiri. Se è la più bassa, subisci -1d a tutti i tiri Influence."
+        }
+      ]
+    },
+    {
+      "nome": "Feudal Realm",
+      "nome_italiano": "Regno feudale tradizionale",
+      "statistiche": {
+        "Territory": 5,
+        "Might": 4,
+        "Treasure": 4,
+        "Sovereignty": 3,
+        "Influence": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Vassallaggio Complesso",
+          "descrizione": "Non puoi mai scendere a 0 per nessuna quality eccetto per la sovereignty. In compenso, non puoi mai raggiungere 6 punti per nessuna statistica."
+        },
+        {
+          "nome": "Obblighi Feudali",
+          "descrizione": "Ogni mese, tira un d10. Su un 1-3, uno dei tuoi feudi richiede il tuo aiuto. Riduci temporaneamente per il mese di 1 la Might e di 1 la Treasure."
+        }
+      ]
+    },
+    {
+      "nome": "Megacorporation",
+      "nome_italiano": "Dominio corporativo",
+      "statistiche": {
+        "Treasure": 5,
+        "Influence": 4,
+        "Territory": 4,
+        "Might": 3,
+        "Sovereignty": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Profitto Sopra Tutto",
+          "descrizione": "Ogni azione che non include Treasure nella pool subisce automaticamente -1d. Ogni azione che include Treasure ottiene +1d."
+        },
+        {
+          "nome": "Liquidità Aziendale",
+          "descrizione": "Puoi 'vendere' permanentemente punti di altre Qualities per ottenere +2 Treasure temporaneo per quel mese."
+        }
+      ]
+    },
+    {
+      "nome": "Plutocratic Oligarchy",
+      "nome_italiano": "Governo dei ricchi",
+      "statistiche": {
+        "Treasure": 5,
+        "Territory": 4,
+        "Sovereignty": 4,
+        "Might": 3,
+        "Influence": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Governo dei Ricchi",
+          "descrizione": "Una volta l'anno, se la tua Treasure non è la più alta tra tutte le Compagnie equivalenti, la tua Sovereignty scende di 1 e ci rimane finché non diventi di nuovo il più ricco."
+        },
+        {
+          "nome": "Compra-Voti",
+          "descrizione": "Puoi spendere 1 punto di Treasure permanente per aggiungere +3d a qualsiasi tiro Sovereignty+Territory, rappresentando corruzione su vasta scala."
+        }
+      ]
+    },
+    {
+      "nome": "Fanatic Purifiers",
+      "nome_italiano": "Fanatismo ideologico",
+      "statistiche": {
+        "Sovereignty": 5,
+        "Might": 4,
+        "Territory": 4,
+        "Influence": 3,
+        "Treasure": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Purezza Ideologica",
+          "descrizione": "Non puoi mai avere alleanze con Compagnie che hanno forme di governo diverse dalla tua. Ogni mese che commerci pacificamente con 'eretici' perdi 2 di Sovereignty."
+        },
+        {
+          "nome": "Zelo Fanatico",
+          "descrizione": "Quando attacchi Compagnie con Sovereignty più bassa della tua, ottieni +2d a tutti i tiri Might e Treasure."
+        }
+      ]
+    },
+    {
+      "nome": "Divine Mandate",
+      "nome_italiano": "Teocrazia divina",
+      "statistiche": {
+        "Sovereignty": 5,
+        "Influence": 4,
+        "Treasure": 4,
+        "Territory": 3,
+        "Might": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Volontà Divina",
+          "descrizione": "All'inizio di ogni mese, lancia 1d10. Su 10, una 'benedizione divina' ti dà +2d a tutti i tiri per quel mese. Su 1, un 'castigo divino' ti dà -2d a tutti i tiri."
+        },
+        {
+          "nome": "Diritto Divino",
+          "descrizione": "Se la tua Sovereignty scende a 2 o meno, tutti credono che gli dei ti abbiano abbandonato: ogni altra Quality scende automaticamente di 1."
+        }
+      ]
+    },
+    {
+      "nome": "Hegemonic Imperialists",
+      "nome_italiano": "Egemonia attraverso diplomazia",
+      "statistiche": {
+        "Influence": 5,
+        "Territory": 4,
+        "Might": 4,
+        "Sovereignty": 3,
+        "Treasure": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Diplomazia Coercitiva",
+          "descrizione": "Quando usi Influence+Treasure per cambiare opinioni, le Compagnie bersaglio non possono usare Counter-Espionage. Tuttavia, se fallisci, subisci automaticamente -2 Influence per il resto del mese."
+        },
+        {
+          "nome": "Egemonia Fragile",
+          "descrizione": "Se la tua Influence scende sotto 4, tutti i tuoi alleati possono immediatamente usare azioni contro di te senza penalità diplomatiche fino a quando non la ripristini."
+        }
+      ]
+    },
+    {
+      "nome": "Enigmatic Observers",
+      "nome_italiano": "Potere attraverso conoscenza e manipolazione",
+      "statistiche": {
+        "Influence": 5,
+        "Treasure": 4,
+        "Sovereignty": 4,
+        "Territory": 3,
+        "Might": 2
+      },
+      "effetti_speciali": [
+        {
+          "nome": "Conoscenza Segreta",
+          "descrizione": "Puoi 'osservare' le azioni di altre Compagnie. Una volta per mese, dopo che un'altra Compagnia dichiara un'azione ma prima che tiri, puoi forzarla a rivelarti esattamente che tiro farà e con che modificatori."
+        },
+        {
+          "nome": "Isolamento Enigmatico",
+          "descrizione": "Non puoi mai iniziare azioni aggressive (Attack, Unconventional Warfare) contro altre Compagnie. Se lo fai, perdi immediatamente 2 punti di Influence permanenti per aver rivelato troppo di te stesso."
+        }
+      ]
+    }
+  ]
+}
