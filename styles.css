@@ -213,9 +213,15 @@ select {
     font-weight: bold;
 }
 
-#laManoBox p {
+#laManoBox h2 {
     margin: 10px 0 0;
     font-size: 1.2rem;
+    font-style: italic;
+}
+
+#laManoBox p {
+    margin: 10px 0 0;
+    font-size: 1rem;
     font-style: italic;
 }
 

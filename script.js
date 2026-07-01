@@ -1,7 +1,8 @@
 const actions = {
     "Attacco": {
-        description: "Azione di Forza Militare. Prima del tiro, segliere l'obbiettivo desiderato fra Conquista (+1 al proprio territorio se avversario =>), Umiliazione (+1 alla propria influence se avversario =>), Razzia (+1 al proprio treasure se avversario =>), Destabilizzazione (-1 Sovereignty), Difesa (-1 Might), Conquista Risorsa (acquisisci risorsa) o Disingaggio (rimuovi flotta nemica).",
-        rolls: ["might", "treasure"]
+        description: "Azione di Forza Militare. Prima del tiro, scegliere l'obbiettivo desiderato (vedi menu sotto).",
+        rolls: ["might", "treasure"],
+        hasWarReasons: true
     },
     "Difesa": {
         description: "Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest, -1 Might nemica se successo, -1 might aggiuntiva per se stessi su fallimento).",
@@ -29,11 +30,32 @@ const actions = {
     },
     "Aumento Stat": {
         description: "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro della stessa stat + una a scelta contro una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
-        rolls: ["might"]
+        rolls: ["might", "sovereignty", "influence", "territory", "treasure"]
     }
 };
 
+// Ragioni di guerra disponibili per l'azione "Attacco"
+const warReasons = [
+    { nome: "Conquista", descrizione: "+1 al proprio territorio se avversario soccombe" },
+    { nome: "Umiliazione", descrizione: "+1 alla propria influence se avversario soccombe" },
+    { nome: "Razzia", descrizione: "+1 al proprio treasure se avversario soccombe" },
+    { nome: "Destabilizzazione", descrizione: "-1 Sovereignty all'avversario" },
+    { nome: "Difesa", descrizione: "-1 Might all'avversario" },
+    { nome: "Conquista Risorsa", descrizione: "Acquisisci una risorsa dell'avversario" },
+    { nome: "Disingaggio", descrizione: "Rimuovi una flotta nemica" }
+];
+
 let bonuses = [];
+let governi = []; // Dati dei governi caricati da all_info/governi.json
+
+// Mappa tra il nome della statistica (come usato in governi.json) e l'id dell'input corrispondente
+const statInputMap = {
+    Might: "might",
+    Treasure: "treasure",
+    Influence: "influence",
+    Territory: "territory",
+    Sovereignty: "sovereignty"
+};
 
 function loadBonuses(csv) {
     csv.forEach(row => {
@@ -50,12 +72,27 @@ function loadBonuses(csv) {
     console.log("Parsed Bonuses:", bonuses); // Debug here
 }
 
+// Carica il file all_info/governi.json contenente le definizioni dei governi
+function fetchGoverni() {
+    return fetch('all_info/governi.json')
+        .then(response => response.json())
+        .then(data => data.governi || [])
+        .catch(err => {
+            console.error("Errore nel caricamento di governi.json:", err);
+            return [];
+        });
+}
+
 // Initialize the system when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
     populateActions();
     fetchBonuses().then(loadBonuses);
     fetchCompanyAssets().then(loadCompanyAssets);
-    fetchFamiliesData().then(loadFamilyStats);
+    fetchGoverni().then(data => {
+        governi = data;
+        // Se i dati famiglia sono già stati caricati prima dei governi, ri-renderizza
+        fetchFamiliesData().then(loadFamilyStats);
+    });
     fetchCourtMembers().then(loadCourtMembers);
     fetchTimelineData().then(loadTimeline);
 });
@@ -95,7 +132,7 @@ function updateActionDetails() {
     // Generate checklist bonuses from CSV data
     const bonusesForRoll = bonuses.filter(bonus =>
         bonus.score.toLowerCase() === "all" || // Include bonuses with "all" as the score
-        (bonus.always && rolls.includes(bonus.score.toLowerCase())) || 
+        (bonus.always && rolls.includes(bonus.score.toLowerCase())) ||
         (!bonus.always && rolls.includes(bonus.score.toLowerCase()))
     );
 
@@ -104,9 +141,9 @@ function updateActionDetails() {
         ${bonusesForRoll.map(bonus => `
             <li style="margin-bottom: 5px;">
                 <label style="display: flex; align-items: center; cursor: pointer;", title="${bonus.situation}">
-                    <input type="checkbox" class="bonus-checkbox" value="${bonus.bonus}" 
-                           data-dice-type="${bonus.diceType}" data-extra="${bonus.extra}" 
-                           ${bonus.always ? "checked disabled" : ""} 
+                    <input type="checkbox" class="bonus-checkbox" value="${bonus.bonus}"
+                           data-dice-type="${bonus.diceType}" data-extra="${bonus.extra}"
+                           ${bonus.always ? "checked disabled" : ""}
                            style="margin-right: 10px; width: 20px; height: 20px;">
                     ${bonus.bonus} (${bonus.diceType}, +${bonus.extra})
                 </label>
@@ -134,9 +171,25 @@ function updateActionDetails() {
         </select>
     `;
 
+    // Genera il menu delle ragioni di guerra, solo se l'azione lo richiede (es. Attacco)
+    let warReasonsMenu = "";
+    if (action.hasWarReasons) {
+        warReasonsMenu = `
+        <div id="warReasonsContainer">
+            <label for="warReasonsMenu"><strong>Scegli l'obbiettivo dell'Attacco:</strong></label>
+            <select id="warReasonsMenu">
+                <option value="" disabled selected>Seleziona una ragione di guerra</option>
+                ${warReasons.map(reason => `<option value="${reason.nome}" title="${reason.descrizione}">${reason.nome}</option>`).join("")}
+            </select>
+            <p id="warReasonDescription"></p>
+        </div>
+        `;
+    }
+
     // Display action details, bonuses, and dice rolls
     actionDetails.innerHTML = `
         <p><strong>Description:</strong> ${description}</p>
+        ${warReasonsMenu}
         <p id="rollDisplay"><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${baseRoll}d10</p>
         <div>
             <strong>Court Bonuses:</strong>
@@ -149,6 +202,15 @@ function updateActionDetails() {
             ${bonusDropdown}
         </div>
     `;
+
+    // Se presente il menu delle ragioni di guerra, mostra la descrizione al cambio
+    const warReasonsSelect = document.getElementById("warReasonsMenu");
+    if (warReasonsSelect) {
+        warReasonsSelect.addEventListener("change", () => {
+            const selected = warReasons.find(r => r.nome === warReasonsSelect.value);
+            document.getElementById("warReasonDescription").textContent = selected ? selected.descrizione : "";
+        });
+    }
 
     // Attach event listeners to recalculate roll
     document.querySelectorAll(".bonus-checkbox, #bonusDropdown").forEach(element => {
@@ -199,11 +261,34 @@ function updateActionDetails() {
     recalculateRoll();
 }
 
+// Aggiorna le label degli input statistici nella sezione "Your Family" mostrando il valore massimo
+// consentito dal governo attuale, accanto al nome della statistica.
+function setStatMaxes(stats) {
+    Object.keys(statInputMap).forEach(statName => {
+        const inputId = statInputMap[statName];
+        const input = document.getElementById(inputId);
+        const label = document.querySelector(`label[for="${inputId}"]`);
+        if (!input) return;
 
-// Update the `loadFamilyStats` function to include the "Government" column
+        if (stats && stats[statName] !== undefined) {
+            input.max = stats[statName];
+            if (label) {
+                label.textContent = `${statName} (max ${stats[statName]}):`;
+            }
+        } else {
+            // Nessun governo o statistica non presente: ripristina il default originale (max 6)
+            input.max = 6;
+            if (label) {
+                label.textContent = `${statName}:`;
+            }
+        }
+    });
+}
+
+// Update the `loadFamilyStats` function to use the governi.json data
 function loadFamilyStats(families) {
     const lamano = families.find(family => family['Name'] === 'La Mano');
-    
+
     if (!lamano) return;
 
     document.getElementById('might').value = lamano['Might'];
@@ -214,29 +299,42 @@ function loadFamilyStats(families) {
 
     let government = lamano['Government'];
 
-    // Map of government types to their associated stats
-    const governmentStats = {
-        "Stratocracy": ["Might", "Territory", "Sovereignty"],
-        "Martial Empire": ["Might", "Treasure", "Territory"],
-        "Space Crusaders": ["Territory", "Sovereignty", "Influence"],
-        "Feudal Realm": ["Territory", "Might", "Treasure"],
-        "Megacorporation": ["Treasure", "Influence", "Territory"],
-        "Plutocratic Oligarchy": ["Treasure", "Territory", "Sovereignty"],
-        "Fanatic Purifiers": ["Sovereignty", "Might", "Territory"],
-        "Divine Mandate": ["Sovereignty", "Influence", "Treasure"],
-        "Hegemonic Imperialists": ["Influence", "Territory", "Might"],
-        "Enigmatic Wizards": ["Influence", "Treasure", "Sovereignty"]
-    };
+    // Trova il governo corrispondente nei dati caricati da governi.json
+    const governmentData = governi.find(g => g.nome === government);
 
-    // Get the associated stats for the government type
-    const associatedStats = governmentStats[government] || [];
-
-    // Generate the subtitle content
     const subtitleElement = document.getElementById('laManoSubtitle');
+    const effectsElement = document.getElementById('governmentEffects');
+
+    if (!governmentData) {
+        subtitleElement.innerHTML = `${government}`;
+        if (effectsElement) effectsElement.innerHTML = "";
+        setStatMaxes(null); // Nessun governo trovato: ripristina i max di default
+        return;
+    }
+
+    const stats = governmentData.statistiche || {};
+    const effetti = governmentData.effetti_speciali || [];
+
+    // Imposta i valori massimi delle statistiche accanto agli input nella sezione "Your Family"
+    setStatMaxes(stats);
+
+    // Nel sottotitolo mostriamo solo il nome del governo (senza la lista delle statistiche)
     subtitleElement.innerHTML = `
-        ${government}<br>
-        ${associatedStats.map(stat => `${stat}`).join(", ")}
+        ${governmentData.nome_italiano ? `${governmentData.nome} - ${governmentData.nome_italiano}` : governmentData.nome}
     `;
+
+    // Gli effetti speciali del governo vengono mostrati qui, al posto dei vecchi limiti statistici
+    if (effectsElement) {
+        effectsElement.innerHTML = `
+            <ul style="list-style: none; padding: 0;">
+                ${effetti.map(effetto => `
+                    <li style="margin-bottom: 5px;">
+                        <strong>${effetto.nome}:</strong> ${effetto.descrizione}
+                    </li>
+                `).join("")}
+            </ul>
+        `;
+    }
 }
 
 // Function to load company assets from Google Sheets
@@ -313,31 +411,30 @@ function loadTimeline(events) {
         const descriptionDiv = document.createElement("div");
         descriptionDiv.className = "description-popup";
         descriptionDiv.textContent = event['Description'];
-    
+
         // Append the description div to the item
         item.appendChild(descriptionDiv);
 
         item.addEventListener("mouseover", (e) => {
             descriptionDiv.style.display = "block";
         });
-    
+
         // Update the popup position on mousemove
         item.addEventListener("mousemove", (e) => {
             descriptionDiv.style.left = e.pageX + 15 + "px"; // 15px to the right of the cursor
             descriptionDiv.style.top = e.pageY + 15 + "px"; // 15px below the cursor
         });
-    
+
         // Hide the popup on mouseout
         item.addEventListener("mouseout", () => {
             descriptionDiv.style.display = "none";
         });
-    
+
         container.appendChild(item);
     });
 
     container.scrollLeft = container.scrollWidth;
 }
-
 
 ["might", "treasure", "influence", "territory", "sovereignty"].forEach(id => {
     document.getElementById(id).addEventListener("input", generateDescription);
