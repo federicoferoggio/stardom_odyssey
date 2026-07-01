@@ -638,7 +638,7 @@ function initDiceRoller() {
         const atk = readIntInput(dom.atkInput, 2, 1, 20);
         const hit = readIntInput(dom.hitInput, 3, 2, 6);
         const wnd = readIntInput(dom.wndInput, 4, 2, 6);
-        const critThreshold = readIntInput(dom.critThresholdInput, 6, 2, 6);
+        const critThreshold = readIntInput(dom.critThresholdInput, 6, 1, 6);
         const rnd = readIntInput(dom.rndInput, 0, 0, 6);
         const save = readIntInput(dom.saveInput, 4, 2, 6);
         const ward = readIntInput(dom.wardInput, 7, 2, 7);

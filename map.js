@@ -69,37 +69,35 @@ function splitRes(val) {
 }
 
 
-// ── TSV/CSV PARSER ────────────────────────────────────────────────────────────
-function parsePaste(text) {
-    if (!text || !text.trim()) return [];
-    const lines = text.trim().split(/\r?\n/);
-    if (lines.length < 2) return [];
-    const sep = lines[0].includes('\t') ? '\t' : ',';
-    const headers = lines[0].split(sep).map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
-    const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-        const cells = lines[i].split(sep);
-        if (cells.every(c => !c.trim())) continue;
-        const obj = {};
-        headers.forEach((h, j) => { obj[h] = (cells[j] || '').trim(); });
-        rows.push(obj);
+// ── FETCH GOOGLE SHEET HTML ───────────────────────────────────────────────────
+// Map data (fleets, ownership, tick position) changes more often than the
+// rest of the site's daily-cached data, so it's fetched fresh but still
+// through the shared BrowserCache (cache.js/parser.js) with a short TTL —
+// this reuses the site's one caching mechanism instead of always hitting the
+// network on every page load.
+const MAP_CACHE_TTL_DAYS = 10 / (24 * 60); // ~10 minutes
+
+async function fetchText(url) {
+    if (window.cacheInstance) {
+        return window.cacheInstance.fetchAndCache(url, undefined, { ttlDays: MAP_CACHE_TTL_DAYS });
     }
-    return rows;
+    const res = await fetch(url, { cache: 'no-store' });
+    return res.text();
 }
 
-// ── FETCH GOOGLE SHEET HTML ───────────────────────────────────────────────────
 async function fetchTable(url) {
-    const res = await fetch(url, { cache: 'no-store' });
-    const text = await res.text();
+    const text = await fetchText(url);
     return parseCsv(text);
 }
 
+// splitCsvLine (quote-aware comma splitting) lives in parser.js so there's a
+// single shared CSV splitter for the whole site.
 function parseCsv(text) {
     if (!text || !text.trim()) return [];
     // Gestisce \r\n e \n
     const lines = text.trim().split(/\r?\n/);
     if (lines.length < 2) return [];
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
+    const headers = splitCsvLine(lines[0]).map(h => h.trim().toLowerCase().replace(/\s+/g, '_'));
     const rows = [];
     for (let i = 1; i < lines.length; i++) {
         const cells = splitCsvLine(lines[i]);
@@ -109,20 +107,6 @@ function parseCsv(text) {
         rows.push(obj);
     }
     return rows;
-}
-
-// Split CSV rispettando le virgolette (es. celle con virgola dentro)
-function splitCsvLine(line) {
-    const result = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') { inQ = !inQ; }
-        else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
-        else { cur += ch; }
-    }
-    result.push(cur);
-    return result;
 }
 
 // ── NORMALISE ─────────────────────────────────────────────────────────────────
@@ -148,12 +132,11 @@ function normalise(rows) {
     });
     const planets = Object.values(map).filter(b => b.anchor === 'sun' && b.id !== 'sun').length;
     const moons = Object.values(map).filter(b => b.anchor !== 'sun' && b.anchor !== '').length;
-    const ownerColorMap = {};
     Object.values(map).forEach(b => {
         if (b.owner) ownerColors[b.owner.trim()] = b.color;
     });
-    // Assegna ownerColor a ogni corpo
-    Object.values(map).forEach(b => { b.ownerColor = ownerColorMap[b.owner.trim()] || b.color || '#aaaaaa'; });
+    // Assegna ownerColor a ogni corpo (colore condiviso da tutti i corpi dello stesso owner)
+    Object.values(map).forEach(b => { b.ownerColor = (b.owner && ownerColors[b.owner.trim()]) || b.color || '#aaaaaa'; });
     map.__paths = rows
         .filter(r => ['path', 'warpath'].includes((getF(r, 'type', 'Type') || '').trim().toLowerCase()))
         .map(r => ({
@@ -497,8 +480,8 @@ let baseTick = 0;  // ← NEW: stores the "current" month from timeline
 // ── TICK PREV/NEXT BUTTONS ────────────────────────────────────────────────────
 let tickHoldInterval = null;
 
-function stepTick() {
-    onTickChange(tick + .03);
+function stepTick(delta) {
+    onTickChange(tick + delta * .03);
 }
 
 function startHold(delta) {
@@ -917,8 +900,7 @@ let craftData = [];
 
 async function fetchCraftAssets() {
     try {
-        const res = await fetch(SHEET_CRAFT_URL, { cache: 'no-store' });
-        const text = await res.text();
+        const text = await fetchText(SHEET_CRAFT_URL);
         craftData = parseTsv(text);
         buildCraftPanel();
     } catch (err) {

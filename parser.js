@@ -3,6 +3,36 @@
 (function(){
     const cacheInstance = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
 
+    // Shared flavor-text phrase bank, keyed by stat name then tier (0-2).
+    // Used by index.html (script.js) and families.html (script_families.js).
+    const qualities = {
+        Might: [
+            ["le loro truppe sono contadini con spade", "il loro esercito è più simbolico che reale"], // 1–2
+            ["le loro forze sono ben addestrate e pronte alla battaglia", "i loro soldati non temono lo scontro"], // 3–4
+            ["le loro forze sono terrificanti da affrontare in battaglia", "il loro esercito semina il terrore ovunque"] // 5–6
+        ],
+        Treasure: [
+            ["hanno solo risparmi di poco valore", "le loro casse contengono appena il necessario"], // 1–2
+            ["trattano in monete d'oro", "la loro ricchezza è notevole"], // 3–4
+            ["commerciano in lingotti d'oro", "il loro tesoro è inestimabile"] // 5–6
+        ],
+        Influence: [
+            ["a pochi interessa della loro esistenza", "sono ignorati da tutti nel sistema"], // 1–2
+            ["sono rispettati nel sistema", "godono di una discreta considerazione"], // 3–4
+            ["sono leggendari e riveriti in ogni angolo del sistema", "la loro parola è legge"] // 5–6
+        ],
+        Territory: [
+            ["controllano una regione dimenticata", "i loro territori sono insignificanti"], // 1–2
+            ["governano un pianeta vasto e sviluppato, e numerose colonie", "le loro terre si espandono su più sistemi"], // 3–4
+            ["dominano pianeti, asteroidi, colonie e persino di più", "il loro dominio si estende oltre l'immaginabile"] // 5–6
+        ],
+        Sovereignty: [
+            ["i loro sudditi li tollerano appena", "sono mal sopportati dalla popolazione"], // 1–2
+            ["i loro sudditi li sostengono", "hanno il supporto della popolazione"], // 3–4
+            ["i loro sudditi li venerano", "il loro regno è visto come sacro"] // 5–6
+        ]
+    };
+
     async function myfetch(url) {
         if (cacheInstance && cacheInstance.fetchAndCache) {
             return cacheInstance.fetchAndCache(url);
@@ -29,17 +59,37 @@
 
 
     /**
+     * Split a single CSV line into fields, respecting double-quoted fields
+     * that may contain commas (e.g. `"Foo, Bar",baz`). Shared with map.js so
+     * there is a single quote-aware CSV splitter for the whole site.
+     * @param {string} line
+     * @returns {Array<string>}
+     */
+    function splitCsvLine(line) {
+        const result = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const ch = line[i];
+            if (ch === '"') { inQuotes = !inQuotes; }
+            else if (ch === ',' && !inQuotes) { result.push(cur); cur = ''; }
+            else { cur += ch; }
+        }
+        result.push(cur);
+        return result;
+    }
+
+    /**
      * Parse a CSV text into a dataframe-like structure (array of objects).
      * @param {*} csvText - The CSV text to parse. The first row should contain headers.
      * @returns {Array<Object>} - Parsed data.
      */
     function parseDataframe(csvText) {
-        const rows = csvText.split("\n").map(row => row.split(","));
+        const rows = csvText.split("\n").map(row => splitCsvLine(row));
         const headers = rows[0].map(header => header.trim());
         const data = rows.slice(1).map(row => {
             const obj = {};
             row.forEach((value, index) => {
-                const trimmedValue = value.trim();
+                const trimmedValue = (value || '').trim();
                 obj[headers[index]] = isNaN(trimmedValue) || trimmedValue === "" ? trimmedValue : parseInt(trimmedValue, 10);
             });
             return obj;
@@ -133,6 +183,8 @@
 
     // Exported variables
     window.cacheInstance = cacheInstance;
+    window.qualities = qualities;
+    window.splitCsvLine = splitCsvLine;
     window.fetchTimelineData = fetchTimelineData;
     window.fetchFamiliesData = fetchFamiliesData;
     window.fetchCourtMembers = fetchCourtMembers;

@@ -106,6 +106,7 @@ function populateActions() {
         option.textContent = actionName;
         actionsMenu.appendChild(option);
     });
+    actionsMenu.addEventListener("change", updateActionDetails);
 }
 
 function updateActionDetails() {
@@ -132,8 +133,7 @@ function updateActionDetails() {
     // Generate checklist bonuses from CSV data
     const bonusesForRoll = bonuses.filter(bonus =>
         bonus.score.toLowerCase() === "all" || // Include bonuses with "all" as the score
-        (bonus.always && rolls.includes(bonus.score.toLowerCase())) ||
-        (!bonus.always && rolls.includes(bonus.score.toLowerCase()))
+        rolls.includes(bonus.score.toLowerCase())
     );
 
     const bonusChecklist = `
@@ -382,7 +382,7 @@ function loadCourtMembers(courtmembers) {
 
         // Set the court member's image, name, and bonuses
         memberDiv.innerHTML = `
-            <img src="images/court/${name}.webp" alt="${name}" onerror="this.onerror=null; this.src='images/court/placeholder.webp';">
+            <img src="images/court/${name}.webp" alt="${name}" onerror="this.onerror=null; this.src='images/court/Position%20Empty.webp';">
             <h3>${name}</h3>
             <p><strong>Role:</strong> ${role}</p>
             <p><strong>Bonuses:</strong> ${bonuses || 'No bonuses available'}</p>

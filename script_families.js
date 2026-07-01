@@ -1,30 +1,7 @@
-const qualities = {
-    Might: [
-        ["le loro truppe sono contadini con spade", "il loro esercito è più simbolico che reale"], // 1–2
-        ["le loro forze sono ben addestrate e pronte alla battaglia", "i loro soldati non temono lo scontro"], // 3–4
-        ["le loro forze sono terrificanti da affrontare in battaglia", "il loro esercito semina il terrore ovunque"] // 5–6
-    ],
-    Treasure: [
-        ["hanno solo risparmi di poco valore", "le loro casse contengono appena il necessario"], // 1–2
-        ["trattano in monete d'oro", "la loro ricchezza è notevole"], // 3–4
-        ["commerciano in lingotti d'oro", "il loro tesoro è inestimabile"] // 5–6
-    ],
-    Influence: [
-        ["a pochi interessa della loro esistenza", "sono ignorati da tutti nel sistema"], // 1–2
-        ["sono rispettati nel sistema", "godono di una discreta considerazione"], // 3–4
-        ["sono leggendari e riveriti in ogni angolo del sistema", "la loro parola è legge"] // 5–6
-    ],
-    Territory: [
-        ["controllano una regione dimenticata", "i loro territori sono insignificanti"], // 1–2
-        ["governano un pianeta vasto e sviluppato, e numerose colonie", "le loro terre si espandono su più sistemi"], // 3–4
-        ["dominano pianeti, asteroidi, colonie e persino di più", "il loro dominio si estende oltre l'immaginabile"] // 5–6
-    ],
-    Sovereignty: [
-        ["i loro sudditi li tollerano appena", "sono mal sopportati dalla popolazione"], // 1–2
-        ["i loro sudditi li sostengono", "hanno il supporto della popolazione"], // 3–4
-        ["i loro sudditi li venerano", "il loro regno è visto come sacro"] // 5–6
-    ]
-};
+// `qualities` (flavor-text phrase bank) is defined once in parser.js and shared
+// with index.html via window.qualities, since both pages generate stat-based
+// flavor text from the same phrase bank.
+const qualities = window.qualities;
 
 const treatyDescriptions = {
     "Alleanza Militare": {

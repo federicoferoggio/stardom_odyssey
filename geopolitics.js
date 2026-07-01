@@ -1,16 +1,24 @@
 const STATS = ["Might", "Treasure", "Influence", "Territory", "Sovereignty"];
-const GOVERNMENT_LIMITS = {
-    Stratocracy: [5, 2, 3, 4, 4],
-    "Martial Empire": [5, 4, 2, 4, 3],
-    "Space Crusaders": [3, 2, 4, 5, 4],
-    "Feudal Realm": [4, 4, 2, 5, 3],
-    Megacorporation: [3, 5, 4, 4, 2],
-    "Plutocratic Oligarchy": [3, 5, 2, 4, 4],
-    "Fanatic Purifiers": [4, 2, 3, 4, 5],
-    "Divine Mandate": [2, 4, 4, 3, 5],
-    "Hegemonic Imperialists": [4, 2, 5, 4, 3],
-    "Enigmatic Observers": [2, 4, 5, 3, 4],
-};
+
+// Government stat caps live in all_info/governi.json (single source of truth,
+// also used by index.html/script.js). Populated at load time by
+// fetchGovernmentLimits() below, keyed by government name -> { Might, Treasure, ... }.
+let GOVERNMENT_LIMITS = {};
+
+async function fetchGovernmentLimits() {
+    try {
+        const response = await fetch('all_info/governi.json');
+        const data = await response.json();
+        const limits = {};
+        (data.governi || []).forEach(gov => {
+            limits[gov.nome] = gov.statistiche || {};
+        });
+        return limits;
+    } catch (err) {
+        console.error("Errore nel caricamento di governi.json:", err);
+        return {};
+    }
+}
 
 const PACT_DESCRIPTIONS = {
     "Patto di Non-Aggressione": "Mutual promise to avoid direct conflict.",
@@ -166,14 +174,19 @@ function fillTableWithFamilyStats() {
     });
 }
 
+// Returns only the pacts that have a matching reverse entry, logging a warning
+// (instead of throwing) for any asymmetric row so a single bad spreadsheet
+// entry doesn't take down the whole graph/table.
 function checkSymmetry(pacts) {
-    pacts.forEach(pact => {
+    return pacts.filter(pact => {
         const reversePact = pacts.find(
             p => p.From === pact.To && p.To === pact.From && p.Pact === pact.Pact
         );
         if (!reversePact) {
-            throw new Error(`Asymmetric pact found: ${pact.From} -> ${pact.To} (${pact.Pact}) has no reverse pact.`);
+            console.warn(`Asymmetric pact found: ${pact.From} -> ${pact.To} (${pact.Pact}) has no reverse pact. Skipping.`);
+            return false;
         }
+        return true;
     });
 }
 
@@ -214,8 +227,7 @@ function cleanPacts(rawPacts) {
         "Patto di Non-Aggressione",
         "Accordo di Migrazione"
     ].forEach(pactType => {
-        const subset = normalized.filter(p => p.Pact === pactType);
-        checkSymmetry(subset);
+        const subset = checkSymmetry(normalized.filter(p => p.Pact === pactType));
         cleaned.push(...chooseOneOfEachPair(subset));
     });
 
@@ -227,28 +239,26 @@ function cleanPacts(rawPacts) {
         ["Supporto Arcano", "Ntsu"],
         ["Patto Draconico", "Wueng"],
     ].forEach(([pactType, familyFrom]) => {
-        const subset = normalized.filter(p => p.Pact === pactType);
-        checkSymmetry(subset);
+        const subset = checkSymmetry(normalized.filter(p => p.Pact === pactType));
         cleaned.push(...enforceDirection(subset, familyFrom));
     });
 
     ["Patto Tributario", "Patto di Vassallaggio"].forEach(pactType => {
         const fromPacts = normalized.filter(p => p.Pact === `${pactType} da`);
         const toPacts = normalized.filter(p => p.Pact === `${pactType} su`);
-
         const fromSet = new Set(fromPacts.map(p => `${p.From}|${p.To}`));
-        const toSet = new Set(toPacts.map(p => `${p.To}|${p.From}`));
-        if (fromSet.size !== toSet.size || ![...fromSet].every(item => toSet.has(item))) {
-            throw new Error(`Asymmetric da/su pacts found for type: ${pactType}`);
-        }
 
-        cleaned.push(
-            ...toPacts.map(p => ({
-                From: p.To,
-                Pact: pactType,
-                To: p.From
-            }))
-        );
+        // Only keep "su" entries that have a matching "da" counterpart; log +
+        // skip mismatches instead of throwing, so one bad row doesn't blank
+        // the whole page.
+        toPacts.forEach(p => {
+            const key = `${p.To}|${p.From}`;
+            if (!fromSet.has(key)) {
+                console.warn(`Asymmetric da/su pact found for type: ${pactType} (${p.From} -> ${p.To}). Skipping.`);
+                return;
+            }
+            cleaned.push({ From: p.To, Pact: pactType, To: p.From });
+        });
     });
 
     cleaned.push(...normalized.filter(p => p.Pact === "Rivalità"));
@@ -258,7 +268,8 @@ function cleanPacts(rawPacts) {
 function enrichFamilies(families, cleanedPacts) {
     families.forEach(family => {
         const governmentType = family.Government;
-        if (!governmentType || !GOVERNMENT_LIMITS[governmentType]) {
+        const govStats = GOVERNMENT_LIMITS[governmentType];
+        if (!governmentType || !govStats) {
             return;
         }
 
@@ -291,7 +302,7 @@ function enrichFamilies(families, cleanedPacts) {
         });
 
         STATS.forEach((stat, index) => {
-            family[`${stat}_goverment_limit`] = GOVERNMENT_LIMITS[governmentType][index];
+            family[`${stat}_goverment_limit`] = govStats[stat] || 0;
             family[`${stat}_bonus_limit_from_pacts`] = bonusLimits[index];
         });
 
@@ -874,6 +885,7 @@ function createGraph(families, pacts) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
+        GOVERNMENT_LIMITS = await fetchGovernmentLimits();
         familyData = await window.fetchFamiliesData();
         pactsData = cleanPacts(await window.fetchPactsData());
 
