@@ -1,0 +1,329 @@
+{
+  "treaties": [
+    {
+      "from": "Wueng",
+      "type": "Patto Draconico",
+      "to": "Rasaily"
+    },
+    {
+      "from": "Wueng",
+      "type": "Patto di Vassallaggio su",
+      "to": "Rasaily"
+    },
+    {
+      "from": "Wueng",
+      "type": "Patto di Non-Aggressione",
+      "to": "Kesk"
+    },
+    {
+      "from": "Wueng",
+      "type": "Ricerca e Sviluppo da",
+      "to": "Shawel"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Supporto Arcano",
+      "to": "Carxus"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Supporto Arcano",
+      "to": "Caillot"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Patto di Vassallaggio su",
+      "to": "Carxus"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Matrimonio",
+      "to": "Caillot"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Patto di Non-Aggressione",
+      "to": "Kesk"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Accordo Spelljammer",
+      "to": "Carxus"
+    },
+    {
+      "from": "Ntsu",
+      "type": "Ricerca e Sviluppo",
+      "to": "Shawel"
+    },
+    {
+      "from": "Mitsumoro",
+      "type": "Ricerca e Sviluppo",
+      "to": "Shawel"
+    },
+    {
+      "from": "Mitsumoro",
+      "type": "Patto di Non-Aggressione",
+      "to": "Kesk"
+    },
+    {
+      "from": "Mitsumoro",
+      "type": "Patto di Vassallaggio su",
+      "to": "Sifu"
+    },
+    {
+      "from": "Mitsumoro",
+      "type": "Matrimonio",
+      "to": "Caillot"
+    },
+    {
+      "from": "Mitsumoro",
+      "type": "Accordo Commerciale",
+      "to": "Amoako"
+    },
+    {
+      "from": "Ousssek",
+      "type": "Accordo Commerciale",
+      "to": "Rivera"
+    },
+    {
+      "from": "Ousssek",
+      "type": "Matrimonio",
+      "to": "Caillot"
+    },
+    {
+      "from": "Ousssek",
+      "type": "Accordo Commerciale",
+      "to": "Amoako"
+    },
+    {
+      "from": "Ousssek",
+      "type": "Accordo di Migrazione",
+      "to": "Rivera"
+    },
+    {
+      "from": "Ousssek",
+      "type": "Rivalità",
+      "to": "La Mano"
+    },
+    {
+      "from": "Grayshine",
+      "type": "Accordo di Finanziamento",
+      "to": "Sudriz"
+    },
+    {
+      "from": "Grayshine",
+      "type": "Accordo di Finanziamento",
+      "to": "Rivera"
+    },
+    {
+      "from": "Grayshine",
+      "type": "Accordo di Finanziamento",
+      "to": "Stozav"
+    },
+    {
+      "from": "Caillot",
+      "type": "Supporto Arcano",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Caillot",
+      "type": "Matrimonio",
+      "to": "Ousssek"
+    },
+    {
+      "from": "Caillot",
+      "type": "Matrimonio",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Caillot",
+      "type": "Matrimonio",
+      "to": "Carxus"
+    },
+    {
+      "from": "Caillot",
+      "type": "Matrimonio",
+      "to": "Zolinath"
+    },
+    {
+      "from": "Caillot",
+      "type": "Matrimonio",
+      "to": "Mitsumoro"
+    },
+    {
+      "from": "Caillot",
+      "type": "Accordo Spelljammer",
+      "to": "Carxus"
+    },
+    {
+      "from": "Amoako",
+      "type": "Accordo Commerciale",
+      "to": "Mitsumoro"
+    },
+    {
+      "from": "Amoako",
+      "type": "Accordo Commerciale",
+      "to": "Ousssek"
+    },
+    {
+      "from": "Zolinath",
+      "type": "Matrimonio",
+      "to": "Caillot"
+    },
+    {
+      "from": "Zolinath",
+      "type": "Autorità Giudiziaria",
+      "to": "Sifu"
+    },
+    {
+      "from": "Zolinath",
+      "type": "Autorità Giudiziaria",
+      "to": "Rasaily"
+    },
+    {
+      "from": "Zolinath",
+      "type": "Rivalità",
+      "to": "Stozav"
+    },
+    {
+      "from": "Sifu",
+      "type": "Patto di Vassallaggio da",
+      "to": "Mitsumoro"
+    },
+    {
+      "from": "Sifu",
+      "type": "Autorità Giudiziaria",
+      "to": "Zolinath"
+    },
+    {
+      "from": "Sifu",
+      "type": "Matrimonio",
+      "to": "Kesk"
+    },
+    {
+      "from": "Rasaily",
+      "type": "Patto Draconico",
+      "to": "Wueng"
+    },
+    {
+      "from": "Rasaily",
+      "type": "Patto di Vassallaggio su",
+      "to": "Wueng"
+    },
+    {
+      "from": "Rasaily",
+      "type": "Autorità Giudiziaria",
+      "to": "Zolinath"
+    },
+    {
+      "from": "Kesk",
+      "type": "Matrimonio",
+      "to": "Sifu"
+    },
+    {
+      "from": "Kesk",
+      "type": "Patto di Non-Aggressione",
+      "to": "Wueng"
+    },
+    {
+      "from": "Kesk",
+      "type": "Patto di Non-Aggressione",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Kesk",
+      "type": "Patto di Non-Aggressione",
+      "to": "Mitsumoro"
+    },
+    {
+      "from": "Carxus",
+      "type": "Supporto Arcano",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Carxus",
+      "type": "Patto di Vassallaggio da",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Carxus",
+      "type": "Accordo Spelljammer",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Carxus",
+      "type": "Matrimonio",
+      "to": "Caillot"
+    },
+    {
+      "from": "Carxus",
+      "type": "Accordo Spelljammer",
+      "to": "Caillot"
+    },
+    {
+      "from": "Stozav",
+      "type": "Accordo di Finanziamento",
+      "to": "Grayshine"
+    },
+    {
+      "from": "Stozav",
+      "type": "Rivalità",
+      "to": "Zolinath"
+    },
+    {
+      "from": "Shawel",
+      "type": "Ricerca e Sviluppo",
+      "to": "Mitsumoro"
+    },
+    {
+      "from": "Shawel",
+      "type": "Ricerca e Sviluppo",
+      "to": "Ntsu"
+    },
+    {
+      "from": "Shawel",
+      "type": "Ricerca e Sviluppo",
+      "to": "Wueng"
+    },
+    {
+      "from": "Shawel",
+      "type": "Patto di Non-Aggressione",
+      "to": "La Mano"
+    },
+    {
+      "from": "Hai",
+      "type": "Patto di Non-Aggressione",
+      "to": "La Mano"
+    },
+    {
+      "from": "La Mano",
+      "type": "Patto di Non-Aggressione",
+      "to": "Shawel"
+    },
+    {
+      "from": "La Mano",
+      "type": "Patto di Non-Aggressione",
+      "to": "Hai"
+    },
+    {
+      "from": "Sudriz",
+      "type": "Accordo di Finanziamento",
+      "to": "Grayshine"
+    },
+    {
+      "from": "Rivera",
+      "type": "Accordo Commerciale",
+      "to": "Ousssek"
+    },
+    {
+      "from": "Rivera",
+      "type": "Accordo di Migrazione",
+      "to": "Ousssek"
+    },
+    {
+      "from": "Rivera",
+      "type": "Accordo di Finanziamento",
+      "to": "Grayshine"
+    }
+  ]
+}

@@ -1,10 +1,11 @@
-// Central parser and fetch utilities for the app
-// Provides functions to fetch and parse data from Google Sheets
+// Central parser and fetch utilities for the app.
+// Provides functions to fetch game data, sourced from local all_info/*.json
+// (this used to fetch a published Google Sheet CSV export of the same data).
 (function(){
     const cacheInstance = (typeof BrowserCache !== 'undefined') ? new BrowserCache('stardom', 1) : null;
 
     // Shared flavor-text phrase bank, keyed by stat name then tier (0-2).
-    // Used by index.html (script.js) and families.html (script_families.js).
+    // Used by index.html (script.js).
     const qualities = {
         Might: [
             ["le loro truppe sono contadini con spade", "il loro esercito è più simbolico che reale"], // 1–2
@@ -33,30 +34,16 @@
         ]
     };
 
-    async function myfetch(url) {
-        if (cacheInstance && cacheInstance.fetchAndCache) {
-            return cacheInstance.fetchAndCache(url);
-        } else {
-            console.log("Fetching without cache for URL:", url);
-            const res = await fetch(url);
-            return res.text();
-        }
-    };
-
-
-    // All URLs
-    const googleSheetBaseURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRqpVaE0U3b0-TIyW-xoZrkys30jf0YkU0cRRexohMZmdd_Ln1zeWiAi-x0RrGQUaIKGHvyM1PBIXTk/pub';
-    
-    // script.js
-    const googleSheetBonusesURL = `${googleSheetBaseURL}?gid=237415455&single=true&output=csv`;
-    const googleSheetFamiliesURL = `${googleSheetBaseURL}?gid=0&single=true&output=csv`;
-    const googleSheetCourtURL = `${googleSheetBaseURL}?gid=2021236788&single=true&output=csv`;
-    const googleSheetAssetsURL = `${googleSheetBaseURL}?gid=549477368&single=true&output=csv`;
-    const googleSheetTimelinedataURL = `${googleSheetBaseURL}?gid=1188539103&single=true&output=csv`;
-
-    // script_families.js
-    const pactsUrl = `${googleSheetBaseURL}?gid=1375108331&single=true&output=csv`;
-
+    // Local-JSON fetch helper for the six functions below -- these used to
+    // hit a published Google Sheet (CSV export of the same data now checked
+    // into all_info/*.json); local files are same-origin so no cache layer
+    // is needed the way BrowserCache was for the old remote CSVs (that
+    // cache is still used directly by map.js for its own remote data).
+    async function myfetchJson(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`${url}: ${res.status}`);
+        return res.json();
+    }
 
     /**
      * Split a single CSV line into fields, respecting double-quoted fields
@@ -78,103 +65,168 @@
         return result;
     }
 
-    /**
-     * Parse a CSV text into a dataframe-like structure (array of objects).
-     * @param {*} csvText - The CSV text to parse. The first row should contain headers.
-     * @returns {Array<Object>} - Parsed data.
-     */
-    function parseDataframe(csvText) {
-        const rows = csvText.split("\n").map(row => splitCsvLine(row));
-        const headers = rows[0].map(header => header.trim());
-        const data = rows.slice(1).map(row => {
-            const obj = {};
-            row.forEach((value, index) => {
-                const trimmedValue = (value || '').trim();
-                obj[headers[index]] = isNaN(trimmedValue) || trimmedValue === "" ? trimmedValue : parseInt(trimmedValue, 10);
-            });
-            return obj;
-        });
-        return data;
-    }
+    // Below: the six functions that used to fetch a published Google Sheet
+    // (CSV) now read the equivalent all_info/*.json instead, reshaping each
+    // record into the exact legacy row shape (capitalized keys etc.) so that
+    // script.js / geopolitics.js need no changes at all.
 
     async function fetchTimelineData() {
-        return myfetch(googleSheetTimelinedataURL)
-            .then(parseDataframe)
-            .catch(error => {
-                console.error("Error fetching timeline data:", error);
-                return [];
-            });
+        try {
+            const data = await myfetchJson('all_info/timeline.json');
+            // timeline.json is now { currentMonth, months: [{month,title,events:[{description,modifier}]}] }
+            // (previously one flat CSV row per month) -- flatten each month's
+            // events back into a single legacy row.
+            return (data.months || []).map(m => ({
+                Month: m.month,
+                Event: m.title || '',
+                Description: (m.events || []).map(e => e.description).filter(Boolean).join(' '),
+                'Modifier (Inizio del Mese)': (m.events || []).map(e => e.modifier).filter(Boolean).join(';'),
+            }));
+        } catch (error) {
+            console.error("Error fetching timeline data:", error);
+            return [];
+        }
     }
 
     async function fetchFamiliesData() {
-        return myfetch(googleSheetFamiliesURL)
-            .then(parseDataframe)
-            .catch(error => {
-                console.error("Error fetching families data:", error);
-                return [];
-            });
+        try {
+            const data = await myfetchJson('all_info/companies.json');
+            return (data.companies || []).map(c => ({
+                Name: c.name,
+                Might: c.might,
+                Treasure: c.treasure,
+                Influence: c.influence,
+                Territory: c.territory,
+                Sovereignty: c.sovereignty,
+                Government: c.government,
+                Planet: c.planet,
+            }));
+        } catch (error) {
+            console.error("Error fetching families data:", error);
+            return [];
+        }
+    }
+
+    // index.html plays from La Mano's own perspective -- its Court and dice
+    // calculator are both La Mano-specific views over the SAME shared
+    // leaders.json/traits.json/assets.json every other family also uses,
+    // rather than a separate bespoke file (that used to be
+    // dice_bonuses.json/la_mano_court.json/bonus_descriptions.json, now
+    // folded entirely into the shared files).
+    const PLAYER_FAMILY = 'La Mano';
+
+    async function fetchLaManoLeadersWithTraits() {
+        const [leadersData, traitsData] = await Promise.all([
+            myfetchJson('all_info/leaders.json'),
+            myfetchJson('all_info/traits.json'),
+        ]);
+        const traitsById = {};
+        (traitsData.traits || []).forEach(t => { traitsById[t.id] = t; });
+        const leaders = (leadersData.leaders || {})[PLAYER_FAMILY] || [];
+        return leaders.map(leader => ({
+            ...leader,
+            traitObjects: (leader.traits || []).map(id => traitsById[id]).filter(Boolean),
+        }));
     }
 
     async function fetchCourtMembers() {
-        return myfetch(googleSheetCourtURL)
-            .then(parseDataframe)
-            .catch(error => {
-                console.error("Error fetching court members data:", error);
-                return [];
-            });
+        try {
+            const leaders = await fetchLaManoLeadersWithTraits();
+            return leaders.map(l => ({
+                Role: l.role,
+                Name: l.name,
+                Bonuses: l.traitObjects.map(t => `${t.label}: ${t.description}`).join(' '),
+            }));
+        } catch (error) {
+            console.error("Error fetching court members data:", error);
+            return [];
+        }
     }
 
+    // "Current Assets" dropdown: only what La Mano already owns (assets.json's
+    // familyAssets entries with owner La Mano) plus what it could craft right
+    // now from the resources on bodies/points of interest it currently
+    // controls -- mirrors strategic-map.js's familyResourceIds()/qualifiesFor()
+    // so both pages agree, instead of dumping the entire global craftAssets catalog.
     async function fetchCompanyAssets() {
-        return myfetch(googleSheetAssetsURL)
-            .then(parseDataframe)
-            .catch(error => {
-                console.error("Error fetching company assets data:", error);
-                return [];
+        try {
+            const [bodiesData, poiData, assetsData] = await Promise.all([
+                myfetchJson('all_info/bodies.json'),
+                myfetchJson('all_info/points_of_interest.json'),
+                myfetchJson('all_info/assets.json'),
+            ]);
+
+            const resourceIds = new Set();
+            const collectOwned = (list) => (list || []).forEach(b => {
+                if (b && b.owner === PLAYER_FAMILY) (b.resourceIds || []).forEach(id => resourceIds.add(id));
             });
+            collectOwned(bodiesData.bodies);
+            collectOwned(poiData.pointsOfInterest);
+
+            const craftable = (assetsData.craftAssets || [])
+                .filter(a => (a.requirementIds || []).every(rid => resourceIds.has(rid)))
+                .map(a => ({ Name: a.name, Bonus: a.description }));
+
+            const owned = (assetsData.familyAssets || [])
+                .filter(a => a.owner === PLAYER_FAMILY)
+                .map(a => ({ Name: a.name, Bonus: [a.description, a.effect].filter(Boolean).join(' — ') }));
+
+            return [...owned, ...craftable];
+        } catch (error) {
+            console.error("Error fetching company assets data:", error);
+            return [];
+        }
     }
 
+    // Flattens every modifier from La Mano's 3 leaders' traits, plus every
+    // modifier on La Mano's own assets.json familyAssets entries, into the
+    // same checklist-row shape the action-roll calculator has always
+    // expected. A modifier binds to EITHER a stat (Score, matched against
+    // whichever qualities the selected action rolls) OR an action (Action,
+    // matched exactly against one specific action name) -- Score defaults to
+    // '' rather than undefined so script.js's filter never throws when only
+    // Action is set.
     async function fetchBonuses() {
-        return myfetch(googleSheetBonusesURL)
-            .then(parseDataframe)
-            .catch(error => {
-                console.error("Error fetching bonuses data:", error);
-                return [];
+        try {
+            const [leaders, assetsData] = await Promise.all([
+                fetchLaManoLeadersWithTraits(),
+                myfetchJson('all_info/assets.json'),
+            ]);
+            const rows = [];
+            const pushModifiers = (bonusName, modifiers) => {
+                (modifiers || []).forEach(m => {
+                    rows.push({
+                        Bonus: bonusName,
+                        Score: m.stat || '',
+                        Action: m.action || '',
+                        Situation: m.situation,
+                        'Dice Type': m.diceType || 'Normal Dice',
+                        Extra: m.amount,
+                        Always: m.always ? 'Y' : 'N',
+                    });
+                });
+            };
+            leaders.forEach(l => {
+                l.traitObjects.forEach(trait => pushModifiers(`${l.name} (${trait.label})`, trait.modifiers));
             });
+            (assetsData.familyAssets || [])
+                .filter(a => a.owner === PLAYER_FAMILY)
+                .forEach(a => pushModifiers(a.name, a.modifiers));
+            return rows;
+        } catch (error) {
+            console.error("Error fetching bonuses data:", error);
+            return [];
+        }
     }
-
 
     async function fetchPactsData() {
         try {
-            const csvText = await myfetch(pactsUrl);
-
-            // Example of a row:
-            // Ntsu,Supporto Arcano (Carxus),Supporto Arcano (Caillot),Patto di Vassallaggio su (Carxus),...
-            // I want to use regex to parse this into:
-            // [
-            //   { From: "Ntsu", Pact: "Supporto Arcano", To: "Carxus" },
-            //   { From: "Ntsu", Pact: "Supporto Arcano", To: "Caillot" },
-            //   ...
-            // ]
-
-            let data = [];
-            const rows = csvText.split("\n");
-            const headers = rows[0].split(",").map(h => h.trim());
-
-            rows.slice(1).forEach(row => {
-                // Split at first comma to separate company from pacts
-                const firstCommaIndex = row.indexOf(",");
-                const company = row.slice(0, firstCommaIndex).trim();
-                row.slice(firstCommaIndex + 1)
-                    .matchAll(/\s*(.+?)\s*\((.+?)\),/g)
-                    .forEach(pactEntry => {
-                        data.push({
-                            From: company,
-                            Pact: pactEntry[1].trim(),
-                            To: pactEntry[2].trim()
-                        });
-                    });
-            });
-            return data;
+            const data = await myfetchJson('all_info/treaties.json');
+            return (data.treaties || []).map(t => ({
+                From: t.from,
+                Pact: t.type,
+                To: t.to,
+            }));
         } catch (error) {
             console.error("Error fetching pacts data:", error);
             return {};

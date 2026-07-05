@@ -1,0 +1,101 @@
+{
+  "_readme": "Canonical catalog of treaty/pact types referenced by all_info/treaties.json. 'opinionValue' is the default directional opinion modifier applied once when opinions.json was seeded from treaties.json — editing it here has no live effect, it's just documentation of where the seed numbers came from. category: relational | benefit | unique.",
+  "treatyTypes": {
+    "Alleanza Militare": {
+      "description": "Un patto di ferro che lega due famiglie nel sangue e nella guerra, giurando di difendersi reciprocamente contro ogni minaccia.",
+      "effects": "I due partiti difendono e assistono il proprio alleato in qualsiasi questione militare. L'attaccante deve affrontare entrambe le famiglie contemporaneamente.",
+      "category": "relational",
+      "opinionValue": 40
+    },
+    "Patto di Non-Aggressione": {
+      "description": "Un giuramento solenne che proibisce ai firmatari di alzare le armi l'uno contro l'altro, sigillato sotto gli occhi degli dei.",
+      "effects": "I due partiti non possono attaccarsi reciprocamente. Se trascinati in guerra da alleati, il patto è rotto. Blocca le opzioni di attacco diretto nelle scelte.",
+      "category": "relational",
+      "opinionValue": 20
+    },
+    "Trattato di Neutralità": {
+      "description": "Un accordo diplomatico che impone ai firmatari di rimanere imparziali nei conflitti che non li riguardano direttamente.",
+      "effects": "I partiti si impegnano a non aiutare fazioni nemiche o ostili l'uno dell'altro. Non possono essere trascinati in guerre contro altre famiglie.",
+      "category": "relational",
+      "opinionValue": 5
+    },
+    "Patto di Vassallaggio": {
+      "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
+      "effects": "Signore: +2 Bonus Territory. Vassallo: +2 Bonus Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
+      "category": "relational",
+      "opinionValue": 20
+    },
+    "Patto Tributario": {
+      "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
+      "effects": "Signore: +2 Bonus Treasure. Vassallo: +2 Bonus Might, massimo Treasure scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
+      "category": "relational",
+      "opinionValue": 15
+    },
+    "Rivalità": {
+      "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
+      "effects": "+1 a tutti i limiti massimi delle statistiche. La famiglia rivale ottiene +1 bonus a tutte le azioni ostili contro di te.",
+      "category": "relational",
+      "opinionValue": -40
+    },
+    "Accordo Commerciale": {
+      "description": "Un'alleanza mercantile che apre le rotte commerciali e crea prosperità condivisa tra i firmatari.",
+      "effects": "+1 limite massimo Treasure per entrambi i partiti.",
+      "category": "benefit",
+      "opinionValue": 10
+    },
+    "Accordo di Migrazione": {
+      "description": "Un patto che regola il flusso di popolazioni tra territori, permettendo espansione controllata e crescita demografica.",
+      "effects": "+1 limite massimo Territory per entrambi i partiti.",
+      "category": "benefit",
+      "opinionValue": 10
+    },
+    "Matrimonio": {
+      "description": "Un'unione di sangue che lega due casate attraverso matrimoni strategici, aumentando il prestigio e l'influenza reciproca.",
+      "effects": "+1 limite massimo Influence per entrambi i partiti.",
+      "category": "benefit",
+      "opinionValue": 20
+    },
+    "Accordo Spelljammer": {
+      "description": "Un contratto esclusivo con i maestri costruttori che garantisce accesso alle loro avanzate tecnologie navali.",
+      "effects": "Sblocca azione 'Innalza la Flotta'.",
+      "category": "unique",
+      "opinionValue": 15
+    },
+    "Accordo di Finanziamento": {
+      "description": "Un patto faustiano con i signori della ricchezza che permette espansione immediata in cambio di debiti futuri.",
+      "effects": "Può aumentare Treasure di +1 istantaneamente. Ottieni risorsa 'Debiti' (conseguenze negative future).",
+      "category": "unique",
+      "opinionValue": 10
+    },
+    "Supporto Arcano": {
+      "description": "Un'alleanza con i custodi della magia antica che garantisce accesso ai segreti più profondi dell'arcano.",
+      "effects": "Ottieni asset 'Maghi di Ion'.",
+      "category": "unique",
+      "opinionValue": 15
+    },
+    "Patto Draconico": {
+      "description": "Un patto di sangue con i signori dei draghi che garantisce l'aiuto delle bestie più terribili dello spazio.",
+      "effects": "Ottieni asset 'Bestie di Tiamat'.",
+      "category": "unique",
+      "opinionValue": 15
+    },
+    "Rete Alternativa": {
+      "description": "Un accordo mercantile ricco di opportunità non ovvie.",
+      "effects": "Ottieni asset 'Contatti con i Baroni'.",
+      "category": "unique",
+      "opinionValue": 10
+    },
+    "Autorità Giudiziaria": {
+      "description": "Un'alleanza con i custodi della giustizia che garantisce legittimità legale e precedenti giuridici.",
+      "effects": "Ottieni asset 'Purità Statale'.",
+      "category": "unique",
+      "opinionValue": 10
+    },
+    "Ricerca e Sviluppo": {
+      "description": "Una alleanza che garantisce accesso a oggetti e tecnologie avanzate.",
+      "effects": "Ottieni asset 'Ricerca e Sviluppo'.",
+      "category": "unique",
+      "opinionValue": 15
+    }
+  }
+}

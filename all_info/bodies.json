@@ -1,0 +1,417 @@
+{
+  "_readme": "Planets, moons and the sun. These never change once the system layout is set. The sun itself is hardcoded in strategic-map.js and not listed here.",
+  "bodies": [
+    {
+      "id": "hellcoast",
+      "owner": "Sudriz",
+      "offset": 150,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 1,
+      "speed": 6,
+      "color": "#FE4402",
+      "name": "Hellcoast",
+      "descr": "La miniera fiammeggiante dove un’intera popolazione è dedicata all’estrazione dei rari minerali che alimentano gli armamenti dei warjammers.",
+      "resourceIds": [
+        "niez",
+        "livinohorite",
+        "platinum",
+        "tholleite"
+      ]
+    },
+    {
+      "id": "jetaras",
+      "owner": "Mitsumoro",
+      "offset": 169,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 2,
+      "speed": 8,
+      "color": "#7405ED",
+      "name": "Jetaras",
+      "descr": "Un deserto circonda tre ultra-città da miliardi di abitanti dominate da una gerarchia sociale immutabile.",
+      "resourceIds": [
+        "niez",
+        "gold",
+        "knotime",
+        "centro-di-mercato",
+        "sovrappopolazione"
+      ]
+    },
+    {
+      "id": "void",
+      "owner": "Custodians",
+      "offset": 110,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 4,
+      "speed": 12,
+      "color": "#F8FE75",
+      "name": "The void",
+      "descr": "Ciò che rimane di ciò che una volta era. Il vuoto è ora una fonte costante di invasioni demoniache e spetta ai custodi assicurarsi che non sfuggano nello spazio più ampio. I custodi vivono nella piccola città-roccia di Bral.",
+      "resourceIds": [
+        "helium",
+        "blu-kolbmony-drussiana"
+      ]
+    },
+    {
+      "id": "draconia",
+      "owner": "Wueng",
+      "offset": 280,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 6,
+      "speed": 10,
+      "color": "#0576ED",
+      "name": "Draconia",
+      "descr": "Draghi e avidità governano questa terra ma i veri re di questo pianeta sono i possenti eserciti dei Wueng che piegano tutti al loro volere.",
+      "resourceIds": [
+        "xifl",
+        "silver",
+        "gold",
+        "diamond",
+        "ivory"
+      ]
+    },
+    {
+      "id": "tithion",
+      "owner": "Rasaily",
+      "offset": 225,
+      "node": false,
+      "type": "moon",
+      "anchor": "draconia",
+      "distance": 0,
+      "speed": 5,
+      "color": "#00B3F5",
+      "name": "Tithion",
+      "descr": "Casa delle orde di orchi che così spesso discendono nel sistema sotto il comando dei loro leader per soddisfare la loro sete di sangue uccidendo e sottomettendo pianeti ribelli.",
+      "resourceIds": [
+        "bobssium"
+      ]
+    },
+    {
+      "id": "enov",
+      "owner": "Grayshine",
+      "offset": 282,
+      "node": false,
+      "type": "moon",
+      "anchor": "draconia",
+      "distance": 0,
+      "speed": 7,
+      "color": "#C005ED",
+      "name": "Enov",
+      "descr": "Qualcosa di più simile a una fortezza che a un pianeta in cui si nascondono ricchezze oltre ogni immaginazione. Il pianeta è la riserva di tutte le risorse del sistema.",
+      "resourceIds": [
+        "ruby",
+        "diamond"
+      ]
+    },
+    {
+      "id": "ion",
+      "owner": "Ntsu",
+      "offset": 11,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 12,
+      "speed": 20,
+      "color": "#613C24",
+      "name": "Ion",
+      "descr": "Montagne aride e fredde circondano il Faro della Conoscenza l’unica università di magia del sistema. Qui vengono formati alcuni dei più grandi maghi dei nostri tempi.",
+      "resourceIds": [
+        "xifl",
+        "adamantine",
+        "centro-di-mercato"
+      ]
+    },
+    {
+      "id": "tophadus",
+      "owner": "Carxus",
+      "offset": 356,
+      "node": false,
+      "type": "moon",
+      "anchor": "ion",
+      "distance": 0,
+      "speed": 5,
+      "color": "#00CB6E",
+      "name": "Tophadus",
+      "descr": "L’acqua è il luogo da cui provengono le navi. Una luna oceanica dove i Carxus hanno costruito per la prima volta i loro grandi warjammers navi che ora dominano il sistema.",
+      "resourceIds": [
+        "tholleite"
+      ]
+    },
+    {
+      "id": "hoter",
+      "owner": "Stozav",
+      "offset": 173,
+      "node": false,
+      "type": "moon",
+      "anchor": "ion",
+      "distance": 0,
+      "speed": 7,
+      "color": "#7EFA00",
+      "name": "Hoter",
+      "descr": "Una luna di gas governata da navi che fluttuano sulla sua superficie filtrando e raccogliendo un potente afrodisiaco usato dagli stozav per creare le loro sostanze potenziate.",
+      "resourceIds": [
+        "livinohorite"
+      ]
+    },
+    {
+      "id": "zimurn",
+      "owner": "Zolinath",
+      "offset": 306,
+      "node": false,
+      "type": "moon",
+      "anchor": "ion",
+      "distance": 0,
+      "speed": 11,
+      "color": "#FB005F",
+      "name": "Zimurn",
+      "descr": "Isole fluttuanti ospitano una legge radicata. Una società in cui la legge è tutto e la deviazione è il più grande crimine.",
+      "resourceIds": [
+        "perla-di-brauh",
+        "gold",
+        "luogo-sacro-kord"
+      ]
+    },
+    {
+      "id": "saltar",
+      "owner": "Ousssek",
+      "offset": 80,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 16,
+      "speed": 25,
+      "color": "#C160FF",
+      "name": "Saltar",
+      "descr": "Un pianeta che può essere attraversato a piedi dove le città si espandono in profondità piuttosto che in larghezza. Letale se lasciata incontrollata qui gli Ousssek tramano i loro grandi piani di dominio.",
+      "resourceIds": [
+        "livinohorite",
+        "tholleite",
+        "luogo-sacro-lolth"
+      ]
+    },
+    {
+      "id": "calichi",
+      "owner": "Sifu",
+      "offset": 275,
+      "node": false,
+      "type": "moon",
+      "anchor": "saltar",
+      "distance": 0,
+      "speed": 5,
+      "color": "#F5AE01",
+      "name": "Calichi",
+      "descr": "Nulla è stabile qui tranne la distruzione costante. Costantemente colpita da disastri naturali questa società vive per sopravvivere un altro giorno.",
+      "resourceIds": [
+        "xifl",
+        "campi-di-cibo"
+      ]
+    },
+    {
+      "id": "allenia",
+      "owner": "Rivera",
+      "offset": 259,
+      "node": false,
+      "type": "moon",
+      "anchor": "saltar",
+      "distance": 0,
+      "speed": 7,
+      "color": "#00F542",
+      "name": "Allenia",
+      "descr": "Il ghiaccio e il gelo non hanno fermato la natura su questa luna. Un mondo-prigione qui vengono mandati tutti gli indesiderabili a vivere in una brutale società di tribù goblinoidi in guerra per gli scarti che i loro padroni lasciano.",
+      "resourceIds": [
+        "niez",
+        "seaurite"
+      ]
+    },
+    {
+      "id": "aepra",
+      "owner": "Hai",
+      "offset": 290,
+      "node": false,
+      "type": "moon",
+      "anchor": "saltar",
+      "distance": 0,
+      "speed": 11,
+      "color": "#F58900",
+      "name": "Aepra",
+      "descr": "Una luna governata fino a poco tempo fa da una guerra civile costante; ora una nuova famiglia cerca di destreggiarsi tra odi secolari e l’influenza dei potenti e vicini Ousssek.",
+      "resourceIds": [
+        "perla-di-brauh",
+        "ruby",
+        "pianeta-fortezza"
+      ]
+    },
+    {
+      "id": "wandacker",
+      "owner": "Amoako",
+      "offset": 75,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 24,
+      "speed": 36,
+      "color": "#FF5B01",
+      "name": "Wandacker",
+      "descr": "Una delle famiglie più potenti non vivono sul pianeta stesso infestato da gnoll. Invece appaltano navi equipaggiamenti e altre risorse a contractor suicidi che cercano costantemente di fare il colpo grosso e raccogliere qualcosa di prezioso dalla superficie di Wandacker.",
+      "resourceIds": [
+        "varisiana-nera",
+        "giunglato",
+        "niez",
+        "ruby",
+        "emerald",
+        "platinum",
+        "cronvite",
+        "centro-di-mercato"
+      ]
+    },
+    {
+      "id": "tebara",
+      "owner": "Caillot",
+      "offset": 117,
+      "node": false,
+      "type": "moon",
+      "anchor": "wandacker",
+      "distance": 0,
+      "speed": 5,
+      "color": "#F502DC",
+      "name": "Tebara",
+      "descr": "Una società aristocratica schiavista che coltiva la maggior parte del cibo per il sistema.",
+      "resourceIds": [
+        "varisiana-nera",
+        "gold",
+        "campi-di-cibo"
+      ]
+    },
+    {
+      "id": "hophus",
+      "owner": "Kesk",
+      "offset": 120,
+      "node": false,
+      "type": "moon",
+      "anchor": "wandacker",
+      "distance": 0,
+      "speed": 7,
+      "color": "#FFCF01",
+      "name": "Hophus",
+      "descr": "Oscurità e dolore sono sovrani su questa luna senza sole.",
+      "resourceIds": [
+        "varisiana-nera",
+        "ruby",
+        "zinale"
+      ]
+    },
+    {
+      "id": "enides",
+      "owner": "Shawel",
+      "offset": 111,
+      "node": false,
+      "type": "moon",
+      "anchor": "wandacker",
+      "distance": 0,
+      "speed": 11,
+      "color": "#00EEFA",
+      "name": "Enides",
+      "descr": "Un centro di ricerca e creazione gli Shawel sono una famiglia che ha sempre eccelso nella creazione di manufatti magici.",
+      "resourceIds": [
+        "varisiana-nera",
+        "niez"
+      ]
+    },
+    {
+      "id": "elbethel",
+      "owner": "La Mano",
+      "offset": 25,
+      "node": false,
+      "type": "moon",
+      "anchor": "wandacker",
+      "distance": 0,
+      "speed": 13,
+      "color": "#CC6E35",
+      "name": "El-Beth-El",
+      "descr": "Quattro regni su un pianeta con un unico padrone su tutti. La Mano è un nuovo arrivato nel sistema e deve rapidamente bilanciare tutti i problemi brucianti e distruttivi lasciati dai loro predecessori.",
+      "resourceIds": [
+        "varisiana-nera",
+        "ruby",
+        "obsidian",
+        "luogo-sacro-unico"
+      ]
+    },
+    {
+      "id": "xan",
+      "owner": "Eretici",
+      "offset": 330,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 36,
+      "speed": 73,
+      "color": "#F41500",
+      "name": "Xan",
+      "descr": "Terra degli eretici.",
+      "resourceIds": []
+    },
+    {
+      "id": "liotis",
+      "owner": "Eretici",
+      "offset": 173,
+      "node": false,
+      "type": "moon",
+      "anchor": "xan",
+      "distance": 0,
+      "speed": 5,
+      "color": "#F41500",
+      "name": "Taliotis",
+      "descr": "Terra degli eretici.",
+      "resourceIds": []
+    },
+    {
+      "id": "neres",
+      "owner": "Eretici",
+      "offset": 306,
+      "node": false,
+      "type": "moon",
+      "anchor": "xan",
+      "distance": 0,
+      "speed": 7,
+      "color": "#F41500",
+      "name": "Nereis",
+      "descr": "Terra degli eretici.",
+      "resourceIds": []
+    },
+    {
+      "id": "promeneus",
+      "owner": "Eretici",
+      "offset": 232,
+      "node": false,
+      "type": "moon",
+      "anchor": "xan",
+      "distance": 0,
+      "speed": 11,
+      "color": "#F41500",
+      "name": "Progomeneus",
+      "descr": "Terra degli eretici.",
+      "resourceIds": []
+    },
+    {
+      "id": "brion7",
+      "owner": "Nobody",
+      "offset": 67,
+      "node": true,
+      "type": "planet",
+      "anchor": "sun",
+      "distance": 48,
+      "speed": 456,
+      "color": "#C0B3FA",
+      "name": "Brion 7",
+      "descr": "Un pianeta schermato che protegge (o intrappola) qualcosa mai visto.",
+      "resourceIds": []
+    }
+  ]
+}

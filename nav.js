@@ -22,8 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const links = [
         { href: 'index.html', text: 'Court' },
         { href: 'scrolls.html', text: 'Army' },
-        { href: 'families.html', text: 'Families' },
-        { href: 'map.html', text: 'Map' },
+        { href: 'strategic-map.html', text: 'Strategic Map' },
         { href: 'https://www.dndbeyond.com/campaigns/5380810', text: 'D&D Beyond Campaign' },
         { href: 'geopolitics.html', text: 'Geopolitics' },
         { href: 'https://federicoferoggio.github.io/planetnavigator/', text: 'Planets Explorer' }

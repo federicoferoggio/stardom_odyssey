@@ -1,0 +1,135 @@
+{
+  "currentMonth": 10226,
+  "months": [
+    {
+      "month": 10200,
+      "title": "Start",
+      "events": [
+        {
+          "description": "The Hand becomes the leaders of El-Beth-El and attended the dinner party in their honor.",
+          "modifier": "Court facilities are built"
+        }
+      ]
+    },
+    {
+      "month": 10201,
+      "title": "Killings of the Survivors",
+      "events": [
+        {
+          "description": "The Hand suppressed a cult of Deos called -The Surviving- gaining the trust and loyalty of Rime Mugwes. The reaction of the population has yet to be seen.",
+          "modifier": "PR Inf +1;TR Inf +1 to 10204"
+        }
+      ]
+    },
+    {
+      "month": 10202,
+      "title": "Pacts of the four Kingdoms",
+      "events": [
+        {
+          "description": "The Hand dealt with the four kingdoms of El-Beth-El but yet have to gain their respect. Nonetheless the kingdoms respected their authority (at least so it appeared).",
+          "modifier": "Spy Network built in Ashtran"
+        }
+      ]
+    },
+    {
+      "month": 10203,
+      "title": "War drums start beating",
+      "events": [
+        {
+          "description": "The hand was declared war on. They went to Ashran to ensure their loyalty and kick Arakne out of the system.",
+          "modifier": "Hai declared war"
+        }
+      ]
+    },
+    {
+      "month": 10204,
+      "title": "The Creation of the Army",
+      "events": [
+        {
+          "description": "The Hand takes the troops of Bataar and starts to unify its army",
+          "modifier": "TR Sov +1 and PR Might +1"
+        }
+      ]
+    },
+    {
+      "month": 10205,
+      "title": "Hai arrivano",
+      "events": [
+        {
+          "description": "Preparazioni alla guerra",
+          "modifier": "Spy Network in Khor Galimah"
+        }
+      ]
+    },
+    {
+      "month": 10206,
+      "title": "Vittoria",
+      "events": [
+        {
+          "description": "Vincita della guerra",
+          "modifier": "Army is ready. Spelljaming level increases by one. Civil war roll. Hai arrive."
+        }
+      ]
+    },
+    {
+      "month": 10207,
+      "title": "Recupero",
+      "events": [
+        {
+          "description": "Un mese di Pace",
+          "modifier": "Hor Passa il mese nella piramide ad aspettare"
+        }
+      ]
+    },
+    {
+      "month": 10208,
+      "title": "Ordine",
+      "events": [
+        {
+          "description": "Il Mese del Concilio",
+          "modifier": "Il Concilio stabilisce il nuovo ordine di El-Beth-El"
+        }
+      ]
+    },
+    {
+      "month": 10212,
+      "title": "Caos",
+      "events": [
+        {
+          "description": "La mano stabilisce il proprio governo e poi dopo causa il collasso del matrimonio di Arakne",
+          "modifier": "La famiglia stabilisce il loro regno e incasina quello degli altri"
+        }
+      ]
+    },
+    {
+      "month": 10224,
+      "title": "Crociata",
+      "events": [
+        {
+          "description": "Crociata della mano e morte del Mindlfayer",
+          "modifier": ""
+        }
+      ]
+    },
+    {
+      "month": 10225,
+      "title": "La presa di Aepra",
+      "events": [
+        {
+          "description": "La mano prende Aepra e aiuta Ciarack a dominare sulla Luna",
+          "modifier": "Attività di soppressione"
+        }
+      ]
+    },
+    {
+      "month": 10226,
+      "title": "Current",
+      "events": [
+        {
+          "description": "",
+          "modifier": ""
+        }
+      ]
+    }
+  ]
+}

@@ -45,6 +45,12 @@ const warReasons = [
     { nome: "Disingaggio", descrizione: "Rimuovi una flotta nemica" }
 ];
 
+function escHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 let bonuses = [];
 let governi = []; // Dati dei governi caricati da all_info/governi.json
 
@@ -62,6 +68,7 @@ function loadBonuses(csv) {
         bonuses.push({
             bonus: row['Bonus'],
             score: row['Score'],
+            action: row['Action'],
             situation: row['Situation'],
             diceType: row['Dice Type'],
             extra: row['Extra'],
@@ -130,22 +137,26 @@ function updateActionDetails() {
         baseRoll += statValue;
     });
 
-    // Generate checklist bonuses from CSV data
+    // Generate checklist bonuses from CSV data. A bonus binds to EITHER a
+    // specific action by name (Barda's Iron Order: only "Controllo
+    // dell'Ordine", regardless of which qualities that action rolls) OR a
+    // quality/score (every other bonus: shown whenever the selected action
+    // rolls that quality, or unconditionally if the score is "all").
     const bonusesForRoll = bonuses.filter(bonus =>
-        bonus.score.toLowerCase() === "all" || // Include bonuses with "all" as the score
-        rolls.includes(bonus.score.toLowerCase())
+        (bonus.action && bonus.action === selectedAction) ||
+        (!bonus.action && (bonus.score.toLowerCase() === "all" || rolls.includes(bonus.score.toLowerCase())))
     );
 
     const bonusChecklist = `
     <ul style="list-style: none; padding: 0;">
         ${bonusesForRoll.map(bonus => `
             <li style="margin-bottom: 5px;">
-                <label style="display: flex; align-items: center; cursor: pointer;", title="${bonus.situation}">
-                    <input type="checkbox" class="bonus-checkbox" value="${bonus.bonus}"
-                           data-dice-type="${bonus.diceType}" data-extra="${bonus.extra}"
+                <label style="display: flex; align-items: center; cursor: pointer;", title="${escHtml(bonus.situation)}">
+                    <input type="checkbox" class="bonus-checkbox" value="${escHtml(bonus.bonus)}"
+                           data-dice-type="${escHtml(bonus.diceType)}" data-extra="${escHtml(bonus.extra)}"
                            ${bonus.always ? "checked disabled" : ""}
                            style="margin-right: 10px; width: 20px; height: 20px;">
-                    ${bonus.bonus} (${bonus.diceType}, +${bonus.extra})
+                    ${escHtml(bonus.bonus)} (${escHtml(bonus.diceType)}, +${escHtml(bonus.extra)})
                 </label>
             </li>
         `).join("")}
@@ -179,7 +190,7 @@ function updateActionDetails() {
             <label for="warReasonsMenu"><strong>Scegli l'obbiettivo dell'Attacco:</strong></label>
             <select id="warReasonsMenu">
                 <option value="" disabled selected>Seleziona una ragione di guerra</option>
-                ${warReasons.map(reason => `<option value="${reason.nome}" title="${reason.descrizione}">${reason.nome}</option>`).join("")}
+                ${warReasons.map(reason => `<option value="${escHtml(reason.nome)}" title="${escHtml(reason.descrizione)}">${escHtml(reason.nome)}</option>`).join("")}
             </select>
             <p id="warReasonDescription"></p>
         </div>
@@ -188,7 +199,7 @@ function updateActionDetails() {
 
     // Display action details, bonuses, and dice rolls
     actionDetails.innerHTML = `
-        <p><strong>Description:</strong> ${description}</p>
+        <p><strong>Description:</strong> ${escHtml(description)}</p>
         ${warReasonsMenu}
         <p id="rollDisplay"><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${baseRoll}d10</p>
         <div>
@@ -306,7 +317,7 @@ function loadFamilyStats(families) {
     const effectsElement = document.getElementById('governmentEffects');
 
     if (!governmentData) {
-        subtitleElement.innerHTML = `${government}`;
+        subtitleElement.innerHTML = `${escHtml(government)}`;
         if (effectsElement) effectsElement.innerHTML = "";
         setStatMaxes(null); // Nessun governo trovato: ripristina i max di default
         return;
@@ -320,7 +331,7 @@ function loadFamilyStats(families) {
 
     // Nel sottotitolo mostriamo solo il nome del governo (senza la lista delle statistiche)
     subtitleElement.innerHTML = `
-        ${governmentData.nome_italiano ? `${governmentData.nome} - ${governmentData.nome_italiano}` : governmentData.nome}
+        ${governmentData.nome_italiano ? `${escHtml(governmentData.nome)} - ${escHtml(governmentData.nome_italiano)}` : escHtml(governmentData.nome)}
     `;
 
     // Gli effetti speciali del governo vengono mostrati qui, al posto dei vecchi limiti statistici
@@ -329,7 +340,7 @@ function loadFamilyStats(families) {
             <ul style="list-style: none; padding: 0;">
                 ${effetti.map(effetto => `
                     <li style="margin-bottom: 5px;">
-                        <strong>${effetto.nome}:</strong> ${effetto.descrizione}
+                        <strong>${escHtml(effetto.nome)}:</strong> ${escHtml(effetto.descrizione)}
                     </li>
                 `).join("")}
             </ul>
@@ -382,10 +393,10 @@ function loadCourtMembers(courtmembers) {
 
         // Set the court member's image, name, and bonuses
         memberDiv.innerHTML = `
-            <img src="images/court/${name}.webp" alt="${name}" onerror="this.onerror=null; this.src='images/court/Position%20Empty.webp';">
-            <h3>${name}</h3>
-            <p><strong>Role:</strong> ${role}</p>
-            <p><strong>Bonuses:</strong> ${bonuses || 'No bonuses available'}</p>
+            <img src="images/court/${escHtml(name)}.webp" alt="${escHtml(name)}" onerror="this.onerror=null; this.src='images/court/Position%20Empty.webp';">
+            <h3>${escHtml(name)}</h3>
+            <p><strong>Role:</strong> ${escHtml(role)}</p>
+            <p><strong>Bonuses:</strong> ${escHtml(bonuses || 'No bonuses available')}</p>
         `;
 
         courtContainer.appendChild(memberDiv);
@@ -407,7 +418,7 @@ function loadTimeline(events) {
         mod = (mod || "").replace(/;/g, ' and ');
         const item = document.createElement("div");
         item.className = "timeline-item";
-        item.innerHTML = `<h3>${event['Month']}</h3><strong>${name}</strong><p>${mod}</p>`;
+        item.innerHTML = `<h3>${escHtml(event['Month'])}</h3><strong>${escHtml(name)}</strong><p>${escHtml(mod)}</p>`;
         const descriptionDiv = document.createElement("div");
         descriptionDiv.className = "description-popup";
         descriptionDiv.textContent = event['Description'];

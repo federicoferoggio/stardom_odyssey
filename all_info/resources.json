@@ -1,0 +1,257 @@
+{
+  "_readme": "Canonical catalog of every resource/property name found on planets and bases. Every entry grants its own bonus (effect) to whoever controls a body that has it -- read per-planet, not auto-summed. craft_assets.json's requirementIds and bodies.json/points_of_interest.json's resourceIds both reference these same ids, so matching is exact by construction. 'aliases' lists alternate spellings (mostly the Italian Asset List names) that map onto this canonical id.",
+  "_review": [
+    "bobssium: craft_assets.json used 'Bossio', assumed to be the same material as 'Bobssium' (short form) -- please confirm.",
+    "zinale: craft_assets.json used 'Zinza', assumed to be the same material as 'Zinale' -- please confirm.",
+    "'Plasma Solido' (required by Armamenti arcani avanzati (evocation)) has no current match in any planet's resources -- no family can craft that asset yet until a planet with this resource is added, or the name is reconciled with an existing one."
+  ],
+  "resources": [
+    {
+      "id": "adamantine",
+      "name": "Adamantine",
+      "category": "gems",
+      "aliases": [
+        "Adamantino"
+      ],
+      "effect": "Le leghe di adamantio rendono equipaggiamenti e scudi quasi indistruttibili: +1 Might quando si difende un possedimento che lo possiede."
+    },
+    {
+      "id": "blu-kolbmony-drussiana",
+      "name": "Blu Kolbmony Drussiana",
+      "category": "opals",
+      "aliases": [],
+      "effect": "Un pigmento raro usato nei rituali di legame planare: +1 Influence quando si negozia con entità extraplanari o si invoca protezione arcana."
+    },
+    {
+      "id": "bobssium",
+      "name": "Bobssium",
+      "category": "shards",
+      "aliases": [
+        "Bossio"
+      ],
+      "effect": "Minerale instabile usato per forgiare armi d'assedio: +1 Might in un attacco che include un bombardamento orbitale o d'assedio."
+    },
+    {
+      "id": "campi-di-cibo",
+      "name": "Campi di Cibo",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Terreni fertili che sostengono la popolazione anche in tempi difficili: +1 Territory quando si affronta una carestia o un blocco commerciale."
+    },
+    {
+      "id": "centro-di-mercato",
+      "name": "Centro di mercato",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Un nodo commerciale attivo: +1 Treasure quando si negoziano accordi commerciali con altre famiglie."
+    },
+    {
+      "id": "cronvite",
+      "name": "Cronvite",
+      "category": "opals",
+      "aliases": [
+        "Crovite"
+      ],
+      "effect": "Un cristallo che rallenta la percezione del tempo di chi lo porta: +1 a un tiro difensivo quando si è colti di sorpresa."
+    },
+    {
+      "id": "diamond",
+      "name": "Diamond",
+      "category": "gems",
+      "aliases": [
+        "Diamante"
+      ],
+      "effect": "Simbolo di ricchezza e potere ovunque nel sistema: +1 Influence quando lo si esibisce in trattative o cerimonie pubbliche."
+    },
+    {
+      "id": "emerald",
+      "name": "Emerald",
+      "category": "gems",
+      "aliases": [
+        "Smeraldo"
+      ],
+      "effect": "Pietra preziosa associata alla fortuna dei mercanti: +1 Treasure in un singolo scambio commerciale al mese."
+    },
+    {
+      "id": "giunglato",
+      "name": "Giunglato",
+      "category": "shards",
+      "aliases": [
+        "Giunglato Lopotome"
+      ],
+      "effect": "Fibra vegetale fossilizzata, resistente e leggera: +1 Territory quando si esplora o si coloniza un ambiente ostile."
+    },
+    {
+      "id": "gold",
+      "name": "Gold",
+      "category": "gems",
+      "aliases": [
+        "Oro"
+      ],
+      "effect": "La valuta più universalmente accettata del sistema: +1 Treasure quando si finanziano azioni militari o diplomatiche."
+    },
+    {
+      "id": "helium",
+      "name": "Helium",
+      "category": "gems",
+      "aliases": [
+        "Elio"
+      ],
+      "effect": "Gas essenziale per la propulsione spelljammer: +1 Might quando si effettuano manovre navali rapide o inseguimenti."
+    },
+    {
+      "id": "ivory",
+      "name": "Ivory",
+      "category": "opals",
+      "aliases": [
+        "Avorio"
+      ],
+      "effect": "Materiale pregiato usato per sigilli e oggetti cerimoniali: +1 Sovereignty durante cerimonie o incoronazioni pubbliche."
+    },
+    {
+      "id": "knotime",
+      "name": "Knotime",
+      "category": "opals",
+      "aliases": [],
+      "effect": "Un materiale che si intreccia da solo, usato per fortificazioni rapide: +1 Might quando si fortifica una posizione in un solo mese."
+    },
+    {
+      "id": "livinohorite",
+      "name": "Livinohorite",
+      "category": "shards",
+      "aliases": [],
+      "effect": "Minerale che amplifica gli incantesimi di distruzione: +1 Might quando si effettua un attacco a base arcana."
+    },
+    {
+      "id": "luogo-sacro-ioun",
+      "name": "Luogo sacro (Ioun)",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Un santuario dedicato a Ioun: +1 Influence quando si ricercano informazioni o segreti arcani nel luogo."
+    },
+    {
+      "id": "luogo-sacro-kord",
+      "name": "Luogo sacro (Kord)",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Un santuario dedicato a Kord: +1 Might quando si addestrano truppe o si combatte nei suoi pressi."
+    },
+    {
+      "id": "luogo-sacro-lolth",
+      "name": "Luogo sacro (Lolth)",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Un santuario dedicato a Lolth: +1 Sovereignty quando si reprimono dissidenti o rivali attraverso l'intrigo."
+    },
+    {
+      "id": "luogo-sacro-unico",
+      "name": "Luogo sacro (Unico)",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Un santuario dedicato al Dio Unico: +1 Sovereignty quando si invoca la fede della popolazione a proprio favore."
+    },
+    {
+      "id": "niez",
+      "name": "Niez",
+      "category": "shards",
+      "aliases": [],
+      "effect": "Combustibile raffinato per macchinari pesanti: +1 Treasure quando si commerciano beni prodotti localmente."
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "category": "opals",
+      "aliases": [
+        "Ossidiana"
+      ],
+      "effect": "Vetro vulcanico affilato come lama, usato in armi rituali e armature cerimoniali: +1 Might in duelli o combattimenti singoli."
+    },
+    {
+      "id": "perla-di-brauh",
+      "name": "Perla di Brauh",
+      "category": "shards",
+      "aliases": [],
+      "effect": "Perle rare associate alla protezione dagli incantesimi: +1 a un tiro difensivo contro un attacco a base magica."
+    },
+    {
+      "id": "pianeta-fortezza",
+      "name": "Pianeta Fortezza",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Il pianeta stesso è costruito o scavato per la guerra difensiva: +2 Might quando si difende da un assedio."
+    },
+    {
+      "id": "platinum",
+      "name": "Platinum",
+      "category": "gems",
+      "aliases": [
+        "Platino"
+      ],
+      "effect": "Il metallo più prezioso conosciuto nel sistema: +1 Treasure permanente a qualsiasi tiro che coinvolge il commercio di lusso."
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "category": "gems",
+      "aliases": [
+        "Rubino"
+      ],
+      "effect": "Pietra che si dice conservi la memoria di chi la porta: +1 Influence quando si invocano trattati o promesse passate."
+    },
+    {
+      "id": "seaurite",
+      "name": "Seaurite",
+      "category": "opals",
+      "aliases": [],
+      "effect": "Minerale che amplifica il legame con creature acquatiche: +1 Territory in operazioni su lune o pianeti oceanici."
+    },
+    {
+      "id": "silver",
+      "name": "Silver",
+      "category": "gems",
+      "aliases": [
+        "Argento"
+      ],
+      "effect": "Metallo pregiato, tradizionalmente associato a patti e sigilli: +1 Sovereignty quando si formalizza un nuovo trattato."
+    },
+    {
+      "id": "sovrappopolazione",
+      "name": "Sovrappopolazione",
+      "category": "resources",
+      "aliases": [],
+      "effect": "Una popolazione enorme può essere mobilitata rapidamente, ma è difficile da controllare: +1 Might quando si recluta in massa, -1 Sovereignty quando si reprime una rivolta."
+    },
+    {
+      "id": "tholleite",
+      "name": "Tholleite",
+      "category": "opals",
+      "aliases": [],
+      "effect": "Minerale usato per potenziare armature ed equipaggiamenti da battaglia: +1 Might quando si equipaggiano truppe regolari."
+    },
+    {
+      "id": "varisiana-nera",
+      "name": "Varisiana Nera",
+      "category": "shards",
+      "aliases": [],
+      "effect": "Una sostanza oscura associata a rituali proibiti: +1 Influence quando si ricorre a mezzi non convenzionali o segreti."
+    },
+    {
+      "id": "xifl",
+      "name": "Xifl",
+      "category": "shards",
+      "aliases": [
+        "Xilf"
+      ],
+      "effect": "Materiale leggero usato nella costruzione navale: +1 Territory quando si espande la propria flotta o le proprie basi."
+    },
+    {
+      "id": "zinale",
+      "name": "Zinale",
+      "category": "opals",
+      "aliases": [
+        "Zinza"
+      ],
+      "effect": "Minerale raro usato per rinforzare le fondamenta di edifici e fortificazioni: +1 Territory quando si costruisce una nuova struttura permanente."
+    }
+  ]
+}

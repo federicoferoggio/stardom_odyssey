@@ -1,0 +1,492 @@
+{
+  "leaders": {
+    "Amoako": [
+      {
+        "name": "Kumi",
+        "portrait": "images/members/Kumi.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "iron-fist",
+          "shrewd-trader"
+        ]
+      },
+      {
+        "name": "Jojo",
+        "portrait": "images/members/Jojo.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "shrewd-trader",
+          "naval-tactician"
+        ]
+      },
+      {
+        "name": "Ablä",
+        "portrait": "images/members/Abla.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "naval-tactician",
+          "silver-tongue"
+        ]
+      }
+    ],
+    "Caillot": [
+      {
+        "name": "Michel",
+        "portrait": "images/members/Michel.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "silver-tongue",
+          "zealous"
+        ]
+      },
+      {
+        "name": "Daques",
+        "portrait": "images/members/Daques.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "zealous",
+          "master-spy"
+        ]
+      },
+      {
+        "name": "Claudette",
+        "portrait": "images/members/Claudette.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "master-spy",
+          "frail"
+        ]
+      }
+    ],
+    "Carxus": [
+      {
+        "name": "Usko",
+        "portrait": "images/members/Usko.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "frail",
+          "inspiring"
+        ]
+      },
+      {
+        "name": "Rauni",
+        "portrait": "images/members/Rauni.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "inspiring",
+          "ruthless"
+        ]
+      },
+      {
+        "name": "Heikkila",
+        "portrait": "images/members/Heikkila.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "ruthless",
+          "reclusive"
+        ]
+      }
+    ],
+    "Grayshine": [
+      {
+        "name": "Oakley",
+        "portrait": "images/members/Oakley.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "reclusive",
+          "charismatic"
+        ]
+      },
+      {
+        "name": "Alice",
+        "portrait": "images/members/Alice.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "charismatic",
+          "warmonger"
+        ]
+      },
+      {
+        "name": "Ryan",
+        "portrait": "images/members/Ryan.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "warmonger",
+          "pious"
+        ]
+      }
+    ],
+    "Hai": [
+      {
+        "name": "Ciarak",
+        "portrait": "images/members/Munire.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "pious",
+          "corrupt"
+        ]
+      }
+    ],
+    "Kesk": [
+      {
+        "name": "Line",
+        "portrait": "images/members/Line.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "corrupt",
+          "visionary"
+        ]
+      },
+      {
+        "name": "Vegar",
+        "portrait": "images/members/Vegar.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "visionary",
+          "stoic-defender"
+        ]
+      },
+      {
+        "name": "Trude",
+        "portrait": "images/members/Trude.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "stoic-defender",
+          "void-born"
+        ]
+      }
+    ],
+    "Mitsumoro": [
+      {
+        "name": "Koga",
+        "portrait": "images/members/Koga.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "void-born",
+          "grudge-keeper"
+        ]
+      },
+      {
+        "name": "Sakuma",
+        "portrait": "images/members/Sakuma.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "grudge-keeper",
+          "iron-fist"
+        ]
+      },
+      {
+        "name": "Yuuki",
+        "portrait": "images/members/Yuuki.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "iron-fist",
+          "shrewd-trader"
+        ]
+      }
+    ],
+    "Ntsu": [
+      {
+        "name": "The Eternal",
+        "portrait": "images/members/The Eternal.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "shrewd-trader",
+          "naval-tactician"
+        ]
+      },
+      {
+        "name": "The Courtship",
+        "portrait": "images/members/The Courtship.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "naval-tactician",
+          "silver-tongue"
+        ]
+      },
+      {
+        "name": "The Undead",
+        "portrait": "images/members/The Undead.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "silver-tongue",
+          "zealous"
+        ]
+      }
+    ],
+    "Ousssek": [
+      {
+        "name": "Demryd",
+        "portrait": "images/members/Demryd.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "zealous",
+          "master-spy"
+        ]
+      },
+      {
+        "name": "Tolne",
+        "portrait": "images/members/Tolne.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "master-spy",
+          "frail"
+        ]
+      },
+      {
+        "name": "Bhodvamu",
+        "portrait": "images/members/Bhodvamu.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "frail",
+          "inspiring"
+        ]
+      }
+    ],
+    "Rasaily": [
+      {
+        "name": "Aadarsh",
+        "portrait": "images/members/Aadarsh.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "inspiring",
+          "ruthless"
+        ]
+      },
+      {
+        "name": "Khem",
+        "portrait": "images/members/Khem.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "ruthless",
+          "reclusive"
+        ]
+      },
+      {
+        "name": "Badal",
+        "portrait": "images/members/Badal.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "reclusive",
+          "charismatic"
+        ]
+      }
+    ],
+    "Rivera": [
+      {
+        "name": "Shah",
+        "portrait": "images/members/Shah.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "charismatic",
+          "warmonger"
+        ]
+      },
+      {
+        "name": "Baldev",
+        "portrait": "images/members/Baldev.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "warmonger",
+          "pious"
+        ]
+      }
+    ],
+    "Shawel": [
+      {
+        "name": "Beca Haider",
+        "portrait": "images/members/Beca Haider.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "pious",
+          "corrupt"
+        ]
+      },
+      {
+        "name": "Siona",
+        "portrait": "images/members/Siona.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "corrupt",
+          "visionary"
+        ]
+      }
+    ],
+    "Sifu": [
+      {
+        "name": "Tala",
+        "portrait": "images/members/Tala.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "visionary",
+          "stoic-defender"
+        ]
+      },
+      {
+        "name": "Mataio",
+        "portrait": "images/members/Mataio.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "stoic-defender",
+          "void-born"
+        ]
+      },
+      {
+        "name": "Teulia",
+        "portrait": "images/members/Teulia.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "void-born",
+          "grudge-keeper"
+        ]
+      }
+    ],
+    "Sudriz": [
+      {
+        "name": "Milana",
+        "portrait": "images/members/Milana.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "grudge-keeper",
+          "iron-fist"
+        ]
+      },
+      {
+        "name": "Marija",
+        "portrait": "images/members/Marija.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "iron-fist",
+          "shrewd-trader"
+        ]
+      },
+      {
+        "name": "Suzana",
+        "portrait": "images/members/Suzana.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "shrewd-trader",
+          "naval-tactician"
+        ]
+      }
+    ],
+    "Stozav": [
+      {
+        "name": "Sparticus",
+        "portrait": "images/members/Sparticus.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "naval-tactician",
+          "silver-tongue"
+        ]
+      },
+      {
+        "name": "BLUB",
+        "portrait": "images/members/BLUB.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "silver-tongue",
+          "zealous"
+        ]
+      },
+      {
+        "name": "Burkov",
+        "portrait": "images/members/Burkov.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "zealous",
+          "master-spy"
+        ]
+      }
+    ],
+    "Wueng": [
+      {
+        "name": "Sun Hui",
+        "portrait": "images/members/Sun Hui.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "master-spy",
+          "frail"
+        ]
+      },
+      {
+        "name": "Feng",
+        "portrait": "images/members/Feng.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "frail",
+          "inspiring"
+        ]
+      },
+      {
+        "name": "Xia De",
+        "portrait": "images/members/Xia De.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "inspiring",
+          "ruthless"
+        ]
+      }
+    ],
+    "Zolinath": [
+      {
+        "name": "Prasantha",
+        "portrait": "images/members/Prasantha.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "ruthless",
+          "reclusive"
+        ]
+      },
+      {
+        "name": "Egide",
+        "portrait": "images/members/Egide.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "reclusive",
+          "charismatic"
+        ]
+      },
+      {
+        "name": "Alexis",
+        "portrait": "images/members/Alexis.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "charismatic",
+          "warmonger"
+        ]
+      }
+    ],
+    "La Mano": [
+      {
+        "name": "Rime Mugwes",
+        "portrait": "images/members/Rime Mugwes.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "treasury-instinct",
+          "corrupt"
+        ]
+      },
+      {
+        "name": "Barda Writingham",
+        "portrait": "images/members/Barda Writingham.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "iron-order",
+          "stoic-defender"
+        ]
+      },
+      {
+        "name": "Mado Bophill",
+        "portrait": "images/members/Mado Bophill.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "underdog-tactics",
+          "naval-tactician"
+        ]
+      }
+    ],
+    "Gith": [],
+    "Eretici": []
+  }
+}

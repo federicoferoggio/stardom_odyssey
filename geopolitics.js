@@ -1,5 +1,11 @@
 const STATS = ["Might", "Treasure", "Influence", "Territory", "Sovereignty"];
 
+function escHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 // Government stat caps live in all_info/governi.json (single source of truth,
 // also used by index.html/script.js). Populated at load time by
 // fetchGovernmentLimits() below, keyed by government name -> { Might, Treasure, ... }.
@@ -490,12 +496,12 @@ function createGraph(families, pacts) {
         const familyOptions = families
             .filter(family => family.Name !== familyName)
             .sort((a, b) => a.Name.localeCompare(b.Name))
-            .map(family => `<option value="${family.Name}">${family.Name}</option>`)
+            .map(family => `<option value="${escHtml(family.Name)}">${escHtml(family.Name)}</option>`)
             .join("");
 
         const pactTypeOptions = [...availablePactTypes]
             .sort((a, b) => a.localeCompare(b))
-            .map(pactType => `<option value="${pactType}">${pactType}</option>`)
+            .map(pactType => `<option value="${escHtml(pactType)}">${escHtml(pactType)}</option>`)
             .join("");
 
         addPactFormHost.innerHTML = `
@@ -577,7 +583,7 @@ function createGraph(families, pacts) {
             ["Government", family.Government || "N/A"],
             ["Total Power", totalPowerForFamily(family)],
             ["Stats", statLine]
-        ].map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+        ].map(([label, value]) => `<div><dt>${escHtml(label)}</dt><dd>${escHtml(value)}</dd></div>`).join("");
         selectedFamilyPactsCount.textContent = String(relatedEdges.length);
 
         if (relatedEdges.length === 0) {
@@ -609,7 +615,7 @@ function createGraph(families, pacts) {
 
                 const text = document.createElement("div");
                 const counterparty = edge.pact.From === familyName ? edge.pact.To : edge.pact.From;
-                text.innerHTML = `<strong>${edge.pact.Pact}</strong><span>${counterparty}</span><small>${pactDescription(edge.pact.Pact)}${globallyDisabled ? " Hidden by global filter." : ""}</small>`;
+                text.innerHTML = `<strong>${escHtml(edge.pact.Pact)}</strong><span>${escHtml(counterparty)}</span><small>${escHtml(pactDescription(edge.pact.Pact))}${globallyDisabled ? " Hidden by global filter." : ""}</small>`;
 
                 const swatch = document.createElement("span");
                 swatch.className = "geo-pact-swatch";
@@ -638,10 +644,10 @@ function createGraph(families, pacts) {
         function showGlobalCallout(event, pactType) {
             const matchingEdges = edges
                 .filter(edge => edge.pact.Pact === pactType)
-                .map(edge => `${edge.pact.From} -> ${edge.pact.To}`);
+                .map(edge => `${escHtml(edge.pact.From)} -> ${escHtml(edge.pact.To)}`);
 
             globalCallout.innerHTML = `
-                <strong>${pactType}</strong>
+                <strong>${escHtml(pactType)}</strong>
                 ${matchingEdges.map(label => `<span>${label}</span>`).join("") || "<span>No pacts</span>"}
             `;
 

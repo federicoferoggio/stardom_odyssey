@@ -1,0 +1,178 @@
+{
+  "_readme": "Shared leader trait catalog. Each trait has one or more modifiers of shape { stat, amount, situation, always, diceType }. always:true means the modifier applies unconditionally; always:false means it only applies in the narrative situation described (GM/player judgment call). A modifier binds to EITHER stat (one of Might/Treasure/Influence/Territory/Sovereignty/all, matched against whichever qualities the selected action rolls) OR action (an exact action name from index.html's action list, e.g. \"Controllo dell'Ordine\" -- matched only against that one specific action, not by rolled quality) -- never both; most modifiers use stat, action is for the rare case where a bonus is narrowly tied to one specific roll rather than a quality used by several. diceType is optional (Normal Dice/Expert Dice/Master Dice, defaults to Normal Dice when omitted) -- it's only consumed by index.html's action-roll calculator for La Mano (via parser.js's fetchBonuses aggregation); every other family's traits just show amount/stat-or-action/situation as tooltip flavor text on the map and diceType is irrelevant there. Referenced by id from all_info/leaders.json.",
+  "traits": [
+    {
+      "id": "iron-fist",
+      "label": "Iron Fist",
+      "description": "Rules through fear and the certainty of the sword.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "Always", "always": true },
+        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "shrewd-trader",
+      "label": "Shrewd Trader",
+      "description": "Never leaves a deal without the better half of it.",
+      "modifiers": [
+        { "stat": "Treasure", "amount": 1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "naval-tactician",
+      "label": "Naval Tactician",
+      "description": "Has spent a lifetime among spelljammers and knows how to use them.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "In naval battles, or when defending a fleet in open space", "always": false }
+      ]
+    },
+    {
+      "id": "silver-tongue",
+      "label": "Silver Tongue",
+      "description": "Words come easier than steel, and cut just as deep.",
+      "modifiers": [
+        { "stat": "Influence", "amount": 1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "zealous",
+      "label": "Zealous",
+      "description": "Believes the family's cause is righteous, and says so loudly.",
+      "modifiers": [
+        { "stat": "Sovereignty", "amount": 1, "situation": "When rallying the population against outsiders or heretics", "always": false }
+      ]
+    },
+    {
+      "id": "master-spy",
+      "label": "Master Spy",
+      "description": "Trained in the art of listening at the right doors.",
+      "modifiers": [
+        { "stat": "Influence", "amount": 1, "situation": "During espionage or counter-espionage rolls", "always": false }
+      ]
+    },
+    {
+      "id": "frail",
+      "label": "Frail",
+      "description": "Age or sickness has caught up with them.",
+      "modifiers": [
+        { "stat": "Might", "amount": -1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "inspiring",
+      "label": "Inspiring",
+      "description": "The people believe in them, and that belief is worth something.",
+      "modifiers": [
+        { "stat": "Sovereignty", "amount": 1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "ruthless",
+      "label": "Ruthless",
+      "description": "Sees weakness as an invitation, not a reason for mercy.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "When attacking a weaker family", "always": false },
+        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "reclusive",
+      "label": "Reclusive",
+      "description": "Prefers the family's own borders to anyone else's court.",
+      "modifiers": [
+        { "stat": "Territory", "amount": -1, "situation": "Always", "always": true },
+        { "stat": "Sovereignty", "amount": 1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "charismatic",
+      "label": "Charismatic",
+      "description": "A natural at reading a room, and at being liked in it.",
+      "modifiers": [
+        { "stat": "Influence", "amount": 1, "situation": "When negotiating treaties or opinions with another family", "always": false }
+      ]
+    },
+    {
+      "id": "warmonger",
+      "label": "Warmonger",
+      "description": "Peace is just the time between one war and the next.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "When declaring or fighting a war", "always": false },
+        { "stat": "Influence", "amount": -1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "pious",
+      "label": "Pious",
+      "description": "Keeps the old rites, and the people notice.",
+      "modifiers": [
+        { "stat": "Sovereignty", "amount": 1, "situation": "While the family's religion is stable", "always": false }
+      ]
+    },
+    {
+      "id": "corrupt",
+      "label": "Corrupt",
+      "description": "Every favor has a price, usually paid to them.",
+      "modifiers": [
+        { "stat": "Treasure", "amount": 1, "situation": "When bribing officials or rolling Treasure+Influence", "always": false },
+        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "visionary",
+      "label": "Visionary",
+      "description": "Sees frontiers where others see only void.",
+      "modifiers": [
+        { "stat": "Territory", "amount": 1, "situation": "When expanding into unclaimed space", "always": false }
+      ]
+    },
+    {
+      "id": "stoic-defender",
+      "label": "Stoic Defender",
+      "description": "Will not yield an inch of home soil.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "When defending home territory", "always": false }
+      ]
+    },
+    {
+      "id": "void-born",
+      "label": "Void-Born",
+      "description": "Grew up somewhere most would call uninhabitable.",
+      "modifiers": [
+        { "stat": "Territory", "amount": 1, "situation": "Always", "always": true }
+      ]
+    },
+    {
+      "id": "grudge-keeper",
+      "label": "Grudge-Keeper",
+      "description": "Remembers every slight, and plans accordingly.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "When fighting a declared rival", "always": false }
+      ]
+    },
+    {
+      "id": "treasury-instinct",
+      "label": "Treasury Instinct",
+      "description": "Rime Mugwes' hand never lets a coin slip by unnoticed.",
+      "modifiers": [
+        { "stat": "Treasure", "amount": 1, "situation": "Whenever Treasure is used.", "always": true, "diceType": "Normal Dice" }
+      ]
+    },
+    {
+      "id": "underdog-tactics",
+      "label": "Underdog Tactics",
+      "description": "Mado Bophill has learned to fight uphill and win.",
+      "modifiers": [
+        { "stat": "Might", "amount": 1, "situation": "When attacking or defending against a more powerful foe (calculated as might + treasure + territory).", "always": false, "diceType": "Normal Dice" }
+      ]
+    },
+    {
+      "id": "iron-order",
+      "label": "Iron Order",
+      "description": "Barda Writingham keeps the peace with an iron hand -- at a cost.",
+      "modifiers": [
+        { "action": "Controllo dell'Ordine", "amount": 1, "situation": "Quando tiri per il Controllo dell'Ordine (Might + Sovereignty) -- usarlo riduce permanentemente il Treasure di 1.", "always": false, "diceType": "Master Dice" }
+      ]
+    }
+  ]
+}
