@@ -1,177 +1,290 @@
 {
-  "_readme": "Shared leader trait catalog. Each trait has one or more modifiers of shape { stat, amount, situation, always, diceType }. always:true means the modifier applies unconditionally; always:false means it only applies in the narrative situation described (GM/player judgment call). A modifier binds to EITHER stat (one of Might/Treasure/Influence/Territory/Sovereignty/all, matched against whichever qualities the selected action rolls) OR action (an exact action name from index.html's action list, e.g. \"Controllo dell'Ordine\" -- matched only against that one specific action, not by rolled quality) -- never both; most modifiers use stat, action is for the rare case where a bonus is narrowly tied to one specific roll rather than a quality used by several. diceType is optional (Normal Dice/Expert Dice/Master Dice, defaults to Normal Dice when omitted) -- it's only consumed by index.html's action-roll calculator for La Mano (via parser.js's fetchBonuses aggregation); every other family's traits just show amount/stat-or-action/situation as tooltip flavor text on the map and diceType is irrelevant there. Referenced by id from all_info/leaders.json.",
+  "_readme": "Shared leader trait catalog. Each trait has one or more modifiers of shape { stat, amount, situation, always, diceType }. always:true means the modifier applies unconditionally; always:false means it only applies in the narrative situation described (GM/player judgment call). A modifier binds to EITHER stat (one of Might/Treasure/Influence/Territory/Sovereignty/all, matched against whichever qualities the selected action rolls) OR action (an exact action name from index.html's action list) -- never both. diceType is optional (Normal Dice/Expert Dice/Master Dice, defaults to Normal Dice when omitted).",
   "traits": [
     {
-      "id": "iron-fist",
-      "label": "Iron Fist",
-      "description": "Rules through fear and the certainty of the sword.",
+      "id": "aggressivo",
+      "label": "Aggressivo",
+      "description": "Vede la guerra come lo strumento primario per risolvere ogni disputa.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "Always", "always": true },
-        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+        {
+          "stat": "Might",
+          "amount": 1,
+          "situation": "Quando usa una azione di attacco una seconda volta nello stesso mese.",
+          "always": false
+        }
       ]
     },
     {
-      "id": "shrewd-trader",
-      "label": "Shrewd Trader",
-      "description": "Never leaves a deal without the better half of it.",
+      "id": "passivo",
+      "label": "Passivo",
+      "description": "Preferisce la stabilità interna al rischio del conflitto aperto.",
       "modifiers": [
-        { "stat": "Treasure", "amount": 1, "situation": "Always", "always": true }
+        {
+          "stat": "Sovereignty",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "stat": "Might",
+          "amount": -1,
+          "situation": "Quando usa una azione di attacco.",
+          "always": false
+        }
       ]
     },
     {
-      "id": "naval-tactician",
-      "label": "Naval Tactician",
-      "description": "Has spent a lifetime among spelljammers and knows how to use them.",
+      "id": "previdente",
+      "label": "Previdente",
+      "description": "Accumula risorse e fortifica i confini in vista di ogni crisi possibile.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "In naval battles, or when defending a fleet in open space", "always": false }
+        {
+          "action": "Difesa",
+          "amount": 2,
+          "situation": "Dichiara un obbiettivo di un attacco che ricevi. Se combacia con quello poi eseguito dall'avversario, aggiungi il bonus al tuo tiro di difesa.",
+          "always": false
+        }
       ]
     },
     {
-      "id": "silver-tongue",
-      "label": "Silver Tongue",
-      "description": "Words come easier than steel, and cut just as deep.",
+      "id": "clemente",
+      "label": "Clemente",
+      "description": "Preferisce la grazia alla vendetta, anche verso chi lo ha tradito.",
       "modifiers": [
-        { "stat": "Influence", "amount": 1, "situation": "Always", "always": true }
+        {
+          "stat": "Influence",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "action": "Controllo dell'Ordine",
+          "amount": -1,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "zealous",
-      "label": "Zealous",
-      "description": "Believes the family's cause is righteous, and says so loudly.",
+      "id": "crudele",
+      "label": "Crudele",
+      "description": "Governa con il terrore e punizioni esemplari per tenere a freno i sudditi.",
       "modifiers": [
-        { "stat": "Sovereignty", "amount": 1, "situation": "When rallying the population against outsiders or heretics", "always": false }
+        {
+          "stat": "Influence",
+          "amount": -1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "action": "Controllo dell'Ordine",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "master-spy",
-      "label": "Master Spy",
-      "description": "Trained in the art of listening at the right doors.",
+      "id": "vendicativo",
+      "label": "Vendicativo",
+      "description": "Non dimentica un torto e colpisce i propri nemici quando meno se lo aspettano.",
       "modifiers": [
-        { "stat": "Influence", "amount": 1, "situation": "During espionage or counter-espionage rolls", "always": false }
+        {
+          "action": "Attacco (Umiliazione)",
+          "amount": 2,
+          "situation": "Quando attaccchi un nemico che ha usato la accack action contro di te nei tre mesi precedenti.",
+          "always": true
+        }
       ]
     },
     {
-      "id": "frail",
-      "label": "Frail",
-      "description": "Age or sickness has caught up with them.",
+      "id": "affidabile",
+      "label": "Affidabile",
+      "description": "Mantiene ogni impegno preso, ispirando fiducia in alleati e sudditi.",
       "modifiers": [
-        { "stat": "Might", "amount": -1, "situation": "Always", "always": true }
+        {
+          "stat": "Influence",
+          "amount": 1,
+          "situation": "Quando tiri di inlfuence e ti stai confrontando con altre nazioni.",
+          "always": false
+        }
       ]
     },
     {
-      "id": "inspiring",
-      "label": "Inspiring",
-      "description": "The people believe in them, and that belief is worth something.",
+      "id": "inaffidabile",
+      "label": "Inaffidabile",
+      "description": "Cambia posizione secondo convenienza, minando la fiducia di chi lo circonda.",
       "modifiers": [
-        { "stat": "Sovereignty", "amount": 1, "situation": "Always", "always": true }
+        {
+          "action": "Diplomazia",
+          "amount": 0,
+          "situation": "Puoi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
+          "always": false
+        },
+        {
+          "stat": "Influence",
+          "amount": -2,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "ruthless",
-      "label": "Ruthless",
-      "description": "Sees weakness as an invitation, not a reason for mercy.",
+      "id": "costruttore",
+      "label": "Costruttore",
+      "description": "Investe in infrastrutture e monumenti, lasciando un'eredità duratura.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "When attacking a weaker family", "always": false },
-        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+        {
+          "action": "Aumento Stat",
+          "amount": 2,
+          "situation": "Su qualsiasi tiro che aumenta delle stat.",
+          "always": false
+        },
       ]
     },
     {
-      "id": "reclusive",
-      "label": "Reclusive",
-      "description": "Prefers the family's own borders to anyone else's court.",
+      "id": "conquistatore",
+      "label": "Conquistatore",
+      "description": "Ogni pace firmata è solo una tregua prima della prossima campagna.",
       "modifiers": [
-        { "stat": "Territory", "amount": -1, "situation": "Always", "always": true },
-        { "stat": "Sovereignty", "amount": 1, "situation": "Always", "always": true }
+        {
+          "action": "Attacco (Conquista)",
+          "amount": 1,
+          "situation": "Quando attaccchi un nemico con cui hai una rivalita.",
+          "always": true
+        }
       ]
     },
     {
-      "id": "charismatic",
-      "label": "Charismatic",
-      "description": "A natural at reading a room, and at being liked in it.",
+      "id": "politico",
+      "label": "Politico",
+      "description": "Maestro di alleanze e trattati, preferisce la penna alla spada.",
       "modifiers": [
-        { "stat": "Influence", "amount": 1, "situation": "When negotiating treaties or opinions with another family", "always": false }
+        {
+          "action": "Diplomazia",
+          "amount": 1,
+          "situation": "Qualsiasi tiro per accordi of per generare accordi ha questo bonus.",
+          "always": true
+        }
       ]
     },
     {
-      "id": "warmonger",
-      "label": "Warmonger",
-      "description": "Peace is just the time between one war and the next.",
+      "id": "empatico",
+      "label": "Empatico",
+      "description": "Ascolta i bisogni del popolo e favorisce riforme sociali percepite come giuste.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "When declaring or fighting a war", "always": false },
-        { "stat": "Influence", "amount": -1, "situation": "Always", "always": true }
+        {
+          "stat": "Sovereignty",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "stat": "Treasure",
+          "amount": -1,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "pious",
-      "label": "Pious",
-      "description": "Keeps the old rites, and the people notice.",
+      "id": "popolare",
+      "label": "Popolare",
+      "description": "Amato dal popolo, gode di legittimità e sostegno spontaneo.",
       "modifiers": [
-        { "stat": "Sovereignty", "amount": 1, "situation": "While the family's religion is stable", "always": false }
+        {
+          "action": "Controllo dell'Ordine",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "corrupt",
-      "label": "Corrupt",
-      "description": "Every favor has a price, usually paid to them.",
+      "id": "impopolare",
+      "label": "Impopolare",
+      "description": "Disprezzato dai sudditi, deve reprimere costantemente il malcontento.",
       "modifiers": [
-        { "stat": "Treasure", "amount": 1, "situation": "When bribing officials or rolling Treasure+Influence", "always": false },
-        { "stat": "Sovereignty", "amount": -1, "situation": "Always", "always": true }
+        {
+          "action": "Controllo dell'Ordine",
+          "amount": -1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "action": "Controspionaggio",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     },
     {
-      "id": "visionary",
-      "label": "Visionary",
-      "description": "Sees frontiers where others see only void.",
+      "id": "zelota-religioso",
+      "label": "Zelota Religioso",
+      "description": "Guidato da fervore spirituale, usa la fede come arma politica e sociale.",
       "modifiers": [
-        { "stat": "Territory", "amount": 1, "situation": "When expanding into unclaimed space", "always": false }
+        {
+          "stat": "Sovereignty",
+          "amount": 2,
+          "situation": "Quando alla guida di un gruppo che coinvolge per la maggior parte della stessa religione.",
+          "always": true
+        }
       ]
     },
     {
-      "id": "stoic-defender",
-      "label": "Stoic Defender",
-      "description": "Will not yield an inch of home soil.",
+      "id": "corrotto",
+      "label": "Corrotto",
+      "description": "Sfrutta il potere per arricchimento personale, minando le istituzioni dall'interno.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "When defending home territory", "always": false }
+        {
+          "stat": "Treasure",
+          "amount": -1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "stat": "Treasure",
+          "amount": 3,
+          "situation": "Once a month.",
+          "always": false
+        }
       ]
     },
     {
-      "id": "void-born",
-      "label": "Void-Born",
-      "description": "Grew up somewhere most would call uninhabitable.",
+      "id": "impegnato",
+      "label": "Impegnato",
+      "description": "Dedica ogni energia al governo, instancabile nella cura del proprio regno.",
       "modifiers": [
-        { "stat": "Territory", "amount": 1, "situation": "Always", "always": true }
+        { "stat": "all", "amount": 1, "situation": "Una volta al mese, su una singola azione a scelta dedicata alla gestione interna del regno.", "always": false },
+        { "stat": "Influence", "amount": -1, "situation": "Quando tiri di influence in negoziati con altre nazioni (poco tempo dedicato alla diplomazia estera).", "always": false }
       ]
     },
     {
-      "id": "grudge-keeper",
-      "label": "Grudge-Keeper",
-      "description": "Remembers every slight, and plans accordingly.",
+      "id": "connesso",
+      "label": "Connesso",
+      "description": "Dispone di una rete di contatti e informatori che anticipa intrighi e opportunità.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "When fighting a declared rival", "always": false }
+        { "action": "Spionaggio", "amount": 1, "situation": "Sempre", "always": true },
+        { "action": "Controspionaggio", "amount": 1, "situation": "Sempre", "always": true }
       ]
     },
     {
-      "id": "treasury-instinct",
-      "label": "Treasury Instinct",
-      "description": "Rime Mugwes' hand never lets a coin slip by unnoticed.",
+      "id": "codardo",
+      "label": "Codardo",
+      "description": "Fugge dal rischio anche quando servirebbe coraggio, indebolendo le sue truppe.",
       "modifiers": [
-        { "stat": "Treasure", "amount": 1, "situation": "Whenever Treasure is used.", "always": true, "diceType": "Normal Dice" }
+        { "stat": "Might", "amount": -1, "situation": "Quando attacca per primo o dichiara guerra.", "always": false },
+        { "action": "Difesa", "amount": 1, "situation": "Sempre", "always": true }
       ]
     },
     {
-      "id": "underdog-tactics",
-      "label": "Underdog Tactics",
-      "description": "Mado Bophill has learned to fight uphill and win.",
+      "id": "onesto",
+      "label": "Onesto",
+      "description": "Rispetta la parola data e i trattati, senza mai tradire i propri alleati.",
       "modifiers": [
-        { "stat": "Might", "amount": 1, "situation": "When attacking or defending against a more powerful foe (calculated as might + treasure + territory).", "always": false, "diceType": "Normal Dice" }
-      ]
-    },
-    {
-      "id": "iron-order",
-      "label": "Iron Order",
-      "description": "Barda Writingham keeps the peace with an iron hand -- at a cost.",
-      "modifiers": [
-        { "action": "Controllo dell'Ordine", "amount": 1, "situation": "Quando tiri per il Controllo dell'Ordine (Might + Sovereignty) -- usarlo riduce permanentemente il Treasure di 1.", "always": false, "diceType": "Master Dice" }
+        { "action": "Diplomazia", "amount": 1, "situation": "Quando mantiene un patto o un trattato in essere invece di romperlo.", "always": true },
+        { "stat": "Influence", "amount": -1, "situation": "Quando rompe un patto o un trattato in essere.", "always": false }
       ]
     }
   ]
