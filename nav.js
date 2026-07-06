@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
         { href: 'scrolls.html', text: 'Army' },
         { href: 'strategic-map.html', text: 'Strategic Map' },
         { href: 'https://www.dndbeyond.com/campaigns/5380810', text: 'D&D Beyond Campaign' },
-        { href: 'geopolitics.html', text: 'Geopolitics' },
         { href: 'https://federicoferoggio.github.io/planetnavigator/', text: 'Planets Explorer' }
     ];
 
