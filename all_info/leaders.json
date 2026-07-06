@@ -6,8 +6,8 @@
         "portrait": "images/members/Kumi.webp",
         "role": "Capo Politico",
         "traits": [
-          "iron-fist",
-          "shrewd-trader"
+          "corrotto",
+          "esperto_treasure"
         ]
       },
       {
@@ -15,8 +15,8 @@
         "portrait": "images/members/Jojo.webp",
         "role": "Primo Ministro",
         "traits": [
-          "shrewd-trader",
-          "naval-tactician"
+          "esperto_treasure",
+          "costruttore"
         ]
       },
       {
@@ -24,8 +24,8 @@
         "portrait": "images/members/Abla.webp",
         "role": "Capo Militare",
         "traits": [
-          "naval-tactician",
-          "silver-tongue"
+          "costruttore",
+          "geniale"
         ]
       }
     ],
@@ -35,8 +35,8 @@
         "portrait": "images/members/Michel.webp",
         "role": "Capo Politico",
         "traits": [
-          "silver-tongue",
-          "zealous"
+          "politico",
+          "connesso"
         ]
       },
       {
@@ -44,8 +44,8 @@
         "portrait": "images/members/Daques.webp",
         "role": "Primo Ministro",
         "traits": [
-          "zealous",
-          "master-spy"
+          "connesso",
+          "empatico"
         ]
       },
       {
@@ -53,8 +53,8 @@
         "portrait": "images/members/Claudette.webp",
         "role": "Capo Militare",
         "traits": [
-          "master-spy",
-          "frail"
+          "empatico",
+          "esperto_influence"
         ]
       }
     ],
@@ -64,8 +64,8 @@
         "portrait": "images/members/Usko.webp",
         "role": "Capo Politico",
         "traits": [
-          "frail",
-          "inspiring"
+          "zelota-religioso",
+          "conquistatore"
         ]
       },
       {
@@ -73,8 +73,8 @@
         "portrait": "images/members/Rauni.webp",
         "role": "Primo Ministro",
         "traits": [
-          "inspiring",
-          "ruthless"
+          "conquistatore",
+          "popolare"
         ]
       },
       {
@@ -82,8 +82,8 @@
         "portrait": "images/members/Heikkila.webp",
         "role": "Capo Militare",
         "traits": [
-          "ruthless",
-          "reclusive"
+          "popolare",
+          "aggressivo"
         ]
       }
     ],
@@ -93,8 +93,8 @@
         "portrait": "images/members/Oakley.webp",
         "role": "Capo Politico",
         "traits": [
-          "reclusive",
-          "charismatic"
+          "corrotto",
+          "esperto_treasure"
         ]
       },
       {
@@ -102,8 +102,8 @@
         "portrait": "images/members/Alice.webp",
         "role": "Primo Ministro",
         "traits": [
-          "charismatic",
-          "warmonger"
+          "esperto_treasure",
+          "politico"
         ]
       },
       {
@@ -111,8 +111,8 @@
         "portrait": "images/members/Ryan.webp",
         "role": "Capo Militare",
         "traits": [
-          "warmonger",
-          "pious"
+          "politico",
+          "inaffidabile"
         ]
       }
     ],
@@ -122,8 +122,8 @@
         "portrait": "images/members/Munire.webp",
         "role": "Capo Politico",
         "traits": [
-          "pious",
-          "corrupt"
+          "zelota-religioso",
+          "aggressivo"
         ]
       }
     ],
@@ -133,8 +133,8 @@
         "portrait": "images/members/Line.webp",
         "role": "Capo Politico",
         "traits": [
-          "corrupt",
-          "visionary"
+          "connesso",
+          "politico"
         ]
       },
       {
@@ -142,8 +142,8 @@
         "portrait": "images/members/Vegar.webp",
         "role": "Primo Ministro",
         "traits": [
-          "visionary",
-          "stoic-defender"
+          "politico",
+          "geniale"
         ]
       },
       {
@@ -151,8 +151,8 @@
         "portrait": "images/members/Trude.webp",
         "role": "Capo Militare",
         "traits": [
-          "stoic-defender",
-          "void-born"
+          "geniale",
+          "previdente"
         ]
       }
     ],
@@ -162,8 +162,8 @@
         "portrait": "images/members/Koga.webp",
         "role": "Capo Politico",
         "traits": [
-          "void-born",
-          "grudge-keeper"
+          "corrotto",
+          "esperto_treasure"
         ]
       },
       {
@@ -171,8 +171,8 @@
         "portrait": "images/members/Sakuma.webp",
         "role": "Primo Ministro",
         "traits": [
-          "grudge-keeper",
-          "iron-fist"
+          "esperto_treasure",
+          "politico"
         ]
       },
       {
@@ -180,8 +180,8 @@
         "portrait": "images/members/Yuuki.webp",
         "role": "Capo Militare",
         "traits": [
-          "iron-fist",
-          "shrewd-trader"
+          "politico",
+          "inaffidabile"
         ]
       }
     ],
@@ -191,8 +191,8 @@
         "portrait": "images/members/The Eternal.webp",
         "role": "Capo Politico",
         "traits": [
-          "shrewd-trader",
-          "naval-tactician"
+          "connesso",
+          "politico"
         ]
       },
       {
@@ -200,8 +200,8 @@
         "portrait": "images/members/The Courtship.webp",
         "role": "Primo Ministro",
         "traits": [
-          "naval-tactician",
-          "silver-tongue"
+          "politico",
+          "geniale"
         ]
       },
       {
@@ -209,8 +209,8 @@
         "portrait": "images/members/The Undead.webp",
         "role": "Capo Militare",
         "traits": [
-          "silver-tongue",
-          "zealous"
+          "geniale",
+          "previdente"
         ]
       }
     ],
@@ -220,8 +220,8 @@
         "portrait": "images/members/Demryd.webp",
         "role": "Capo Politico",
         "traits": [
-          "zealous",
-          "master-spy"
+          "politico",
+          "connesso"
         ]
       },
       {
@@ -229,8 +229,8 @@
         "portrait": "images/members/Tolne.webp",
         "role": "Primo Ministro",
         "traits": [
-          "master-spy",
-          "frail"
+          "connesso",
+          "empatico"
         ]
       },
       {
@@ -238,8 +238,8 @@
         "portrait": "images/members/Bhodvamu.webp",
         "role": "Capo Militare",
         "traits": [
-          "frail",
-          "inspiring"
+          "empatico",
+          "esperto_influence"
         ]
       }
     ],
@@ -249,8 +249,8 @@
         "portrait": "images/members/Aadarsh.webp",
         "role": "Capo Politico",
         "traits": [
-          "inspiring",
-          "ruthless"
+          "zelota-religioso",
+          "aggressivo"
         ]
       },
       {
@@ -258,8 +258,8 @@
         "portrait": "images/members/Khem.webp",
         "role": "Primo Ministro",
         "traits": [
-          "ruthless",
-          "reclusive"
+          "aggressivo",
+          "crudele"
         ]
       },
       {
@@ -267,8 +267,8 @@
         "portrait": "images/members/Badal.webp",
         "role": "Capo Militare",
         "traits": [
-          "reclusive",
-          "charismatic"
+          "crudele",
+          "impopolare"
         ]
       }
     ],
@@ -278,8 +278,8 @@
         "portrait": "images/members/Shah.webp",
         "role": "Capo Politico",
         "traits": [
-          "charismatic",
-          "warmonger"
+          "aggressivo",
+          "conquistatore"
         ]
       },
       {
@@ -287,8 +287,8 @@
         "portrait": "images/members/Baldev.webp",
         "role": "Primo Ministro",
         "traits": [
-          "warmonger",
-          "pious"
+          "conquistatore",
+          "esperto_might"
         ]
       }
     ],
@@ -298,8 +298,8 @@
         "portrait": "images/members/Beca Haider.webp",
         "role": "Capo Politico",
         "traits": [
-          "pious",
-          "corrupt"
+          "corrotto",
+          "esperto_treasure"
         ]
       },
       {
@@ -307,8 +307,8 @@
         "portrait": "images/members/Siona.webp",
         "role": "Primo Ministro",
         "traits": [
-          "corrupt",
-          "visionary"
+          "esperto_treasure",
+          "costruttore"
         ]
       }
     ],
@@ -318,8 +318,8 @@
         "portrait": "images/members/Tala.webp",
         "role": "Capo Politico",
         "traits": [
-          "visionary",
-          "stoic-defender"
+          "previdente",
+          "affidabile"
         ]
       },
       {
@@ -327,8 +327,8 @@
         "portrait": "images/members/Mataio.webp",
         "role": "Primo Ministro",
         "traits": [
-          "stoic-defender",
-          "void-born"
+          "affidabile",
+          "esperto_territory"
         ]
       },
       {
@@ -336,8 +336,8 @@
         "portrait": "images/members/Teulia.webp",
         "role": "Capo Militare",
         "traits": [
-          "void-born",
-          "grudge-keeper"
+          "esperto_territory",
+          "codardo"
         ]
       }
     ],
@@ -347,8 +347,8 @@
         "portrait": "images/members/Milana.webp",
         "role": "Capo Politico",
         "traits": [
-          "grudge-keeper",
-          "iron-fist"
+          "aggressivo",
+          "esperto_might"
         ]
       },
       {
@@ -356,8 +356,8 @@
         "portrait": "images/members/Marija.webp",
         "role": "Primo Ministro",
         "traits": [
-          "iron-fist",
-          "shrewd-trader"
+          "esperto_might",
+          "preparato"
         ]
       },
       {
@@ -365,8 +365,8 @@
         "portrait": "images/members/Suzana.webp",
         "role": "Capo Militare",
         "traits": [
-          "shrewd-trader",
-          "naval-tactician"
+          "preparato",
+          "impegnato"
         ]
       }
     ],
@@ -376,8 +376,8 @@
         "portrait": "images/members/Sparticus.webp",
         "role": "Capo Politico",
         "traits": [
-          "naval-tactician",
-          "silver-tongue"
+          "previdente",
+          "affidabile"
         ]
       },
       {
@@ -385,8 +385,8 @@
         "portrait": "images/members/BLUB.webp",
         "role": "Primo Ministro",
         "traits": [
-          "silver-tongue",
-          "zealous"
+          "affidabile",
+          "esperto_territory"
         ]
       },
       {
@@ -394,8 +394,8 @@
         "portrait": "images/members/Burkov.webp",
         "role": "Capo Militare",
         "traits": [
-          "zealous",
-          "master-spy"
+          "esperto_territory",
+          "codardo"
         ]
       }
     ],
@@ -405,8 +405,8 @@
         "portrait": "images/members/Sun Hui.webp",
         "role": "Capo Politico",
         "traits": [
-          "master-spy",
-          "frail"
+          "aggressivo",
+          "conquistatore"
         ]
       },
       {
@@ -414,8 +414,8 @@
         "portrait": "images/members/Feng.webp",
         "role": "Primo Ministro",
         "traits": [
-          "frail",
-          "inspiring"
+          "conquistatore",
+          "esperto_might"
         ]
       },
       {
@@ -423,8 +423,8 @@
         "portrait": "images/members/Xia De.webp",
         "role": "Capo Militare",
         "traits": [
-          "inspiring",
-          "ruthless"
+          "esperto_might",
+          "crudele"
         ]
       }
     ],
@@ -434,8 +434,8 @@
         "portrait": "images/members/Prasantha.webp",
         "role": "Capo Politico",
         "traits": [
-          "ruthless",
-          "reclusive"
+          "zelota-religioso",
+          "aggressivo"
         ]
       },
       {
@@ -443,8 +443,8 @@
         "portrait": "images/members/Egide.webp",
         "role": "Primo Ministro",
         "traits": [
-          "reclusive",
-          "charismatic"
+          "aggressivo",
+          "crudele"
         ]
       },
       {
@@ -452,8 +452,8 @@
         "portrait": "images/members/Alexis.webp",
         "role": "Capo Militare",
         "traits": [
-          "charismatic",
-          "warmonger"
+          "crudele",
+          "impopolare"
         ]
       }
     ],
@@ -463,8 +463,8 @@
         "portrait": "images/members/Rime Mugwes.webp",
         "role": "Capo Politico",
         "traits": [
-          "treasury-instinct",
-          "corrupt"
+          "esperto_treasure",
+          "corrotto"
         ]
       },
       {
@@ -472,8 +472,8 @@
         "portrait": "images/members/Barda Writingham.webp",
         "role": "Primo Ministro",
         "traits": [
-          "iron-order",
-          "stoic-defender"
+          "crudele",
+          "esperto_might"
         ]
       },
       {
@@ -481,8 +481,8 @@
         "portrait": "images/court/Mado Bophubb.webp",
         "role": "Capo Militare",
         "traits": [
-          "underdog-tactics",
-          "naval-tactician"
+          "aggressivo",
+          "geniale"
         ]
       }
     ],

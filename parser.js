@@ -186,11 +186,30 @@
     // matched exactly against one specific action name) -- Score defaults to
     // '' rather than undefined so script.js's filter never throws when only
     // Action is set.
+    // A treaties.json row's type string carries its own directional suffix
+    // (" su" = lord, " da" = vassal/recipient) for the two feudal pacts;
+    // every other type is symmetric. Mirrors strategic-map.js's
+    // baseTreatyType()/resolvedTreatyModifiers() so both pages agree on
+    // which side's modifiers apply.
+    function resolvedTreatyModifiers(treatyType, treatyTypesByName) {
+        let base = treatyType, side = null;
+        for (const suf of [' su', ' da']) {
+            if (treatyType.endsWith(suf)) { base = treatyType.slice(0, -suf.length); side = suf.trim(); break; }
+        }
+        const info = treatyTypesByName[base];
+        if (!info) return [];
+        if (side === 'su') return info.modifiersAsLord || [];
+        if (side === 'da') return info.modifiersAsVassal || [];
+        return info.modifiers || [];
+    }
+
     async function fetchBonuses() {
         try {
-            const [leaders, assetsData] = await Promise.all([
+            const [leaders, assetsData, treatiesData, treatyTypesData] = await Promise.all([
                 fetchLaManoLeadersWithTraits(),
                 myfetchJson('all_info/assets.json'),
+                myfetchJson('all_info/treaties.json'),
+                myfetchJson('all_info/treaty_types.json'),
             ]);
             const rows = [];
             const pushModifiers = (bonusName, modifiers) => {
@@ -212,10 +231,28 @@
             (assetsData.familyAssets || [])
                 .filter(a => a.owner === PLAYER_FAMILY)
                 .forEach(a => pushModifiers(a.name, a.modifiers));
+            const treatyTypesByName = treatyTypesData.treatyTypes || {};
+            (treatiesData.treaties || [])
+                .filter(t => t.from === PLAYER_FAMILY)
+                .forEach(t => pushModifiers(`Trattato: ${t.type} con ${t.to}`, resolvedTreatyModifiers(t.type, treatyTypesByName)));
             return rows;
         } catch (error) {
             console.error("Error fetching bonuses data:", error);
             return [];
+        }
+    }
+
+    // "Diplomazia" action (index.html): the list of available treaty types,
+    // used to populate the treaty-type dropdown -- unique-category treaties
+    // (tied to a specific named benefactor family, e.g. Supporto Arcano with
+    // Ntsu) are excluded there, not here, so other consumers still see them.
+    async function fetchTreatyTypes() {
+        try {
+            const data = await myfetchJson('all_info/treaty_types.json');
+            return data.treatyTypes || {};
+        } catch (error) {
+            console.error("Error fetching treaty types:", error);
+            return {};
         }
     }
 
@@ -243,5 +280,6 @@
     window.fetchCompanyAssets = fetchCompanyAssets;
     window.fetchBonuses = fetchBonuses;
     window.fetchPactsData = fetchPactsData;
+    window.fetchTreatyTypes = fetchTreatyTypes;
 
 })();

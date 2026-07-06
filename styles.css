@@ -625,16 +625,3 @@ button:disabled {
 .timeline-item h3:first-child {
     margin-top: 5px; /* Ensure time number (first child) is close to the top */
 }
-
-
-.bonus-popup {
-    display: none;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    z-index: 1000;
-}

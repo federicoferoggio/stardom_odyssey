@@ -31,8 +31,17 @@ const actions = {
     "Aumento Stat": {
         description: "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro della stessa stat + una a scelta contro una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
         rolls: ["might", "sovereignty", "influence", "territory", "treasure"]
+    },
+    "Diplomazia": {
+        description: "Azione Diplomatica. Genera un nuovo trattato con un'altra Compagnia (vedi menu sotto).",
+        rolls: ["influence", "treasure"],
+        hasTreatyMenu: true
     }
 };
+
+// Popolato da fetchTreatyTypes() (all_info/treaty_types.json) al caricamento
+// della pagina, usato dal menu dei trattati dell'azione "Diplomazia".
+let treatyTypes = {};
 
 // Ragioni di guerra disponibili per l'azione "Attacco"
 const warReasons = [
@@ -94,6 +103,7 @@ function fetchGoverni() {
 document.addEventListener("DOMContentLoaded", () => {
     populateActions();
     fetchBonuses().then(loadBonuses);
+    fetchTreatyTypes().then(data => { treatyTypes = data; });
     fetchCompanyAssets().then(loadCompanyAssets);
     fetchGoverni().then(data => {
         governi = data;
@@ -165,20 +175,20 @@ function updateActionDetails() {
 
     // Generate dropdown menu for bonus selection
     const bonusDropdown = `
-        <label for="bonusDropdown">How useful were you in aiding your company?</label>
+        <label for="bonusDropdown">Quanto sei stato utile nell'aiutare la tua compagnia?</label>
         <select id="bonusDropdown">
-            <option value="none" selected>Did not do shit</option>
-            <option value="-3d">We shat our pants! -3d</option>
-            <option value="-2d">We only earned shame. -2d</option>
-            <option value="-1d">Would have been better to do nothing. -1d</option>
-            <option value="0">Waste of time. No effect</option>
-            <option value="1d">Somewhat useful. +1d</option>
-            <option value="ED">We did good! +ED</option>
-            <option value="2d">Give us gold and give us glory. +2d</option>
-            <option value="MD">We are kings, we are winners. +MD</option>
-            <option value="3d">Legends of our greatness will be sung for centuries. +3d</option>
-            <option value="1+MD">A success that few will ever see again. +1d and MD</option>
-            <option value="2+MD">Gods step aside, for we have come. +2d and MD</option>
+            <option value="none" selected>Non hai fatto un cazzo</option>
+            <option value="-3d">Ce la siamo fatta sotto! -3d</option>
+            <option value="-2d">Ci siamo solo guadagnati la vergogna. -2d</option>
+            <option value="-1d">Sarebbe stato meglio non fare niente. -1d</option>
+            <option value="0">Tempo sprecato. Nessun effetto</option>
+            <option value="1d">Abbastanza utile. +1d</option>
+            <option value="ED">Abbiamo fatto bene! +ED</option>
+            <option value="2d">Datemi oro e datemi gloria. +2d</option>
+            <option value="MD">Siamo re, siamo vincitori. +MD</option>
+            <option value="3d">Leggende della nostra grandezza saranno cantate per secoli. +3d</option>
+            <option value="1+MD">Un successo che pochi rivedranno mai più. +1d e MD</option>
+            <option value="2+MD">Gli dei si facciano da parte, perché siamo arrivati noi. +2d e MD</option>
         </select>
     `;
 
@@ -197,19 +207,39 @@ function updateActionDetails() {
         `;
     }
 
+    // Genera il menu dei trattati, solo per l'azione "Diplomazia". Esclude i
+    // trattati "unique" (legati a una specifica famiglia benefattrice, es.
+    // Supporto Arcano con gli Ntsu) -- quelli non sono liberamente proponibili
+    // a qualsiasi Compagnia come i trattati relational/benefit.
+    let treatyMenu = "";
+    if (action.hasTreatyMenu) {
+        const offerable = Object.entries(treatyTypes).filter(([, info]) => info.category !== "unique");
+        treatyMenu = `
+        <div id="treatyMenuContainer">
+            <label for="treatyTypeMenu"><strong>Scegli il tipo di trattato:</strong></label>
+            <select id="treatyTypeMenu">
+                <option value="" disabled selected>Seleziona un trattato</option>
+                ${offerable.map(([name]) => `<option value="${escHtml(name)}">${escHtml(name)}</option>`).join("")}
+            </select>
+            <div id="treatyTypeDetails"></div>
+        </div>
+        `;
+    }
+
     // Display action details, bonuses, and dice rolls
     actionDetails.innerHTML = `
-        <p><strong>Description:</strong> ${escHtml(description)}</p>
+        <p><strong>Descrizione:</strong> ${escHtml(description)}</p>
         ${warReasonsMenu}
-        <p id="rollDisplay"><strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${baseRoll}d10</p>
+        ${treatyMenu}
+        <p id="rollDisplay"><strong>Stai usando:</strong> ${rolls.join(", ")}. Il tiro totale è: ${baseRoll}d10</p>
         <div>
-            <strong>Court Bonuses:</strong>
+            <strong>Bonus di Corte:</strong>
             <form id="bonusForm">
                 ${bonusChecklist}
             </form>
         </div>
         <div>
-            <strong>Completion Bonus:</strong>
+            <strong>Bonus di Completamento:</strong>
             ${bonusDropdown}
         </div>
     `;
@@ -220,6 +250,20 @@ function updateActionDetails() {
         warReasonsSelect.addEventListener("change", () => {
             const selected = warReasons.find(r => r.nome === warReasonsSelect.value);
             document.getElementById("warReasonDescription").textContent = selected ? selected.descrizione : "";
+        });
+    }
+
+    // Se presente il menu dei trattati, mostra descrizione/costi al cambio
+    const treatyTypeMenu = document.getElementById("treatyTypeMenu");
+    if (treatyTypeMenu) {
+        treatyTypeMenu.addEventListener("change", () => {
+            const info = treatyTypes[treatyTypeMenu.value];
+            const detailsEl = document.getElementById("treatyTypeDetails");
+            detailsEl.innerHTML = info ? `
+                <p><strong>Descrizione:</strong> ${escHtml(info.description)}</p>
+                <p><strong>Costo di creazione:</strong> ${escHtml(info.diplomacyCost || "—")}</p>
+                <p><strong>Costo di rottura:</strong> ${escHtml(info.breakupCost || "—")}</p>
+            ` : "";
         });
     }
 
@@ -265,7 +309,7 @@ function updateActionDetails() {
 
         // Update roll display
         const rollDisplay = actionDetails.querySelector("#rollDisplay");
-        rollDisplay.innerHTML = `<strong>You are using:</strong> ${rolls.join(", ")}. Total roll is: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} Expert Dice` : ""}${masterDice > 0 ? ` + ${masterDice} Master Dice` : ""}</strong>`;
+        rollDisplay.innerHTML = `<strong>Stai usando:</strong> ${rolls.join(", ")}. Il tiro totale è: ${totalNormalDice}d10${expertDice > 0 ? ` + ${expertDice} Expert Dice` : ""}${masterDice > 0 ? ` + ${masterDice} Master Dice` : ""}</strong>`;
     }
 
     // Trigger initial evaluation to account for always-checked bonuses
@@ -395,8 +439,8 @@ function loadCourtMembers(courtmembers) {
         memberDiv.innerHTML = `
             <img src="images/court/${escHtml(name)}.webp" alt="${escHtml(name)}" onerror="this.onerror=null; this.src='images/court/Position%20Empty.webp';">
             <h3>${escHtml(name)}</h3>
-            <p><strong>Role:</strong> ${escHtml(role)}</p>
-            <p><strong>Bonuses:</strong> ${escHtml(bonuses || 'No bonuses available')}</p>
+            <p><strong>Ruolo:</strong> ${escHtml(role)}</p>
+            <p><strong>Bonus:</strong> ${escHtml(bonuses || 'Nessun bonus disponibile')}</p>
         `;
 
         courtContainer.appendChild(memberDiv);
@@ -415,7 +459,7 @@ function loadTimeline(events) {
             return; // Skip the current month / invalid row
         }
         // Safely normalize modifier to a string before using replace
-        mod = (mod || "").replace(/;/g, ' and ');
+        mod = (mod || "").replace(/;/g, ' e ');
         const item = document.createElement("div");
         item.className = "timeline-item";
         item.innerHTML = `<h3>${escHtml(event['Month'])}</h3><strong>${escHtml(name)}</strong><p>${escHtml(mod)}</p>`;
@@ -427,13 +471,21 @@ function loadTimeline(events) {
         item.appendChild(descriptionDiv);
 
         item.addEventListener("mouseover", (e) => {
+            descriptionDiv.style.position = "fixed";
             descriptionDiv.style.display = "block";
         });
 
-        // Update the popup position on mousemove
+        // Update the popup position on mousemove, clamped to the viewport
+        // (fixed positioning + clientX/Y, not pageX/Y, so it can't be pushed
+        // off-screen when the page is scrolled or the popup is measured
+        // near the window's right/bottom edge).
         item.addEventListener("mousemove", (e) => {
-            descriptionDiv.style.left = e.pageX + 15 + "px"; // 15px to the right of the cursor
-            descriptionDiv.style.top = e.pageY + 15 + "px"; // 15px below the cursor
+            const pad = 8;
+            const rect = descriptionDiv.getBoundingClientRect();
+            const left = Math.max(pad, Math.min(e.clientX + 15, window.innerWidth - rect.width - pad));
+            const top = Math.max(pad, Math.min(e.clientY + 15, window.innerHeight - rect.height - pad));
+            descriptionDiv.style.left = left + "px";
+            descriptionDiv.style.top = top + "px";
         });
 
         // Hide the popup on mouseout
@@ -451,6 +503,11 @@ function loadTimeline(events) {
     document.getElementById(id).addEventListener("input", generateDescription);
 });
 
+// qualities (parser.js) is keyed by stat name then tier (0-2), each tier a
+// pair of interchangeable phrase variants -- same tier-clamping approach as
+// strategic-map.js's generateFamilyDescription(), reused here so the input
+// stat value (1-6) always resolves to a real phrase instead of indexing
+// past the array.
 function generateDescription() {
     const stats = {
         Might: parseInt(document.getElementById("might").value, 10),
@@ -459,8 +516,10 @@ function generateDescription() {
         Territory: parseInt(document.getElementById("territory").value, 10),
         Sovereignty: parseInt(document.getElementById("sovereignty").value, 10)
     };
-    const description = `
-        Your reign\'s forces are ${qualities.Might[stats.Might - 1]}, and your subjects ${qualities.Sovereignty[stats.Sovereignty - 1]} your rule. You are ${qualities.Influence[stats.Influence - 1]} in the system, and your territory is ${qualities.Territory[stats.Territory - 1]}. In your court people deal in ${qualities.Treasure[stats.Treasure - 1]}.
-    `.trim();
+    const getTier = value => (value <= 2 ? 0 : value <= 4 ? 1 : 2);
+    const phrase = key => qualities[key][getTier(stats[key])][0];
+    const sentence = [phrase("Might"), phrase("Treasure"), phrase("Influence"), phrase("Territory"), phrase("Sovereignty")]
+        .join(". ") + ".";
+    const description = sentence.replace(/(^\w|\.\s*\w)/g, c => c.toUpperCase());
     document.getElementById("dynamicDescription").innerText = description;
 }

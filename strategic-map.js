@@ -14,6 +14,17 @@ const ZOOM_MAX = 12000;
 const BASE_VB_WIDTH = 1600;
 const MAX_ICON_SCALE = 6;
 
+// A satellite's (moon, or a base anchored directly to a planet, e.g.
+// Lalleanza on Void) icon is pinned to a constant on-screen size by the
+// scaling above, but its orbital separation from its parent keeps shrinking
+// in screen space as you zoom out -- so a multi-moon planet starts
+// overlapping well before MAX_ICON_SCALE even saturates. Past this viewBox
+// width, satellites collapse into just their parent planet (hidden, orbit
+// rings hidden), which gets an extra size boost to read as "a system is
+// collapsed here, zoom in to see it."
+const MOON_COLLAPSE_VB_WIDTH = 4000;
+const COLLAPSED_PLANET_BOOST = 1.35;
+
 const resConfig = [
     { key: 'shards', label: 'Shards', color: '#88ccff', icon: '💎' },
     { key: 'gems', label: 'Gems', color: '#aaffaa', icon: '🟢' },
@@ -73,6 +84,7 @@ function generateFamilyDescription(stats) {
 let byId = {}, tick = 0, ready = false;
 let ownerColors = {};
 let iconScaleGroups = {};
+let satellitesByParent = {}; // parentId -> [satelliteId, ...], see MOON_COLLAPSE_VB_WIDTH above
 
 function escHtml(str) {
     return String(str ?? '')
@@ -102,6 +114,8 @@ let leadersByFamily = {};
 let traitsById = {};
 let opinionsByFamily = {};
 let treatyTypesByName = {};
+let treatiesByFamily = {}; // all_info/treaties.json rows, grouped by `from`
+let treatyOpinionsByFamily = {}; // live-computed, mirrored both ways -- see computeTreatyOpinions()
 let currentMonth = 0;
 let timelineByMonth = {};
 let familyAssetsByOwner = {};
@@ -114,48 +128,62 @@ let planetReligionComposition = {};
 let stationedFleets = []; // all_info/fleets.json .stationed -- kept for familyFleetCount()
 let allWarpaths = []; // all_info/fleets.json .warpaths -- kept for familyFleetCount()
 
-// ── FOG OF WAR / INFILTRATION ─────────────────────────────────────────────────
-// A family's `infiltration` (0-9, from companies.json, everyone starts at 2)
-// progressively unlocks what's shown about them:
-//   0/1/2  -> leader 1/2/3 identity (all already visible at the starting value)
-//   3/4/5  -> Territory/Treasure/Might + that leader's first trait
-//   6/7    -> Influence/Sovereignty + leader 1/2's second trait
-//   8      -> every remaining leader trait (catch-all)
-//   9      -> "Conoscenza Piena": the GM now rolls fully in the open for them
-// Government type and opinions toward other families are never gated.
-const MAX_INFILTRATION = 9;
-const LEADER_IDENTITY_LEVEL = [0, 1, 2];
-const STAT_REVEAL_LEVEL = { territory: 3, treasure: 4, might: 5, influence: 6, sovereignty: 7 };
-const LEADER_TRAIT_EXTRA_LEVEL = [6, 7, 8];
-const ALL_TRAITS_LEVEL = 8;
-const FULL_KNOWLEDGE_LEVEL = 9;
-
+// ── FOG OF WAR / KNOWLEDGE REVEAL ─────────────────────────────────────────────
+// What the players currently know about each family is GM-authored directly
+// in all_info/reveals.json (per-family stat/leader-trait/asset boolean
+// flags) rather than derived from a single progressive score -- lets the GM
+// reveal e.g. Territory before Might, or one leader's trait before another's,
+// in whatever order the story actually goes. Government type and opinions
+// toward other families are never gated. Leader identity (name/portrait/
+// role) is never gated either -- court membership is always public, only a
+// leader's traits are hidden. Missing family/field in reveals.json defaults
+// to hidden (false).
+let revealsByFamily = {};
 let devRevealAll = false;
 let currentOverlayFamily = null;
 
 // The site is played from La Mano's own perspective (that's the player-run
-// family) -- a family always knows everything about itself, so infiltration
-// never gates its own info, independent of the GM-only reveal-all toggle.
+// family) -- a family always knows everything about itself, so the reveal
+// flags never gate its own info, independent of the GM-only reveal-all toggle.
 const PLAYER_FAMILY = 'La Mano';
 
-function effectiveInfiltration(company) {
-    if (devRevealAll) return MAX_INFILTRATION;
-    if (company && company.name === PLAYER_FAMILY) return MAX_INFILTRATION;
-    return (company && Number(company.infiltration)) || 0;
+function familyReveal(name) {
+    const r = (revealsByFamily && revealsByFamily[name]) || {};
+    return { stats: r.stats || {}, leaders: r.leaders || {}, uniqueAssetsKnown: !!r.uniqueAssetsKnown };
 }
-function statUnlocked(infil, statKey) { return infil >= STAT_REVEAL_LEVEL[statKey]; }
-function leaderIdentityUnlocked(infil, leaderIndex) { return infil >= (LEADER_IDENTITY_LEVEL[leaderIndex] ?? 0); }
-function leaderTraitUnlockLevel(leaderIndex, traitIndex) {
-    if (traitIndex === 0) return STAT_REVEAL_LEVEL[['territory', 'treasure', 'might'][leaderIndex]] ?? ALL_TRAITS_LEVEL;
-    if (traitIndex === 1) return LEADER_TRAIT_EXTRA_LEVEL[leaderIndex] ?? ALL_TRAITS_LEVEL;
-    return ALL_TRAITS_LEVEL;
+function statKnown(name, statKey) {
+    if (devRevealAll || name === PLAYER_FAMILY) return true;
+    return !!familyReveal(name).stats[statKey];
+}
+function leaderTraitKnown(name, role, traitIndex) {
+    if (devRevealAll || name === PLAYER_FAMILY) return true;
+    const box = familyReveal(name).leaders[role] || {};
+    return !!box[traitIndex === 0 ? 'trait1Known' : 'trait2Known'];
+}
+function assetsKnown(name) {
+    if (devRevealAll || name === PLAYER_FAMILY) return true;
+    return familyReveal(name).uniqueAssetsKnown;
+}
+// "Conoscenza Piena": sums every trackable flag for a family (5 stats + 2
+// traits per actual leader + 1 for unique assets -- the total scales with
+// how many leaders that family actually has, so Hai's 1 leader or Gith's 0
+// don't get stuck below 100%) into a known/total count for the knowledge bar.
+function familyKnowledgeSummary(name) {
+    const leaders = leadersByFamily[name] || [];
+    const total = 5 + leaders.length * 2 + 1;
+    if (devRevealAll || name === PLAYER_FAMILY) return { known: total, total, pct: 100 };
+    let known = 0;
+    STAT_KEYS.forEach(k => { if (statKnown(name, k)) known++; });
+    leaders.forEach(l => { for (let i = 0; i < 2; i++) if (leaderTraitKnown(name, l.role, i)) known++; });
+    if (assetsKnown(name)) known++;
+    return { known, total, pct: total > 0 ? Math.round((known / total) * 100) : 100 };
 }
 
 function lockedBadge(message) {
     const span = document.createElement('span');
     span.className = 'locked-badge';
     span.textContent = '🔒';
-    span.title = message || 'Serve più infiltrazione per scoprirlo';
+    span.title = message || 'I giocatori non hanno ancora scoperto questa informazione';
     return span;
 }
 
@@ -170,8 +198,16 @@ let vb = { x: CENTER - window.innerWidth / 2, y: CENTER - window.innerHeight / 2
 function applyVB() { svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); refreshIconScale(); }
 function refreshIconScale() {
     const k = Math.min(MAX_ICON_SCALE, Math.max(1, vb.w / BASE_VB_WIDTH));
-    const scaleAttr = `scale(${k.toFixed(3)})`;
-    Object.values(iconScaleGroups).forEach(g => g.setAttribute('transform', scaleAttr));
+    const collapsed = vb.w >= MOON_COLLAPSE_VB_WIDTH;
+    Object.entries(iconScaleGroups).forEach(([id, g]) => {
+        const boost = (collapsed && satellitesByParent[id] && satellitesByParent[id].length) ? COLLAPSED_PLANET_BOOST : 1;
+        g.setAttribute('transform', `scale(${(k * boost).toFixed(3)})`);
+    });
+    Object.values(satellitesByParent).flat().forEach(satId => {
+        const g = bodyGroups[satId];
+        if (g) g.style.display = collapsed ? 'none' : '';
+    });
+    document.querySelectorAll('#orbit-layer .moon-orbit-ring').forEach(ring => { ring.style.display = collapsed ? 'none' : ''; });
 }
 applyVB();
 
@@ -303,6 +339,12 @@ function buildScene() {
     iconScaleGroups = {};
     if (bgStars) bgStars.innerHTML = '';
 
+    satellitesByParent = {};
+    Object.values(byId).forEach(b => {
+        if (b.id === 'sun' || b.isNode) return;
+        if (b.anchor && b.anchor !== 'sun') (satellitesByParent[b.anchor] = satellitesByParent[b.anchor] || []).push(b.id);
+    });
+
     const sunG = el('g', { 'data-id': 'sun', class: 'body-group' });
     const sunScale = el('g', { class: 'icon-scale' });
     sunScale.appendChild(el('circle', { r: SUN_R * 2.8, fill: 'url(#sunGrad)', opacity: '0.5', filter: 'url(#glow-strong)' }));
@@ -405,11 +447,15 @@ function updateScene(t) {
     const positions = computeAllPositions(t);
     const orbitLayer = document.getElementById('orbit-layer');
     orbitLayer.innerHTML = '';
+    const satellitesCollapsed = vb.w >= MOON_COLLAPSE_VB_WIDTH;
     Object.values(byId).forEach(b => {
         if (b.id === 'sun') return;
         const p = positions[b.id]; if (!p) return;
         if (b.type !== 'base' && b.type !== 'point') {
-            orbitLayer.appendChild(el('circle', { cx: p.parentX, cy: p.parentY, r: p.orbitR, class: b.anchor === 'sun' ? 'orbit-ring' : 'moon-orbit-ring' }));
+            const isMoonRing = b.anchor !== 'sun';
+            const ring = el('circle', { cx: p.parentX, cy: p.parentY, r: p.orbitR, class: isMoonRing ? 'moon-orbit-ring' : 'orbit-ring' });
+            if (isMoonRing && satellitesCollapsed) ring.style.display = 'none';
+            orbitLayer.appendChild(ring);
         }
         const g = bodyGroups[b.id];
         if (g) g.setAttribute('transform', `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
@@ -694,9 +740,12 @@ function renderComposition(bodyName) {
         ${religionRows ? `<div class="composition-row"><span class="composition-label">Religione</span>${religionRows}</div>` : ''}`;
 }
 
-// Every resource/property a body has (all_info/resources.json) grants its own
-// bonus — shown as chips (name, colored by category) with the effect text in
-// the hover tooltip. Same place also feeds the Resources & Assets panel.
+// Every resource/property a body has (all_info/resources.json) is inert by
+// itself -- it only gates which craftable assets a controlling family can
+// use. Shown as chips (name, colored by category) with the list of
+// craftAssets it's an ingredient for in the hover tooltip, so the
+// resource-vs-asset split is visible in the UI itself. Same place also feeds
+// the Resources & Assets panel.
 function renderResourceChips(resourceIds) {
     const host = document.getElementById('info-bonuses');
     host.innerHTML = '';
@@ -712,7 +761,10 @@ function renderResourceChips(resourceIds) {
         chip.textContent = `${(cat && cat.icon) || ''} ${res.name}`;
         const tip = document.createElement('div');
         tip.className = 'trait-tooltip';
-        tip.textContent = res.effect || '';
+        const usedBy = craftData.filter(a => (a.requirementIds || []).includes(rid)).map(a => a.name);
+        tip.textContent = usedBy.length
+            ? `Ingrediente per: ${usedBy.join(', ')}`
+            : 'Nessun asset craftabile registrato per questa risorsa.';
         chip.appendChild(tip);
         host.appendChild(chip);
     });
@@ -769,7 +821,6 @@ function renderFamilyQuickView(ownerName) {
     host.style.display = 'block';
 
     const company = companiesByName[ownerName];
-    const infil = effectiveInfiltration(company);
 
     const header = document.createElement('div');
     header.className = 'quickview-header';
@@ -800,7 +851,7 @@ function renderFamilyQuickView(ownerName) {
         STAT_KEYS.forEach(k => {
             const pill = document.createElement('span');
             pill.className = 'quickview-stat-pill';
-            if (statUnlocked(infil, k)) {
+            if (statKnown(ownerName, k)) {
                 pill.textContent = `${STAT_LABELS[k].slice(0, 3)} ${company[k] || 0}`;
             } else {
                 pill.classList.add('locked');
@@ -833,26 +884,27 @@ const CREST_OVERRIDES = { 'La Mano': 'HandIcon.png' };
 const OWNER_NAME_ALIASES = { 'Heretics': 'Eretici' };
 function canonicalFamilyName(name) { return OWNER_NAME_ALIASES[name] || name; }
 
-function renderInfiltrationBar(infil) {
+function renderInfiltrationBar(name) {
     const host = document.getElementById('family-infiltration');
     host.innerHTML = '';
+    const { known, total, pct } = familyKnowledgeSummary(name);
     const label = document.createElement('div');
     label.className = 'infiltration-label';
-    label.textContent = `Infiltrazione: ${infil}/${MAX_INFILTRATION}`;
+    label.textContent = `Conoscenza: ${known}/${total} (${pct}%)`;
     host.appendChild(label);
     const bar = document.createElement('div');
     bar.className = 'infiltration-bar';
-    for (let i = 1; i <= MAX_INFILTRATION; i++) {
+    for (let i = 1; i <= total; i++) {
         const seg = document.createElement('div');
-        seg.className = 'infiltration-seg' + (i <= infil ? ' filled' : '');
+        seg.className = 'infiltration-seg' + (i <= known ? ' filled' : '');
         bar.appendChild(seg);
     }
     host.appendChild(bar);
-    if (infil >= FULL_KNOWLEDGE_LEVEL) {
+    if (total > 0 && known >= total) {
         const badge = document.createElement('div');
         badge.className = 'full-knowledge-badge';
         badge.textContent = '🎲 Conoscenza Piena';
-        badge.title = "L'infiltrazione è completa: i tiri di questa famiglia vengono ora dichiarati apertamente ai giocatori.";
+        badge.title = "I giocatori conoscono tutto ciò che è tracciato su questa famiglia: i tiri vengono ora dichiarati apertamente.";
         host.appendChild(badge);
     }
 }
@@ -862,7 +914,6 @@ function showFamilyOverlay(name) {
     currentOverlayFamily = name;
     const overlay = document.getElementById('family-overlay');
     const company = companiesByName[name];
-    const infil = effectiveInfiltration(company);
     const accent = familyColor(name);
     document.getElementById('family-overlay-panel').style.setProperty('--family-accent', accent);
 
@@ -894,7 +945,7 @@ function showFamilyOverlay(name) {
         planetEl.textContent = '';
         fleetWarningEl.style.display = 'none';
     } else {
-        renderInfiltrationBar(infil);
+        renderInfiltrationBar(name);
         planetEl.textContent = company.planet ? `Sede: ${company.planet}` : '';
         govEl.textContent = company.government || '';
 
@@ -926,13 +977,12 @@ function showFamilyOverlay(name) {
         }
 
         STAT_KEYS.forEach(k => {
-            const stepLevel = STAT_REVEAL_LEVEL[k];
             const card = document.createElement('div');
             card.className = 'family-stat';
-            if (!statUnlocked(infil, k)) {
+            if (!statKnown(name, k)) {
                 card.classList.add('locked');
                 card.innerHTML = `<div class="family-stat-label">${STAT_LABELS[k]}</div>`;
-                card.appendChild(lockedBadge(`Serve infiltrazione ${stepLevel}+`));
+                card.appendChild(lockedBadge('I giocatori non conoscono ancora questo valore'));
                 statsRow.appendChild(card);
                 return;
             }
@@ -948,7 +998,7 @@ function showFamilyOverlay(name) {
             statsRow.appendChild(card);
         });
 
-        if (statUnlocked(infil, 'sovereignty')) {
+        if (STAT_KEYS.every(k => statKnown(name, k))) {
             const statObj = {};
             STAT_KEYS.forEach(k => { statObj[STAT_LABELS[k]] = company[k] || 0; });
             descEl.textContent = generateFamilyDescription(statObj);
@@ -958,8 +1008,12 @@ function showFamilyOverlay(name) {
         }
     }
 
-    renderLeaders(name, infil);
+    renderLeaders(name);
+    renderActiveBonuses(name);
+    renderResourceSummary(name);
+    renderFleetLocations(name);
     renderTerritories(name);
+    renderFamilyTreaties(name);
     renderAssets(name);
     renderOpinions(name);
 
@@ -996,6 +1050,120 @@ function renderTerritories(name) {
         });
 }
 
+// "Risorse Controllate": every resource the family controls anywhere,
+// deduped and grouped by category (same resConfig buckets/colors as the
+// per-planet resource chips) -- hovering a chip lists which owned body/
+// bodies it comes from, reusing the same viewport-clamped tooltip
+// mechanism (the chip gets the .trait-chip class, already covered by
+// TOOLTIP_HOST_SELECTOR).
+function renderResourceSummary(name) {
+    const host = document.getElementById('family-resources-summary');
+    const byCategory = familyResourceSummary(name);
+    const cats = Object.keys(byCategory);
+    if (cats.length === 0) {
+        host.innerHTML = '<div class="opinion-empty">Nessuna risorsa controllata.</div>';
+        return;
+    }
+    host.innerHTML = resConfig
+        .filter(rc => byCategory[rc.key])
+        .map(rc => `
+            <div class="resource-summary-group">
+                <div class="resource-summary-label" style="color:${rc.color}">${rc.icon} ${escHtml(rc.label)}</div>
+                <div class="resource-summary-chips">
+                    ${byCategory[rc.key].map(({ res, bodies }) => `
+                        <div class="trait-chip" style="border-color:${rc.color}">
+                            ${escHtml(res.name)}
+                            <div class="trait-tooltip">${escHtml(bodies.join(', '))}</div>
+                        </div>`).join('')}
+                </div>
+            </div>`).join('');
+}
+
+// "Flotte": stationed-by-planet counts (byId already folds in the
+// auto-fill-at-home default, so this matches what's actually drawn on the
+// map) plus in-transit warpaths with remaining time (same math as
+// showPathInfo()). Rows are clickable, same jump-to-map pattern as
+// renderTerritories().
+function renderFleetLocations(name) {
+    const host = document.getElementById('family-fleet-locations');
+    const { stationed, transit } = familyFleetLocations(name);
+    if (stationed.length === 0 && transit.length === 0) {
+        host.innerHTML = '<div class="opinion-empty">Nessuna flotta rilevata.</div>';
+        return;
+    }
+    const positions = computeAllPositions(tick);
+    const stationedHtml = stationed.map(({ body, count }) => `
+        <div class="fleet-row" data-body="${escHtml(body.id)}">
+            <span class="fleet-icon">🛰</span>
+            <span class="fleet-location">${escHtml(body.name)}</span>
+            <span class="fleet-count">${count} flott${count === 1 ? 'a' : 'e'}</span>
+        </div>`).join('');
+    const transitHtml = transit.map((path, i) => {
+        const pts = path.ids.map(id => positions[id]).filter(Boolean);
+        let totalLen = 0;
+        for (let j = 0; j < pts.length - 1; j++) totalLen += Math.hypot(pts[j + 1].x - pts[j].x, pts[j + 1].y - pts[j].y);
+        const pacingLen = path._totalLenAtDeparture ?? totalLen;
+        const elapsed = tick - path.departure;
+        const remainingSVG = Math.max(0, pacingLen - elapsed * 4 * DIST_SCALE);
+        const remainingMonths = (remainingSVG / (DIST_SCALE * 4)).toFixed(1);
+        const routeName = path.name || path.ids.map(id => (byId[id] && byId[id].name) || id).join(' → ');
+        return `
+            <div class="fleet-row" data-transit-idx="${i}">
+                <span class="fleet-icon">⚔</span>
+                <span class="fleet-location">${escHtml(routeName)}</span>
+                <span class="fleet-count">~${remainingMonths} mesi rimanenti</span>
+            </div>`;
+    }).join('');
+    host.innerHTML = `
+        ${stationed.length ? `<h3 class="family-subsection-label">In stazionamento</h3>${stationedHtml}` : ''}
+        ${transit.length ? `<h3 class="family-subsection-label">In transito</h3>${transitHtml}` : ''}`;
+
+    host.querySelectorAll('.fleet-row[data-body]').forEach(row => {
+        row.addEventListener('click', () => {
+            const id = row.dataset.body;
+            closeFamilyOverlay();
+            focusOnBody(id);
+            showInfo(byId[id]);
+        });
+    });
+    host.querySelectorAll('.fleet-row[data-transit-idx]').forEach(row => {
+        row.addEventListener('click', () => {
+            const path = transit[Number(row.dataset.transitIdx)];
+            closeFamilyOverlay();
+            focusOnPath(path);
+            const pts = path.ids.map(id => positions[id]).filter(Boolean);
+            let totalLen = 0;
+            for (let j = 0; j < pts.length - 1; j++) totalLen += Math.hypot(pts[j + 1].x - pts[j].x, pts[j + 1].y - pts[j].y);
+            showPathInfo(path, totalLen);
+        });
+    });
+}
+
+// "Trattati": every treaty this family currently holds, with who -- plain
+// clickable list (treatiesByFamily is otherwise only consumed internally
+// for opinion/modifier computation, never rendered on its own).
+function renderFamilyTreaties(name) {
+    const host = document.getElementById('family-treaties-list');
+    const treaties = treatiesByFamily[name] || [];
+    if (treaties.length === 0) {
+        host.innerHTML = '<div class="opinion-empty">Nessun trattato in essere.</div>';
+        return;
+    }
+    host.innerHTML = treaties.map((t, i) => {
+        const { base } = baseTreatyType(t.type);
+        const info = treatyTypesByName[base];
+        return `
+            <div class="treaty-row" data-idx="${i}">
+                <span class="treaty-type">${escHtml(t.type)}</span>
+                <span class="treaty-partner">con ${escHtml(t.to)}</span>
+                ${info ? `<div class="trait-tooltip">${escHtml(info.description)}</div>` : ''}
+            </div>`;
+    }).join('');
+    host.querySelectorAll('.treaty-row').forEach((row, i) => {
+        row.addEventListener('click', () => showFamilyOverlay(treaties[i].to));
+    });
+}
+
 // Family overlay "Asset" section: auto-computed craftable assets this family
 // currently qualifies for (all_info/assets.json's craftAssets, same
 // qualification logic as the global Craftable tab) plus any one-of-a-kind
@@ -1010,7 +1178,7 @@ function renderAssets(name) {
         : craftable.map(a => {
             const reqPills = (a.requirementIds || []).map(rid => {
                 const res = resourcesById[rid];
-                return `<span class="craft-req-pill" title="${escHtml((res && res.effect) || '')}">${escHtml((res && res.name) || rid)}</span>`;
+                return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
             }).join('');
             return `
                 <div class="family-asset-item">
@@ -1023,7 +1191,24 @@ function renderAssets(name) {
                 </div>`;
         }).join('');
 
-    const unique = familyAssetsByOwner[name] || [];
+    // Treaty-granted assets (unique-category treaties, e.g. Supporto Arcano
+    // -> "Maghi di Ion") have no fixed owner in assets.json -- multiple
+    // families can hold the same treaty type at once, so whoever currently
+    // has the treaty gets the asset, resolved here rather than pinned to a
+    // static owner.
+    const treatyGranted = (treatiesByFamily[name] || [])
+        .map(t => {
+            const { base } = baseTreatyType(t.type);
+            const info = treatyTypesByName[base];
+            return info && info.grantsAsset ? { ...info.grantsAsset, _via: t.type, _with: t.to } : null;
+        })
+        .filter(Boolean);
+
+    const unique = [...(familyAssetsByOwner[name] || []), ...treatyGranted];
+    if (!assetsKnown(name)) {
+        uniqueHost.innerHTML = '<div class="opinion-empty locked">🔒 I giocatori non hanno ancora scoperto gli asset unici di questa famiglia.</div>';
+        return;
+    }
     uniqueHost.innerHTML = unique.length === 0
         ? '<div class="opinion-empty">Nessun asset unico registrato.</div>'
         : unique.map(a => `
@@ -1032,6 +1217,7 @@ function renderAssets(name) {
                     <span class="family-asset-name">${escHtml(a.name || '—')}</span>
                     <span class="family-asset-type">${escHtml(a.type || '')}</span>
                 </div>
+                ${a._via ? `<div class="family-asset-via">Da ${escHtml(a._via)} con ${escHtml(a._with)}</div>` : ''}
                 <div class="family-asset-desc">${escHtml(a.description || '')}</div>
                 ${a.effect ? `<div class="family-asset-effect">✦ ${escHtml(a.effect)}</div>` : ''}
             </div>`).join('');
@@ -1057,7 +1243,7 @@ function renderLocalizedAssets(bodyId) {
         </div>`).join('');
 }
 
-function renderLeaders(name, infil) {
+function renderLeaders(name) {
     const row = document.getElementById('family-leaders-row');
     row.innerHTML = '';
     const leaders = leadersByFamily[name] || [];
@@ -1067,16 +1253,6 @@ function renderLeaders(name, infil) {
             const card = document.createElement('div');
             card.className = 'leader-card empty';
             card.textContent = 'Posizione vacante';
-            row.appendChild(card);
-            continue;
-        }
-        if (infil !== undefined && !leaderIdentityUnlocked(infil, i)) {
-            const card = document.createElement('div');
-            card.className = 'leader-card empty locked';
-            card.appendChild(lockedBadge(`Serve infiltrazione ${LEADER_IDENTITY_LEVEL[i]}+ per identificare questo leader`));
-            const msg = document.createElement('div');
-            msg.textContent = 'Sconosciuto';
-            card.appendChild(msg);
             row.appendChild(card);
             continue;
         }
@@ -1101,12 +1277,11 @@ function renderLeaders(name, infil) {
         (leader.traits || []).forEach((traitId, traitIdx) => {
             const trait = traitsById[traitId];
             if (!trait) return;
-            const unlockLevel = leaderTraitUnlockLevel(i, traitIdx);
-            if (infil !== undefined && infil < unlockLevel) {
+            if (!leaderTraitKnown(name, leader.role, traitIdx)) {
                 const chip = document.createElement('div');
                 chip.className = 'trait-chip locked';
                 chip.textContent = '🔒 ???';
-                chip.title = `Serve infiltrazione ${unlockLevel}+ per scoprire questo tratto`;
+                chip.title = 'I giocatori non hanno ancora scoperto questo tratto';
                 traitsEl.appendChild(chip);
                 return;
             }
@@ -1116,13 +1291,127 @@ function renderLeaders(name, infil) {
             const tip = document.createElement('div');
             tip.className = 'trait-tooltip';
             tip.innerHTML = `<div>${escHtml(trait.description || '')}</div>` +
-                (trait.modifiers || []).map(m => `<div class="modline">${m.amount > 0 ? '+' : ''}${m.amount} ${escHtml(m.stat || m.action)} — ${escHtml(m.situation || 'Always')}</div>`).join('');
+                (trait.modifiers || []).map(formatModifierLine).join('');
             chip.appendChild(tip);
             traitsEl.appendChild(chip);
         });
         card.appendChild(traitsEl);
         row.appendChild(card);
     }
+}
+
+// A modifier binds to exactly one of stat/action/armies. `armies`-kind
+// modifiers (e.g. bonus Deployment Points) must display like any other but
+// must NEVER feed a dice roll -- parser.js/script.js already only ever read
+// m.stat/m.action when building the roll checklist, so an armies-only
+// modifier is naturally excluded there; this is purely the display side.
+function modifierLabel(m) { return m.stat || m.action || m.armies || ''; }
+function formatModifierLine(m) {
+    const isArmies = !!m.armies;
+    const sign = (typeof m.amount === 'number' && m.amount > 0) ? '+' : '';
+    const marker = isArmies ? '⚔ ' : '';
+    return `<div class="modline${isArmies ? ' armies-mod' : ''}">${marker}${sign}${escHtml(m.amount)} ${escHtml(modifierLabel(m))} — ${escHtml(m.situation || 'Always')}</div>`;
+}
+
+// Mirrors script.js's `actions` object (the canonical 9-action list) so
+// this page can group modifiers by which roll they'd actually apply to,
+// without loading script.js itself (this page has no dice-roll UI of its
+// own). Keep in sync if the action list or its rolled stats ever change.
+const ACTION_ROLLS = {
+    "Attacco": ["might", "treasure"],
+    "Difesa": ["might", "territory"],
+    "Spionaggio": ["influence", "treasure"],
+    "Controspionaggio": ["influence", "territory"],
+    "Controllo dell'Ordine": ["might", "sovereignty"],
+    "Guerra Non Convenzionale (richiede un leader)": ["influence", "might"],
+    "Raccolta Informazioni": ["influence", "sovereignty"],
+    "Aumento Stat": ["might", "sovereignty", "influence", "territory", "treasure"],
+    "Diplomazia": ["influence", "treasure"],
+};
+
+// Buckets every modifier entry by which action(s) it could apply to: an
+// action-bound modifier goes only under its exact action; a stat-bound one
+// goes under every action that rolls that stat (or every action if
+// stat === "all") -- so an always-on modifier is intentionally repeated
+// under each action it's relevant to, matching how a GM would actually
+// look this up ("what applies if I declare Attacco?"). armies-kind
+// modifiers never apply to any roll, so they're collected separately.
+function groupModifiersByAction(mods) {
+    const groups = {};
+    Object.keys(ACTION_ROLLS).forEach(action => { groups[action] = []; });
+    const nonRoll = [];
+    mods.forEach(entry => {
+        const m = entry.modifier;
+        if (m.armies) { nonRoll.push(entry); return; }
+        if (m.action) {
+            // A handful of trait actions are war-reason-qualified variants
+            // of a base action ("Attacco (Conquista)", "Attacco
+            // (Umiliazione)") rather than one of the 9 standardized names
+            // verbatim -- strip the "(...)" qualifier to find the base
+            // action to bucket under; the qualifier itself stays visible in
+            // the rendered line via modifierLabel(m).
+            const baseAction = m.action.replace(/\s*\(.*\)\s*$/, '');
+            const target = groups[m.action] ? m.action : (groups[baseAction] ? baseAction : null);
+            if (target) groups[target].push(entry);
+            else nonRoll.push(entry);
+            return;
+        }
+        const stat = (m.stat || '').toLowerCase();
+        Object.entries(ACTION_ROLLS).forEach(([action, rolls]) => {
+            if (stat === 'all' || rolls.includes(stat)) groups[action].push(entry);
+        });
+    });
+    return { groups, nonRoll };
+}
+
+// "Bonus Attivi": every currently-active modifier from every source
+// (leader traits, treaties, assets), grouped by which of the 9 standardized
+// actions it would apply to -- so "what bonuses do I have if I declare
+// Attacco?" is a single glance, not a hunt through a by-source list. Each
+// line keeps its source (Leader/Trattato/Asset) as a small tag. Stat bars
+// above stay showing only raw companies.json values -- see
+// familyActiveModifiers().
+// "Bonus Attivi" is GM-facing table info (the actual dice-roll modifiers a
+// family has), not something players should see regardless of how much
+// they've discovered about a family -- so the whole section only renders
+// while the maintainer's GM-mode toggle (Ctrl+Shift+G) is on.
+function renderActiveBonuses(name) {
+    const section = document.getElementById('family-bonuses-section');
+    if (section) section.style.display = devRevealAll ? '' : 'none';
+    if (!devRevealAll) return;
+    const host = document.getElementById('family-active-bonuses');
+    if (!host) return;
+    const mods = familyActiveModifiers(name);
+    if (mods.length === 0) {
+        host.innerHTML = '<div class="opinion-empty">Nessun bonus attivo registrato.</div>';
+        return;
+    }
+    const { groups, nonRoll } = groupModifiersByAction(mods);
+    const renderRows = list => list.map(({ source, modifier }) => `
+        <div class="active-bonus-row${modifier.armies ? ' armies-mod' : ''}">
+            <span class="active-bonus-source">${escHtml(source)}</span>
+            <span class="active-bonus-line">${formatModifierLine(modifier)}</span>
+        </div>`).join('');
+
+    const sections = Object.entries(groups)
+        .filter(([, list]) => list.length > 0)
+        .map(([action, list]) => `
+            <div class="active-bonus-group">
+                <h3 class="family-subsection-label">${escHtml(action)}</h3>
+                ${renderRows(list)}
+            </div>`);
+
+    if (nonRoll.length > 0) {
+        sections.push(`
+            <div class="active-bonus-group">
+                <h3 class="family-subsection-label">Altri bonus (non legati a un tiro)</h3>
+                ${renderRows(nonRoll)}
+            </div>`);
+    }
+
+    host.innerHTML = sections.length
+        ? sections.join('')
+        : '<div class="opinion-empty">Nessun bonus attivo registrato.</div>';
 }
 
 // ── DIPLOMATIC BASELINE (all_info/diplomacy.json) ────────────────────────────
@@ -1197,127 +1486,129 @@ function fmtBaselineNum(v) {
     return (n > 0 ? '+' : '') + (Number.isInteger(n) ? n : n.toFixed(1));
 }
 
-const OPINION_COLLAPSED_COUNT = 5;
+// Curated total for one direction = live treaty-derived opinion
+// (treatyOpinionsByFamily, mirrored both ways per treaty edge at load time)
+// + opinions.json's hand-authored story-beat modifiers for this pair (now
+// the only thing that file holds) + the diplomatic baseline.
+function computeOpinionBreakdown(from, to) {
+    const mods = [...((treatyOpinionsByFamily[from] || {})[to] || []), ...((opinionsByFamily[from] || {})[to] || [])];
+    const curatedTotal = mods.reduce((sum, m) => sum + (m.value || 0), 0);
+    const baseline = computeDiplomaticBaseline(from, to);
+    const total = curatedTotal + (baseline ? baseline.total : 0);
+    return { mods, baseline, total };
+}
+
+// Renders the baseline (Governo/Popolazione/Religione) + curated modifier
+// pills for one direction as an HTML string -- shared by every column of
+// the opinions table's expanded row detail.
+function opinionBreakdownHtml(from, to, { mods, baseline }) {
+    let html = '';
+    const a = companiesByName[from], b = companiesByName[to];
+    if (baseline && a && b) {
+        const topA = topComposition(planetRaceComposition[a.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
+        const topB = topComposition(planetRaceComposition[b.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
+        const raceContribs = topContributingPairs(raceCompatibility, planetRaceComposition[a.planet], planetRaceComposition[b.planet])
+            .map(c => `${escHtml(c.a)} (${c.pctA}%) × ${escHtml(c.b)} (${c.pctB}%) × ${c.matrixVal} = ${fmtBaselineNum(c.contribution)}`);
+        const topRelA = topComposition(planetReligionComposition[a.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
+        const topRelB = topComposition(planetReligionComposition[b.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
+        const religionContribs = topContributingPairs(religionCompatibility, planetReligionComposition[a.planet], planetReligionComposition[b.planet])
+            .map(c => `${escHtml(c.a)} (${c.pctA}%) × ${escHtml(c.b)} (${c.pctB}%) × ${c.matrixVal} = ${fmtBaselineNum(c.contribution)}`);
+        html += `<span class="opinion-mod baseline ${baseline.government >= 0 ? 'positive' : 'negative'}">Governo ${fmtBaselineNum(baseline.government)}
+            <div class="trait-tooltip"><div>${escHtml(a.government)} (${escHtml(from)}) ↔ ${escHtml(b.government)} (${escHtml(to)})</div><div class="modline">Totale = ${fmtBaselineNum(baseline.government)}</div></div></span>`;
+        html += `<span class="opinion-mod baseline ${baseline.race >= 0 ? 'positive' : 'negative'}">Popolazione ${fmtBaselineNum(baseline.race)}
+            <div class="trait-tooltip"><div>${escHtml(from)}: ${topA || '—'}</div><div>${escHtml(to)}: ${topB || '—'}</div>${(raceContribs.length ? raceContribs : ['(nessun contributo significativo)']).map(l => `<div class="modline">${l}</div>`).join('')}<div class="modline">Totale = ${fmtBaselineNum(baseline.race)}</div></div></span>`;
+        html += `<span class="opinion-mod baseline ${baseline.religion >= 0 ? 'positive' : 'negative'}">Religione ${fmtBaselineNum(baseline.religion)}
+            <div class="trait-tooltip"><div>${escHtml(from)}: ${topRelA || '—'}</div><div>${escHtml(to)}: ${topRelB || '—'}</div>${(religionContribs.length ? religionContribs : ['(nessun contributo significativo)']).map(l => `<div class="modline">${l}</div>`).join('')}<div class="modline">Totale = ${fmtBaselineNum(baseline.religion)}</div></div></span>`;
+    }
+    mods.forEach(m => {
+        const typeInfo = treatyTypesByName[m.label] || treatyTypesByName[(m.label || '').replace(/ (su|da)$/, '')];
+        html += `<span class="opinion-mod ${m.value >= 0 ? 'positive' : 'negative'}">${escHtml(m.label)} ${m.value > 0 ? '+' : ''}${m.value}${typeInfo ? `<div class="trait-tooltip">${escHtml(typeInfo.description)}</div>` : ''}</span>`;
+    });
+    return html || '<div class="opinion-empty">Nessun modificatore.</div>';
+}
+
+const fmtOpinionTotal = t => (t > 0 ? '+' : '') + (Number.isInteger(t) ? t : t.toFixed(1));
+const opinionTotalClass = t => t > 0 ? 'positive' : t < 0 ? 'negative' : 'neutral';
+
+// Opinions table: one row per other family with three columns -- Noi→Loro,
+// Loro→Noi, and Loro→La Mano (a constant reference column showing how much
+// every other family likes/dislikes the player family, regardless of whose
+// overlay you're viewing -- omitted when already viewing La Mano's own
+// overlay, since it would just repeat column 2). Row click toggles a detail
+// panel below it with the full breakdown for all three directions;
+// clicking the family name itself jumps straight to their overlay instead.
 function renderOpinions(name) {
     const list = document.getElementById('family-opinions-list');
     list.innerHTML = '';
 
-    const opinionsOfOthers = opinionsByFamily[name] || {};
     const otherNames = Object.keys(companiesByName).filter(n => n !== name);
+    const showHandColumn = name !== PLAYER_FAMILY;
 
-    const rows = otherNames.map(other => {
-        const mods = opinionsOfOthers[other] || [];
-        const curatedTotal = mods.reduce((sum, m) => sum + (m.value || 0), 0);
-        const baseline = computeDiplomaticBaseline(name, other);
-        const total = curatedTotal + (baseline ? baseline.total : 0);
-        return { other, mods, baseline, total };
-    });
-
-    rows.sort((a, b) => Math.abs(b.total) - Math.abs(a.total));
+    const rows = otherNames.map(other => ({
+        other,
+        ours: computeOpinionBreakdown(name, other),
+        theirs: computeOpinionBreakdown(other, name),
+        theirsOfHand: showHandColumn ? computeOpinionBreakdown(other, PLAYER_FAMILY) : null,
+    }));
+    rows.sort((a, b) => Math.abs(b.ours.total) - Math.abs(a.ours.total));
 
     if (rows.length === 0) {
         list.innerHTML = '<div class="opinion-empty">Nessuna relazione registrata.</div>';
         return;
     }
 
-    const buildRow = ({ other, mods, baseline, total }) => {
+    const table = document.createElement('div');
+    table.className = 'opinion-table';
+    const header = document.createElement('div');
+    header.className = 'opinion-table-row opinion-table-header';
+    header.innerHTML = `
+        <span class="opinion-family-name">Famiglia</span>
+        <span class="opinion-total-header">Noi → Loro</span>
+        <span class="opinion-total-header">Loro → Noi</span>
+        ${showHandColumn ? `<span class="opinion-total-header">Loro → ${escHtml(PLAYER_FAMILY)}</span>` : ''}`;
+    table.appendChild(header);
+
+    rows.forEach(({ other, ours, theirs, theirsOfHand }) => {
         const row = document.createElement('div');
-        row.className = 'opinion-row';
-        const dot = document.createElement('span');
-        dot.className = 'opinion-dot';
-        dot.style.background = familyColor(other);
-        row.appendChild(dot);
-        const nameEl = document.createElement('span');
-        nameEl.className = 'opinion-family-name';
-        nameEl.textContent = other;
-        row.appendChild(nameEl);
-        const totalEl = document.createElement('span');
-        totalEl.className = `opinion-total ${total > 0 ? 'positive' : total < 0 ? 'negative' : 'neutral'}`;
-        totalEl.textContent = (total > 0 ? '+' : '') + (Number.isInteger(total) ? total : total.toFixed(1));
-        row.appendChild(totalEl);
-        const modsEl = document.createElement('div');
-        modsEl.className = 'opinion-modifiers';
+        row.className = 'opinion-table-row';
+        row.innerHTML = `
+            <span class="opinion-family-name"><span class="opinion-dot" style="background:${familyColor(other)}"></span>${escHtml(other)}</span>
+            <span class="opinion-total ${opinionTotalClass(ours.total)}">${fmtOpinionTotal(ours.total)}</span>
+            <span class="opinion-total ${opinionTotalClass(theirs.total)}">${fmtOpinionTotal(theirs.total)}</span>
+            ${showHandColumn ? `<span class="opinion-total ${opinionTotalClass(theirsOfHand.total)}">${fmtOpinionTotal(theirsOfHand.total)}</span>` : ''}`;
 
-        if (baseline) {
-            const a = companiesByName[name], b = companiesByName[other];
+        const detail = document.createElement('div');
+        detail.className = 'opinion-detail';
+        detail.innerHTML = `
+            <div class="opinion-detail-block">
+                <h4>Noi → Loro</h4>
+                <div class="opinion-modifiers">${opinionBreakdownHtml(name, other, ours)}</div>
+            </div>
+            <div class="opinion-detail-block">
+                <h4>Loro → Noi</h4>
+                <div class="opinion-modifiers">${opinionBreakdownHtml(other, name, theirs)}</div>
+            </div>
+            ${showHandColumn ? `
+            <div class="opinion-detail-block">
+                <h4>Loro → ${escHtml(PLAYER_FAMILY)}</h4>
+                <div class="opinion-modifiers">${opinionBreakdownHtml(other, PLAYER_FAMILY, theirsOfHand)}</div>
+            </div>` : ''}`;
 
-            const govPill = document.createElement('span');
-            govPill.className = `opinion-mod baseline ${baseline.government >= 0 ? 'positive' : 'negative'}`;
-            govPill.textContent = `Governo ${fmtBaselineNum(baseline.government)}`;
-            const govTip = document.createElement('div');
-            govTip.className = 'trait-tooltip';
-            govTip.innerHTML = `<div>${escHtml(a.government)} (${escHtml(name)}) ↔ ${escHtml(b.government)} (${escHtml(other)})</div><div class="modline">Totale = ${fmtBaselineNum(baseline.government)}</div>`;
-            govPill.appendChild(govTip);
-            modsEl.appendChild(govPill);
-
-            const popPill = document.createElement('span');
-            popPill.className = `opinion-mod baseline ${baseline.race >= 0 ? 'positive' : 'negative'}`;
-            popPill.textContent = `Popolazione ${fmtBaselineNum(baseline.race)}`;
-            const topA = topComposition(planetRaceComposition[a.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
-            const topB = topComposition(planetRaceComposition[b.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
-            const raceContribs = topContributingPairs(raceCompatibility, planetRaceComposition[a.planet], planetRaceComposition[b.planet])
-                .map(c => `${escHtml(c.a)} (${c.pctA}%) × ${escHtml(c.b)} (${c.pctB}%) × ${c.matrixVal} = ${fmtBaselineNum(c.contribution)}`);
-            const popTip = document.createElement('div');
-            popTip.className = 'trait-tooltip';
-            popTip.innerHTML = `<div>${escHtml(name)}: ${topA || '—'}</div><div>${escHtml(other)}: ${topB || '—'}</div>` +
-                (raceContribs.length ? raceContribs : ['(nessun contributo significativo)']).map(l => `<div class="modline">${l}</div>`).join('') +
-                `<div class="modline">Totale = ${fmtBaselineNum(baseline.race)}</div>`;
-            popPill.appendChild(popTip);
-            modsEl.appendChild(popPill);
-
-            const relPill = document.createElement('span');
-            relPill.className = `opinion-mod baseline ${baseline.religion >= 0 ? 'positive' : 'negative'}`;
-            relPill.textContent = `Religione ${fmtBaselineNum(baseline.religion)}`;
-            const topRelA = topComposition(planetReligionComposition[a.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
-            const topRelB = topComposition(planetReligionComposition[b.planet]).map(([n, p]) => `${p}% ${escHtml(n)}`).join(', ');
-            const religionContribs = topContributingPairs(religionCompatibility, planetReligionComposition[a.planet], planetReligionComposition[b.planet])
-                .map(c => `${escHtml(c.a)} (${c.pctA}%) × ${escHtml(c.b)} (${c.pctB}%) × ${c.matrixVal} = ${fmtBaselineNum(c.contribution)}`);
-            const relTip = document.createElement('div');
-            relTip.className = 'trait-tooltip';
-            relTip.innerHTML = `<div>${escHtml(name)}: ${topRelA || '—'}</div><div>${escHtml(other)}: ${topRelB || '—'}</div>` +
-                (religionContribs.length ? religionContribs : ['(nessun contributo significativo)']).map(l => `<div class="modline">${l}</div>`).join('') +
-                `<div class="modline">Totale = ${fmtBaselineNum(baseline.religion)}</div>`;
-            relPill.appendChild(relTip);
-            modsEl.appendChild(relPill);
-        }
-
-        mods.forEach(m => {
-            const pill = document.createElement('span');
-            pill.className = `opinion-mod ${m.value >= 0 ? 'positive' : 'negative'}`;
-            pill.textContent = `${m.label} ${m.value > 0 ? '+' : ''}${m.value}`;
-            const typeInfo = treatyTypesByName[m.label] || treatyTypesByName[(m.label || '').replace(/ (su|da)$/, '')];
-            if (typeInfo) {
-                const tip = document.createElement('div');
-                tip.className = 'trait-tooltip';
-                tip.textContent = typeInfo.description;
-                pill.appendChild(tip);
-            }
-            modsEl.appendChild(pill);
+        row.addEventListener('click', () => {
+            const isOpen = detail.classList.contains('open');
+            table.querySelectorAll('.opinion-detail.open').forEach(d => d.classList.remove('open'));
+            if (!isOpen) detail.classList.add('open');
         });
-        row.appendChild(modsEl);
-        row.addEventListener('click', () => showFamilyOverlay(other));
-        return row;
-    };
-
-    rows.slice(0, OPINION_COLLAPSED_COUNT).forEach(r => list.appendChild(buildRow(r)));
-
-    if (rows.length > OPINION_COLLAPSED_COUNT) {
-        const rest = rows.slice(OPINION_COLLAPSED_COUNT);
-        const restHost = document.createElement('div');
-        restHost.className = 'opinion-rest-host';
-        rest.forEach(r => restHost.appendChild(buildRow(r)));
-        list.appendChild(restHost);
-
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'opinion-toggle-all';
-        toggleBtn.textContent = `Mostra tutte (${rows.length}) ▾`;
-        toggleBtn.addEventListener('click', () => {
-            const expanded = restHost.classList.contains('open');
-            restHost.classList.toggle('open', !expanded);
-            toggleBtn.textContent = expanded ? `Mostra tutte (${rows.length}) ▾` : 'Mostra meno ▴';
+        row.querySelector('.opinion-family-name').addEventListener('click', e => {
+            e.stopPropagation();
+            showFamilyOverlay(other);
         });
-        list.appendChild(toggleBtn);
-    }
+
+        table.appendChild(row);
+        table.appendChild(detail);
+    });
+
+    list.appendChild(table);
 }
 
 function closeFamilyOverlay() {
@@ -1330,10 +1621,11 @@ window.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeFamilyOverlay();
 });
 
-// Maintainer-only "reveal all" toggle: bypasses infiltration client-side for
-// prep/reference. Never persisted — resets on reload, doesn't touch the JSON.
-// No visible button (players could stumble onto it) — Ctrl+Shift+G instead,
-// with a brief toast so a GM still gets confirmation it toggled.
+// Maintainer-only "reveal all" toggle: bypasses reveals.json gating (and
+// shows the GM-only Bonus Attivi section) client-side for prep/reference.
+// Never persisted — resets on reload, doesn't touch the JSON. No visible
+// button (players could stumble onto it) — Ctrl+Shift+G instead, with a
+// brief toast so a GM still gets confirmation it toggled.
 let gmToastTimeout = null;
 function showGmToast(text) {
     const toast = document.getElementById('gm-toast');
@@ -1410,6 +1702,44 @@ function familyFleetCount(name) {
     allWarpaths.forEach(w => { (w.fleets || []).forEach(f => { if (f === name) count++; }); });
     return count;
 }
+
+// Every resource id a family controls, grouped by category and deduped,
+// each noting which owned body/bodies it comes from -- for the overlay's
+// "Risorse Controllate" section. Unlike familyResourceIds() (a flat Set
+// used for craft-asset qualification), this keeps the body attribution.
+function familyResourceSummary(name) {
+    const byResource = {}; // resourceId -> Set of body names
+    Object.values(byId).forEach(b => {
+        if (!b || typeof b !== 'object' || Array.isArray(b) || !b.id) return;
+        if (b.owner !== name) return;
+        (b.resourceIds || []).forEach(rid => {
+            (byResource[rid] = byResource[rid] || new Set()).add(b.name);
+        });
+    });
+    const byCategory = {};
+    Object.entries(byResource).forEach(([rid, bodies]) => {
+        const res = resourcesById[rid];
+        if (!res) return;
+        (byCategory[res.category] = byCategory[res.category] || []).push({ res, bodies: [...bodies] });
+    });
+    return byCategory;
+}
+
+// Where a family's fleets currently are: stationed at a body (byId's
+// .fleets already includes the game-balance auto-fill-at-home default, so
+// this matches what's actually drawn on the map) plus in transit on a
+// warpath (byId.__paths, which already has _totalLenAtDeparture cached by
+// updateScene() for the remaining-time math, same as showPathInfo()).
+function familyFleetLocations(name) {
+    const stationed = [];
+    Object.values(byId).forEach(b => {
+        if (!b || typeof b !== 'object' || Array.isArray(b) || !b.id || b.id === 'sun') return;
+        const count = (b.fleets || []).filter(f => f === name).length;
+        if (count > 0) stationed.push({ body: b, count });
+    });
+    const transit = (byId.__paths || []).filter(p => p.type === 'warpath' && (p.fleets || []).includes(name));
+    return { stationed, transit };
+}
 function qualifiesFor(asset, resourceIdSet) {
     return (asset.requirementIds || []).every(rid => resourceIdSet.has(rid));
 }
@@ -1419,6 +1749,101 @@ function qualifiesFor(asset, resourceIdSet) {
 function familyCraftableAssets(name) {
     const resourceIds = familyResourceIds(name);
     return craftData.filter(a => qualifiesFor(a, resourceIds));
+}
+
+// ── TREATY-DERIVED BONUSES (all_info/treaties.json + treaty_types.json) ──────
+// A treaty row's `type` string carries its own directional suffix (" su" =
+// lord, " da" = vassal/recipient) for the two feudal pacts; every other type
+// is symmetric. Stripping the suffix looks up the shared treaty_types.json
+// entry; the suffix (if any) picks which side's modifiers apply.
+function baseTreatyType(type) {
+    for (const suf of [' su', ' da']) {
+        if (type.endsWith(suf)) return { base: type.slice(0, -suf.length), side: suf.trim() };
+    }
+    return { base: type, side: null };
+}
+
+// Opinion contribution from treaties is computed once here (not per-render):
+// for every row in treaties.json, the SAME opinionValue is added to both
+// directions, regardless of whether the mechanical effect is one-sided. If
+// both sides independently hold their own row for the same treaty (e.g. a
+// mutual rivalry declaration), each row contributes its own mirrored pair,
+// so the totals simply stack -- no special-casing needed.
+function computeTreatyOpinions(treaties) {
+    const result = {};
+    const add = (from, to, label, value) => {
+        (result[from] = result[from] || {});
+        (result[from][to] = result[from][to] || []).push({ label, value });
+    };
+    treaties.forEach(t => {
+        const { base } = baseTreatyType(t.type);
+        const info = treatyTypesByName[base];
+        const value = info ? (info.opinionValue || 0) : 0;
+        add(t.from, t.to, t.type, value);
+        add(t.to, t.from, t.type, value);
+    });
+    return result;
+}
+
+// Resolves which modifiers apply to the family on the `from` side of a
+// treaties.json row: modifiersAsLord/modifiersAsVassal for the two feudal
+// pacts (picked by the row's own su/da suffix), or the shared `modifiers`
+// array for every symmetric type. Missing arrays default to [].
+function resolvedTreatyModifiers(treatyRow) {
+    const { base, side } = baseTreatyType(treatyRow.type);
+    const info = treatyTypesByName[base];
+    if (!info) return [];
+    if (side === 'su') return info.modifiersAsLord || [];
+    if (side === 'da') return info.modifiersAsVassal || [];
+    return info.modifiers || [];
+}
+
+// Every currently-active flat/situational modifier a family has, from every
+// source, flattened into one list for the "Bonus Attivi" section -- leader
+// traits, treaty effects (resolved per-side), and asset effects (owned
+// familyAssets, localizedAssets on owned bodies, qualifying craftAssets, and
+// any grantsAsset from a currently-held unique treaty). Each entry carries
+// its own `source` label so the UI can attribute it.
+function familyActiveModifiers(name) {
+    const out = [];
+
+    (leadersByFamily[name] || []).forEach(leader => {
+        (leader.traits || []).forEach(traitId => {
+            const trait = traitsById[traitId];
+            if (!trait) return;
+            (trait.modifiers || []).forEach(m => {
+                out.push({ source: `Leader: ${leader.name} — ${trait.label}`, modifier: m });
+            });
+        });
+    });
+
+    (treatiesByFamily[name] || []).forEach(t => {
+        resolvedTreatyModifiers(t).forEach(m => {
+            out.push({ source: `Trattato: ${t.type} con ${t.to}`, modifier: m });
+        });
+        const { base } = baseTreatyType(t.type);
+        const info = treatyTypesByName[base];
+        if (info && info.grantsAsset && info.grantsAsset.effect) {
+            out.push({
+                source: `Trattato: ${t.type} con ${t.to}`,
+                modifier: { stat: info.grantsAsset.name, amount: 0, situation: info.grantsAsset.effect, always: true, isAssetEffect: true },
+            });
+        }
+    });
+
+    (familyAssetsByOwner[name] || []).forEach(a => {
+        (a.modifiers || []).forEach(m => out.push({ source: `Asset: ${a.name}`, modifier: m }));
+    });
+    familyTerritories(name).forEach(b => {
+        (localizedAssetsByBody[b.id] || []).forEach(a => {
+            (a.modifiers || []).forEach(m => out.push({ source: `Asset: ${a.name} (${b.name})`, modifier: m }));
+        });
+    });
+    familyCraftableAssets(name).forEach(a => {
+        (a.modifiers || []).forEach(m => out.push({ source: `Asset: ${a.name}`, modifier: m }));
+    });
+
+    return out;
 }
 
 function buildAtlasPanel(filter = '') {
@@ -1445,7 +1870,9 @@ function buildAtlasPanel(filter = '') {
         rows.forEach(({ res, holders }) => {
             const resBlock = document.createElement('div');
             resBlock.className = 'atlas-resource';
-            resBlock.innerHTML = `<div class="atlas-resource-name" title="${escHtml(res.effect || '')}">${escHtml(res.name)}</div>`;
+            const usedBy = craftData.filter(a => (a.requirementIds || []).includes(res.id)).map(a => a.name);
+            const tipText = usedBy.length ? `Ingrediente per: ${usedBy.join(', ')}` : '';
+            resBlock.innerHTML = `<div class="atlas-resource-name" title="${escHtml(tipText)}">${escHtml(res.name)}</div>`;
             const holdersEl = document.createElement('div');
             holdersEl.className = 'atlas-holders';
             if (holders.length === 0) {
@@ -1492,7 +1919,7 @@ function buildCraftPanel(filter = '') {
         item.className = 'craft-item';
         const reqPills = (r.requirementIds || []).map(rid => {
             const res = resourcesById[rid];
-            return `<span class="craft-req-pill" title="${escHtml((res && res.effect) || '')}">${escHtml((res && res.name) || rid)}</span>`;
+            return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
         }).join('');
 
         const qualifiers = Object.keys(companiesByName).filter(name => qualifiesFor(r, familyResources[name]));
@@ -1629,7 +2056,7 @@ window.addEventListener('keydown', e => {
 // on hover, switch the tooltip to position:fixed and place it with
 // viewport-clamped coordinates, so it always escapes ancestor clipping and
 // never runs off the edge of the screen.
-const TOOLTIP_HOST_SELECTOR = '.trait-chip, #family-government, .opinion-mod';
+const TOOLTIP_HOST_SELECTOR = '.trait-chip, #family-government, .opinion-mod, .treaty-row';
 document.addEventListener('mouseover', e => {
     const host = e.target.closest(TOOLTIP_HOST_SELECTOR);
     if (!host) return;
@@ -1775,7 +2202,7 @@ async function init() {
     // rarely change), fleets.json (where every family's military currently
     // is -- both stationed and in-transit -- changes constantly, kept in its
     // own small file so that's the only one touched most weeks).
-    const [bodiesFile, poiFile, fleetsFile, companies, governi, timeline, traits, leaders, opinions, treatyTypes, assetsFile, resourcesFile, diplomacy] = await Promise.all([
+    const [bodiesFile, poiFile, fleetsFile, companies, governi, timeline, traits, leaders, opinions, treatyTypes, treatiesFile, assetsFile, resourcesFile, diplomacy, reveals] = await Promise.all([
         loadJson('all_info/bodies.json', { bodies: [] }),
         loadJson('all_info/points_of_interest.json', { pointsOfInterest: [], tradePaths: [] }),
         loadJson('all_info/fleets.json', { stationed: [], warpaths: [] }),
@@ -1786,9 +2213,11 @@ async function init() {
         loadJson('all_info/leaders.json', { leaders: {} }),
         loadJson('all_info/opinions.json', { opinions: {} }),
         loadJson('all_info/treaty_types.json', { treatyTypes: {} }),
+        loadJson('all_info/treaties.json', { treaties: [] }),
         loadJson('all_info/assets.json', { craftAssets: [], familyAssets: [], localizedAssets: [] }),
         loadJson('all_info/resources.json', { resources: [] }),
         loadJson('all_info/diplomacy.json', { governmentCompatibility: {}, raceCompatibility: {}, religionCompatibility: {}, planetRaceComposition: {}, planetReligionComposition: {} }),
+        loadJson('all_info/reveals.json', { families: {} }),
     ]);
 
     companiesByName = {};
@@ -1800,6 +2229,11 @@ async function init() {
     (traits.traits || []).forEach(t => { traitsById[t.id] = t; });
     opinionsByFamily = opinions.opinions || {};
     treatyTypesByName = treatyTypes.treatyTypes || {};
+    treatiesByFamily = {};
+    (treatiesFile.treaties || []).forEach(t => {
+        (treatiesByFamily[t.from] = treatiesByFamily[t.from] || []).push(t);
+    });
+    treatyOpinionsByFamily = computeTreatyOpinions(treatiesFile.treaties || []);
     craftData = assetsFile.craftAssets || [];
     resourcesById = {};
     (resourcesFile.resources || []).forEach(r => { resourcesById[r.id] = r; });
@@ -1813,6 +2247,7 @@ async function init() {
     (assetsFile.localizedAssets || []).forEach(a => {
         (localizedAssetsByBody[a.bodyId] = localizedAssetsByBody[a.bodyId] || []).push(a);
     });
+    revealsByFamily = reveals.families || {};
     governmentCompatibility = diplomacy.governmentCompatibility || {};
     raceCompatibility = diplomacy.raceCompatibility || {};
     religionCompatibility = diplomacy.religionCompatibility || {};

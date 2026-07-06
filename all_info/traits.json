@@ -11,6 +11,12 @@
           "amount": 1,
           "situation": "Quando usa una azione di attacco una seconda volta nello stesso mese.",
           "always": false
+        },
+        {
+          "armies": "Deployment Phase",
+          "amount": 0,
+          "situation": "Se il leader avversario non ha Aggressivo, allora questo leader ha sempre il primo turno.",
+          "always": false
         }
       ]
     },
@@ -42,6 +48,12 @@
           "action": "Difesa",
           "amount": 2,
           "situation": "Dichiara un obbiettivo di un attacco che ricevi. Se combacia con quello poi eseguito dall'avversario, aggiungi il bonus al tuo tiro di difesa.",
+          "always": false
+        },
+        {
+          "armies": "Deployment Phase",
+          "amount": 0,
+          "situation": "Inizia il combattimento controllando un obbiettivo aggiuntivo.",
           "always": false
         }
       ]
@@ -92,7 +104,7 @@
         {
           "action": "Attacco (Umiliazione)",
           "amount": 2,
-          "situation": "Quando attaccchi un nemico che ha usato la accack action contro di te nei tre mesi precedenti.",
+          "situation": "Quando attacchi un nemico che ha usato l'azione Attacco contro di te nei tre mesi precedenti.",
           "always": true
         }
       ]
@@ -105,7 +117,7 @@
         {
           "stat": "Influence",
           "amount": 1,
-          "situation": "Quando tiri di inlfuence e ti stai confrontando con altre nazioni.",
+          "situation": "Quando tiri di Influence e ti stai confrontando con altre nazioni.",
           "always": false
         }
       ]
@@ -139,7 +151,7 @@
           "amount": 2,
           "situation": "Su qualsiasi tiro che aumenta delle stat.",
           "always": false
-        },
+        }
       ]
     },
     {
@@ -150,7 +162,7 @@
         {
           "action": "Attacco (Conquista)",
           "amount": 1,
-          "situation": "Quando attaccchi un nemico con cui hai una rivalita.",
+          "situation": "Quando attacchi un nemico con cui hai una rivalità.",
           "always": true
         }
       ]
@@ -163,7 +175,7 @@
         {
           "action": "Diplomazia",
           "amount": 1,
-          "situation": "Qualsiasi tiro per accordi of per generare accordi ha questo bonus.",
+          "situation": "Qualsiasi tiro per generare accordi ha questo bonus.",
           "always": true
         }
       ]
@@ -193,7 +205,7 @@
       "description": "Amato dal popolo, gode di legittimità e sostegno spontaneo.",
       "modifiers": [
         {
-          "action": "Controllo dell'Ordine",
+          "stat": "Sovereignty",
           "amount": 1,
           "situation": "Sempre",
           "always": true
@@ -213,7 +225,7 @@
         },
         {
           "action": "Controspionaggio",
-          "amount": 1,
+          "amount": 2,
           "situation": "Sempre",
           "always": true
         }
@@ -225,9 +237,15 @@
       "description": "Guidato da fervore spirituale, usa la fede come arma politica e sociale.",
       "modifiers": [
         {
-          "stat": "Sovereignty",
-          "amount": 2,
-          "situation": "Quando alla guida di un gruppo che coinvolge per la maggior parte della stessa religione.",
+          "stat": "Might",
+          "amount": 1,
+          "situation": "Quando la nazione ha come maggioranza religiosa la stessa di questo leader.",
+          "always": true
+        },
+        {
+          "armies": "Fight Phase",
+          "amount": 3,
+          "situation": "Per tre volte durante un combattimento, una unita della stessa religione del leader puo aggiungere +1 alla sua Attack Ability fino alla fine del turno.",
           "always": true
         }
       ]
@@ -235,7 +253,7 @@
     {
       "id": "corrotto",
       "label": "Corrotto",
-      "description": "Sfrutta il potere per arricchimento personale, minando le istituzioni dall'interno.",
+      "description": "Sfrutta il potere per arricchimento personale, ma ha una grande riserva personale per le emergenze.",
       "modifiers": [
         {
           "stat": "Treasure",
@@ -246,7 +264,7 @@
         {
           "stat": "Treasure",
           "amount": 3,
-          "situation": "Once a month.",
+          "situation": "Una volta al mese.",
           "always": false
         }
       ]
@@ -256,8 +274,18 @@
       "label": "Impegnato",
       "description": "Dedica ogni energia al governo, instancabile nella cura del proprio regno.",
       "modifiers": [
-        { "stat": "all", "amount": 1, "situation": "Una volta al mese, su una singola azione a scelta dedicata alla gestione interna del regno.", "always": false },
-        { "stat": "Influence", "amount": -1, "situation": "Quando tiri di influence in negoziati con altre nazioni (poco tempo dedicato alla diplomazia estera).", "always": false }
+        {
+          "stat": "all",
+          "amount": 1,
+          "situation": "Una volta al mese, su una singola azione a scelta dedicata alla gestione interna del regno.",
+          "always": false
+        },
+        {
+          "stat": "Influence",
+          "amount": -1,
+          "situation": "Quando tiri di influence in negoziati con altre nazioni (poco tempo dedicato alla diplomazia estera).",
+          "always": false
+        }
       ]
     },
     {
@@ -265,8 +293,18 @@
       "label": "Connesso",
       "description": "Dispone di una rete di contatti e informatori che anticipa intrighi e opportunità.",
       "modifiers": [
-        { "action": "Spionaggio", "amount": 1, "situation": "Sempre", "always": true },
-        { "action": "Controspionaggio", "amount": 1, "situation": "Sempre", "always": true }
+        {
+          "action": "Spionaggio",
+          "amount": 2,
+          "situation": "Quando direttamente coinvolto.",
+          "always": false
+        },
+        {
+          "stat": "Sovereignty",
+          "amount": -2,
+          "situation": "Se il leader viene mai rimosso dalla famiglia.",
+          "always": false
+        }
       ]
     },
     {
@@ -274,8 +312,18 @@
       "label": "Codardo",
       "description": "Fugge dal rischio anche quando servirebbe coraggio, indebolendo le sue truppe.",
       "modifiers": [
-        { "stat": "Might", "amount": -1, "situation": "Quando attacca per primo o dichiara guerra.", "always": false },
-        { "action": "Difesa", "amount": 1, "situation": "Sempre", "always": true }
+        {
+          "stat": "Sovereignty",
+          "amount": -1,
+          "situation": "Quando attaccato durante l'ultimo mese",
+          "always": true
+        },
+        {
+          "stat": "Might",
+          "amount": 0,
+          "situation": "Non può mai essere ridotta temporaneamente.",
+          "always": true
+        }
       ]
     },
     {
@@ -283,8 +331,108 @@
       "label": "Onesto",
       "description": "Rispetta la parola data e i trattati, senza mai tradire i propri alleati.",
       "modifiers": [
-        { "action": "Diplomazia", "amount": 1, "situation": "Quando mantiene un patto o un trattato in essere invece di romperlo.", "always": true },
-        { "stat": "Influence", "amount": -1, "situation": "Quando rompe un patto o un trattato in essere.", "always": false }
+        {
+          "action": "Diplomazia",
+          "amount": 1,
+          "situation": "Quando mantiene un patto o un trattato in essere invece di romperlo.",
+          "always": true
+        },
+        {
+          "stat": "Influence",
+          "amount": -1,
+          "situation": "Quando rompe un patto o un trattato in essere.",
+          "always": false
+        }
+      ]
+    },
+    {
+      "id": "geniale",
+      "label": "Geniale",
+      "description": "Un leader dotato di eccezionali capacità di comando, uniche nel mondo.",
+      "modifiers": [
+        {
+          "stat": "all",
+          "amount": "+MD",
+          "situation": "Una volta al mese.",
+          "always": false
+        },
+        {
+          "armies": "Deployment Phase",
+          "amount": 400,
+          "situation": "Punti di deployment bonus disponibili per questo armate controllate da questo leader.",
+          "always": false
+        }
+      ]
+    },
+    {
+      "id": "preparato",
+      "label": "Preparato",
+      "description": "Sempre pronto a gestire una situazione, qualsiasi essa sia.",
+      "modifiers": [
+        {
+          "stat": "all",
+          "amount": "+ED",
+          "situation": "Una volta al mese.",
+          "always": false
+        },
+        {
+          "armies": "Deployment Phase",
+          "amount": 200,
+          "situation": "Punti di deployment bonus disponibili per questo armate controllate da questo leader.",
+          "always": false
+        }
+      ]
+    },
+    {
+      "id": "esperto_treasure",
+      "label": "Esperto di Finanza",
+      "description": "Eccellente gestore di risorse economiche.",
+      "modifiers": [
+        {
+          "stat": "Treasure",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
+      ]
+    },
+    {
+      "id": "esperto_might",
+      "label": "Esperto di Logistica",
+      "description": "Eccellente gestore di Logistica.",
+      "modifiers": [
+        {
+          "stat": "Might",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
+      ]
+    },
+    {
+      "id": "esperto_influence",
+      "label": "Esperto diplomatico",
+      "description": "Eccellente diplomatico.",
+      "modifiers": [
+        {
+          "stat": "Influence",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
+      ]
+    },
+    {
+      "id": "esperto_territory",
+      "label": "Amministratore esperto",
+      "description": "Eccellente amministratore.",
+      "modifiers": [
+        {
+          "stat": "Territory",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
       ]
     }
   ]

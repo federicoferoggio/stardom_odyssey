@@ -315,13 +315,13 @@
       "owner": "La Mano",
       "name": "Crippling Debt",
       "type": "Condizione Permanente",
-      "description": "The sins of the father are the sins of the son -- or in this case a new government is not exempt from the debts of the previous one. Whenever the company rolls and it includes Treasure, remove any roll higher than 9.",
+      "description": "I peccati del padre sono i peccati del figlio -- o in questo caso, un nuovo governo non è esente dai debiti di quello precedente. Ogni volta che la Compagnia tira e il tiro include Treasure, rimuovi qualsiasi risultato di dado superiore a 9.",
       "effect": "Qualsiasi tiro di Treasure ignora risultati di dado superiori a 9.",
       "modifiers": [
         {
           "stat": "Treasure",
           "amount": 0,
-          "situation": "When rolling for treasure remove all roll higher than 9.",
+          "situation": "Quando si tira per Treasure, rimuovi tutti i risultati superiori a 9.",
           "always": true,
           "diceType": "Normal Dice"
         }
@@ -332,13 +332,13 @@
       "owner": "La Mano",
       "name": "Defiant Tradition",
       "type": "Tratto Culturale",
-      "description": "El-Beth-El is a proud independent planet. Even if the population is divided in the four kingdoms they will always hate any outsider force more than their neighbours. Defiant cultures aren't the easiest to govern but they don't cave when times turn bad.",
+      "description": "El-Beth-El è un pianeta fiero e indipendente. Anche se la popolazione è divisa nei quattro regni, odierà sempre qualsiasi forza esterna più dei propri vicini. Le culture ribelli non sono le più facili da governare, ma non cedono quando i tempi si fanno duri.",
       "effect": "+1 dado a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
       "modifiers": [
         {
           "stat": "Territory",
           "amount": 1,
-          "situation": "Bonus to all Territory rolls (Difesa) if your Company is under attack from an outside force.",
+          "situation": "Bonus a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
           "always": false,
           "diceType": "Normal Dice"
         }
@@ -349,13 +349,13 @@
       "owner": "La Mano",
       "name": "Spelljammers (Livello 2)",
       "type": "Tecnologia Navale",
-      "description": "Currently your spelljamming level is equal to 2. The spelljamming level defines how well equipped your fleet is compared to the other families -- it limits your Might, as even the most well trained army cannot fight an enemy fleet without spelljammers of their own. Your Might can increase to at most one point higher than your current spelljamming level. When fighting an adversary with no spelljammers at all, the spelljamming level becomes a straight bonus on any Might roll.",
+      "description": "Il tuo livello di spelljamming è attualmente pari a 2. Il livello di spelljamming definisce quanto sia equipaggiata la tua flotta rispetto alle altre famiglie -- limita il tuo Might, poiché anche l'esercito meglio addestrato non può affrontare una flotta nemica senza propri spelljammer. Il tuo Might può salire al massimo di un punto oltre il tuo livello di spelljamming attuale. Quando affronti un avversario privo di spelljammer, il livello di spelljamming diventa un bonus diretto a qualsiasi tiro di Might.",
       "effect": "+1 dado di Might contro un nemico privo di spelljammers.",
       "modifiers": [
         {
           "stat": "Might",
           "amount": 1,
-          "situation": "Bonus when fighting a force that has no spelljammers at all.",
+          "situation": "Bonus quando si combatte contro una forza priva di spelljammer.",
           "always": false,
           "diceType": "Normal Dice"
         }
@@ -366,13 +366,13 @@
       "owner": "La Mano",
       "name": "Fanatismo (2)",
       "type": "Condizione Religiosa",
-      "description": "You have a bonus of +2 on all dice rolls. If the Sael ever dies your family permanently loses 4 points of Sovereignty. Furthermore, for the next 6 months you have -2 on all rolls.",
+      "description": "Hai un bonus di +2 su tutti i tiri di dado. Se il Sael dovesse mai morire, la tua famiglia perde permanentemente 4 punti di Sovereignty. Inoltre, per i successivi 6 mesi subisci -2 a tutti i tiri.",
       "effect": "+2 dadi a qualsiasi tiro -- ma se il Sael muore, -4 Sovereignty permanenti e -2 a tutti i tiri per 6 mesi.",
       "modifiers": [
         {
           "stat": "all",
           "amount": 2,
-          "situation": "The people rally around the will of the Sael.",
+          "situation": "Il popolo si stringe attorno alla volontà del Sael.",
           "always": false,
           "diceType": "Normal Dice"
         }
@@ -383,7 +383,7 @@
       "owner": "La Mano",
       "name": "(Monouso prossimo tiro) Spelljamming Bonus",
       "type": "Monouso",
-      "description": "The troops are very well trained. They can easily adapt and prepare for new situations, and specifically they are ready to become a spacefaring force.",
+      "description": "Le truppe sono molto ben addestrate. Possono adattarsi e prepararsi facilmente a nuove situazioni, e in particolare sono pronte a diventare una forza spaziale.",
       "effect": "+2 bonus al prossimo tiro per aumentare il livello di spelljamming."
     },
     {

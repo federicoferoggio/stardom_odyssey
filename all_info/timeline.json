@@ -3,51 +3,51 @@
   "months": [
     {
       "month": 10200,
-      "title": "Start",
+      "title": "Inizio",
       "events": [
         {
-          "description": "The Hand becomes the leaders of El-Beth-El and attended the dinner party in their honor.",
-          "modifier": "Court facilities are built"
+          "description": "La Mano diventa la famiglia dominante di El-Beth-El e partecipa al banchetto organizzato in suo onore.",
+          "modifier": "Le strutture della Corte vengono costruite."
         }
       ]
     },
     {
       "month": 10201,
-      "title": "Killings of the Survivors",
+      "title": "Le Uccisioni dei Sopravvissuti",
       "events": [
         {
-          "description": "The Hand suppressed a cult of Deos called -The Surviving- gaining the trust and loyalty of Rime Mugwes. The reaction of the population has yet to be seen.",
-          "modifier": "PR Inf +1;TR Inf +1 to 10204"
+          "description": "La Mano reprime un culto di Deos chiamato -I Sopravvissuti-, guadagnando la fiducia e la lealtà di Rime Mugwes. La reazione della popolazione è ancora da vedere.",
+          "modifier": "Influence +1 permanente; Influence +1 temporaneo fino al mese 10204."
         }
       ]
     },
     {
       "month": 10202,
-      "title": "Pacts of the four Kingdoms",
+      "title": "I Patti dei Quattro Regni",
       "events": [
         {
-          "description": "The Hand dealt with the four kingdoms of El-Beth-El but yet have to gain their respect. Nonetheless the kingdoms respected their authority (at least so it appeared).",
-          "modifier": "Spy Network built in Ashtran"
+          "description": "La Mano negozia con i quattro regni di El-Beth-El senza ancora essersi guadagnata il loro rispetto. Ciononostante, i regni rispettano la loro autorità (almeno in apparenza).",
+          "modifier": "Rete di spie costruita ad Ashtran."
         }
       ]
     },
     {
       "month": 10203,
-      "title": "War drums start beating",
+      "title": "I Tamburi di Guerra Iniziano a Battere",
       "events": [
         {
-          "description": "The hand was declared war on. They went to Ashran to ensure their loyalty and kick Arakne out of the system.",
-          "modifier": "Hai declared war"
+          "description": "Viene dichiarata guerra alla Mano. La famiglia si reca ad Ashran per assicurarsi la sua lealtà e cacciare Arakne dal sistema.",
+          "modifier": "Gli Hai dichiarano guerra."
         }
       ]
     },
     {
       "month": 10204,
-      "title": "The Creation of the Army",
+      "title": "La Creazione dell'Esercito",
       "events": [
         {
-          "description": "The Hand takes the troops of Bataar and starts to unify its army",
-          "modifier": "TR Sov +1 and PR Might +1"
+          "description": "La Mano recluta le truppe di Bataar e inizia a unificare il proprio esercito.",
+          "modifier": "Sovereignty +1 temporaneo e Might +1 permanente."
         }
       ]
     },
@@ -123,7 +123,7 @@
     },
     {
       "month": 10226,
-      "title": "Current",
+      "title": "Presente",
       "events": [
         {
           "description": "",
