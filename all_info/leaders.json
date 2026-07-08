@@ -482,11 +482,67 @@
         "role": "Capo Militare",
         "traits": [
           "aggressivo",
-          "geniale"
+          "zelota-religioso"
         ]
       }
     ],
-    "Gith": [],
-    "Eretici": []
+    "Gith": [
+{
+        "name": "Rime Mugwes",
+        "portrait": "images/members/Rime Mugwes.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "esperto_treasure",
+          "corrotto"
+        ]
+      },
+      {
+        "name": "Barda Writingham",
+        "portrait": "images/members/Barda Writingham.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "crudele",
+          "esperto_might"
+        ]
+      },
+      {
+        "name": "Mado Bophubb",
+        "portrait": "images/court/Mado Bophubb.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "aggressivo",
+          "zelota-religioso"
+        ]
+      }
+],
+    "Eretici": [
+{
+        "name": "Rime Mugwes",
+        "portrait": "images/members/Rime Mugwes.webp",
+        "role": "Capo Politico",
+        "traits": [
+          "esperto_treasure",
+          "corrotto"
+        ]
+      },
+      {
+        "name": "Barda Writingham",
+        "portrait": "images/members/Barda Writingham.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "crudele",
+          "esperto_might"
+        ]
+      },
+      {
+        "name": "Mado Bophubb",
+        "portrait": "images/court/Mado Bophubb.webp",
+        "role": "Capo Militare",
+        "traits": [
+          "aggressivo",
+          "zelota-religioso"
+        ]
+      }
+]
   }
 }
