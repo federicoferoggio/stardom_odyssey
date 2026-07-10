@@ -327,25 +327,6 @@
       ]
     },
     {
-      "id": "onesto",
-      "label": "Onesto",
-      "description": "Rispetta la parola data e i trattati, senza mai tradire i propri alleati.",
-      "modifiers": [
-        {
-          "action": "Diplomazia",
-          "amount": 1,
-          "situation": "Quando mantiene un patto o un trattato in essere invece di romperlo.",
-          "always": true
-        },
-        {
-          "stat": "Influence",
-          "amount": -1,
-          "situation": "Quando rompe un patto o un trattato in essere.",
-          "always": false
-        }
-      ]
-    },
-    {
       "id": "geniale",
       "label": "Geniale",
       "description": "Un leader dotato di eccezionali capacità di comando, uniche nel mondo.",
@@ -431,6 +412,19 @@
           "stat": "Territory",
           "amount": 1,
           "situation": "Sempre",
+          "always": true
+        }
+      ]
+    },
+{
+      "id": "immortal_god",
+      "label": "Immortale",
+      "description": "Immortale, e coseguentemente imbattibile.",
+      "modifiers": [
+        {
+          "action": "Attacco",
+          "amount": 3,
+          "situation": "Sempre un bonus di piu 3 sui tiri di might.",
           "always": true
         }
       ]

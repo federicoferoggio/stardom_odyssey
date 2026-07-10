@@ -98,8 +98,8 @@
           "trait2Known": true
         },
         "Primo Ministro": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Capo Militare": {
           "trait1Known": false,
@@ -158,10 +158,10 @@
     },
     "Amoako": {
       "stats": {
-        "might": false,
+        "might": true,
         "treasure": false,
         "influence": false,
-        "territory": false,
+        "territory": true,
         "sovereignty": false
       },
       "leaders": {
@@ -170,8 +170,8 @@
           "trait2Known": false
         },
         "Primo Ministro": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Capo Militare": {
           "trait1Known": false,
@@ -310,11 +310,11 @@
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": false,
+          "trait1Known": true,
           "trait2Known": false
         },
         "Primo Ministro": {
-          "trait1Known": false,
+          "trait1Known": true,
           "trait2Known": false
         },
         "Capo Militare": {
@@ -326,63 +326,63 @@
     },
     "Shawel": {
       "stats": {
-        "might": false,
+        "might": true,
         "treasure": false,
-        "influence": false,
-        "territory": false,
-        "sovereignty": false
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Primo Ministro": {
-          "trait1Known": false,
+          "trait1Known": true,
           "trait2Known": false
         }
       },
-      "uniqueAssetsKnown": false
+      "uniqueAssetsKnown": true
     },
     "Hai": {
       "stats": {
-        "might": false,
-        "treasure": false,
-        "influence": false,
-        "territory": false,
-        "sovereignty": false
+        "might": true,
+        "treasure": true,
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         }
       },
-      "uniqueAssetsKnown": false
+      "uniqueAssetsKnown": true
     },
     "La Mano": {
       "stats": {
-        "might": false,
-        "treasure": false,
-        "influence": false,
-        "territory": false,
-        "sovereignty": false
+        "might": true,
+        "treasure": true,
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Primo Ministro": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Capo Militare": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         }
       },
-      "uniqueAssetsKnown": false
+      "uniqueAssetsKnown": true
     },
     "Sudriz": {
       "stats": {
@@ -410,16 +410,16 @@
     },
     "Rivera": {
       "stats": {
-        "might": false,
+        "might": true,
         "treasure": false,
         "influence": false,
-        "territory": false,
-        "sovereignty": false
+        "territory": true,
+        "sovereignty": true
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": false,
-          "trait2Known": false
+          "trait1Known": true,
+          "trait2Known": true
         },
         "Primo Ministro": {
           "trait1Known": false,
@@ -436,7 +436,16 @@
         "territory": false,
         "sovereignty": false
       },
-      "leaders": {},
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
       "uniqueAssetsKnown": false
     }
   }

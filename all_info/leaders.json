@@ -6,7 +6,7 @@
         "portrait": "images/members/Kumi.webp",
         "role": "Capo Politico",
         "traits": [
-          "corrotto",
+          "affidabile",
           "esperto_treasure"
         ]
       },
@@ -15,8 +15,8 @@
         "portrait": "images/members/Jojo.webp",
         "role": "Primo Ministro",
         "traits": [
-          "esperto_treasure",
-          "costruttore"
+          "codardo",
+          "passivo"
         ]
       },
       {
@@ -24,8 +24,8 @@
         "portrait": "images/members/Abla.webp",
         "role": "Capo Militare",
         "traits": [
-          "costruttore",
-          "geniale"
+          "affidabile",
+          "passivo"
         ]
       }
     ],
@@ -44,17 +44,17 @@
         "portrait": "images/members/Daques.webp",
         "role": "Primo Ministro",
         "traits": [
-          "connesso",
-          "empatico"
+          "affidabile",
+          "crudele"
         ]
       },
       {
-        "name": "Claudette",
-        "portrait": "images/members/Claudette.webp",
+        "name": "Audrey",
+        "portrait": "images/members/Audrey.webp",
         "role": "Capo Militare",
         "traits": [
           "empatico",
-          "esperto_influence"
+          "esperto_might"
         ]
       }
     ],
@@ -64,8 +64,8 @@
         "portrait": "images/members/Usko.webp",
         "role": "Capo Politico",
         "traits": [
-          "zelota-religioso",
-          "conquistatore"
+          "preparato",
+          "costruttore"
         ]
       },
       {
@@ -73,7 +73,7 @@
         "portrait": "images/members/Rauni.webp",
         "role": "Primo Ministro",
         "traits": [
-          "conquistatore",
+          "costruttore",
           "popolare"
         ]
       },
@@ -82,33 +82,33 @@
         "portrait": "images/members/Heikkila.webp",
         "role": "Capo Militare",
         "traits": [
-          "popolare",
-          "aggressivo"
+          "corrotto",
+          "passivo"
         ]
       }
     ],
     "Grayshine": [
       {
-        "name": "Oakley",
-        "portrait": "images/members/Oakley.webp",
-        "role": "Capo Politico",
-        "traits": [
-          "corrotto",
-          "esperto_treasure"
-        ]
-      },
-      {
         "name": "Alice",
         "portrait": "images/members/Alice.webp",
-        "role": "Primo Ministro",
+        "role": "Capo Politico",
         "traits": [
           "esperto_treasure",
           "politico"
         ]
       },
       {
-        "name": "Ryan",
-        "portrait": "images/members/Ryan.webp",
+        "name": "Oakley",
+        "portrait": "images/members/Oakley.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "corrotto",
+          "esperto_treasure"
+        ]
+      },
+      {
+        "name": "Ashton",
+        "portrait": "images/members/Ashton.webp",
         "role": "Capo Militare",
         "traits": [
           "politico",
@@ -119,36 +119,36 @@
     "Hai": [
       {
         "name": "Ciarak",
-        "portrait": "images/members/Munire.webp",
+        "portrait": "images/members/Ciarack.png",
         "role": "Capo Politico",
         "traits": [
-          "zelota-religioso",
+          "vendicativo",
           "aggressivo"
         ]
       }
     ],
     "Kesk": [
       {
-        "name": "Line",
-        "portrait": "images/members/Line.webp",
-        "role": "Capo Politico",
-        "traits": [
-          "connesso",
-          "politico"
-        ]
-      },
-      {
         "name": "Vegar",
         "portrait": "images/members/Vegar.webp",
-        "role": "Primo Ministro",
+        "role": "Capo Politico",
         "traits": [
           "politico",
           "geniale"
         ]
       },
       {
-        "name": "Trude",
-        "portrait": "images/members/Trude.webp",
+        "name": "Line",
+        "portrait": "images/members/Line.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "connesso",
+          "politico"
+        ]
+      },
+      {
+        "name": "Simen",
+        "portrait": "images/members/Simen.webp",
         "role": "Capo Militare",
         "traits": [
           "geniale",
@@ -162,26 +162,26 @@
         "portrait": "images/members/Koga.webp",
         "role": "Capo Politico",
         "traits": [
-          "corrotto",
-          "esperto_treasure"
+          "popolare",
+          "preparato"
+        ]
+      },
+      {
+        "name": "Tokimori",
+        "portrait": "images/members/Tokimori.webp",
+        "role": "Primo Ministro",
+        "traits": [
+          "crudele",
+          "inaffidabile"
         ]
       },
       {
         "name": "Sakuma",
         "portrait": "images/members/Sakuma.webp",
-        "role": "Primo Ministro",
-        "traits": [
-          "esperto_treasure",
-          "politico"
-        ]
-      },
-      {
-        "name": "Yuuki",
-        "portrait": "images/members/Yuuki.webp",
         "role": "Capo Militare",
         "traits": [
-          "politico",
-          "inaffidabile"
+          "immortal_god",
+          "impopolare"
         ]
       }
     ],
@@ -192,7 +192,7 @@
         "role": "Capo Politico",
         "traits": [
           "connesso",
-          "politico"
+          "zelota-religioso"
         ]
       },
       {
@@ -200,8 +200,8 @@
         "portrait": "images/members/The Courtship.webp",
         "role": "Primo Ministro",
         "traits": [
-          "politico",
-          "geniale"
+          "popolare",
+          "empatico"
         ]
       },
       {
@@ -210,7 +210,7 @@
         "role": "Capo Militare",
         "traits": [
           "geniale",
-          "previdente"
+          "esperto_territory"
         ]
       }
     ],
@@ -225,8 +225,8 @@
         ]
       },
       {
-        "name": "Tolne",
-        "portrait": "images/members/Tolne.webp",
+        "name": "Arakne",
+        "portrait": "images/members/Arakne.webp",
         "role": "Primo Ministro",
         "traits": [
           "connesso",
@@ -234,8 +234,8 @@
         ]
       },
       {
-        "name": "Bhodvamu",
-        "portrait": "images/members/Bhodvamu.webp",
+        "name": "Tolne",
+        "portrait": "images/members/Tolne.webp",
         "role": "Capo Militare",
         "traits": [
           "empatico",
@@ -249,7 +249,7 @@
         "portrait": "images/members/Aadarsh.webp",
         "role": "Capo Politico",
         "traits": [
-          "zelota-religioso",
+          "crudele",
           "aggressivo"
         ]
       },
@@ -259,7 +259,7 @@
         "role": "Primo Ministro",
         "traits": [
           "aggressivo",
-          "crudele"
+          "esperto_might"
         ]
       },
       {
@@ -267,7 +267,7 @@
         "portrait": "images/members/Badal.webp",
         "role": "Capo Militare",
         "traits": [
-          "crudele",
+          "inaffidabile",
           "impopolare"
         ]
       }
@@ -278,8 +278,8 @@
         "portrait": "images/members/Shah.webp",
         "role": "Capo Politico",
         "traits": [
-          "aggressivo",
-          "conquistatore"
+          "politico",
+          "inaffidabile"
         ]
       },
       {
@@ -287,8 +287,8 @@
         "portrait": "images/members/Baldev.webp",
         "role": "Primo Ministro",
         "traits": [
-          "conquistatore",
-          "esperto_might"
+          "preparato",
+          "esperto_territory"
         ]
       }
     ],
@@ -307,8 +307,8 @@
         "portrait": "images/members/Siona.webp",
         "role": "Primo Ministro",
         "traits": [
-          "esperto_treasure",
-          "costruttore"
+          "esperto_influence",
+          "clemente"
         ]
       }
     ],
@@ -357,7 +357,7 @@
         "role": "Primo Ministro",
         "traits": [
           "esperto_might",
-          "preparato"
+          "popolare"
         ]
       },
       {
@@ -365,7 +365,7 @@
         "portrait": "images/members/Suzana.webp",
         "role": "Capo Militare",
         "traits": [
-          "preparato",
+          "empatico",
           "impegnato"
         ]
       }
@@ -377,7 +377,7 @@
         "role": "Capo Politico",
         "traits": [
           "previdente",
-          "affidabile"
+          "inaffidabile"
         ]
       },
       {
@@ -385,8 +385,8 @@
         "portrait": "images/members/BLUB.webp",
         "role": "Primo Ministro",
         "traits": [
-          "affidabile",
-          "esperto_territory"
+          "immortal_god",
+          "impegnato"
         ]
       },
       {
@@ -410,21 +410,21 @@
         ]
       },
       {
-        "name": "Feng",
-        "portrait": "images/members/Feng.webp",
+        "name": "Luo Da",
+        "portrait": "images/members/Luo Da.webp",
         "role": "Primo Ministro",
         "traits": [
-          "conquistatore",
-          "esperto_might"
+          "impopolare",
+          "impegnato"
         ]
       },
       {
-        "name": "Xia De",
-        "portrait": "images/members/Xia De.webp",
+        "name": "Lei Lim",
+        "portrait": "images/members/Lei Lim.webp",
         "role": "Capo Militare",
         "traits": [
           "esperto_might",
-          "crudele"
+          "affidabile"
         ]
       }
     ],
@@ -453,27 +453,27 @@
         "role": "Capo Militare",
         "traits": [
           "crudele",
-          "impopolare"
+          "affidabile"
         ]
       }
     ],
     "La Mano": [
       {
         "name": "Rime Mugwes",
-        "portrait": "images/members/Rime Mugwes.webp",
+        "portrait": "images/court/Rime Mugwes.webp",
         "role": "Capo Politico",
         "traits": [
           "esperto_treasure",
-          "corrotto"
+          "connesso"
         ]
       },
       {
         "name": "Barda Writingham",
-        "portrait": "images/members/Barda Writingham.webp",
+        "portrait": "images/court/Barda Writingham.webp",
         "role": "Primo Ministro",
         "traits": [
           "crudele",
-          "esperto_might"
+          "esperto_influence"
         ]
       },
       {
@@ -487,62 +487,35 @@
       }
     ],
     "Gith": [
-{
-        "name": "Rime Mugwes",
-        "portrait": "images/members/Rime Mugwes.webp",
+      {
+        "name": "Sandath",
+        "portrait": "images/members/Sandath.png",
         "role": "Capo Politico",
         "traits": [
-          "esperto_treasure",
-          "corrotto"
-        ]
-      },
-      {
-        "name": "Barda Writingham",
-        "portrait": "images/members/Barda Writingham.webp",
-        "role": "Primo Ministro",
-        "traits": [
-          "crudele",
-          "esperto_might"
-        ]
-      },
-      {
-        "name": "Mado Bophubb",
-        "portrait": "images/court/Mado Bophubb.webp",
-        "role": "Capo Militare",
-        "traits": [
-          "aggressivo",
-          "zelota-religioso"
+          "vendicativo",
+          "crudele"
         ]
       }
-],
+    ],
     "Eretici": [
-{
-        "name": "Rime Mugwes",
-        "portrait": "images/members/Rime Mugwes.webp",
+      {
+        "name": "Halzel",
+        "portrait": "images/members/Halzel.png",
         "role": "Capo Politico",
         "traits": [
-          "esperto_treasure",
-          "corrotto"
+          "esperto_territory",
+          "previdente"
         ]
       },
       {
-        "name": "Barda Writingham",
-        "portrait": "images/members/Barda Writingham.webp",
-        "role": "Primo Ministro",
-        "traits": [
-          "crudele",
-          "esperto_might"
-        ]
-      },
-      {
-        "name": "Mado Bophubb",
-        "portrait": "images/court/Mado Bophubb.webp",
+        "name": "Zylril",
+        "portrait": "images/members/Zylril.webp",
         "role": "Capo Militare",
         "traits": [
-          "aggressivo",
-          "zelota-religioso"
+          "geniale",
+          "popolare"
         ]
       }
-]
+    ]
   }
 }

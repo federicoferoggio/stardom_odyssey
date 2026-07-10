@@ -2,127 +2,17 @@
   "_howto": "Everything about where every family's military currently is -- the 'changes constantly' tier (unlike bodies.json/points_of_interest.json, which are the never/rarely-changes tiers and no longer carry a fleets field at all). 'stationed' = fleets sitting at a body right now (bodyId + fleets array of owner names, duplicates allowed for multiple fleets of the same family at one location). 'warpaths' = fleets in transit between two bodies (unchanged shape from before: ids=[from,to], name, color, type, owner, fleets array, descr, departure month). ADDITIVE DEFAULT: a family is assumed to keep any fleets not explicitly listed here at its companies.json 'planet' (home body) -- the map auto-fills the gap up to ceil(might/2) at load time, so you only need to record deviations (fleets away from home, or in transit), not a full roster for every family. A family's TOTAL fleet count (every appearance across both stationed[].fleets and warpaths[].fleets) should never exceed ceil(might/2) from companies.json -- the map shows a warning badge in a family's overlay if this is violated (this check only ever looks at explicit entries here, never at the auto-filled ones, so it still fires correctly).",
   "stationed": [
     {
-      "bodyId": "hellcoast",
-      "fleets": [
-        "Sudriz"
-      ]
-    },
-    {
-      "bodyId": "jetaras",
-      "fleets": [
-        "Mitsumoro"
-      ]
-    },
-    {
-      "bodyId": "void",
-      "fleets": [
-        "Custodians",
-        "Custodians"
-      ]
-    },
-    {
-      "bodyId": "draconia",
-      "fleets": [
-        "Wueng"
-      ]
-    },
-    {
-      "bodyId": "tithion",
-      "fleets": [
-        "Rasaily"
-      ]
-    },
-    {
-      "bodyId": "enov",
-      "fleets": [
-        "Grayshine",
-        "Grayshine"
-      ]
-    },
-    {
-      "bodyId": "ion",
-      "fleets": [
-        "Ntsu"
-      ]
-    },
-    {
-      "bodyId": "tophadus",
-      "fleets": [
-        "Carxus"
-      ]
-    },
-    {
-      "bodyId": "hoter",
-      "fleets": [
-        "Stozav",
-        "Stozav"
-      ]
-    },
-    {
-      "bodyId": "zimurn",
-      "fleets": [
-        "Zolinath",
-        "Zolinath"
-      ]
-    },
-    {
-      "bodyId": "saltar",
-      "fleets": [
-        "Ousssek"
-      ]
-    },
-    {
-      "bodyId": "calichi",
-      "fleets": [
-        "Sifu",
-        "Sifu"
-      ]
-    },
-    {
       "bodyId": "aepra",
       "fleets": [
-        "Hai",
         "Ousssek"
-      ]
-    },
-    {
-      "bodyId": "wandacker",
-      "fleets": [
-        "Amoako"
-      ]
-    },
-    {
-      "bodyId": "tebara",
-      "fleets": [
-        "Caillot",
-        "Caillot"
-      ]
-    },
-    {
-      "bodyId": "hophus",
-      "fleets": [
-        "Kesk"
-      ]
-    },
-    {
-      "bodyId": "enides",
-      "fleets": [
-        "Shawel"
-      ]
-    },
-    {
-      "bodyId": "xan",
-      "fleets": [
-        "Eretici",
-        "Eretici",
-        "Eretici"
       ]
     },
     {
       "bodyId": "neres",
       "fleets": [
         "Mitsumoro",
-        "Ntsu"
+        "Ntsu",
+        "Eretici"
       ]
     },
     {
