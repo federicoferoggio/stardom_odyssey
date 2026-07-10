@@ -6,8 +6,12 @@
       "title": "Inizio",
       "events": [
         {
-          "description": "La Mano diventa la famiglia dominante di El-Beth-El e partecipa al banchetto organizzato in suo onore.",
+          "description": "Il party vince il torneo nell'arena (sconfiggendo I Crittografi dell'Occhio e la Mano di Ferro guidata da Durn), sceglie il nome 'La Mano' e diventa la famiglia dominante di El-Beth-El, partecipando al banchetto organizzato in suo onore. Durante il banchetto giura i tre patti richiesti dalle Tre Potenze: caccia demoniaca (mai aiutare cultisti di Tharizdun), arcano controllo (piena autorità arcana ai Ntsu), supporto all'Eterna Crociata.",
           "modifier": "Le strutture della Corte vengono costruite."
+        },
+        {
+          "description": "Tenar entra a far parte della famiglia: il party accetta tutte e tre le riforme lette nelle sue carte.",
+          "modifier": "Ordine dell'Ossidiana rifondato (+1 Might perenne dal mese 10206, sfidabile da un party rivale di pari numero); smantellamento della ricchezza della Coorte (+1 Sovereignty dal mese 10203, -1 Treasure); nuova vacanza di mezzo mese proclamata (-1 a tutte le statistiche nel mese 10200, +1 Sovereignty perenne)."
         }
       ]
     },
@@ -16,7 +20,7 @@
       "title": "Le Uccisioni dei Sopravvissuti",
       "events": [
         {
-          "description": "La Mano reprime un culto di Deos chiamato -I Sopravvissuti-, guadagnando la fiducia e la lealtà di Rime Mugwes. La reazione della popolazione è ancora da vedere.",
+          "description": "La Mano reprime un culto di Deos chiamato -I Sopravvissuti-, guidato da Falsar dal Tempio della Sete nel Nareb (440 fedeli), guadagnando la fiducia e la lealtà di Rime Mugwes. Nelle cisterne del tempio vengono scoperte armi nascoste dai Mantelli Dorati, guidati da Zylril, che intervengono in battaglia. La reazione della popolazione è ancora da vedere.",
           "modifier": "Influence +1 permanente; Influence +1 temporaneo fino al mese 10204."
         }
       ]
@@ -26,7 +30,7 @@
       "title": "I Patti dei Quattro Regni",
       "events": [
         {
-          "description": "La Mano negozia con i quattro regni di El-Beth-El senza ancora essersi guadagnata il loro rispetto. Ciononostante, i regni rispettano la loro autorità (almeno in apparenza).",
+          "description": "La Mano negozia con i quattro regni di El-Beth-El senza ancora essersi guadagnata il loro rispetto: Kerr chiede il Richiamo delle Stelle (tassa del 10% dagli altri regni) per la sua bancarotta; Bataar chiede aiuto contro i clan ribelli; i Samarkhoy temono la crescita di Bataar; Ashran chiede la rimozione del Limite del Cielo sulle proprie navi. Ciononostante, i regni rispettano la loro autorità (almeno in apparenza).",
           "modifier": "Rete di spie costruita ad Ashtran."
         }
       ]
@@ -36,8 +40,8 @@
       "title": "I Tamburi di Guerra Iniziano a Battere",
       "events": [
         {
-          "description": "Viene dichiarata guerra alla Mano. La famiglia si reca ad Ashran per assicurarsi la sua lealtà e cacciare Arakne dal sistema.",
-          "modifier": "Gli Hai dichiarano guerra."
+          "description": "Viene dichiarata guerra alla Mano dagli Hai (per vendicare la Setta dei Sopravvissuti, come favore agli Ousssek contro Minerva, e come favore alla confraternita contro la nuova religione dell'Unico). La famiglia si reca ad Ashran per assicurarsi la sua lealtà e cacciare Arakne dal sistema. Il Duello del Destino fra Minerva e Arakne non viene mai conclusivamente risolto. Arakne lascia El-Beth-El; Jasval Perr e gli Ashran finanziano in parte una flotta di Galeoni per la Mano, respingendo un attentato notturno di assassini Deossiani durante l'incontro.",
+          "modifier": "Gli Hai dichiarano guerra. +1 Spelljamming Level (flotta finanziata da Ashran/Jasval Perr)."
         }
       ]
     },
@@ -46,8 +50,8 @@
       "title": "La Creazione dell'Esercito",
       "events": [
         {
-          "description": "La Mano recluta le truppe di Bataar e inizia a unificare il proprio esercito.",
-          "modifier": "Sovereignty +1 temporaneo e Might +1 permanente."
+          "description": "La Mano recluta le truppe di Bataar e inizia a unificare il proprio esercito, abbattendo le fortezze ribelli di Kha'hel El-Beth-El e lasciando il territorio conquistato a Bataar (invece di restituirlo ai Samarkhoy). I tre capiclan ribelli catturati (Nissan, Kilerval, Zero Olotris) vengono giustiziati. La Mano sacrifica Might -1 per 3 mesi per dare truppe a Jasval Perr ad Ashran, mantenendo basso il rischio di guerra civile.",
+          "modifier": "Sovereignty +1 temporaneo e Might +1 permanente. Might -1 per 3 mesi (truppe a Jasval Perr)."
         }
       ]
     },
@@ -56,7 +60,7 @@
       "title": "Hai arrivano",
       "events": [
         {
-          "description": "Preparazioni alla guerra",
+          "description": "Il Khan mantiene la parola data e cede le sue truppe alla Mano. Il comando dell'esercito unificato viene affidato alla famiglia Akbe (Elt). Preparazione alla guerra contro gli Hai.",
           "modifier": "Spy Network in Khor Galimah"
         }
       ]
@@ -66,7 +70,7 @@
       "title": "Vittoria",
       "events": [
         {
-          "description": "Vincita della guerra",
+          "description": "La flotta della Mano affronta e cattura l'Ammiraglio Astrul in una battaglia navale costosa (Minerva catturata dagli Hai, l'anima di Arren spaccata). Si raggiunge un cessate il fuoco con gli Hai: scambio Astrul-Minerva, resa pubblica dignitosa, rotte commerciali Hai aperte a prezzi maggiorati. Patto di Non Aggressione di 3 anni firmato.",
           "modifier": "Army is ready. Spelljaming level increases by one. Civil war roll. Hai arrive."
         }
       ]
@@ -76,7 +80,7 @@
       "title": "Recupero",
       "events": [
         {
-          "description": "Un mese di Pace",
+          "description": "Un mese di pace dopo la vittoria: parata e banchetto dei vittoriosi a Khor Galimath, con offerte di matrimonio ad Hor ancora aperte (Jojo Amoako, la Regina Zila'ach). Arren muore definitivamente, la sua anima frantumata dalla Piramide; viene poi ricostruito da essa come un undead senz'anima.",
           "modifier": "Hor Passa il mese nella piramide ad aspettare"
         }
       ]
@@ -86,8 +90,8 @@
       "title": "Ordine",
       "events": [
         {
-          "description": "Il Mese del Concilio",
-          "modifier": "Il Concilio stabilisce il nuovo ordine di El-Beth-El"
+          "description": "Il Concilio di Rizmahal: il party raggiunge l'80% di supporto richiesto, ottenendo il sostegno di tutte le fazioni tranne i Deossiani (Casa delle Ultime Luci e Cenere e Spirito) e Cavalcante Garil (dopo che si scopre che il Khan di Bataar è morto, avvelenato dalla Regina Zila'ach dei Samarkhoy). La Religione dell'Unico si diffonde in Samarkoi.",
+          "modifier": "Il Concilio stabilisce il nuovo ordine di El-Beth-El. Treasure +1, Might a 2. Bataar rischia il collasso (10%/mese di -1 Might). Deossiani ostili."
         }
       ]
     },
@@ -96,8 +100,22 @@
       "title": "Caos",
       "events": [
         {
-          "description": "La mano stabilisce il proprio governo e poi dopo causa il collasso del matrimonio di Arakne",
+          "description": "La Mano stabilisce il proprio governo. Recupera un carico conteso su Wandacker. A Bataar, il Principe Borin (figlio bastardo di Larmal XVIII) tende una trappola alla Mano nella Reggia dei Tre Fratelli per soggiogarli con tadpole modificati; un attacco demoniaco travolge l'accampamento e Borin fugge, rimanendo un nemico a piede libero.",
           "modifier": "La famiglia stabilisce il loro regno e incasina quello degli altri"
+        },
+        {
+          "description": "Il Massacro del Fidanzamento: durante il matrimonio di Arakne Ousssek e Tokimori Mitsumoro, la Mano esegue un piano di assassinio coperto uccidendo l'ambasciatore Hai Munire e il diplomatico Sudriz Vukasin. L'evento degenera in un massacro generale: i Mantelli Dorati uccidono Arakne ed Ehosse; Jhank, trasformato in drago, uccide Siona Shawel e Lei Ping dei Wueng. Le conseguenze travolgono l'intero sistema: il governo Hai crolla in una guerra civile a tre fazioni, gli Ousssek escono devastati e umiliati (-2 Influence, -2 Sovereignty, -2 Territory), i Mitsumoro indicono una Crociata di vendetta contro gli eretici, i Wueng finanziano i Rasaily per una 'pulizia totale' dagli eretici del sistema.",
+          "modifier": "Inizio del Grande Timeskip di un anno (mesi 10213-10223)."
+        }
+      ]
+    },
+    {
+      "month": 10213,
+      "title": "Il Grande Timeskip",
+      "events": [
+        {
+          "description": "Un anno passa (mesi 10213-10223) mentre la Mano si riprende dal Massacro del Fidanzamento e ne gestisce le conseguenze: stabilizzazione dell'esercito, nuova banca centrale, riscrittura del codice di governo, spinta della fede dell'Unico su Kerr, tentativo di dare a Minerva un nuovo corpo. Nessuna sessione dedicata copre questi mesi nel dettaglio.",
+          "modifier": "Vari progetti a lungo termine portati avanti dai singoli membri della Mano durante il timeskip."
         }
       ]
     },
@@ -106,7 +124,7 @@
       "title": "Crociata",
       "events": [
         {
-          "description": "Crociata della mano e morte del Mindlfayer",
+          "description": "La 356ª Crociata, indetta dai Mitsumoro per vendicare il Massacro del Fidanzamento, coinvolge quasi tutte le famiglie del sistema contro gli Xan e i loro alleati Mantelli Dorati. La Mano (con Sudriz, Rivera e Shawel) conquista la base militare di Progomeneus. Durante la crociata viene uccisa la Mindflayer di Luna, antico amore perduto di \"Dodici\" nella storia parallela, che profetizza a Demir l'arrivo di un nemico implacabile.",
           "modifier": ""
         }
       ]
@@ -116,8 +134,8 @@
       "title": "La presa di Aepra",
       "events": [
         {
-          "description": "La mano prende Aepra e aiuta Ciarack a dominare sulla Luna",
-          "modifier": "Attività di soppressione"
+          "description": "La Mano interviene nella guerra civile di Aepra fra Drow (Nik), Duergar (miniere di Sputaferro) e Thrikreen ribelli guidati da Ciarak (dopo l'uccisione del rivale Baktirich). La Mano distrugge Nik e aiuta Ciarak a dominare sulla luna. La Religione dell'Unico si espande enormemente su Aepra insieme a Tiamat e Bane; Drow e Duergar vengono ridotti in schiavitù. Reazioni contrastanti nel sistema: ostili Amoako, Mitsumoro, Ousssek, Ntsu, Caillot; favorevoli Rasaily, Stozav, Wueng. Gli Ousssek perdono 1 Influence permanente; i Rivera ne approfittano per diventare tributari (invece che vassalli) senza conflitto.",
+          "modifier": "Attività di soppressione. Ousssek -1 Influence permanente."
         }
       ]
     },
@@ -126,7 +144,7 @@
       "title": "Presente",
       "events": [
         {
-          "description": "",
+          "description": "Sessione di riassesto sullo stato del sistema: la costa di Ashran è sotto il controllo della Mano, ma i ribelli di Ashran risultano finanziati da un attore esterno a El-Beth-El; la regina di Samarkoi si proclama 'la Prescelta del Profeta' e lascia predicare liberamente il Cane (Leahm Shalaq); non si hanno più notizie della Veggente Tenar. Il prossimo arco pianificato (non ancora giocato) prevede l'arrivo degli Ousssek e una guerra su El-Beth-El stesso.",
           "modifier": ""
         }
       ]
