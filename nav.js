@@ -37,15 +37,18 @@ document.addEventListener("DOMContentLoaded", function() {
     button.addEventListener('click', function() {
         if (menuLinks.style.display === 'block') {
             menuLinks.style.display = 'none';
+            button.classList.remove('active');
             this.blur();
         } else {
             menuLinks.style.display = 'block';
+            button.classList.add('active');
         }
     });
 
     button.addEventListener('focusout', function(event) {
         if (!menuLinks.contains(event.relatedTarget)) {
             menuLinks.style.display = 'none';
+            button.classList.remove('active');
         }
     });
 

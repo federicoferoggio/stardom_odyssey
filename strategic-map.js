@@ -85,6 +85,10 @@ let byId = {}, tick = 0, ready = false;
 let ownerColors = {};
 let iconScaleGroups = {};
 let satellitesByParent = {}; // parentId -> [satelliteId, ...], see MOON_COLLAPSE_VB_WIDTH above
+let fleetIconGroups = {}; // bodyId -> <g>, this body's OWN fleet markers (anonymous+named combined, deduped by family), rebuilt each tick in updateScene() -- declared here (not down by buildScene) because refreshIconScale() reads it immediately at load time via applyVB()
+let fleetIconGroupsCollapsed = {}; // parentId -> <g>, only for bodies with satellites: the MERGED (parent + all its satellites) marker row shown when zoomed out past MOON_COLLAPSE_VB_WIDTH, toggled by refreshIconScale()
+let fleetTokenScaleEls = []; // <g class="fleet-icon-scale"> elements, rebuilt every updateScene(), rescaled by refreshIconScale()
+let fleetCourseLineEls = []; // in-transit course <line> elements, same deal (stroke-width instead of a transform)
 
 function escHtml(str) {
     return String(str ?? '')
@@ -125,8 +129,9 @@ let raceCompatibility = {};
 let religionCompatibility = {};
 let planetRaceComposition = {};
 let planetReligionComposition = {};
-let stationedFleets = []; // all_info/fleets.json .stationed -- kept for familyFleetCount()
-let allWarpaths = []; // all_info/fleets.json .warpaths -- kept for familyFleetCount()
+let namedFleets = []; // all_info/fleets.json .fleets -- named, orderable fleets
+let fleetsById = {}; // namedFleets indexed by id, for fleet-vs-fleet order targets
+let bodyIdByName = {}; // body.name (lowercased) -> id, built once in loadMap, reused by fleet home-planet resolution
 
 // ── FOG OF WAR / KNOWLEDGE REVEAL ─────────────────────────────────────────────
 // What the players currently know about each family is GM-authored directly
@@ -208,19 +213,41 @@ function refreshIconScale() {
         if (g) g.style.display = collapsed ? 'none' : '';
     });
     document.querySelectorAll('#orbit-layer .moon-orbit-ring').forEach(ring => { ring.style.display = collapsed ? 'none' : ''; });
+
+    // A satellite's own fleet-icon row disappears along with it when
+    // collapsed (it's a child of the now-hidden satellite group) -- the
+    // parent's MERGED row (built in updateScene, this body + its
+    // satellites combined) takes over instead, and vice versa when zoomed
+    // back in. Mirrors the satellite-body visibility toggle just above.
+    Object.keys(fleetIconGroupsCollapsed).forEach(parentId => {
+        const expandedG = fleetIconGroups[parentId];
+        const collapsedG = fleetIconGroupsCollapsed[parentId];
+        if (expandedG) expandedG.style.display = collapsed ? 'none' : '';
+        if (collapsedG) collapsedG.style.display = collapsed ? '' : 'none';
+    });
+
+    // Named-fleet tokens/course-lines aren't anchored to any single body's
+    // icon-scale group (a transiting fleet isn't "at" a body), so they're
+    // rescaled independently here using the same k curve as body icons.
+    fleetTokenScaleEls.forEach(g => { g.setAttribute('transform', `scale(${k.toFixed(3)})`); });
+    fleetCourseLineEls.forEach(line => { line.setAttribute('stroke-width', (2 * k).toFixed(2)); });
 }
 applyVB();
 
 let panning = false, px = 0, py = 0;
 svg.addEventListener('mousedown', e => { if (e.button !== 0) return; panning = true; px = e.clientX; py = e.clientY; });
-svg.addEventListener('mousemove', e => { if (!panning) return; vb.x -= (e.clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.clientY - py) * (vb.h / svg.clientHeight); px = e.clientX; py = e.clientY; applyVB(); clampVB(); });
+svg.addEventListener('mousemove', e => { if (!panning) return; followEntity = null; vb.x -= (e.clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.clientY - py) * (vb.h / svg.clientHeight); px = e.clientX; py = e.clientY; applyVB(); clampVB(); });
 svg.addEventListener('mouseup', () => { panning = false; });
 svg.addEventListener('mouseleave', () => { panning = false; });
 svg.addEventListener('wheel', e => {
     e.preventDefault();
     const f = e.deltaY > 0 ? 1.04 : 0.96;
-    const mx = e.offsetX / svg.clientWidth;
-    const my = e.offsetY / svg.clientHeight;
+    // Zoom (unlike pan) doesn't break camera-follow -- while following,
+    // anchor the zoom on the viewport CENTER (where the followed body/fleet
+    // already sits) instead of the mouse cursor, so it can't drift off
+    // center just because the cursor wasn't exactly over it.
+    const mx = followEntity ? 0.5 : e.offsetX / svg.clientWidth;
+    const my = followEntity ? 0.5 : e.offsetY / svg.clientHeight;
     const prevW = vb.w, prevH = vb.h;
     vb.w *= f; vb.h *= f;
     clampVB();
@@ -230,7 +257,7 @@ svg.addEventListener('wheel', e => {
 }, { passive: false });
 let lastTD = null;
 svg.addEventListener('touchstart', e => { e.preventDefault(); if (e.touches.length === 1) { panning = true; px = e.touches[0].clientX; py = e.touches[0].clientY; } else if (e.touches.length === 2) { panning = false; lastTD = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); } }, { passive: false });
-svg.addEventListener('touchmove', e => { e.preventDefault(); if (e.touches.length === 1 && panning) { vb.x -= (e.touches[0].clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.touches[0].clientY - py) * (vb.h / svg.clientHeight); px = e.touches[0].clientX; py = e.touches[0].clientY; clampVB(); applyVB(); } else if (e.touches.length === 2 && lastTD) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); vb.w *= lastTD / d; vb.h *= lastTD / d; lastTD = d; clampVB(); applyVB(); } }, { passive: false });
+svg.addEventListener('touchmove', e => { e.preventDefault(); if (e.touches.length === 1 && panning) { followEntity = null; vb.x -= (e.touches[0].clientX - px) * (vb.w / svg.clientWidth); vb.y -= (e.touches[0].clientY - py) * (vb.h / svg.clientHeight); px = e.touches[0].clientX; py = e.touches[0].clientY; clampVB(); applyVB(); } else if (e.touches.length === 2 && lastTD) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); vb.w *= lastTD / d; vb.h *= lastTD / d; lastTD = d; clampVB(); applyVB(); } }, { passive: false });
 svg.addEventListener('touchend', () => { panning = false; lastTD = null; });
 
 function clampVB() {
@@ -247,7 +274,38 @@ function clampVB() {
     if (factor !== 1) { vb.w *= factor; vb.h *= factor; }
 }
 
+// ── CAMERA FOLLOW ─────────────────────────────────────────────────────────────
+// Selecting a body (showInfo) or a fleet (showFleetInfo) starts the camera
+// tracking it hard-centered every tick as time moves -- a manual pan (drag)
+// breaks the follow (you clearly want to look elsewhere); zooming does NOT
+// (see the wheel handler above, which re-anchors on center instead of the
+// cursor while following, so it can't drift). Selecting a static trade lane
+// (showPathInfo) clears it -- nothing there moves, so there's nothing to
+// track. Re-selecting a body/fleet always re-engages it.
+let followEntity = null; // {type:'body', id} | {type:'fleet', fleet} | null
+function setFollowEntity(entity) { followEntity = entity; }
+function followEntityPosition() {
+    if (!followEntity) return null;
+    if (followEntity.type === 'body') return computeAllPositions(tick)[followEntity.id] || null;
+    return getFleetState(followEntity.fleet, tick).position || null;
+}
+function applyCameraFollow() {
+    if (!followEntity) return;
+    const p = followEntityPosition();
+    if (!p) return;
+    vb.x = p.x - vb.w / 2;
+    vb.y = p.y - vb.h / 2;
+    applyVB();
+}
+
 // ── LOAD LOCAL JSON ───────────────────────────────────────────────────────────
+// Every all_info/*.json file is hand-edited directly by the GM (no in-app
+// editor) -- a 404 (renamed/moved file) or a JSON syntax typo used to fail
+// completely silently here (console.error only, that section just quietly
+// fell back to its empty default), easy to miss mid-session. dataLoadErrors
+// collects the failures so init() can surface them on-screen once loading
+// settles -- see showDataErrorBanner().
+let dataLoadErrors = [];
 async function loadJson(path, fallback) {
     try {
         const res = await fetch(path);
@@ -255,8 +313,23 @@ async function loadJson(path, fallback) {
         return await res.json();
     } catch (err) {
         console.error('[STRATMAP] failed to load', path, err);
+        dataLoadErrors.push(path);
         return fallback;
     }
+}
+function showDataErrorBanner() {
+    if (!dataLoadErrors.length) return;
+    const host = document.getElementById('data-error-banner');
+    if (!host) return;
+    host.innerHTML = '';
+    const msg = document.createElement('span');
+    msg.textContent = `⚠ Errore nel caricamento di: ${dataLoadErrors.join(', ')} — quella sezione userà valori vuoti/di default. Controlla la console per i dettagli.`;
+    host.appendChild(msg);
+    const dismiss = document.createElement('button');
+    dismiss.textContent = 'Ignora';
+    dismiss.addEventListener('click', () => host.classList.remove('show'));
+    host.appendChild(dismiss);
+    host.classList.add('show');
 }
 
 // ── NORMALISE MAP DATA ────────────────────────────────────────────────────────
@@ -294,7 +367,14 @@ function normalise(bodies, paths) {
 }
 
 // ── ORBITAL ENGINE ────────────────────────────────────────────────────────────
+// Single-slot cache: within one render pass (or one animation frame), several
+// independent code paths (updateScene, resolveFleetState, focusOnBody, the
+// info-panel renderers...) all ask for positions at the SAME t -- recomputing
+// the full recursive walk every time is pure waste since byId never changes
+// at runtime (no live-editing UI, GM edits the JSON file and reloads).
+let lastPositionsT = null, lastPositionsCache = null;
 function computeAllPositions(t) {
+    if (t === lastPositionsT) return lastPositionsCache;
     const cache = {};
     function pos(id) {
         if (cache[id]) return cache[id];
@@ -309,7 +389,235 @@ function computeAllPositions(t) {
         return cache[id];
     }
     Object.keys(byId).filter(id => id !== '__paths').forEach(id => pos(id));
+    lastPositionsT = t; lastPositionsCache = cache;
     return cache;
+}
+
+// ── FLEET INTERCEPT SOLVE ─────────────────────────────────────────────────────
+// Every orbit is fully deterministic (computeAllPositions above), so a "move
+// to X" order is solved as a real intercept problem rather than chased frame
+// by frame: given the fleet's live start position/time and constant speed,
+// find the smallest future month where the fleet (traveling in a fixed
+// straight line at constant speed) and the target's position coincide.
+// Coarse-scan then bisect -- simple and numerically robust for the smooth,
+// bounded target paths this system actually has (circular orbits, or another
+// fleet's own already-solved course), no closed-form needed.
+const INTERCEPT_HORIZON_MONTHS = 240;
+const INTERCEPT_STEP_MONTHS = 0.5;
+const DEFAULT_FLEET_SPEED = 4; // AU/month -- matches the old hardcoded global every fleet used to share
+
+function solveIntercept(startPos, startMonth, speedAU, targetPosFn) {
+    if (!(speedAU > 0)) return null;
+    const speedSVG = speedAU * DIST_SCALE;
+    const f = t => {
+        const p = targetPosFn(t);
+        if (!p) return null;
+        return Math.hypot(p.x - startPos.x, p.y - startPos.y) - speedSVG * (t - startMonth);
+    };
+    let prevT = startMonth, prevF = f(startMonth);
+    if (prevF === null) return null;
+    if (prevF <= 0) return { etaMonth: startMonth, point: targetPosFn(startMonth), distanceAU: 0 };
+    for (let t = startMonth + INTERCEPT_STEP_MONTHS; t <= startMonth + INTERCEPT_HORIZON_MONTHS; t += INTERCEPT_STEP_MONTHS) {
+        const curF = f(t);
+        if (curF === null) return null;
+        if (curF <= 0) {
+            let lo = prevT, hi = t;
+            for (let i = 0; i < 30; i++) {
+                const mid = (lo + hi) / 2;
+                const midF = f(mid);
+                if (midF === null) return null;
+                if (midF > 0) lo = mid; else hi = mid;
+            }
+            const etaMonth = hi;
+            const point = targetPosFn(etaMonth);
+            const distanceAU = speedAU * (etaMonth - startMonth);
+            return { etaMonth, point, distanceAU };
+        }
+        prevT = t; prevF = curF;
+    }
+    return null; // no crossing within the horizon -> infeasible
+}
+
+// ── FLEET STATE RESOLUTION ────────────────────────────────────────────────────
+// Resolves a named fleet's live position/status at month t by replaying its
+// order list chronologically. Returns one of:
+//   {mode:'body', bodyId, position}     -- parked at a real body (folds into that body's info panel)
+//   {mode:'point', position}            -- holding at a fixed rendezvous point that isn't a body (e.g. arrived at another fleet)
+//   {mode:'transit', position, course}  -- mid-course, gets its own map token
+//   {mode:'disabled', position}         -- ghosted at its position when disabled
+// plus an errors[] list of any rejected orders (unresolved target, no
+// intercept found in the horizon, or exceeds maxDistance).
+const RESOLVE_DEPTH_LIMIT = 8;
+
+function fleetHomeBodyId(fleet) {
+    const company = companiesByName[fleet.owner];
+    if (!company || !company.planet) return null;
+    return bodyIdByName[company.planet.trim().toLowerCase()] || null;
+}
+
+function positionOnCourse(course, month) {
+    if (month >= course.etaMonth) return course.endPoint;
+    const frac = Math.max(0, (month - course.startMonth) / (course.etaMonth - course.startMonth));
+    return { x: course.startPos.x + (course.endPoint.x - course.startPos.x) * frac, y: course.startPos.y + (course.endPoint.y - course.startPos.y) * frac };
+}
+
+function resolveTargetPosFn(targetId, depth) {
+    if (byId[targetId]) return t => computeAllPositions(t)[targetId];
+    const targetFleet = fleetsById[targetId];
+    if (targetFleet) return t => resolveFleetState(targetFleet, t, depth + 1).position;
+    return null;
+}
+
+// Where a fleet actually is at a given month, given whatever state it's
+// currently resolved to -- reused both for a move order's own departure
+// point and for probing candidate (possibly later) departure months while
+// waiting for a launch window to open (see WAIT_STEP_MONTHS below).
+function positionOfState(state, month) {
+    if (state.mode === 'course') {
+        if (month >= state.course.etaMonth) {
+            // Arrived. If it arrived AT A BODY, keep tracking that body's
+            // live orbit from then on -- a parked fleet doesn't freeze in
+            // space just because its course finished; only a bare-point
+            // rendezvous (e.g. arriving at another fleet, no body to track)
+            // stays fixed at the point the intercept actually happened.
+            return state.course.targetIsBody ? computeAllPositions(month)[state.course.rawTarget] : state.course.endPoint;
+        }
+        return positionOnCourse(state.course, month);
+    }
+    if (state.mode === 'point' || state.mode === 'disabled') return state.position;
+    if (state.bodyId) return computeAllPositions(month)[state.bodyId];
+    return { x: CENTER, y: CENTER };
+}
+
+// Granularity for the "wait until in range" departure search below -- whole
+// months are plenty precise for a month-scale game and keep the search
+// (which re-runs solveIntercept's own sub-month scan at every candidate)
+// cheap in the common case where the very first candidate already works.
+const WAIT_STEP_MONTHS = 1;
+
+// onDeparture(order, departureMonth, rawTarget), if given, fires for every
+// move order that resolves to an actual departure (whether or not it's
+// already happened by t) -- used by the timeline panel to auto-list "fleet X
+// started moving to Y" without duplicating this resolution logic.
+function resolveFleetState(fleet, t, depth, onDeparture) {
+    depth = depth || 0;
+    const homeId = fleetHomeBodyId(fleet);
+    const startBodyId = (fleet.startBody && byId[fleet.startBody]) ? fleet.startBody : homeId;
+    const errors = [];
+
+    if (depth > RESOLVE_DEPTH_LIMIT) {
+        const pos = startBodyId ? computeAllPositions(t)[startBodyId] : { x: CENTER, y: CENTER };
+        return { mode: 'body', bodyId: startBodyId, position: pos, fleet, errors: [{ message: 'Riferimento circolare tra flotte.' }] };
+    }
+
+    let state = { mode: 'body', bodyId: startBodyId };
+    let disabled = false;
+    let pending = null; // {order, departureMonth, rawTarget} while a move order is authored but hasn't reached its launch window yet
+    const orders = (fleet.orders || []).slice().sort((a, b) => a.month - b.month);
+
+    for (const order of orders) {
+        if (order.month > t) break;
+        if (order.action === 'disable') {
+            const pos = positionOfState(state, order.month);
+            disabled = true;
+            pending = null;
+            state = { mode: 'disabled', position: pos };
+            continue;
+        }
+        if (order.action === 'enable') {
+            disabled = false;
+            if (state.mode === 'disabled') state = { mode: 'point', position: state.position };
+            continue;
+        }
+        if (order.action !== 'move' || disabled) continue;
+
+        const rawTarget = order.target === 'home' ? homeId : order.target;
+        if (!rawTarget) { errors.push({ order, message: `Obiettivo "${order.target}" non riconosciuto.` }); pending = null; continue; }
+        const posFn = resolveTargetPosFn(rawTarget, depth);
+        if (!posFn) { errors.push({ order, message: `Obiettivo "${order.target}" non riconosciuto.` }); pending = null; continue; }
+
+        // No cap -> solve once at the order's own month, same as before.
+        // Capped -> the order's month is only the EARLIEST possible
+        // departure; scan forward (fleet holding in place, still tracked
+        // live via positionOfState) for the first month a solve actually
+        // fits within maxDistance, and depart then instead of rejecting.
+        let solved = null, departureMonth = null;
+        if (fleet.maxDistance == null) {
+            departureMonth = order.month;
+            solved = solveIntercept(positionOfState(state, departureMonth), departureMonth, fleet.speed || DEFAULT_FLEET_SPEED, posFn);
+        } else {
+            for (let dep = order.month; dep <= order.month + INTERCEPT_HORIZON_MONTHS; dep += WAIT_STEP_MONTHS) {
+                const candidate = solveIntercept(positionOfState(state, dep), dep, fleet.speed || DEFAULT_FLEET_SPEED, posFn);
+                if (candidate && candidate.distanceAU <= fleet.maxDistance) { solved = candidate; departureMonth = dep; break; }
+            }
+        }
+        if (!solved) {
+            errors.push({ order, message: `Nessuna finestra di lancio raggiungibile entro ${INTERCEPT_HORIZON_MONTHS} mesi (fuori portata).` });
+            pending = null;
+            continue;
+        }
+
+        if (onDeparture) onDeparture(order, departureMonth, rawTarget);
+
+        if (t < departureMonth) {
+            // Launch window hasn't opened yet as of the month being viewed --
+            // stay parked/tracking live position, just remember we're waiting.
+            pending = { order, departureMonth, rawTarget };
+            continue;
+        }
+        pending = null;
+        state = {
+            mode: 'course',
+            course: {
+                startPos: positionOfState(state, departureMonth), startMonth: departureMonth, etaMonth: solved.etaMonth, endPoint: solved.point,
+                rawTarget, targetIsBody: !!byId[rawTarget],
+            },
+        };
+    }
+
+    if (state.mode === 'course') {
+        if (t >= state.course.etaMonth) {
+            // positionOfState live-tracks the target body's current orbit
+            // once arrived (see above) rather than freezing at the
+            // arrival-moment coordinates, which otherwise made a NEXT move
+            // order's departure point (and this fleet's own displayed
+            // position) go stale the longer it sat parked after arriving.
+            if (state.course.targetIsBody) return { mode: 'body', bodyId: state.course.rawTarget, position: positionOfState(state, t), fleet, errors, pending };
+            return { mode: 'point', position: state.course.endPoint, fleet, errors, pending };
+        }
+        return { mode: 'transit', position: positionOnCourse(state.course, t), course: state.course, fleet, errors, pending };
+    }
+    if (state.mode === 'disabled') return { mode: 'disabled', position: state.position, fleet, errors, pending };
+    if (state.mode === 'point') return { mode: 'point', position: state.position, fleet, errors, pending };
+    return { mode: 'body', bodyId: state.bodyId, position: state.bodyId ? computeAllPositions(t)[state.bodyId] : { x: CENTER, y: CENTER }, fleet, errors, pending };
+}
+
+// Memoized resolveFleetState for the common "what's this fleet doing right
+// now, at the currently displayed tick" question -- a single click (e.g.
+// showInfo -> namedFleetsParkedAt -> renderFleetBonusChips, or
+// showFamilyOverlay -> its warnings loop -> renderFleetLocations) can ask
+// this same (fleet, tick) question 2-3x in one UI refresh, each repeating
+// the full order walk (including any wait-for-range intercept search).
+// Scoped to a single tick: reset whenever t changes rather than kept forever,
+// since t is now a continuously-eased float during the tick animation (see
+// tickAnimStep) and an unbounded cache would just leak one entry per frame.
+// Only used at render/UI call sites -- resolveTargetPosFn's own recursive
+// fleet-vs-fleet probing (arbitrary probe months, not the display tick, plus
+// depth-tracked for cycle safety) intentionally calls resolveFleetState raw.
+let fleetStateCache = new Map();
+let fleetStateCacheTick = null;
+function getFleetState(fleet, t) {
+    if (t !== fleetStateCacheTick) { fleetStateCache = new Map(); fleetStateCacheTick = t; }
+    let res = fleetStateCache.get(fleet.id || fleet);
+    if (!res) { res = resolveFleetState(fleet, t); if (fleet.id) fleetStateCache.set(fleet.id, res); }
+    return res;
+}
+
+function targetLabel(targetId) {
+    if (!targetId) return '?';
+    if (byId[targetId]) return byId[targetId].name;
+    if (fleetsById[targetId]) return fleetsById[targetId].name;
+    return targetId;
 }
 
 // ── GRADIENT / COLOR FILTER ───────────────────────────────────────────────────
@@ -337,6 +645,8 @@ function buildScene() {
     bodyLayer.innerHTML = '';
     bodyGroups = {};
     iconScaleGroups = {};
+    fleetIconGroups = {};
+    fleetIconGroupsCollapsed = {};
     if (bgStars) bgStars.innerHTML = '';
 
     satellitesByParent = {};
@@ -351,6 +661,9 @@ function buildScene() {
     sunScale.appendChild(el('circle', { r: SUN_R, fill: 'url(#sunGrad)', filter: 'url(#glow-strong)', stroke: 'rgba(255,240,180,0.3)', 'stroke-width': '2' }));
     const sunLbl = el('text', { x: SUN_R + 8, y: 0, class: 'body-label', 'dominant-baseline': 'middle' });
     sunLbl.textContent = 'Sun'; sunScale.appendChild(sunLbl);
+    const sunFleetIconG = el('g', { class: 'fleet-icons' });
+    sunScale.appendChild(sunFleetIconG);
+    fleetIconGroups['sun'] = sunFleetIconG;
     sunG.appendChild(sunScale);
     sunG.addEventListener('click', () => showInfo(byId['sun']));
     sunG.setAttribute('transform', `translate(${CENTER},${CENTER})`);
@@ -395,26 +708,22 @@ function buildScene() {
         icon.setAttribute('opacity', '0.85');
         g.addEventListener('click', e => { e.stopPropagation(); showInfo(b); });
 
-        if (b.fleets && b.fleets.length) {
-            const fleets = b.fleets;
-            const iconSize = isMain ? 14 : 10;
-            const iconGap = isMain ? 16 : 12;
-            const startX = r - (fleets.length - 1) * iconGap / 2;
-            const topY = -(r + 10);
-            fleets.forEach((fleetOwner, i) => {
-                const ownerColor = byId[Object.keys(byId).find(k => byId[k].owner === fleetOwner)]?.color || b.ownerColor || '#aaaaaa';
-                const img = el('image', {
-                    href: 'images/attack.svg', x: startX + i * iconGap - iconSize / 2, y: topY - iconSize / 2,
-                    width: iconSize, height: iconSize, style: `filter: drop-shadow(0 0 2px ${ownerColor}); opacity: 0.9;`,
-                });
-                const colorDot = el('circle', {
-                    cx: startX + i * iconGap, cy: topY, r: iconSize / 2 + 1, fill: ownerColor, opacity: '0.6',
-                    stroke: 'rgba(255,255,255,0.4)', 'stroke-width': '1',
-                });
-                scaleG.appendChild(colorDot);
-                scaleG.appendChild(img);
-            });
+        // Fleet markers (anonymous + named combined, deduped by family) are
+        // built fresh every tick in updateScene() -- this body's OWN row
+        // always exists; bodies WITH satellites (checked below) also get a
+        // second, initially-hidden row holding the MERGED parent+satellites
+        // count, shown instead of the per-body rows when zoomed out past
+        // MOON_COLLAPSE_VB_WIDTH (refreshIconScale() toggles between them,
+        // same mechanism it already uses to hide the satellites themselves).
+        const fleetIconG = el('g', { class: 'fleet-icons' });
+        scaleG.appendChild(fleetIconG);
+        fleetIconGroups[b.id] = fleetIconG;
+        if (satellitesByParent[b.id] && satellitesByParent[b.id].length) {
+            const collapsedG = el('g', { class: 'fleet-icons fleet-icons-collapsed' });
+            scaleG.appendChild(collapsedG);
+            fleetIconGroupsCollapsed[b.id] = collapsedG;
         }
+
         bodyLayer.appendChild(g); bodyGroups[b.id] = g; iconScaleGroups[b.id] = scaleG;
     });
 
@@ -468,10 +777,12 @@ function updateScene(t) {
     defs.querySelectorAll('[id^="mp-"]').forEach(e => e.remove());
     defs.querySelectorAll('[id^="arrow-"]').forEach(e => e.remove());
 
+    // Permanent trade lanes only now (all_info/points_of_interest.json's
+    // tradePaths) -- fleet movement has its own resolution below, replacing
+    // the old warpath/progress mechanic entirely.
     (byId.__paths || []).forEach((path, pi) => {
-        const isWar = path.type === 'warpath';
         const arrowId = `arrow-${pi}`;
-        if (!isWar && !defs.querySelector(`#${arrowId}`)) {
+        if (!defs.querySelector(`#${arrowId}`)) {
             const marker = el('marker', { id: arrowId, markerWidth: '8', markerHeight: '8', refX: '6', refY: '3', orient: 'auto' });
             marker.appendChild(el('polygon', { points: '0,0 0,6 8,3', fill: path.color, opacity: '0.85' }));
             defs.appendChild(marker);
@@ -488,89 +799,224 @@ function updateScene(t) {
         const pathG = el('g', { class: 'path-group', style: 'cursor:pointer' });
         pathG.addEventListener('click', e => { e.stopPropagation(); showPathInfo(path, totalLen); });
 
-        // Warpaths only define a departure + arrival id; the fleet always
-        // aims at wherever the target currently is (segments/totalLen above
-        // are already recomputed fresh from *live* positions every tick).
-        // But pacing "how much of the trip is done" against that same live
-        // (orbiting, non-monotonic) distance made arrival flicker as the two
-        // endpoints' mutual distance oscillated. Instead, freeze the pacing
-        // distance once at departure (cached on the path object -- paths are
-        // rebuilt fresh on every loadMap(), so this can't go stale) and only
-        // use the live totalLen to place the fleet marker visually.
-        let progress = 1;
-        if (isWar) {
-            if (path._totalLenAtDeparture === undefined) {
-                const depPositions = computeAllPositions(path.departure);
-                const depPts = path.ids.map(id => depPositions[id]).filter(Boolean);
-                let depLen = 0;
-                for (let i = 0; i < depPts.length - 1; i++) {
-                    depLen += Math.hypot(depPts[i + 1].x - depPts[i].x, depPts[i + 1].y - depPts[i].y);
-                }
-                path._totalLenAtDeparture = depLen;
-            }
-            const elapsed = tick - path.departure;
-            const travelledSVG = elapsed * 4 * DIST_SCALE;
-            progress = path._totalLenAtDeparture > 0 ? travelledSVG / path._totalLenAtDeparture : 1;
-            if (elapsed < 0 || progress >= 1) return;
-        }
-
         for (let i = 0; i < segments.length; i++) {
             const { a, b, len } = segments[i];
             const dx = b.x - a.x, dy = b.y - a.y;
             const ux = dx / len, uy = dy / len;
-            const trim = isWar ? 5 : Math.min(PLANET_R + 10, len * 0.2);
+            const trim = Math.min(PLANET_R + 10, len * 0.2);
             const lineAttrs = {
                 x1: a.x + ux * trim, y1: a.y + uy * trim,
-                x2: b.x - ux * (trim + (isWar ? 5 : 10)), y2: b.y - uy * (trim + (isWar ? 5 : 10)),
-                stroke: path.color, 'stroke-width': isWar ? '2' : '2.5', opacity: isWar ? '0.5' : '0.7',
+                x2: b.x - ux * (trim + 10), y2: b.y - uy * (trim + 10),
+                stroke: path.color, 'stroke-width': '2.5', opacity: '0.7',
             };
-            if (isWar) lineAttrs['stroke-dasharray'] = '12 8';
-            else if (i === segments.length - 1) lineAttrs['marker-end'] = `url(#${arrowId})`;
+            if (i === segments.length - 1) lineAttrs['marker-end'] = `url(#${arrowId})`;
             const hitAttrs = { ...lineAttrs };
             delete hitAttrs['marker-end'];
             const hit = el('line', { ...hitAttrs, stroke: 'transparent', 'stroke-width': '18' });
             pathG.appendChild(hit);
             pathG.appendChild(el('line', lineAttrs));
         }
-
-        if (isWar && path.fleets && path.fleets.length) {
-            // Map the departure-paced progress fraction onto the live
-            // (current-position) segment lengths, so the token still visually
-            // tracks the target as it orbits, without the pacing itself
-            // flickering (see progress computation above).
-            let remaining = Math.max(0, progress) * totalLen;
-            let tokenPos = null, tokenAngle = 0;
-            for (const seg of segments) {
-                if (remaining <= seg.len) {
-                    const frac = remaining / seg.len;
-                    const dx = seg.b.x - seg.a.x, dy = seg.b.y - seg.a.y;
-                    tokenPos = { x: seg.a.x + dx * frac, y: seg.a.y + dy * frac };
-                    tokenAngle = Math.atan2(dy, dx) * 180 / Math.PI;
-                    break;
-                }
-                remaining -= seg.len;
-            }
-            if (tokenPos) {
-                const fleetList = path.fleets;
-                const iconSize = 20;
-                fleetList.forEach((fleetOwner, fi) => {
-                    const ownerColor = Object.values(byId).find(b => b.owner === fleetOwner)?.color || path.color;
-                    const offsetY = fi * (iconSize + 4) - ((fleetList.length - 1) * (iconSize + 4)) / 2;
-                    const iconG = el('g', { transform: `translate(${tokenPos.x.toFixed(1)},${tokenPos.y.toFixed(1)}) rotate(${tokenAngle.toFixed(1)})` });
-                    iconG.appendChild(el('circle', { r: iconSize / 2 + 2, cx: 0, cy: offsetY, fill: ownerColor, opacity: '0.55', stroke: 'rgba(255,255,255,0.5)', 'stroke-width': '1.5' }));
-                    iconG.appendChild(el('image', { href: 'images/attack.svg', x: -iconSize / 2, y: offsetY - iconSize / 2, width: iconSize, height: iconSize, style: `filter: drop-shadow(0 0 6px ${ownerColor}) brightness(1.8); opacity: 1;` }));
-                    pathG.appendChild(iconG);
-                });
-            }
-        }
         pathLayer.appendChild(pathG);
     });
+
+    // ── NAMED FLEETS ─────────────────────────────────────────────────────────
+    // A named fleet's own live status (see resolveFleetState) decides how it
+    // renders: parked at a real body -> folds into that body's own icon row,
+    // deduped by family alongside any anonymous fleets there (see the body
+    // icon-row pass below); anything else (in transit, holding at a bare
+    // rendezvous point, or ghosted while disabled) gets its own token.
+    fleetTokenScaleEls = [];
+    fleetCourseLineEls = [];
+    const namedFleetsByBody = {}; // bodyId -> [{fleet, res}, ...] currently resolved as parked there
+    namedFleets.forEach(fleet => {
+        const res = getFleetState(fleet, t);
+        const ownerColor = familyColor(fleet.owner);
+        if (res.mode === 'body' && res.bodyId) {
+            (namedFleetsByBody[res.bodyId] = namedFleetsByBody[res.bodyId] || []).push({ fleet, res });
+            return;
+        }
+        const p = res.position;
+        if (!p) return;
+        const ghosted = res.mode === 'disabled';
+        const iconSize = 20;
+
+        if (res.mode === 'transit') {
+            const c = res.course;
+            // Wrapped in a clickable group with a wide invisible hit-line, same
+            // pattern as the permanent trade-lane lines above -- clicking
+            // anywhere along the dashed course (not just the icon) opens the
+            // fleet's info panel.
+            const lineG = el('g', { style: 'cursor:pointer' });
+            lineG.addEventListener('click', e => { e.stopPropagation(); showFleetInfo(fleet, t); });
+            const hit = el('line', { x1: c.startPos.x, y1: c.startPos.y, x2: c.endPoint.x, y2: c.endPoint.y, stroke: 'transparent', 'stroke-width': '18' });
+            const line = el('line', {
+                x1: c.startPos.x, y1: c.startPos.y, x2: c.endPoint.x, y2: c.endPoint.y,
+                stroke: ownerColor, opacity: '0.5', 'stroke-dasharray': '12 8',
+            });
+            lineG.appendChild(hit); lineG.appendChild(line);
+            pathLayer.appendChild(lineG);
+            fleetCourseLineEls.push(line);
+        }
+
+        const iconG = el('g', { transform: `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`, style: 'cursor:pointer', class: 'fleet-token' + (ghosted ? ' fleet-token-ghost' : '') });
+        const scaleG = el('g', { class: 'fleet-icon-scale' });
+        iconG.appendChild(scaleG);
+        scaleG.appendChild(el('circle', { r: iconSize / 2 + 2, fill: ownerColor, opacity: ghosted ? '0.35' : '0.55', stroke: 'rgba(255,255,255,0.5)', 'stroke-width': '1.5' }));
+        scaleG.appendChild(el('image', {
+            href: 'images/attack.svg', x: -iconSize / 2, y: -iconSize / 2, width: iconSize, height: iconSize,
+            style: `filter: drop-shadow(0 0 6px ${ownerColor}) brightness(${ghosted ? 1 : 1.8}); opacity: ${ghosted ? 0.6 : 1};`,
+        }));
+        if (ghosted) {
+            const badge = el('text', { x: iconSize / 2 + 4, y: 4, class: 'fleet-ghost-badge' });
+            badge.textContent = '⏸';
+            scaleG.appendChild(badge);
+        }
+        if (res.errors && res.errors.length) {
+            const warn = el('text', { x: -(iconSize / 2 + 12), y: 4, class: 'fleet-warn-badge' });
+            warn.textContent = '⚠';
+            scaleG.appendChild(warn);
+        }
+        iconG.addEventListener('click', e => { e.stopPropagation(); showFleetInfo(fleet, t); });
+        pathLayer.appendChild(iconG);
+        fleetTokenScaleEls.push(scaleG);
+    });
+
+    // ── BODY FLEET ICON ROWS ────────────────────────────────────────────────
+    // Anonymous stationed fleets (b.fleets, family-name strings) and named
+    // fleets currently parked here (namedFleetsByBody) are combined into one
+    // family -> count map per body, so several fleets from the same family
+    // never draw as separate markers -- one icon per family, with a small
+    // ×N badge when more than one. Bodies with satellites also get a second
+    // MERGED row (this body + all its satellites) built into
+    // fleetIconGroupsCollapsed, shown instead when moons collapse at high
+    // zoom-out (toggled by refreshIconScale(), not rebuilt on pure zoom).
+    function familyCounts(bodyId) {
+        const counts = {}; // name -> {count, pending}
+        const b = byId[bodyId];
+        (b && b.fleets || []).forEach(name => {
+            counts[name] = counts[name] || { count: 0, pending: false };
+            counts[name].count++;
+        });
+        (namedFleetsByBody[bodyId] || []).forEach(({ fleet, res }) => {
+            counts[fleet.owner] = counts[fleet.owner] || { count: 0, pending: false };
+            counts[fleet.owner].count++;
+            if (res.pending) counts[fleet.owner].pending = true;
+        });
+        return counts;
+    }
+    function mergeCounts(target, extra) {
+        Object.entries(extra).forEach(([name, v]) => {
+            target[name] = target[name] || { count: 0, pending: false };
+            target[name].count += v.count;
+            target[name].pending = target[name].pending || v.pending;
+        });
+        return target;
+    }
+    function renderFamilyIcons(targetGroup, counts, isMain) {
+        targetGroup.innerHTML = '';
+        const names = Object.keys(counts);
+        if (!names.length) return;
+        const iconSize = isMain ? 14 : 10;
+        const iconGap = isMain ? 16 : 12;
+        const r = isMain ? PLANET_R : MOON_R;
+        const startX = r - (names.length - 1) * iconGap / 2;
+        const topY = -(r + 10);
+        names.forEach((name, i) => {
+            const ownerColor = familyColor(name);
+            const cx = startX + i * iconGap;
+            targetGroup.appendChild(el('circle', { cx, cy: topY, r: iconSize / 2 + 1, fill: ownerColor, opacity: '0.6', stroke: 'rgba(255,255,255,0.4)', 'stroke-width': '1' }));
+            targetGroup.appendChild(el('image', { href: 'images/attack.svg', x: cx - iconSize / 2, y: topY - iconSize / 2, width: iconSize, height: iconSize, style: `filter: drop-shadow(0 0 2px ${ownerColor}); opacity: 0.9;` }));
+            if (counts[name].count > 1) {
+                const badge = el('text', { x: cx + iconSize / 2 + 1, y: topY + iconSize / 2 + 2, class: 'fleet-count-badge' });
+                badge.textContent = `×${counts[name].count}`;
+                targetGroup.appendChild(badge);
+            }
+            if (counts[name].pending) {
+                const badge = el('text', { x: cx - iconSize / 2 - 2, y: topY - iconSize / 2 - 2, class: 'fleet-wait-badge' });
+                badge.textContent = '⏳';
+                targetGroup.appendChild(badge);
+            }
+        });
+    }
+    Object.keys(fleetIconGroups).forEach(bodyId => {
+        const b = byId[bodyId];
+        const isMain = bodyId === 'sun' || (b && (b.anchor === 'sun' || b.type === 'planet'));
+        renderFamilyIcons(fleetIconGroups[bodyId], familyCounts(bodyId), isMain);
+    });
+    Object.keys(fleetIconGroupsCollapsed).forEach(parentId => {
+        const merged = familyCounts(parentId);
+        (satellitesByParent[parentId] || []).forEach(satId => { mergeCounts(merged, familyCounts(satId)); });
+        renderFamilyIcons(fleetIconGroupsCollapsed[parentId], merged, true);
+    });
+
+    refreshIconScale(); // apply the current zoom's fleet scale + collapse toggle immediately, not just on the next pan/zoom event
 }
 
 // ── TICK CONTROLS ─────────────────────────────────────────────────────────────
+// `tick` is the DISPLAYED value everything renders from (updateScene,
+// renderTimelinePanel, the camera-follow). `targetTick` is whatever the user
+// just asked for -- dragging the slider, the prev/next buttons, or the
+// "Corrente" reset. Rather than snapping `tick` straight to `targetTick`,
+// tickAnimStep eases it there over ~1-2s via requestAnimationFrame, so every
+// way of moving through time (including live slider drag) reads as one
+// continuous glide instead of a jump-cut; the slider's own thumb still
+// tracks the pointer natively while dragging (only the rendered scene/label
+// trail behind it -- see draggingSlider below).
 let baseTick = 0;
+let targetTick = 0;
 let tickHoldInterval = null;
-function stepTick(delta) { onTickChange(tick + delta * .03); }
+let tickAnimHandle = null;
+let tickAnimLastTs = null;
+let draggingSlider = false;
+const TICK_EASE_TAU = 0.35; // seconds -- ~4-5 tau (1.5-2s) to visually settle
+// Below this remaining gap the change is visually imperceptible (~half a
+// day of in-game time) -- snap immediately rather than let the exponential
+// tail keep re-running the full updateScene() DOM rebuild every frame for
+// several more seconds to close a gap nobody can actually see.
+const TICK_SNAP_EPS = 0.02;
+
+const tickSlider = document.getElementById('tickSlider');
+
+function clampTick(v) {
+    v = Math.round((parseFloat(v) || 0) * 100) / 100;
+    const min = parseFloat(tickSlider.min), max = parseFloat(tickSlider.max);
+    if (!Number.isNaN(min)) v = Math.max(min, v);
+    if (!Number.isNaN(max)) v = Math.min(max, v);
+    return v;
+}
+function setTargetTick(val) {
+    targetTick = clampTick(val);
+    if (tickAnimHandle == null) tickAnimHandle = requestAnimationFrame(tickAnimStep);
+}
+function tickAnimStep(ts) {
+    if (tickAnimLastTs == null) tickAnimLastTs = ts;
+    const dt = Math.min(0.1, Math.max(0, (ts - tickAnimLastTs) / 1000)); // clamp so a backgrounded tab doesn't leap on resume
+    tickAnimLastTs = ts;
+    const diff = targetTick - tick;
+    if (Math.abs(diff) <= TICK_SNAP_EPS) {
+        tick = targetTick;
+        applyTick();
+        tickAnimHandle = null;
+        tickAnimLastTs = null;
+        return;
+    }
+    tick += diff * (1 - Math.exp(-dt / TICK_EASE_TAU));
+    applyTick();
+    tickAnimHandle = requestAnimationFrame(tickAnimStep);
+}
+function applyTick() {
+    if (!draggingSlider) tickSlider.value = tick;
+    document.querySelector('#tick-label span').textContent = Math.round(tick * 100) / 100;
+    updateScene(tick);
+    renderTimelinePanel(tick);
+    applyCameraFollow();
+}
+
+// Holding prev/next steps the TARGET (not the still-easing displayed tick),
+// so repeated/rapid steps accumulate predictably and the eased tick just
+// keeps chasing whatever the latest target is, instead of restarting from a
+// barely-moved position every 150ms.
+function stepTick(delta) { setTargetTick(targetTick + delta * .03); }
 function startHold(delta) { stepTick(delta); tickHoldInterval = setInterval(() => stepTick(delta), 150); }
 function stopHold() { clearInterval(tickHoldInterval); tickHoldInterval = null; }
 
@@ -586,19 +1032,12 @@ tickNextBtn.addEventListener('touchstart', e => { e.preventDefault(); startHold(
 tickPrevBtn.addEventListener('touchend', stopHold);
 tickNextBtn.addEventListener('touchend', stopHold);
 
-const tickSlider = document.getElementById('tickSlider');
-function onTickChange(val) {
-    tick = Math.round(parseFloat(val) * 100) / 100 || 0;
-    const min = parseFloat(tickSlider.min), max = parseFloat(tickSlider.max);
-    if (!Number.isNaN(min)) tick = Math.max(min, tick);
-    if (!Number.isNaN(max)) tick = Math.min(max, tick);
-    tickSlider.value = tick;
-    document.querySelector('#tick-label span').textContent = tick;
-    updateScene(tick);
-    renderTimelinePanel(tick);
-}
-tickSlider.addEventListener('input', e => onTickChange(e.target.value));
-document.getElementById('resetBtn').addEventListener('click', () => onTickChange(baseTick));
+tickSlider.addEventListener('input', e => setTargetTick(e.target.value));
+tickSlider.addEventListener('mousedown', () => { draggingSlider = true; });
+tickSlider.addEventListener('touchstart', () => { draggingSlider = true; }, { passive: true });
+window.addEventListener('mouseup', () => { draggingSlider = false; });
+tickSlider.addEventListener('touchend', () => { draggingSlider = false; });
+document.getElementById('resetBtn').addEventListener('click', () => setTargetTick(baseTick));
 
 function loadMap(bodies, paths, timeline, stationedFleets) {
     byId = normalise(bodies, paths);
@@ -607,27 +1046,14 @@ function loadMap(bodies, paths, timeline, stationedFleets) {
         if (body) body.fleets = Array.isArray(s.fleets) ? s.fleets : [];
     });
 
-    // Game-balance default: any family short of its ceil(might/2) cap (after
-    // counting explicit fleets.json entries via familyFleetCount) is assumed
-    // to keep the remainder at its companies.json home planet -- so
-    // fleets.json only needs to record deviations (fleets away from home, or
-    // in transit), not a full roster for every family.
-    const bodyIdByName = {};
+    // Fleet count is no longer might-derived (see resolveFleetState/the
+    // "Genera Flotta" action) -- bodyIdByName is still needed by
+    // fleetHomeBodyId() to resolve a fleet's own home planet.
+    bodyIdByName = {};
     Object.values(byId).forEach(b => { if (b && b.name) bodyIdByName[b.name.trim().toLowerCase()] = b.id; });
-    Object.keys(companiesByName).forEach(name => {
-        const company = companiesByName[name];
-        if (!company.planet) return;
-        const homeId = bodyIdByName[company.planet.trim().toLowerCase()];
-        if (!homeId) { console.warn(`Fleet auto-fill: "${name}"'s planet "${company.planet}" matches no known body.`); return; }
-        const cap = Math.ceil((company.might || 0) / 2);
-        const remainder = Math.max(0, cap - familyFleetCount(name));
-        const home = byId[homeId];
-        home.fleets = home.fleets || [];
-        for (let i = 0; i < remainder; i++) home.fleets.push(name);
-    });
 
     currentMonth = (timeline && timeline.currentMonth) || 0;
-    tick = currentMonth; baseTick = currentMonth;
+    tick = currentMonth; targetTick = currentMonth; baseTick = currentMonth;
     tickSlider.min = baseTick - 24;
     tickSlider.max = baseTick + 24;
     tickSlider.step = 0.03125;
@@ -635,6 +1061,30 @@ function loadMap(bodies, paths, timeline, stationedFleets) {
     document.querySelector('#tick-label span').textContent = tick;
     buildScene(); ready = true; updateScene(tick); refreshIconScale();
     renderTimelinePanel(tick);
+}
+
+// Auto-generated "fleet X started moving to Y" lines for a given whole
+// month, merged into the timeline panel alongside the real GM-authored
+// events below -- reuses resolveFleetState's own order-walking logic via its
+// onDeparture callback rather than re-deriving departure months separately,
+// so this can never disagree with what the map itself renders. Guarded by a
+// last-month cache since renderTimelinePanel now runs every animation frame
+// while the tick eases (tickAnimStep), and the whole-month result is usually
+// unchanged between consecutive frames.
+let lastTimelineMonthNum = null, lastTimelineAutoEvents = null;
+function fleetDepartureEventsForMonth(monthNum) {
+    if (monthNum === lastTimelineMonthNum) return lastTimelineAutoEvents;
+    const events = [];
+    namedFleets.forEach(fleet => {
+        resolveFleetState(fleet, monthNum + 0.5, 0, (order, departureMonth, rawTarget) => {
+            if (Math.round(departureMonth) === monthNum) {
+                events.push(`⚔ ${fleet.name} (${fleet.owner}) è partita verso ${targetLabel(rawTarget)}.`);
+            }
+        });
+    });
+    lastTimelineMonthNum = monthNum;
+    lastTimelineAutoEvents = events;
+    return events;
 }
 
 // ── TIMELINE PANEL ───────────────────────────────────────────────────────────────
@@ -650,15 +1100,11 @@ function renderTimelinePanel(currentTick) {
     const titleEl = document.getElementById('timeline-panel-title');
     const eventsEl = document.getElementById('timeline-panel-events');
     monthEl.textContent = `Mese ${monthNum}`;
-    if (!month) {
-        titleEl.textContent = 'Nessun evento registrato per questo mese.';
-        eventsEl.innerHTML = '';
-        return;
-    }
-    titleEl.textContent = month.title || '—';
+    titleEl.textContent = (month && month.title) || '—';
     eventsEl.innerHTML = '';
-    const realEvents = (month.events || []).filter(ev => ev.description || ev.modifier);
-    if (realEvents.length === 0) {
+    const realEvents = ((month && month.events) || []).filter(ev => ev.description || ev.modifier);
+    const autoEvents = fleetDepartureEventsForMonth(monthNum);
+    if (realEvents.length === 0 && autoEvents.length === 0) {
         eventsEl.innerHTML = '<div class="opinion-empty">Nessun evento registrato per questo mese.</div>';
         return;
     }
@@ -670,9 +1116,15 @@ function renderTimelinePanel(currentTick) {
             ${ev.modifier ? `<div class="timeline-event-modifier">⚙ ${escHtml(ev.modifier)}</div>` : ''}`;
         eventsEl.appendChild(row);
     });
+    autoEvents.forEach(text => {
+        const row = document.createElement('div');
+        row.className = 'timeline-event-row auto';
+        row.innerHTML = `<div class="timeline-event-desc">${escHtml(text)}</div>`;
+        eventsEl.appendChild(row);
+    });
 }
-document.getElementById('timeline-prev-btn').addEventListener('click', () => onTickChange(Math.round(tick) - 1));
-document.getElementById('timeline-next-btn').addEventListener('click', () => onTickChange(Math.round(tick) + 1));
+document.getElementById('timeline-prev-btn').addEventListener('click', () => setTargetTick(Math.round(targetTick) - 1));
+document.getElementById('timeline-next-btn').addEventListener('click', () => setTargetTick(Math.round(targetTick) + 1));
 
 // ── UNIFIED TOP TOOLBAR ────────────────────────────────────────────────────────
 // One dropdown open at a time (Famiglie / Risorse & Asset / Info), replacing
@@ -699,6 +1151,39 @@ TOOLBAR_PANELS.forEach(name => {
 });
 
 // ── PLANET INFO PANEL ─────────────────────────────────────────────────────────
+// #info-meta lines used to be one plain textContent string (\n-joined) --
+// fine while every line was inert, but named fleets parked at a body need to
+// stay clickable (open that fleet's own panel) while living in this same
+// "⬡ Type: / ↩ Orbits:" list, so it's now built from real DOM nodes. A line
+// is either a plain string, or {prefix, parts:[{text, onClick?, color?}]}
+// for a line that mixes plain text with clickable fragments.
+function setInfoMeta(lines) {
+    const host = document.getElementById('info-meta');
+    host.innerHTML = '';
+    lines.forEach(line => {
+        const row = document.createElement('div');
+        if (typeof line === 'string') {
+            row.textContent = line;
+        } else {
+            row.appendChild(document.createTextNode(line.prefix));
+            line.parts.forEach((part, i) => {
+                if (i > 0) row.appendChild(document.createTextNode(', '));
+                if (part.onClick) {
+                    const span = document.createElement('span');
+                    span.textContent = part.text;
+                    span.className = 'owner-link';
+                    if (part.color) span.style.color = part.color;
+                    span.addEventListener('click', e => { e.stopPropagation(); part.onClick(); });
+                    row.appendChild(span);
+                } else {
+                    row.appendChild(document.createTextNode(part.text));
+                }
+            });
+        }
+        host.appendChild(row);
+    });
+}
+
 function showInfo(b) {
     document.getElementById('info-name').textContent = b.name || b.id;
     const oe = document.getElementById('info-owner');
@@ -713,15 +1198,90 @@ function showInfo(b) {
         oe.appendChild(link);
     }
     document.getElementById('info-desc').textContent = b.descr || '—';
-    let meta = ''; if (b.type) meta += `⬡ Type: ${b.type}\n`; if (b.fleets && b.fleets.length) meta += `⚔ Fleets: ${b.fleets.join(', ')}\n`; if (b.anchor) meta += `↩ Orbits: ${b.anchor}`;
-    document.getElementById('info-meta').textContent = meta;
+
+    const metaLines = [];
+    if (b.type) metaLines.push(`⬡ Type: ${b.type}`);
+    const parkedNamed = namedFleetsParkedAt(b.id);
+    const anonNames = b.fleets || [];
+    if (anonNames.length || parkedNamed.length) {
+        metaLines.push({
+            prefix: '⚔ Fleets: ',
+            parts: [
+                ...anonNames.map(n => ({ text: n })),
+                ...parkedNamed.map(fl => ({ text: fl.name, color: familyColor(fl.owner), onClick: () => showFleetInfo(fl, tick) })),
+            ],
+        });
+    }
+    if (b.anchor) metaLines.push(`↩ Orbits: ${b.anchor}`);
+    setInfoMeta(metaLines);
 
     renderResourceChips(b.resourceIds);
+    renderFleetBonusChips(parkedNamed);
     renderComposition(b.name);
     renderLocalizedAssets(b.id);
     renderFamilyQuickView(b.owner);
+    setFollowEntity(b.id === 'sun' ? null : { type: 'body', id: b.id });
 
     openToolbarPanel('info');
+}
+
+// Named fleets currently resolved (live, at the global `tick`) as parked at
+// a given body -- used both for the "Flotte in orbita" chips below and to
+// decide which bodies get a named-fleet icon row in updateScene().
+function namedFleetsParkedAt(bodyId) {
+    return namedFleets.filter(fl => {
+        const st = getFleetState(fl, tick);
+        return st.mode === 'body' && st.bodyId === bodyId;
+    });
+}
+
+// Live distance (AU) between a fleet's resolved position and its own home
+// body's current position -- the "logistics" reading, and the value
+// fleetBonusActive() below gates a fleet's bonus against.
+function fleetLogisticsDistanceAU(fleet, res, t) {
+    const homeId = fleetHomeBodyId(fleet);
+    if (!homeId || !res.position) return null;
+    const homePos = computeAllPositions(t)[homeId];
+    if (!homePos) return null;
+    return Math.hypot(res.position.x - homePos.x, res.position.y - homePos.y) / DIST_SCALE;
+}
+
+// A fleet's bonus is only in effect while it's within bonusRange AU of its
+// own home body (no bonusRange declared -> always active, no gating).
+function fleetBonusActive(fleet, res, t) {
+    if (fleet.bonusRange == null) return true;
+    const distAU = fleetLogisticsDistanceAU(fleet, res, t);
+    return distAU != null && distAU <= fleet.bonusRange;
+}
+
+// Named fleets parked at a body show up here as clickable chips (name +
+// owner color, bonus text + live active/inactive readout in the hover
+// tooltip) -- appended alongside renderResourceChips() in the same
+// #info-bonuses host rather than a new container, same "informational only"
+// treatment as a resource chip.
+function renderFleetBonusChips(fleetsHere) {
+    const host = document.getElementById('info-bonuses');
+    if (!fleetsHere || fleetsHere.length === 0) return;
+    host.style.display = 'flex';
+    fleetsHere.forEach(fleet => {
+        const res = getFleetState(fleet, tick);
+        const active = fleetBonusActive(fleet, res, tick);
+        const distAU = fleetLogisticsDistanceAU(fleet, res, tick);
+        const chip = document.createElement('div');
+        chip.className = 'trait-chip' + (active ? '' : ' locked');
+        chip.style.borderColor = familyColor(fleet.owner);
+        chip.textContent = `⚔ ${fleet.name}`;
+        const tip = document.createElement('div');
+        tip.className = 'trait-tooltip';
+        const bonusText = fleet.bonus ? `${fleet.owner}: ${fleet.bonus}` : `Flotta di ${fleet.owner}, nessun bonus dichiarato.`;
+        const statusText = fleet.bonusRange == null ? ''
+            : active ? `✅ Bonus attivo (${distAU.toFixed(1)}/${fleet.bonusRange} UA dalla base)`
+                : `⛔ Bonus inattivo (fuori raggio: ${distAU != null ? distAU.toFixed(1) : '?'}/${fleet.bonusRange} UA dalla base)`;
+        tip.innerHTML = `<div>${escHtml(bonusText)}</div>${statusText ? `<div class="modline">${escHtml(statusText)}</div>` : ''}`;
+        chip.appendChild(tip);
+        chip.addEventListener('click', e => { e.stopPropagation(); showFleetInfo(fleet, tick); });
+        host.appendChild(chip);
+    });
 }
 
 // Top 3 races + top 3 religions for a body (all_info/diplomacy.json), when
@@ -785,28 +1345,66 @@ function showPathInfo(path, totalLen) {
     document.getElementById('info-desc').textContent = path.descr || '—';
     let meta = '';
     meta += `⬡ Type: ${path.type}\n`;
-    if (path.fleets && path.fleets.length) meta += `⚔ Fleets: ${path.fleets.join(', ')}\n`;
     meta += `→ Route: ${path.ids.join(' → ')}`;
-    if (path.type === 'warpath') {
-        // Pace against the distance frozen at departure (see updateScene),
-        // not the live orbiting distance, so this doesn't wobble/go negative
-        // as the two endpoints' mutual distance oscillates over time.
-        const pacingLen = path._totalLenAtDeparture ?? totalLen;
-        if (pacingLen !== undefined) {
-            const elapsed = tick - path.departure;
-            const travelledSVG = elapsed * 4 * DIST_SCALE;
-            const remainingSVG = Math.max(0, pacingLen - travelledSVG);
-            const remainingWeeks = (remainingSVG / DIST_SCALE).toFixed(1);
-            const remainingMonths = (remainingSVG / (DIST_SCALE * 4)).toFixed(1);
-            meta += `\n📍 Partita al mese ${path.departure}`;
-            meta += `\n⏱ Distanza rimanente: ${remainingWeeks} wk (~${remainingMonths} mesi)`;
-        }
-    }
     document.getElementById('info-meta').textContent = meta;
     renderResourceChips(null);
     renderComposition(null);
     renderLocalizedAssets(null);
     renderFamilyQuickView(path.owner);
+    setFollowEntity(null); // trade lanes are static -- nothing here to track across time
+    openToolbarPanel('info');
+}
+
+// ── FLEET INFO PANEL ──────────────────────────────────────────────────────────
+// Shown for a named fleet's own map token (only rendered while it's in
+// transit, holding at a bare rendezvous point, or ghosted/disabled -- see
+// updateScene()); reuses the same shared #info-panel showPathInfo does.
+function showFleetInfo(fleet, t) {
+    const res = getFleetState(fleet, t);
+    document.getElementById('info-name').textContent = fleet.name || fleet.id;
+    const oe = document.getElementById('info-owner');
+    oe.innerHTML = '';
+    const ownerColor = familyColor(fleet.owner);
+    oe.style.color = ownerColor;
+    if (fleet.owner) {
+        const link = document.createElement('span');
+        link.textContent = `⚑ ${fleet.owner}`;
+        link.className = 'owner-link';
+        link.addEventListener('click', e => { e.stopPropagation(); showFamilyOverlay(fleet.owner); });
+        oe.appendChild(link);
+    }
+    document.getElementById('info-desc').textContent = fleet.bonus || '—';
+
+    let meta = `⬡ Flotta nominata\n`;
+    meta += `⚡ Velocità: ${fleet.speed || DEFAULT_FLEET_SPEED} UA/mese\n`;
+    meta += `↔ Distanza massima per ordine: ${fleet.maxDistance != null ? fleet.maxDistance + ' UA' : 'illimitata'}\n`;
+    const distAU = fleetLogisticsDistanceAU(fleet, res, t);
+    if (distAU != null) {
+        meta += `📡 Logistica: ${distAU.toFixed(1)} UA dalla base\n`;
+        if (fleet.bonusRange != null) {
+            const active = fleetBonusActive(fleet, res, t);
+            meta += `${active ? '✅' : '⛔'} Bonus ${active ? 'attivo' : 'inattivo'} (raggio: ${fleet.bonusRange} UA)\n`;
+        }
+    }
+    if (res.mode === 'transit') {
+        meta += `➤ In rotta verso: ${targetLabel(res.course.rawTarget)}\n`;
+        meta += `⏱ Arrivo previsto: mese ${res.course.etaMonth.toFixed(1)}`;
+    } else if (res.mode === 'disabled') {
+        meta += `⏸ Flotta disabilitata`;
+    } else if (res.mode === 'body' && res.bodyId) {
+        meta += `📍 In stazionamento su ${byId[res.bodyId] ? byId[res.bodyId].name : res.bodyId}`;
+    } else {
+        meta += `📍 In posizione fissa`;
+    }
+    if (res.pending) meta += `\n⏳ In attesa di una finestra di lancio verso ${targetLabel(res.pending.rawTarget)} — partenza prevista mese ${res.pending.departureMonth.toFixed(1)}`;
+    if (res.errors && res.errors.length) meta += `\n⚠ ${res.errors.map(e => e.message).join(' | ')}`;
+    document.getElementById('info-meta').textContent = meta;
+
+    renderResourceChips(null);
+    renderComposition(null);
+    renderLocalizedAssets(null);
+    renderFamilyQuickView(fleet.owner);
+    setFollowEntity({ type: 'fleet', fleet });
     openToolbarPanel('info');
 }
 
@@ -949,13 +1547,16 @@ function showFamilyOverlay(name) {
         planetEl.textContent = company.planet ? `Sede: ${company.planet}` : '';
         govEl.textContent = company.government || '';
 
-        // Game-balance rule: a family should never field more fleets at once
-        // than ceil(might/2) (all_info/fleets.json is the source for both
-        // stationed and in-transit fleets).
-        const fleetCount = familyFleetCount(name);
-        const fleetCap = Math.ceil((company.might || 0) / 2);
-        if (fleetCount > fleetCap) {
-            fleetWarningEl.textContent = `⚠ ${fleetCount}/${fleetCap} flotte — oltre il limite (ceil(Might/2))`;
+        // Surface any named fleet whose latest order is unreachable within
+        // the intercept solver's search horizon (target unresolved, or no
+        // in-range launch window ever found -- see resolveFleetState) right
+        // here. Fleet count itself is no longer might-capped.
+        const warnings = [];
+        namedFleets.filter(fl => fl.owner === name).forEach(fl => {
+            (getFleetState(fl, tick).errors || []).forEach(e => warnings.push(`⚠ ${fl.name}: ${e.message}`));
+        });
+        if (warnings.length) {
+            fleetWarningEl.innerHTML = warnings.map(w => `<div>${escHtml(w)}</div>`).join('');
             fleetWarningEl.style.display = 'block';
         } else {
             fleetWarningEl.style.display = 'none';
@@ -1079,44 +1680,48 @@ function renderResourceSummary(name) {
             </div>`).join('');
 }
 
-// "Flotte": stationed-by-planet counts (byId already folds in the
+// "Flotte": anonymous stationed-by-planet counts (byId already folds in the
 // auto-fill-at-home default, so this matches what's actually drawn on the
-// map) plus in-transit warpaths with remaining time (same math as
-// showPathInfo()). Rows are clickable, same jump-to-map pattern as
-// renderTerritories().
+// map) plus one row per NAMED fleet this family owns, showing its live
+// status (parked/in transit/disabled) resolved via resolveFleetState().
+// Rows are clickable, same jump-to-map pattern as renderTerritories().
 function renderFleetLocations(name) {
     const host = document.getElementById('family-fleet-locations');
-    const { stationed, transit } = familyFleetLocations(name);
-    if (stationed.length === 0 && transit.length === 0) {
+    const { stationed } = familyFleetLocations(name);
+    const named = namedFleets.filter(fl => fl.owner === name).map(fl => ({ fleet: fl, state: getFleetState(fl, tick) }));
+    if (stationed.length === 0 && named.length === 0) {
         host.innerHTML = '<div class="opinion-empty">Nessuna flotta rilevata.</div>';
         return;
     }
-    const positions = computeAllPositions(tick);
     const stationedHtml = stationed.map(({ body, count }) => `
         <div class="fleet-row" data-body="${escHtml(body.id)}">
             <span class="fleet-icon">🛰</span>
             <span class="fleet-location">${escHtml(body.name)}</span>
             <span class="fleet-count">${count} flott${count === 1 ? 'a' : 'e'}</span>
         </div>`).join('');
-    const transitHtml = transit.map((path, i) => {
-        const pts = path.ids.map(id => positions[id]).filter(Boolean);
-        let totalLen = 0;
-        for (let j = 0; j < pts.length - 1; j++) totalLen += Math.hypot(pts[j + 1].x - pts[j].x, pts[j + 1].y - pts[j].y);
-        const pacingLen = path._totalLenAtDeparture ?? totalLen;
-        const elapsed = tick - path.departure;
-        const remainingSVG = Math.max(0, pacingLen - elapsed * 4 * DIST_SCALE);
-        const remainingMonths = (remainingSVG / (DIST_SCALE * 4)).toFixed(1);
-        const routeName = path.name || path.ids.map(id => (byId[id] && byId[id].name) || id).join(' → ');
+    const namedHtml = named.map(({ fleet, state }, i) => {
+        let icon, statusText;
+        if (state.mode === 'transit') {
+            icon = '⚔'; statusText = `→ ${targetLabel(state.course.rawTarget)}, arrivo mese ${state.course.etaMonth.toFixed(1)}`;
+        } else if (state.mode === 'disabled') {
+            icon = '⏸'; statusText = 'Disabilitata';
+        } else if (state.mode === 'body' && state.bodyId) {
+            icon = '🛰'; statusText = `In stazionamento su ${(byId[state.bodyId] && byId[state.bodyId].name) || state.bodyId}`;
+        } else {
+            icon = '📍'; statusText = 'In posizione fissa';
+        }
+        if (state.pending) statusText += ` — ⏳ attesa finestra verso ${targetLabel(state.pending.rawTarget)}, mese ${state.pending.departureMonth.toFixed(1)}`;
+        const errBadge = state.errors && state.errors.length ? ' ⚠' : '';
         return `
-            <div class="fleet-row" data-transit-idx="${i}">
-                <span class="fleet-icon">⚔</span>
-                <span class="fleet-location">${escHtml(routeName)}</span>
-                <span class="fleet-count">~${remainingMonths} mesi rimanenti</span>
+            <div class="fleet-row" data-named-idx="${i}">
+                <span class="fleet-icon">${icon}</span>
+                <span class="fleet-location">${escHtml(fleet.name)}${errBadge}</span>
+                <span class="fleet-count">${escHtml(statusText)}</span>
             </div>`;
     }).join('');
     host.innerHTML = `
-        ${stationed.length ? `<h3 class="family-subsection-label">In stazionamento</h3>${stationedHtml}` : ''}
-        ${transit.length ? `<h3 class="family-subsection-label">In transito</h3>${transitHtml}` : ''}`;
+        ${stationed.length ? `<h3 class="family-subsection-label">In stazionamento (anonime)</h3>${stationedHtml}` : ''}
+        ${named.length ? `<h3 class="family-subsection-label">Flotte nominate</h3>${namedHtml}` : ''}`;
 
     host.querySelectorAll('.fleet-row[data-body]').forEach(row => {
         row.addEventListener('click', () => {
@@ -1126,15 +1731,12 @@ function renderFleetLocations(name) {
             showInfo(byId[id]);
         });
     });
-    host.querySelectorAll('.fleet-row[data-transit-idx]').forEach(row => {
+    host.querySelectorAll('.fleet-row[data-named-idx]').forEach(row => {
         row.addEventListener('click', () => {
-            const path = transit[Number(row.dataset.transitIdx)];
+            const { fleet, state } = named[Number(row.dataset.namedIdx)];
             closeFamilyOverlay();
-            focusOnPath(path);
-            const pts = path.ids.map(id => positions[id]).filter(Boolean);
-            let totalLen = 0;
-            for (let j = 0; j < pts.length - 1; j++) totalLen += Math.hypot(pts[j + 1].x - pts[j].x, pts[j + 1].y - pts[j].y);
-            showPathInfo(path, totalLen);
+            if (state.position) { vb.x = state.position.x - vb.w / 2; vb.y = state.position.y - vb.h / 2; applyVB(); }
+            showFleetInfo(fleet, tick);
         });
     });
 }
@@ -1692,17 +2294,6 @@ function familyTerritories(name) {
     return Object.values(byId).filter(b =>
         b && typeof b === 'object' && !Array.isArray(b) && b.id && b.id !== 'sun' && b.owner === name);
 }
-// Total fleets a family currently has anywhere on the map -- stationed at a
-// body plus in transit on a warpath -- compared against the game-balance
-// rule that a family should never field more than ceil(might/2) at once
-// (all_info/fleets.json is the single source for both categories).
-function familyFleetCount(name) {
-    let count = 0;
-    stationedFleets.forEach(s => { (s.fleets || []).forEach(f => { if (f === name) count++; }); });
-    allWarpaths.forEach(w => { (w.fleets || []).forEach(f => { if (f === name) count++; }); });
-    return count;
-}
-
 // Every resource id a family controls, grouped by category and deduped,
 // each noting which owned body/bodies it comes from -- for the overlay's
 // "Risorse Controllate" section. Unlike familyResourceIds() (a flat Set
@@ -1725,11 +2316,11 @@ function familyResourceSummary(name) {
     return byCategory;
 }
 
-// Where a family's fleets currently are: stationed at a body (byId's
-// .fleets already includes the game-balance auto-fill-at-home default, so
-// this matches what's actually drawn on the map) plus in transit on a
-// warpath (byId.__paths, which already has _totalLenAtDeparture cached by
-// updateScene() for the remaining-time math, same as showPathInfo()).
+// Where a family's ANONYMOUS fleets currently are: stationed at a body
+// (byId's .fleets already includes the game-balance auto-fill-at-home
+// default, so this matches what's actually drawn on the map). Named fleets
+// are resolved separately, live, via resolveFleetState() -- see
+// renderFleetLocations().
 function familyFleetLocations(name) {
     const stationed = [];
     Object.values(byId).forEach(b => {
@@ -1737,8 +2328,7 @@ function familyFleetLocations(name) {
         const count = (b.fleets || []).filter(f => f === name).length;
         if (count > 0) stationed.push({ body: b, count });
     });
-    const transit = (byId.__paths || []).filter(p => p.type === 'warpath' && (p.fleets || []).includes(name));
-    return { stationed, transit };
+    return { stationed };
 }
 function qualifiesFor(asset, resourceIdSet) {
     return (asset.requirementIds || []).every(rid => resourceIdSet.has(rid));
@@ -2106,6 +2696,9 @@ function buildSearchIndex() {
             });
         });
     });
+    namedFleets.forEach(fl => {
+        index.push({ type: 'fleet', id: fl.id || fl.name, name: fl.name, color: familyColor(fl.owner), sub: `Flotta — ${fl.owner}`, fleet: fl });
+    });
     return index;
 }
 
@@ -2121,6 +2714,12 @@ function focusOnBody(id) {
         const halo = g.querySelector('circle');
         if (halo) { halo.setAttribute('opacity', '0.5'); setTimeout(() => halo.setAttribute('opacity', '0.0'), 600); }
     }
+}
+function focusOnPoint(p) {
+    if (!p) return;
+    vb.x = p.x - vb.w / 2;
+    vb.y = p.y - vb.h / 2;
+    applyVB();
 }
 function focusOnPath(pathObj) {
     const positions = computeAllPositions(tick);
@@ -2174,6 +2773,10 @@ function selectSearchItem(item) {
         showFamilyOverlay(item.id);
     } else if (item.type === 'leader') {
         showFamilyOverlay(item.family);
+    } else if (item.type === 'fleet') {
+        const res = getFleetState(item.fleet, tick);
+        focusOnPoint(res.position);
+        showFleetInfo(item.fleet, tick);
     }
 }
 searchInput.addEventListener('input', e => renderSearchResults(e.target.value));
@@ -2205,7 +2808,7 @@ async function init() {
     const [bodiesFile, poiFile, fleetsFile, companies, governi, timeline, traits, leaders, opinions, treatyTypes, treatiesFile, assetsFile, resourcesFile, diplomacy, reveals] = await Promise.all([
         loadJson('all_info/bodies.json', { bodies: [] }),
         loadJson('all_info/points_of_interest.json', { pointsOfInterest: [], tradePaths: [] }),
-        loadJson('all_info/fleets.json', { stationed: [], warpaths: [] }),
+        loadJson('all_info/fleets.json', { stationed: [], fleets: [] }),
         loadJson('all_info/companies.json', { companies: [] }),
         loadJson('all_info/governi.json', { governi: [] }),
         loadJson('all_info/timeline.json', { currentMonth: 0, months: [] }),
@@ -2219,6 +2822,7 @@ async function init() {
         loadJson('all_info/diplomacy.json', { governmentCompatibility: {}, raceCompatibility: {}, religionCompatibility: {}, planetRaceComposition: {}, planetReligionComposition: {} }),
         loadJson('all_info/reveals.json', { families: {} }),
     ]);
+    showDataErrorBanner();
 
     companiesByName = {};
     (companies.companies || []).forEach(c => { companiesByName[c.name] = c; });
@@ -2259,11 +2863,12 @@ async function init() {
     buildFamiliesPanel();
 
     const bodies = [...(bodiesFile.bodies || []), ...(poiFile.pointsOfInterest || [])];
-    const paths = [...(poiFile.tradePaths || []), ...(fleetsFile.warpaths || [])];
-    stationedFleets = fleetsFile.stationed || [];
-    allWarpaths = fleetsFile.warpaths || [];
+    const paths = poiFile.tradePaths || [];
+    namedFleets = fleetsFile.fleets || [];
+    fleetsById = {};
+    namedFleets.forEach(fl => { if (fl.id) fleetsById[fl.id] = fl; });
     if (bodies.length === 0) return;
-    loadMap(bodies, paths, timeline, stationedFleets);
+    loadMap(bodies, paths, timeline, fleetsFile.stationed || []);
     // Atlas/Craftable both read byId (populated by loadMap), so build after.
     buildAtlasPanel();
     buildCraftPanel();

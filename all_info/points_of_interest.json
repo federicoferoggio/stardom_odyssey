@@ -275,20 +275,6 @@
       "name": "Gith Crèche X ller",
       "descr": "Una fortezza edificata su un ammasso di asteroidi e relitti di spelljammer abbattuti nel mondo reale dei Gith. La sua posizione e sconosciuta.",
       "resourceIds": []
-    },
-    {
-      "id": "mysterypoint1",
-      "owner": "Ousssek",
-      "offset": 108,
-      "node": false,
-      "type": "point",
-      "anchor": "sun",
-      "distance": 24,
-      "speed": 0.01,
-      "color": "#C160FF",
-      "name": "Mistery point",
-      "descr": "???",
-      "resourceIds": []
     }
   ],
   "tradePaths": [

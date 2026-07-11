@@ -36,6 +36,10 @@ const actions = {
         description: "Azione Diplomatica. Genera un nuovo trattato con un'altra Compagnia (vedi menu sotto).",
         rolls: ["influence", "treasure"],
         hasTreatyMenu: true
+    },
+    "Genera Flotta": {
+        description: "Azione di Forza Militare. Forma una nuova flotta, che va nominata e assegnata dal GM (vedi all_info/fleets.json). Costa Might e Treasure pari al numero di flotte attualmente possedute moltiplicato per 2 (entrambe le risorse) e richiede un tiro contro una Difficoltà in Height pari al numero di flotte attualmente possedute moltiplicato per 3.",
+        rolls: ["might", "treasure"]
     }
 };
 
@@ -51,7 +55,7 @@ const warReasons = [
     { nome: "Destabilizzazione", descrizione: "-1 Sovereignty all'avversario" },
     { nome: "Difesa", descrizione: "-1 Might all'avversario" },
     { nome: "Conquista Risorsa", descrizione: "Acquisisci una risorsa dell'avversario" },
-    { nome: "Disingaggio", descrizione: "Rimuovi una flotta nemica" }
+    { nome: "Disingaggio", descrizione: "Disabilita una flotta nemica: Height determina per quanti mesi resta disabilitata, Width determina di quanto (in UA) deve ritirarsi" }
 ];
 
 function escHtml(str) {
@@ -84,8 +88,6 @@ function loadBonuses(csv) {
             always: row['Always'] === "Y"
         });
     });
-
-    console.log("Parsed Bonuses:", bonuses); // Debug here
 }
 
 // Carica il file all_info/governi.json contenente le definizioni dei governi
@@ -399,16 +401,10 @@ function loadCompanyAssets(assets) {
     companyAssetsMenu.addEventListener('change', () => {
         const selectedBonus = document.getElementById("companyBonus").value;
         const bonusDescription = document.getElementById("bonusDescription");
-        // bonusDescription.textContent = companyAssets[selectedBonus];
 
         // Find the selected asset and update the description
         let selectedAsset = assets.find(asset => asset['Name'] === selectedBonus);
-        if (selectedAsset) {
-            bonusDescription.textContent = selectedAsset['Bonus'];
-        } else {
-            console.log("Selected asset not found.");
-            bonusDescription.textContent = "";
-        }
+        bonusDescription.textContent = selectedAsset ? selectedAsset['Bonus'] : "";
     });
     assets.forEach(asset => {
         const name = asset['Name'];

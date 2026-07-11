@@ -1,3 +1,4 @@
 {
-    "livePreview.defaultPreviewPath": "/new_map.html"
+  "livePreview.defaultPreviewPath": "/new_map.html",
+  "remote.autoForwardPortsFallback": 0
 }
