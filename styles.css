@@ -1,8 +1,11 @@
+/* ── FONT ───────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap');
+
 /* Prevent x-axis overflow */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     color: white;
     height: 100vh;
     overflow-x: hidden;
@@ -85,7 +88,7 @@ input,
 select,
 button,
 div {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     /* Apply the font to all headings, inputs, etc. */
     color: white;
     /* Ensure text is white */
@@ -209,8 +212,10 @@ select {
 
 #laManoBox h1 {
     margin: 0;
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    font-size: 2.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
 }
 
 #laManoBox h2 {
@@ -255,8 +260,8 @@ select {
     -moz-appearance: none;
     /* Remove Firefox default styling */
 
-    font-family: 'Josefin Sans', sans-serif;
-    /* Apply the Josefin Sans font */
+    font-family: 'Outfit', sans-serif;
+    /* Apply the Outfit font */
     font-size: 16px;
     /* Set the font size */
     color: white;
@@ -324,8 +329,8 @@ textarea {
     -moz-appearance: none;
     /* Remove Firefox default styling */
 
-    font-family: 'Josefin Sans', sans-serif;
-    /* Use Josefin Sans font */
+    font-family: 'Outfit', sans-serif;
+    /* Use the Outfit font */
     font-size: 16px;
     /* Set font size */
     color: white;
@@ -408,7 +413,7 @@ select[disabled],
 textarea[disabled] {
     background-color: #555;
     /* Darker background for disabled elements */
-    color: #aaa;
+    color: #cfd2d8;
     /* Light gray text for disabled elements */
     cursor: not-allowed;
     /* Not allowed cursor for disabled elements */
@@ -417,8 +422,8 @@ textarea[disabled] {
 
 /* General button styling */
 button {
-    font-family: 'Josefin Sans', sans-serif;
-    /* Apply the Josefin Sans font */
+    font-family: 'Outfit', sans-serif;
+    /* Apply the Outfit font */
     font-size: 16px;
     /* Set font size */
     color: white;
@@ -455,7 +460,7 @@ button:focus {
 button:disabled {
     background-color: #555;
     /* Gray background for disabled buttons */
-    color: #aaa;
+    color: #cfd2d8;
     /* Gray text for disabled buttons */
     cursor: not-allowed;
     /* Not allowed cursor for disabled state */
@@ -514,7 +519,7 @@ button:disabled {
 
 /* Court member bonuses */
 .court-member p {
-    font-size: 14px;
+    font-size: 16px;
     margin: 5px 0;
     color: white;
 }
@@ -538,7 +543,7 @@ button:disabled {
 
 .bonus-checkbox:checked::after {
     content: '✔'; /* Unicode checkmark */
-    font-size: 14px; /* Adjust size of the checkmark */
+    font-size: 16px; /* Adjust size of the checkmark */
     color: white; /* Checkmark color */
     position: absolute;
     top: 2px; /* Adjust position */
@@ -616,7 +621,7 @@ button:disabled {
 
 .timeline-item p {
     margin: 5px 0 0;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.4; /* Adjust spacing for readability */
     white-space: normal; /* Allow wrapping */
     word-wrap: break-word; /* Break long words */

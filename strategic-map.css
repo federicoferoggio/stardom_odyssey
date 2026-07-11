@@ -1,5 +1,5 @@
 /* ── FONT ───────────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap');
 
 * {
     box-sizing: border-box;
@@ -14,8 +14,8 @@ body {
         url('images/space-background.jpg');
     background-size: cover;
     background-position: center;
-    color: #ccc;
-    font-family: 'Josefin Sans', 'Courier New', monospace;
+    color: #dfe1e4;
+    font-family: 'Outfit', 'Courier New', monospace;
     overflow: hidden;
     height: 100vh;
 }
@@ -60,12 +60,12 @@ svg {
     padding: 7px 16px;
     border-radius: 8px;
     backdrop-filter: blur(10px);
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 #controls label {
-    font-size: 13px;
-    color: #aaa;
+    font-size: 15px;
+    color: #cfd2d8;
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
@@ -81,17 +81,17 @@ svg {
     z-index: 300;
     display: flex;
     gap: 8px;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 .toolbar-btn {
     background: rgba(0, 0, 0, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ccc;
+    color: #dfe1e4;
     padding: 10px 16px;
     border-radius: 8px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 0.03em;
     cursor: pointer;
     backdrop-filter: blur(10px);
@@ -109,7 +109,7 @@ svg {
     top: 68px;
     left: 20px;
     z-index: 290;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 .toolbar-dropdown {
@@ -139,11 +139,11 @@ svg {
 .navigation-menu .navigation-menu-button {
     background: rgba(0, 0, 0, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ccc;
+    color: #dfe1e4;
     padding: 10px 16px;
     border-radius: 8px;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
     letter-spacing: 0.03em;
     text-transform: none;
     cursor: pointer;
@@ -171,12 +171,12 @@ svg {
     box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
 }
 .navigation-menu .navigation-menu-links a {
-    color: #ccc;
+    color: #dfe1e4;
     padding: 8px 12px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 0.02em;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     transition: background .15s, color .15s;
 }
 .navigation-menu .navigation-menu-links a:hover {
@@ -187,12 +187,12 @@ svg {
 #tickInput {
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #eee;
+    color: #f1f2f3;
     padding: 3px 7px;
     border-radius: 4px;
     width: 80px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 /* Reset native appearance */
@@ -257,8 +257,8 @@ svg {
 
 /* NEW: label with teal month number */
 #tick-label {
-    font-size: 13px;
-    color: #aaa;
+    font-size: 15px;
+    color: #cfd2d8;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     white-space: nowrap;
@@ -266,13 +266,13 @@ svg {
 #tick-label span {
     color: #4f98a3;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     margin-left: 2px;
 }
 
 #status {
-    font-size: 13px;
-    color: #aaa;
+    font-size: 15px;
+    color: #cfd2d8;
     max-width: 360px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -283,11 +283,11 @@ svg {
 #pasteBtn, #rulerBtn, #resetBtn {
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ccc;
+    color: #dfe1e4;
     padding: 3px 10px;
     border-radius: 4px;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
     transition: background .2s;
 }
@@ -308,14 +308,14 @@ svg {
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 7px;
     padding: 9px 10px;
-    font-size: 13px;
+    font-size: 15px;
     margin-bottom: 8px;
 }
 
 .res-header {
     font-weight: 600;
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: 15px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
@@ -350,14 +350,14 @@ svg {
     fill: rgba(255, 255, 255, 0.78);
     pointer-events: none;
     font-weight: 600;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 .moon-label {
     font-size: 16px;
     fill: rgba(255, 255, 255, 0.58);
     pointer-events: none;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 .body-group:hover .body-label,
@@ -372,7 +372,7 @@ svg {
 }
 
 #info-panel .owner {
-    font-size: 13px;
+    font-size: 15px;
     margin-bottom: 8px;
     font-weight: 600;
     text-transform: uppercase;
@@ -387,14 +387,14 @@ svg {
 .owner-link:hover { opacity: 0.75; }
 
 #info-panel .desc {
-    font-size: 13px;
+    font-size: 15px;
     color: #fff;
     line-height: 1.6;
 }
 
 #info-panel .meta {
-    font-size: 12px;
-    color: #999;
+    font-size: 14px;
+    color: #c5c8cf;
     margin-top: 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
     padding-top: 8px;
@@ -407,12 +407,12 @@ svg {
 #searchInput {
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.18);
-    color: #eee;
+    color: #f1f2f3;
     padding: 3px 7px 3px 24px;
     border-radius: 4px;
     width: 160px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     outline: none;
     transition: border-color .2s, width .2s;
 }
@@ -423,7 +423,7 @@ svg {
     left: 7px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 13px;
+    font-size: 15px;
     pointer-events: none;
     opacity: 0.4;
 }
@@ -446,20 +446,20 @@ svg {
 
 .search-item {
     padding: 7px 12px;
-    font-size: 13px;
+    font-size: 15px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     transition: background .15s;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 .search-item:last-child { border-bottom: none; }
 .search-item:hover, .search-item.active { background: rgba(80,180,255,0.12); }
 .search-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.search-name { color: #ddd; }
-.search-sub { color: #555; font-size: 12px; margin-left: auto; }
+.search-name { color: #e6e7ea; }
+.search-sub { color: #868b96; font-size: 14px; margin-left: auto; }
 
 /* ── RULER ───────────────────────────────────────────────────────────────────── */
 #ruler-tooltip {
@@ -469,8 +469,8 @@ svg {
     background: rgba(0,0,0,0.88);
     border: 1px solid rgba(255,200,80,0.35);
     color: #ffc840;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
     padding: 4px 10px;
     border-radius: 6px;
     display: none;
@@ -480,11 +480,11 @@ svg {
 #tickPrevBtn, #tickNextBtn {
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ccc;
+    color: #dfe1e4;
     width: 26px;
     height: 26px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -505,10 +505,10 @@ svg {
 #resources-subtabs { display: flex; gap: 6px; flex-shrink: 0; margin-bottom: 8px; }
 .res-subtab-btn {
     flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    color: #999; font-family: inherit; font-size: 12px; padding: 6px 4px; border-radius: 5px;
+    color: #c5c8cf; font-family: inherit; font-size: 14px; padding: 6px 4px; border-radius: 5px;
     cursor: pointer; transition: background .15s, color .15s;
 }
-.res-subtab-btn:hover { background: rgba(255,255,255,0.09); color: #ccc; }
+.res-subtab-btn:hover { background: rgba(255,255,255,0.09); color: #dfe1e4; }
 .res-subtab-btn.active { background: rgba(79,152,163,0.18); border-color: rgba(79,152,163,0.4); color: #9fd7de; }
 
 .res-subtab-panel { display: none; }
@@ -517,33 +517,33 @@ svg {
 #resources-search-wrapper { position: relative; flex-shrink: 0; }
 #resources-search-input {
     width: 100%; background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.18); color: #eee;
+    border: 1px solid rgba(255,255,255,0.18); color: #f1f2f3;
     padding: 5px 8px 5px 26px; border-radius: 5px;
-    font-family: 'Josefin Sans', sans-serif; font-size: 13px;
+    font-family: 'Outfit', sans-serif; font-size: 15px;
     outline: none; transition: border-color .2s;
 }
 #resources-search-input:focus { border-color: rgba(80,180,255,0.45); }
-#resources-search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; pointer-events: none; opacity: 0.4; }
+#resources-search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.4; }
 
 /* Atlas */
 .atlas-resource { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .atlas-resource:last-child { border-bottom: none; }
-.atlas-resource-name { font-size: 13px; color: #ddd; cursor: help; margin-bottom: 3px; }
+.atlas-resource-name { font-size: 15px; color: #e6e7ea; cursor: help; margin-bottom: 3px; }
 .atlas-holders { display: flex; flex-wrap: wrap; gap: 4px; }
 .atlas-holder-chip {
-    font-size: 11px; color: #ccc; background: rgba(255,255,255,0.05);
+    font-size: 13px; color: #dfe1e4; background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 2px 7px; cursor: pointer;
 }
 .atlas-holder-chip:hover { background: rgba(255,255,255,0.1); }
-.atlas-none { font-size: 11px; color: #555; font-style: italic; }
+.atlas-none { font-size: 13px; color: #868b96; font-style: italic; }
 
 .craft-qualifier-chip {
-    font-size: 11px; color: #ddd; background: rgba(255,255,255,0.05);
+    font-size: 13px; color: #e6e7ea; background: rgba(255,255,255,0.05);
     border: 1px solid; border-radius: 8px; padding: 2px 7px;
 }
 
 #craft-list { display: flex; flex-direction: column; gap: 3px; }
-#craft-empty { font-size: 12px; color: #444; text-align: center; padding: 20px 0; display: none; }
+#craft-empty { font-size: 14px; color: #757a84; text-align: center; padding: 20px 0; display: none; }
 
 .craft-item { border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color .2s; }
 .craft-item:hover { border-color: rgba(255,255,255,0.14); }
@@ -560,17 +560,17 @@ svg {
 #timeline-prev-btn, #timeline-next-btn {
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.2);
-    color: #ccc;
+    color: #dfe1e4;
     width: 26px;
     height: 26px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     transition: background .2s;
 }
 #timeline-prev-btn:hover, #timeline-next-btn:hover { background: rgba(255,255,255,0.15); }
 #timeline-panel-month {
-    font-size: 14px;
+    font-size: 16px;
     color: #4f98a3;
     font-weight: 600;
     text-transform: uppercase;
@@ -579,8 +579,8 @@ svg {
     text-align: center;
 }
 #timeline-panel-title {
-    font-size: 14px;
-    color: #eee;
+    font-size: 16px;
+    color: #f1f2f3;
     text-align: center;
     margin-bottom: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -593,8 +593,8 @@ svg {
     border-radius: 7px;
     padding: 8px 10px;
 }
-.timeline-event-desc { font-size: 13px; color: #ccc; line-height: 1.6; }
-.timeline-event-modifier { font-size: 12px; color: #9fd7de; margin-top: 4px; }
+.timeline-event-desc { font-size: 15px; color: #dfe1e4; line-height: 1.6; }
+.timeline-event-modifier { font-size: 14px; color: #9fd7de; margin-top: 4px; }
 .timeline-event-row.auto { border-style: dashed; background: rgba(255,255,255,0.015); }
 .timeline-event-row.auto .timeline-event-desc { color: #9fb3d9; font-style: italic; }
 
@@ -602,21 +602,21 @@ svg {
 .craft-item-header:hover { background: rgba(255,255,255,0.07); }
 .craft-item.expanded .craft-item-header { background: rgba(79,152,163,0.1); }
 
-.craft-item-name { font-size: 13px; color: #ddd; flex: 1; line-height: 1.4; }
-.craft-item-type { font-size: 11px; color: #4f98a3; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(79,152,163,0.3); border-radius: 3px; padding: 1px 5px; }
-.craft-item-chevron { font-size: 10px; color: #555; flex-shrink: 0; transition: transform .2s; }
+.craft-item-name { font-size: 15px; color: #e6e7ea; flex: 1; line-height: 1.4; }
+.craft-item-type { font-size: 13px; color: #4f98a3; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(79,152,163,0.3); border-radius: 3px; padding: 1px 5px; }
+.craft-item-chevron { font-size: 12px; color: #868b96; flex-shrink: 0; transition: transform .2s; }
 .craft-item.expanded .craft-item-chevron { transform: rotate(90deg); color: #4f98a3; }
 
-.craft-item-detail { display: none; padding: 8px 10px 10px; background: rgba(0,0,0,0.3); font-size: 12px; line-height: 1.6; color: #aaa; border-top: 1px solid rgba(255,255,255,0.05); }
+.craft-item-detail { display: none; padding: 8px 10px 10px; background: rgba(0,0,0,0.3); font-size: 14px; line-height: 1.6; color: #cfd2d8; border-top: 1px solid rgba(255,255,255,0.05); }
 .craft-item.expanded .craft-item-detail { display: block; }
 
 .craft-detail-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: flex-start; }
-.craft-detail-label { color: #555; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; white-space: nowrap; padding-top: 1px; min-width: 70px; }
-.craft-detail-value { color: #ccc; font-size: 12px; }
-.craft-detail-desc { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); color: #bbb; font-size: 12px; line-height: 1.65; font-style: italic; }
+.craft-detail-label { color: #868b96; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; white-space: nowrap; padding-top: 1px; min-width: 70px; }
+.craft-detail-value { color: #dfe1e4; font-size: 14px; }
+.craft-detail-desc { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); color: #d8dade; font-size: 14px; line-height: 1.65; font-style: italic; }
 
 .craft-req-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
-.craft-req-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 1px 6px; font-size: 11px; color: #ccc; }
+.craft-req-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 1px 6px; font-size: 13px; color: #dfe1e4; }
 
 /* ── FAMILY / EMPIRE SCREEN OVERLAY ─────────────────────────────────────────── */
 #family-overlay {
@@ -648,7 +648,7 @@ svg {
     border-radius: 14px;
     padding: 28px 32px 34px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 #family-overlay-close {
@@ -660,8 +660,8 @@ svg {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #ccc;
-    font-size: 14px;
+    color: #dfe1e4;
+    font-size: 16px;
     cursor: pointer;
     transition: background .2s, color .2s;
 }
@@ -686,14 +686,16 @@ svg {
 }
 
 #family-name {
-    font-size: 26px;
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
     color: #fff;
     letter-spacing: 0.03em;
     margin-bottom: 2px;
 }
 
 #family-government {
-    font-size: 14px;
+    font-size: 16px;
     color: var(--family-accent, #4f98a3);
     text-transform: uppercase;
     letter-spacing: 0.07em;
@@ -709,30 +711,30 @@ svg {
 }
 
 #family-history {
-    font-size: 14px;
-    color: #bbb;
+    font-size: 16px;
+    color: #d8dade;
     line-height: 1.7;
     margin-bottom: 16px;
     font-style: italic;
 }
 
 #family-planet {
-    font-size: 13px;
-    color: #888;
+    font-size: 15px;
+    color: #b8bcc4;
     margin-top: 2px;
 }
 
 #family-motto {
     display: none;
-    font-size: 14px;
-    color: #999;
+    font-size: 16px;
+    color: #c5c8cf;
     font-style: italic;
     margin: 2px 0 4px;
 }
 
 #family-fleet-warning {
     display: none;
-    font-size: 13px;
+    font-size: 15px;
     color: #ffc857;
     background: rgba(255, 200, 87, 0.1);
     border: 1px solid rgba(255, 200, 87, 0.35);
@@ -756,20 +758,20 @@ svg {
     text-align: center;
 }
 .family-stat-label {
-    font-size: 11px;
-    color: #777;
+    font-size: 13px;
+    color: #a8acb6;
     text-transform: uppercase;
     letter-spacing: 0.07em;
     margin-bottom: 4px;
 }
 .family-stat-value {
     font-size: 18px;
-    color: #eee;
+    color: #f1f2f3;
     font-weight: 600;
 }
 .family-stat-cap {
-    font-size: 13px;
-    color: #777;
+    font-size: 15px;
+    color: #a8acb6;
     font-weight: 400;
 }
 .family-stat-bar {
@@ -786,8 +788,8 @@ svg {
 }
 
 #family-description {
-    font-size: 14px;
-    color: #bbb;
+    font-size: 16px;
+    color: #d8dade;
     line-height: 1.7;
     margin-bottom: 22px;
     border-left: 2px solid var(--family-accent, rgba(79,152,163,0.4));
@@ -796,8 +798,8 @@ svg {
 
 .family-section { margin-bottom: 24px; }
 .family-section h2 {
-    font-size: 14px;
-    color: #999;
+    font-size: 16px;
+    color: #c5c8cf;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 12px;
@@ -805,7 +807,7 @@ svg {
     padding-bottom: 6px;
 }
 .gm-only-tag {
-    font-size: 11px;
+    font-size: 13px;
     text-transform: none;
     letter-spacing: normal;
     color: #ffb84d;
@@ -833,8 +835,8 @@ svg {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #444;
-    font-size: 13px;
+    color: #757a84;
+    font-size: 15px;
     min-height: 140px;
     font-style: italic;
 }
@@ -848,13 +850,13 @@ svg {
     background: rgba(255,255,255,0.05);
 }
 .leader-name {
-    font-size: 13px;
-    color: #eee;
+    font-size: 15px;
+    color: #f1f2f3;
     font-weight: 600;
     margin-bottom: 2px;
 }
 .leader-role {
-    font-size: 12px;
+    font-size: 14px;
     color: #4f98a3;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -872,12 +874,12 @@ svg {
     background: rgba(79,152,163,0.15);
     border: 1px solid rgba(79,152,163,0.4);
     color: #9fd7de;
-    font-size: 12px;
+    font-size: 14px;
     padding: 3px 8px;
     border-radius: 10px;
     cursor: default;
 }
-.trait-chip.locked { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: #666; cursor: help; }
+.trait-chip.locked { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: #969ba6; cursor: help; }
 /* Standalone tooltip base (not scoped to .trait-chip) so it can also be
    attached to other hoverable elements, e.g. #family-government below.
    Shown/hidden and positioned entirely by JS (see attachViewportTooltips in
@@ -892,9 +894,9 @@ svg {
     border: 1px solid rgba(79,152,163,0.4);
     border-radius: 6px;
     padding: 8px 10px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
-    color: #ccc;
+    color: #dfe1e4;
     /* Reset explicitly: hosts like .opinion-mod set white-space:nowrap for
        their own single-line pill label, which would otherwise be inherited
        here and force every tooltip line onto one unbroken (overflowing)
@@ -926,21 +928,21 @@ svg {
     border-radius: 7px;
     padding: 6px 10px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 15px;
     transition: background .15s, border-color .15s;
 }
 .territory-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
 .territory-icon { flex-shrink: 0; }
-.territory-name { color: #ddd; flex: 1; }
-.territory-type { color: #666; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
-.territory-res-count { color: #4f98a3; font-size: 11px; white-space: nowrap; }
+.territory-name { color: #e6e7ea; flex: 1; }
+.territory-type { color: #969ba6; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; }
+.territory-res-count { color: #4f98a3; font-size: 13px; white-space: nowrap; }
 
 /* Resource summary ("Risorse Controllate") */
 #family-resources-summary { display: flex; flex-direction: column; gap: 10px; }
 .resource-summary-group { display: flex; flex-direction: column; gap: 5px; }
-.resource-summary-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.resource-summary-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
 .resource-summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.resource-summary-chips .trait-chip { font-size: 12px; padding: 3px 8px; }
+.resource-summary-chips .trait-chip { font-size: 14px; padding: 3px 8px; }
 
 /* Fleets */
 #family-fleet-locations { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; }
@@ -953,21 +955,21 @@ svg {
     border-radius: 7px;
     padding: 6px 10px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 15px;
     transition: background .15s, border-color .15s;
 }
 .fleet-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
 .fleet-icon { flex-shrink: 0; }
-.fleet-location { color: #ddd; flex: 1; }
-.fleet-count { color: #4f98a3; font-size: 11px; white-space: nowrap; }
+.fleet-location { color: #e6e7ea; flex: 1; }
+.fleet-count { color: #4f98a3; font-size: 13px; white-space: nowrap; }
 
 /* Named-fleet map tokens (in transit / holding at a bare point / ghosted while disabled) */
 .fleet-token { cursor: pointer; }
 .fleet-token-ghost { opacity: 0.6; }
-.fleet-ghost-badge { fill: #ccc; font-size: 13px; }
-.fleet-warn-badge { fill: #ffb84d; font-size: 13px; }
-.fleet-wait-badge { fill: #7fd4e0; font-size: 12px; }
-.fleet-count-badge { fill: #ddd; font-size: 10px; font-weight: 600; }
+.fleet-ghost-badge { fill: #dfe1e4; font-size: 15px; }
+.fleet-warn-badge { fill: #ffb84d; font-size: 15px; }
+.fleet-wait-badge { fill: #7fd4e0; font-size: 14px; }
+.fleet-count-badge { fill: #e6e7ea; font-size: 12px; font-weight: 600; }
 
 /* Treaties */
 #family-treaties-list { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; }
@@ -981,17 +983,17 @@ svg {
     border-radius: 7px;
     padding: 6px 10px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 15px;
     transition: background .15s, border-color .15s;
 }
 .treaty-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
-.treaty-type { color: #ddd; flex: 1; }
-.treaty-partner { color: #4f98a3; font-size: 11px; white-space: nowrap; }
+.treaty-type { color: #e6e7ea; flex: 1; }
+.treaty-partner { color: #4f98a3; font-size: 13px; white-space: nowrap; }
 
 /* Assets */
 .family-subsection-label {
-    font-size: 12px;
-    color: #777;
+    font-size: 14px;
+    color: #a8acb6;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin: 12px 0 6px;
@@ -1009,15 +1011,15 @@ svg {
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 7px;
     padding: 8px 10px;
-    font-size: 13px;
+    font-size: 15px;
 }
 .family-asset-item.unique { border-color: var(--family-accent, rgba(255,255,255,0.16)); }
 .family-asset-header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
-.family-asset-name { color: #ddd; font-weight: 600; }
-.family-asset-type { color: #4f98a3; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; }
-.family-asset-desc { color: #999; font-size: 12px; line-height: 1.5; }
-.family-asset-effect { color: #ffd76b; font-size: 12px; margin-top: 4px; }
-.family-asset-via { color: #4f98a3; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+.family-asset-name { color: #e6e7ea; font-weight: 600; }
+.family-asset-type { color: #4f98a3; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; }
+.family-asset-desc { color: #c5c8cf; font-size: 14px; line-height: 1.5; }
+.family-asset-effect { color: #ffd76b; font-size: 14px; margin-top: 4px; }
+.family-asset-via { color: #4f98a3; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
 
 /* Bonus Attivi: every currently-active modifier (leader traits, treaties,
    assets), flattened and tagged by source -- stat bars above stay raw. */
@@ -1031,10 +1033,10 @@ svg {
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 7px;
     padding: 6px 10px;
-    font-size: 12px;
+    font-size: 14px;
 }
-.active-bonus-source { color: #4f98a3; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; flex-shrink: 0; width: 150px; }
-.active-bonus-line { color: #ccc; flex: 1; }
+.active-bonus-source { color: #4f98a3; text-transform: uppercase; letter-spacing: 0.04em; font-size: 13px; flex-shrink: 0; width: 150px; }
+.active-bonus-line { color: #dfe1e4; flex: 1; }
 .active-bonus-line .modline { margin-top: 0; }
 .active-bonus-row.armies-mod { border-color: rgba(255,199,64,0.25); }
 .armies-mod .modline, .modline.armies-mod { color: #ffc740; }
@@ -1060,18 +1062,18 @@ svg {
     border: none;
     cursor: default;
     padding: 0 12px;
-    font-size: 11px;
-    color: #666;
+    font-size: 13px;
+    color: #969ba6;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .opinion-table-header:hover { background: transparent; }
 .opinion-total-header { text-align: center; }
 .opinion-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: 6px; }
-.opinion-family-name { font-size: 14px; color: #ddd; cursor: pointer; }
+.opinion-family-name { font-size: 16px; color: #e6e7ea; cursor: pointer; }
 .opinion-family-name:hover { text-decoration: underline; }
 .opinion-total {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     text-align: center;
     padding: 2px 0;
@@ -1079,7 +1081,7 @@ svg {
 }
 .opinion-total.positive { color: #7be08a; background: rgba(123,224,138,0.12); }
 .opinion-total.negative { color: #ff8a80; background: rgba(255,138,128,0.12); }
-.opinion-total.neutral { color: #999; background: rgba(255,255,255,0.05); }
+.opinion-total.neutral { color: #c5c8cf; background: rgba(255,255,255,0.05); }
 
 .opinion-detail {
     display: none;
@@ -1093,11 +1095,11 @@ svg {
     margin-top: -6px;
 }
 .opinion-detail.open { display: flex; }
-.opinion-detail-block h4 { font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.opinion-detail-block h4 { font-size: 13px; color: #a8acb6; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
 .opinion-modifiers { display: flex; flex-wrap: wrap; gap: 5px; }
 .opinion-mod {
     position: relative;
-    font-size: 12px;
+    font-size: 14px;
     padding: 2px 7px;
     border-radius: 8px;
     white-space: nowrap;
@@ -1106,7 +1108,7 @@ svg {
 .opinion-mod.positive { color: #a8f0b3; background: rgba(123,224,138,0.1); }
 .opinion-mod.negative { color: #ffb3ab; background: rgba(255,138,128,0.1); }
 .opinion-mod.baseline { border: 1px solid rgba(255,255,255,0.12); }
-.opinion-empty { font-size: 13px; color: #555; font-style: italic; padding: 10px 0; }
+.opinion-empty { font-size: 15px; color: #868b96; font-style: italic; padding: 10px 0; }
 
 @media (max-width: 720px) {
     #family-stats-row { grid-template-columns: repeat(2, 1fr); }
@@ -1135,7 +1137,7 @@ svg {
     #searchInput:focus { width: 150px; }
     /* 26px was well under the ~44px touch-target guideline -- the most
        frequently-tapped control in the app deserves to be easy to hit. */
-    #tickPrevBtn, #tickNextBtn { width: 36px; height: 36px; font-size: 14px; }
+    #tickPrevBtn, #tickNextBtn { width: 36px; height: 36px; font-size: 16px; }
 }
 
 /* ── REVEAL-ALL (GM) TOGGLE ─────────────────────────────────────────────────────
@@ -1150,8 +1152,8 @@ svg {
     background: rgba(10, 12, 22, 0.92);
     border: 1px solid rgba(120, 200, 255, 0.5);
     color: #a8e0ff;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
     letter-spacing: 0.04em;
     padding: 12px 22px;
     border-radius: 8px;
@@ -1179,8 +1181,8 @@ svg {
     background: rgba(120, 20, 20, 0.92);
     border-bottom: 1px solid rgba(255, 120, 120, 0.5);
     color: #ffd9d9;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
     padding: 8px 16px;
     backdrop-filter: blur(6px);
 }
@@ -1193,7 +1195,7 @@ svg {
     padding: 2px 10px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 14px;
     flex-shrink: 0;
 }
 #data-error-banner button:hover { background: rgba(255, 255, 255, 0.22); }
@@ -1203,7 +1205,7 @@ svg {
     display: inline-block;
     cursor: help;
     opacity: 0.75;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .family-stat.locked { opacity: 0.55; }
@@ -1220,8 +1222,8 @@ svg {
 /* Infiltration meter */
 #family-infiltration { margin-bottom: 14px; }
 .infiltration-label {
-    font-size: 12px;
-    color: #888;
+    font-size: 14px;
+    color: #b8bcc4;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 4px;
@@ -1240,7 +1242,7 @@ svg {
 .full-knowledge-badge {
     margin-top: 8px;
     display: inline-block;
-    font-size: 13px;
+    font-size: 15px;
     color: #ffd76b;
     background: rgba(255, 215, 107, 0.1);
     border: 1px solid rgba(255, 215, 107, 0.35);
@@ -1258,10 +1260,10 @@ svg {
 }
 .composition-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 5px; }
 .composition-row:last-child { margin-bottom: 0; }
-.composition-label { font-size: 11px; color: #777; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 2px; }
+.composition-label { font-size: 13px; color: #a8acb6; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 2px; }
 .composition-pill {
-    font-size: 11px;
-    color: #ccc;
+    font-size: 13px;
+    color: #dfe1e4;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
@@ -1310,9 +1312,9 @@ svg {
     padding: 3px;
     flex-shrink: 0;
 }
-.quickview-name { font-size: 13px; color: #fff; font-weight: 600; }
+.quickview-name { font-size: 15px; color: #fff; font-weight: 600; }
 .quickview-gov {
-    font-size: 12px;
+    font-size: 14px;
     color: #4f98a3;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1327,21 +1329,21 @@ svg {
     margin-bottom: 8px;
 }
 .quickview-stat-pill {
-    font-size: 11px;
-    color: #ccc;
+    font-size: 13px;
+    color: #dfe1e4;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 6px;
     padding: 2px 6px;
 }
-.quickview-stat-pill.locked { color: #666; }
+.quickview-stat-pill.locked { color: #969ba6; }
 .quickview-expand {
     width: 100%;
     background: rgba(79,152,163,0.15);
     border: 1px solid rgba(79,152,163,0.4);
     color: #9fd7de;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 15px;
     padding: 5px 0;
     border-radius: 6px;
     cursor: pointer;
@@ -1363,8 +1365,8 @@ svg {
     border-radius: 6px;
     border-left: 3px solid transparent;
     cursor: pointer;
-    font-size: 13px;
-    color: #ccc;
+    font-size: 15px;
+    color: #dfe1e4;
     transition: background .15s;
 }
 .families-list-row:hover { background: color-mix(in srgb, var(--row-accent, #4f98a3) 16%, transparent); color: #fff; }
