@@ -38,7 +38,7 @@ const actions = {
         hasTreatyMenu: true
     },
     "Genera Flotta": {
-        description: "Azione di Forza Militare. Forma una nuova flotta, che va nominata e assegnata dal GM (vedi all_info/fleets.json). Costa Might e Treasure pari al numero di flotte attualmente possedute moltiplicato per 2 (entrambe le risorse) e richiede un tiro contro una Difficoltà in Height pari al numero di flotte attualmente possedute moltiplicato per 3.",
+        description: "Sviluppa e potenzia le capacità militari della compagnia. Forma una nuova flotta, che va nominata e assegnata dal GM (vedi all_info/fleets.json). Costa Might e Treasure pari al numero di flotte attualmente possedute moltiplicato per 2 (entrambe le risorse) e richiede un tiro contro una Difficoltà in Height pari al numero di flotte attualmente possedute moltiplicato per 3.",
         rolls: ["might", "treasure"]
     }
 };
