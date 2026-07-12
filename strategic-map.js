@@ -801,6 +801,17 @@ function resolveTargetPosFn(targetId, depth) {
 // cheap in the common case where the very first candidate already works.
 const WAIT_STEP_MONTHS = 1;
 
+// A fleet-vs-fleet chase (see buildFleetPlan) re-aims this often -- matches
+// the tick slider's own step, so the simulated pursuit curve is as smooth as
+// the UI can ever actually display. It's all precomputed once into the
+// cached plan, so a fine step costs nothing at render time.
+const CHASE_TICK_MONTHS = 0.03125;
+// Two fleets close enough to this count as having caught up with each other
+// -- the chaser just stops and holds there (the target is NOT affected, it
+// keeps moving on its own schedule regardless).
+const CONTACT_RADIUS_AU = 1;
+const CONTACT_RADIUS_SVG = CONTACT_RADIUS_AU * DIST_SCALE;
+
 function degenerateFleetPlan(fleet) {
   const homeId = fleetHomeBodyId(fleet);
   const startBodyId =
@@ -811,6 +822,7 @@ function degenerateFleetPlan(fleet) {
     ],
     errors: [{ message: "Riferimento circolare tra flotte." }],
     waits: [],
+    chasePaths: [],
   };
 }
 
@@ -824,6 +836,11 @@ function buildFleetPlan(fleet, depth) {
   const errors = [];
   const waits = [];
   const segments = [];
+  // One entry per fleet-vs-fleet chase order, recording every tick's
+  // waypoint so the WHOLE pursuit curve can be drawn as a single persistent
+  // line on the map (see updateScene()) -- unlike segments (only one is ever
+  // "current" for a given t), this doesn't depend on t at all.
+  const chasePaths = [];
 
   let state = { mode: "body", bodyId: startBodyId };
   let segStart = -Infinity;
@@ -833,10 +850,7 @@ function buildFleetPlan(fleet, depth) {
   // Where the fleet is at an arbitrary month given whatever state it's
   // CURRENTLY resolved to so far -- reused both for a move order's own
   // departure point and for probing candidate departure months while
-  // waiting for a launch window to open. 'shadow' (see the fleet-vs-fleet
-  // chase below) has no position of its own -- once caught, this fleet's
-  // position is simply whatever the target fleet's OWN (already-cached)
-  // plan says it is, at any month, forever after.
+  // waiting for a launch window to open.
   function stateAt(month) {
     if (state.mode === "course") {
       if (month >= state.course.etaMonth) {
@@ -845,14 +859,6 @@ function buildFleetPlan(fleet, depth) {
           : state.course.endPoint;
       }
       return positionOnCourse(state.course, month);
-    }
-    if (state.mode === "shadow") {
-      const targetFleet = fleetsById[state.targetFleetId];
-      return evaluatePlanAt(
-        getFleetPlan(targetFleet, depth + 1),
-        targetFleet,
-        month,
-      ).position;
     }
     if (state.mode === "point" || state.mode === "disabled")
       return state.position;
@@ -863,13 +869,15 @@ function buildFleetPlan(fleet, depth) {
     const rec =
       state.mode === "course"
         ? { mode: "course", course: state.course }
-        : state.mode === "shadow"
-          ? { mode: "shadow", targetFleetId: state.targetFleetId }
-          : state.mode === "point"
-            ? { mode: "point", position: state.position }
-            : state.mode === "disabled"
-              ? { mode: "disabled", position: state.position }
-              : { mode: "body", bodyId: state.bodyId };
+        : state.mode === "point"
+          ? {
+              mode: "point",
+              position: state.position,
+              contactWith: state.contactWith,
+            }
+          : state.mode === "disabled"
+            ? { mode: "disabled", position: state.position }
+            : { mode: "body", bodyId: state.bodyId };
     segments.push({ ...rec, from: segStart, to: endMonth });
     segStart = endMonth;
   }
@@ -904,38 +912,49 @@ function buildFleetPlan(fleet, depth) {
       continue;
     }
     if (fleetsById[rawTarget]) {
-      // ── FLEET-VS-FLEET: turn-by-turn pursuit ──────────────────────────
+      // ── FLEET-VS-FLEET: tick-by-tick pursuit ──────────────────────────
       // A move order targeting another fleet doesn't get a single solved
       // lead-shot intercept (that's only exact for a body's smooth,
-      // perfectly predictable orbit) -- instead the chaser re-aims every
-      // month at wherever the target ACTUALLY is that month and covers one
-      // month of its own speed toward that fixed point, repeating until it
-      // closes the gap. Bounded by: the timeline's own visible window
-      // (nothing past it is ever rendered, so there's no reason to keep
-      // simulating -- see TIMELINE_WINDOW_MONTHS), the next authored order
-      // (so e.g. a later 'disable' still interrupts at the right month,
-      // same as it already does for a single long solved course), and
-      // maxDistance as a running TOTAL distance budget for the whole chase
-      // (not a per-leg cap) -- if that runs out before catching up, the
-      // chase stops there and gets the usual "fuori portata" warning.
+      // perfectly predictable orbit) -- instead the chaser re-aims at
+      // CHASE_TICK_MONTHS granularity at wherever the target ACTUALLY is
+      // right then and covers one tick's worth of its own speed toward that
+      // point, repeating until the gap closes to CONTACT_RADIUS_AU. At that
+      // point the chaser just stops and holds -- the target is NOT affected
+      // and keeps moving on its own schedule regardless (see 'contactWith').
+      // A single whole-MONTH hop (like the body-target branch below still
+      // does) would let the target -- which keeps moving the entire time --
+      // drift far from the snapshot the chaser aimed at, so "catching" it
+      // would require teleporting onto the target's real, much-further-along
+      // position; ticking finely instead keeps every step's aim point
+      // essentially fresh, so there's never a meaningful gap to teleport
+      // across. Bounded by: the timeline's own visible window (nothing past
+      // it is ever rendered, so there's no reason to keep simulating -- see
+      // TIMELINE_WINDOW_MONTHS), the next authored order (so e.g. a later
+      // 'disable' still interrupts at the right month, same as it already
+      // does for a single long solved course), and maxDistance as a running
+      // TOTAL distance budget for the whole chase (not a per-leg cap) -- if
+      // that runs out before catching up, the chase stops there and gets the
+      // usual "fuori portata" warning.
       const targetFleet = fleetsById[rawTarget];
       const targetPlan = getFleetPlan(targetFleet, depth + 1);
       const stopBound = Math.min(
         baseTick + TIMELINE_WINDOW_MONTHS,
         nextOrderMonth,
       );
-      const stepDist = defaults.speed * DIST_SCALE;
+      const speedSVG = defaults.speed * DIST_SCALE;
       const maxDistanceSVG =
         defaults.maxDistance == null ? null : defaults.maxDistance * DIST_SCALE;
       let distTraveledSVG = 0;
       let m = order.month;
       // Close whatever state preceded this order (e.g. parked at home) right
       // at its own month, exactly like the body-target branch's
-      // closeSegment(departureMonth) below -- without this, the first hop's
+      // closeSegment(departureMonth) below -- without this, the first tick's
       // closeSegment() call would mislabel the OLD state's entire history
       // (from wherever segStart was, possibly -Infinity) as if it were
       // already part of this course.
       closeSegment(order.month);
+      const chaseStartPos = stateAt(order.month);
+      const chasePoints = [[chaseStartPos.x, chaseStartPos.y]];
 
       while (m < stopBound) {
         const pos = stateAt(m);
@@ -944,78 +963,75 @@ function buildFleetPlan(fleet, depth) {
           targetPos.x - pos.x,
           targetPos.y - pos.y,
         );
+
+        if (distToTarget <= CONTACT_RADIUS_SVG) {
+          state = { mode: "point", position: pos, contactWith: rawTarget };
+          closeSegment(m);
+          // Reused warning channel (same one maxDistance-exhaustion below
+          // uses) -- both stop conditions need a GM-visible flag, since
+          // neither fleet moves again until a fresh order dated after this
+          // month is authored (buildFleetPlan only ever replays a fleet's
+          // OWN orders in order, so that's already guaranteed structurally).
+          errors.push({
+            order,
+            message: `Contatto raggiunto con ${targetLabel(rawTarget)} al mese ${m.toFixed(2)} -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
+          });
+          break;
+        }
+
         const budgetLeft =
           maxDistanceSVG == null ? Infinity : maxDistanceSVG - distTraveledSVG;
         if (budgetLeft <= 0) {
           errors.push({
             order,
-            message: `Inseguimento interrotto: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo.`,
+            message: `Inseguimento interrotto al mese ${m.toFixed(2)}: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
           });
           break;
         }
 
-        let hopEta = m + Math.min(stepDist, budgetLeft) / stepDist;
-        let cappedByWindow = false;
-        if (hopEta > stopBound) {
-          hopEta = stopBound;
-          cappedByWindow = true;
-        }
-        const hopReach = stepDist * (hopEta - m);
-
-        if (distToTarget <= hopReach) {
-          // Close enough to reach the target's THIS-MONTH position within
-          // the hop budget -- caught. From here on this fleet just IS
-          // wherever the target is (see stateAt/closeSegment's 'shadow'
-          // handling), for as long as this plan runs.
-          const catchEta = m + distToTarget / stepDist;
-          state = {
-            mode: "course",
-            course: {
-              startPos: pos,
-              startMonth: m,
-              etaMonth: catchEta,
-              endPoint: targetPos,
-              rawTarget,
-              targetIsBody: false,
-              // Only the FIRST monthly hop is the order's real departure --
-              // buildFleetDepartureEvents uses this to report just one
-              // "started chasing" line instead of one per re-aim.
-              isRepeatHop: m !== order.month,
-            },
-          };
-          closeSegment(catchEta);
-          distTraveledSVG += distToTarget;
-          state = { mode: "shadow", targetFleetId: rawTarget };
-          break;
-        }
+        const tickDuration = Math.min(CHASE_TICK_MONTHS, stopBound - m);
+        const cappedByWindow = tickDuration < CHASE_TICK_MONTHS;
+        const maxReachThisTick = speedSVG * tickDuration;
+        // Capped by distToTarget too so a (rare, only at high speed/large
+        // tick) overshoot can't fly the chaser past the target's current aim
+        // point into empty space.
+        const reach = Math.min(maxReachThisTick, budgetLeft, distToTarget);
+        const tickEta = m + reach / speedSVG;
 
         const ux = (targetPos.x - pos.x) / distToTarget;
         const uy = (targetPos.y - pos.y) / distToTarget;
+        const endPoint = { x: pos.x + ux * reach, y: pos.y + uy * reach };
         state = {
           mode: "course",
           course: {
             startPos: pos,
             startMonth: m,
-            etaMonth: hopEta,
-            endPoint: { x: pos.x + ux * hopReach, y: pos.y + uy * hopReach },
+            etaMonth: tickEta,
+            endPoint,
             rawTarget,
             targetIsBody: false,
+            // Only the FIRST tick is the order's real departure --
+            // buildFleetDepartureEvents uses this to report just one
+            // "started chasing" line instead of one per re-aim.
             isRepeatHop: m !== order.month,
           },
         };
-        closeSegment(hopEta);
-        distTraveledSVG += hopReach;
-        m = hopEta;
-        if (!cappedByWindow && hopReach < stepDist) {
-          // The hop budget (not the visible window / next order) is what
-          // cut this leg short -- maxDistance is exhausted.
+        closeSegment(tickEta);
+        chasePoints.push([endPoint.x, endPoint.y]);
+        distTraveledSVG += reach;
+        m = tickEta;
+        if (!cappedByWindow && reach === budgetLeft && budgetLeft < maxReachThisTick) {
+          // The distance budget (not the visible window / next order, and
+          // not just having reached this tick's aim point) is what cut this
+          // leg short -- maxDistance is exhausted.
           errors.push({
             order,
-            message: `Inseguimento interrotto: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo.`,
+            message: `Inseguimento interrotto al mese ${m.toFixed(2)}: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
           });
           break;
         }
       }
+      chasePaths.push({ rawTarget, points: chasePoints });
       continue;
     }
 
@@ -1101,7 +1117,7 @@ function buildFleetPlan(fleet, depth) {
       : { mode: "point", position: solved.point };
   }
   closeSegment(Infinity);
-  return { segments, errors, waits };
+  return { segments, errors, waits, chasePaths };
 }
 
 let fleetPlanCache = new Map();
@@ -1178,26 +1194,6 @@ function evaluatePlanAt(plan, fleet, t) {
       pending,
     };
   }
-  if (seg.mode === "shadow") {
-    // Caught up with a chased fleet -- from here on this fleet just IS
-    // wherever the target fleet's OWN (separately cached) plan says it is,
-    // whatever that mode happens to be (parked/transit/disabled/shadowing
-    // someone else in turn); only fleet/errors/pending below stay this
-    // fleet's own, so UI clicks and warnings still refer to the chaser.
-    const targetFleet = fleetsById[seg.targetFleetId];
-    const targetState = evaluatePlanAt(
-      getFleetPlan(targetFleet, 0),
-      targetFleet,
-      t,
-    );
-    return {
-      ...targetState,
-      fleet,
-      shadowing: targetFleet,
-      errors: plan.errors,
-      pending,
-    };
-  }
   if (seg.mode === "disabled")
     return {
       mode: "disabled",
@@ -1210,6 +1206,7 @@ function evaluatePlanAt(plan, fleet, t) {
     return {
       mode: "point",
       position: seg.position,
+      contactWith: seg.contactWith ? fleetsById[seg.contactWith] : null,
       fleet,
       errors: plan.errors,
       pending,
@@ -1578,6 +1575,49 @@ function updateScene(t) {
   fleetTokenScaleEls = [];
   fleetCourseLineEls = [];
   const namedFleetsByBody = {}; // bodyId -> [{fleet, res}, ...] currently resolved as parked there
+
+  // A chasing fleet's WHOLE pursuit curve (every tick's waypoint, see
+  // buildFleetPlan's chasePaths) is drawn as one persistent dashed line, same
+  // as the permanent trade lanes above -- unlike the current-segment
+  // transit line below, this doesn't depend on t at all, so it stays fully
+  // visible however the timeline is scrubbed, letting the whole bent curve
+  // be read at a glance instead of only revealed tick by tick.
+  namedFleets.forEach((fleet) => {
+    const plan = getFleetPlan(fleet, 0);
+    if (!plan.chasePaths.length) return;
+    const ownerColor = familyColor(fleet.owner);
+    plan.chasePaths.forEach((cp) => {
+      if (cp.points.length < 2) return;
+      const pointsAttr = cp.points
+        .map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`)
+        .join(" ");
+      const hit = el("polyline", {
+        points: pointsAttr,
+        fill: "none",
+        stroke: "transparent",
+        "stroke-width": "18",
+        style: "cursor:pointer",
+      });
+      const line = el("polyline", {
+        points: pointsAttr,
+        fill: "none",
+        stroke: ownerColor,
+        opacity: "0.4",
+        "stroke-dasharray": "10 6",
+        "stroke-width": "2",
+      });
+      const pathG = el("g", {});
+      pathG.appendChild(hit);
+      pathG.appendChild(line);
+      pathG.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showFleetInfo(fleet, tick);
+      });
+      pathLayer.appendChild(pathG);
+      fleetCourseLineEls.push(line);
+    });
+  });
+
   namedFleets.forEach((fleet) => {
     const res = getFleetState(fleet, t);
     const ownerColor = familyColor(fleet.owner);
@@ -2332,6 +2372,8 @@ function showFleetInfo(fleet, t) {
     meta += `⏱ Arrivo previsto: mese ${res.course.etaMonth.toFixed(1)}`;
   } else if (res.mode === "disabled") {
     meta += `⏸ Flotta disabilitata`;
+  } else if (res.contactWith) {
+    meta += `🤝 In contatto con ${res.contactWith.name}`;
   } else if (res.mode === "body" && res.bodyId) {
     meta += `📍 In stazionamento su ${byId[res.bodyId] ? byId[res.bodyId].name : res.bodyId}`;
   } else {
@@ -2727,6 +2769,9 @@ function renderFleetLocations(name) {
       } else if (state.mode === "disabled") {
         icon = "⏸";
         statusText = "Disabilitata";
+      } else if (state.contactWith) {
+        icon = "🤝";
+        statusText = `In contatto con ${state.contactWith.name}`;
       } else if (state.mode === "body" && state.bodyId) {
         icon = "🛰";
         statusText = `In stazionamento su ${(byId[state.bodyId] && byId[state.bodyId].name) || state.bodyId}`;

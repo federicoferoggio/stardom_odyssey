@@ -181,11 +181,6 @@
       "type": "arcanic-shield",
       "startBody": "saltar",
       "orders": [
-        {
-          "month": 10225,
-          "action": "move",
-          "target": "elbethel"
-        }
       ]
     },
     {
