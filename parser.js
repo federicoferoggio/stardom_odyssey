@@ -186,30 +186,38 @@
     // matched exactly against one specific action name) -- Score defaults to
     // '' rather than undefined so script.js's filter never throws when only
     // Action is set.
-    // A treaties.json row's type string carries its own directional suffix
-    // (" su" = lord, " da" = vassal/recipient) for the two feudal pacts;
-    // every other type is symmetric. Mirrors strategic-map.js's
-    // baseTreatyType()/resolvedTreatyModifiers() so both pages agree on
-    // which side's modifiers apply.
-    function resolvedTreatyModifiers(treatyType, treatyTypesByName) {
-        let base = treatyType, side = null;
-        for (const suf of [' su', ' da']) {
-            if (treatyType.endsWith(suf)) { base = treatyType.slice(0, -suf.length); side = suf.trim(); break; }
-        }
-        const info = treatyTypesByName[base];
+    // treaties.json is keyed by pact type, each carrying a `holders` list of
+    // {from, to, bidirectional}. Symmetric pacts share one `modifiers` array;
+    // asymmetric ones (the two feudal pacts) use modifiersAsFrom/modifiersAsTo
+    // instead, picked by which side PLAYER_FAMILY is on for that holder row.
+    // Mirrors strategic-map.js's resolvedTreatyModifiers() so both pages
+    // agree on which side's modifiers apply.
+    function resolvedTreatyModifiers(treatyType, side, treatyTypesByName) {
+        const info = treatyTypesByName[treatyType];
         if (!info) return [];
-        if (side === 'su') return info.modifiersAsLord || [];
-        if (side === 'da') return info.modifiersAsVassal || [];
+        if (info.modifiersAsFrom || info.modifiersAsTo) {
+            return (side === 'from' ? info.modifiersAsFrom : info.modifiersAsTo) || [];
+        }
         return info.modifiers || [];
+    }
+
+    // Annotates an asymmetric pact's display label with which side
+    // PLAYER_FAMILY is on, since the type name no longer carries a su/da
+    // suffix. Symmetric pacts get no annotation.
+    function treatyDisplayLabel(treatyType, side, treatyTypesByName) {
+        const info = treatyTypesByName[treatyType];
+        if (info && (info.modifiersAsFrom || info.modifiersAsTo)) {
+            return `${treatyType} (${side === 'from' ? 'Signore' : 'Vassallo'})`;
+        }
+        return treatyType;
     }
 
     async function fetchBonuses() {
         try {
-            const [leaders, assetsData, treatiesData, treatyTypesData] = await Promise.all([
+            const [leaders, assetsData, treatiesData] = await Promise.all([
                 fetchLaManoLeadersWithTraits(),
                 myfetchJson('all_info/assets.json'),
                 myfetchJson('all_info/treaties.json'),
-                myfetchJson('all_info/treaty_types.json'),
             ]);
             const rows = [];
             const pushModifiers = (bonusName, modifiers) => {
@@ -231,10 +239,17 @@
             (assetsData.familyAssets || [])
                 .filter(a => a.owner === PLAYER_FAMILY)
                 .forEach(a => pushModifiers(a.name, a.modifiers));
-            const treatyTypesByName = treatyTypesData.treatyTypes || {};
-            (treatiesData.treaties || [])
-                .filter(t => t.from === PLAYER_FAMILY)
-                .forEach(t => pushModifiers(`Trattato: ${t.type} con ${t.to}`, resolvedTreatyModifiers(t.type, treatyTypesByName)));
+            const treatyTypesByName = treatiesData.pacts || {};
+            Object.entries(treatyTypesByName).forEach(([type, info]) => {
+                (info.holders || []).forEach(h => {
+                    let side = null, partner = null;
+                    if (h.from === PLAYER_FAMILY) { side = 'from'; partner = h.to; }
+                    else if (h.to === PLAYER_FAMILY && h.bidirectional !== false) { side = 'to'; partner = h.from; }
+                    if (!side) return;
+                    const label = treatyDisplayLabel(type, side, treatyTypesByName);
+                    pushModifiers(`Trattato: ${label} con ${partner}`, resolvedTreatyModifiers(type, side, treatyTypesByName));
+                });
+            });
             return rows;
         } catch (error) {
             console.error("Error fetching bonuses data:", error);
@@ -248,8 +263,8 @@
     // Ntsu) are excluded there, not here, so other consumers still see them.
     async function fetchTreatyTypes() {
         try {
-            const data = await myfetchJson('all_info/treaty_types.json');
-            return data.treatyTypes || {};
+            const data = await myfetchJson('all_info/treaties.json');
+            return data.pacts || {};
         } catch (error) {
             console.error("Error fetching treaty types:", error);
             return {};
@@ -259,11 +274,16 @@
     async function fetchPactsData() {
         try {
             const data = await myfetchJson('all_info/treaties.json');
-            return (data.treaties || []).map(t => ({
-                From: t.from,
-                Pact: t.type,
-                To: t.to,
-            }));
+            const rows = [];
+            Object.entries(data.pacts || {}).forEach(([type, info]) => {
+                (info.holders || []).forEach(h => {
+                    rows.push({ From: h.from, Pact: type, To: h.to });
+                    if (h.bidirectional !== false) {
+                        rows.push({ From: h.to, Pact: type, To: h.from });
+                    }
+                });
+            });
+            return rows;
         } catch (error) {
             console.error("Error fetching pacts data:", error);
             return {};

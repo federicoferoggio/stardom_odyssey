@@ -203,6 +203,29 @@ let revealsByFamily = {};
 let devRevealAll = false;
 let currentOverlayFamily = null;
 
+// ── SINGLE-SLOT BACK NAVIGATION (Q) ──────────────────────────────────────────
+// showInfo/showFleetInfo/showPathInfo/showFamilyOverlay each replace whatever
+// view was on screen with no way back except re-navigating by hand. Every one
+// of them calls enterView() with a closure that redraws itself; Q (see the
+// shortcuts keydown handler) replays the ONE view that was active just
+// before the current one and forgets it -- a single previous step, not a
+// full history stack.
+let currentView = null;
+let previousView = null;
+let restoringView = false;
+function enterView(render) {
+  if (!restoringView && currentView) previousView = currentView;
+  currentView = render;
+}
+function goBack() {
+  if (!previousView) return;
+  const render = previousView;
+  previousView = null;
+  restoringView = true;
+  render();
+  restoringView = false;
+}
+
 // The site is played from La Mano's own perspective (that's the player-run
 // family) -- a family always knows everything about itself, so the reveal
 // flags never gate its own info, independent of the GM-only reveal-all toggle.
@@ -822,7 +845,6 @@ function degenerateFleetPlan(fleet) {
     ],
     errors: [{ message: "Riferimento circolare tra flotte." }],
     waits: [],
-    chasePaths: [],
   };
 }
 
@@ -836,11 +858,6 @@ function buildFleetPlan(fleet, depth) {
   const errors = [];
   const waits = [];
   const segments = [];
-  // One entry per fleet-vs-fleet chase order, recording every tick's
-  // waypoint so the WHOLE pursuit curve can be drawn as a single persistent
-  // line on the map (see updateScene()) -- unlike segments (only one is ever
-  // "current" for a given t), this doesn't depend on t at all.
-  const chasePaths = [];
 
   let state = { mode: "body", bodyId: startBodyId };
   let segStart = -Infinity;
@@ -907,6 +924,7 @@ function buildFleetPlan(fleet, depth) {
     if (!rawTarget) {
       errors.push({
         order,
+        month: order.month,
         message: `Obiettivo "${order.target}" non riconosciuto.`,
       });
       continue;
@@ -953,8 +971,6 @@ function buildFleetPlan(fleet, depth) {
       // (from wherever segStart was, possibly -Infinity) as if it were
       // already part of this course.
       closeSegment(order.month);
-      const chaseStartPos = stateAt(order.month);
-      const chasePoints = [[chaseStartPos.x, chaseStartPos.y]];
 
       while (m < stopBound) {
         const pos = stateAt(m);
@@ -974,6 +990,7 @@ function buildFleetPlan(fleet, depth) {
           // OWN orders in order, so that's already guaranteed structurally).
           errors.push({
             order,
+            month: m,
             message: `Contatto raggiunto con ${targetLabel(rawTarget)} al mese ${m.toFixed(2)} -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
           });
           break;
@@ -984,6 +1001,7 @@ function buildFleetPlan(fleet, depth) {
         if (budgetLeft <= 0) {
           errors.push({
             order,
+            month: m,
             message: `Inseguimento interrotto al mese ${m.toFixed(2)}: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
           });
           break;
@@ -1017,7 +1035,6 @@ function buildFleetPlan(fleet, depth) {
           },
         };
         closeSegment(tickEta);
-        chasePoints.push([endPoint.x, endPoint.y]);
         distTraveledSVG += reach;
         m = tickEta;
         if (!cappedByWindow && reach === budgetLeft && budgetLeft < maxReachThisTick) {
@@ -1026,12 +1043,12 @@ function buildFleetPlan(fleet, depth) {
           // leg short -- maxDistance is exhausted.
           errors.push({
             order,
+            month: m,
             message: `Inseguimento interrotto al mese ${m.toFixed(2)}: superata la distanza massima (${defaults.maxDistance} UA) senza raggiungere l'obiettivo -- la flotta resta ferma finché non riceve un nuovo ordine datato dopo questo mese.`,
           });
           break;
         }
       }
-      chasePaths.push({ rawTarget, points: chasePoints });
       continue;
     }
 
@@ -1039,6 +1056,7 @@ function buildFleetPlan(fleet, depth) {
     if (!posFn) {
       errors.push({
         order,
+        month: order.month,
         message: `Obiettivo "${order.target}" non riconosciuto.`,
       });
       continue;
@@ -1081,6 +1099,7 @@ function buildFleetPlan(fleet, depth) {
     if (!solved) {
       errors.push({
         order,
+        month: order.month,
         message: `Nessuna finestra di lancio raggiungibile entro ${INTERCEPT_HORIZON_MONTHS} mesi (fuori portata).`,
       });
       continue;
@@ -1107,17 +1126,29 @@ function buildFleetPlan(fleet, depth) {
         targetIsBody: !!byId[rawTarget],
       },
     };
-    // The fleet either tracks the arrived body live from then on, or (a
-    // bare-point rendezvous, e.g. arriving at another fleet) holds fixed
-    // at the point the intercept actually happened -- close the course
-    // segment right away so the NEXT order's stateAt() sees this too.
-    closeSegment(solved.etaMonth);
-    state = byId[rawTarget]
-      ? { mode: "body", bodyId: rawTarget }
-      : { mode: "point", position: solved.point };
+    // If a LATER order's own month falls before this leg's real arrival,
+    // leave the course open here rather than closing it now -- the next
+    // order's own closeSegment() call (in its own branch, next loop
+    // iteration) will then correctly cut this course short using stateAt's
+    // live interpolation along it, redirecting from wherever the fleet
+    // ACTUALLY is instead of wrongly assuming it already arrived. Without
+    // this check, a later order dated before this leg's solved arrival used
+    // to produce a segment with from > to (recorded at the fleet's home
+    // body's LATER position instead of its real, still-in-flight one) and
+    // silently teleport the redirect's departure point.
+    if (solved.etaMonth <= nextOrderMonth) {
+      // The fleet either tracks the arrived body live from then on, or (a
+      // bare-point rendezvous, e.g. arriving at another fleet) holds fixed
+      // at the point the intercept actually happened -- close the course
+      // segment right away so the NEXT order's stateAt() sees this too.
+      closeSegment(solved.etaMonth);
+      state = byId[rawTarget]
+        ? { mode: "body", bodyId: rawTarget }
+        : { mode: "point", position: solved.point };
+    }
   }
   closeSegment(Infinity);
-  return { segments, errors, waits, chasePaths };
+  return { segments, errors, waits };
 }
 
 let fleetPlanCache = new Map();
@@ -1157,6 +1188,11 @@ function evaluatePlanAt(plan, fleet, t) {
       break;
     }
   }
+  // An error/warning (e.g. "stuck in contact since month X") only applies
+  // from the month it actually happened -- otherwise it'd show as a ⚠ for
+  // the fleet's entire timeline, including months before the problem ever
+  // occurred.
+  const errors = plan.errors.filter((e) => e.month == null || e.month <= t);
   const wait = plan.waits.find((w) => t >= w.from && t < w.to);
   const pending = wait
     ? {
@@ -1174,14 +1210,14 @@ function evaluatePlanAt(plan, fleet, t) {
             bodyId: seg.course.rawTarget,
             position: computeAllPositions(t)[seg.course.rawTarget],
             fleet,
-            errors: plan.errors,
+            errors,
             pending,
           }
         : {
             mode: "point",
             position: seg.course.endPoint,
             fleet,
-            errors: plan.errors,
+            errors,
             pending,
           };
     }
@@ -1190,7 +1226,7 @@ function evaluatePlanAt(plan, fleet, t) {
       position: positionOnCourse(seg.course, t),
       course: seg.course,
       fleet,
-      errors: plan.errors,
+      errors,
       pending,
     };
   }
@@ -1199,7 +1235,7 @@ function evaluatePlanAt(plan, fleet, t) {
       mode: "disabled",
       position: seg.position,
       fleet,
-      errors: plan.errors,
+      errors,
       pending,
     };
   if (seg.mode === "point")
@@ -1208,7 +1244,7 @@ function evaluatePlanAt(plan, fleet, t) {
       position: seg.position,
       contactWith: seg.contactWith ? fleetsById[seg.contactWith] : null,
       fleet,
-      errors: plan.errors,
+      errors,
       pending,
     };
   return {
@@ -1218,13 +1254,77 @@ function evaluatePlanAt(plan, fleet, t) {
       ? computeAllPositions(t)[seg.bodyId]
       : { x: CENTER, y: CENTER },
     fleet,
-    errors: plan.errors,
+    errors,
     pending,
   };
 }
 
 function getFleetState(fleet, t) {
   return evaluatePlanAt(getFleetPlan(fleet, 0), fleet, t);
+}
+
+// A fleet's current "trail" -- the path it's ACTUALLY traveled on its
+// current leg (or chase), from that leg's own departure up to its live
+// position at t. Returns null (no trail) once the fleet has arrived
+// somewhere real (mode 'body') or is otherwise idle -- only an in-progress
+// course, or a chase that ended stuck (contact/out-of-range, both still
+// represented as -- or immediately preceded by -- a 'course' segment; see
+// buildFleetPlan), has one. Deliberately recomputed from plan.segments at
+// render time (not cached) since, unlike everything else in the plan, this
+// depends on the live t.
+function computeFleetTrail(plan, t) {
+  let idx = plan.segments.length - 1;
+  for (let i = 0; i < plan.segments.length; i++) {
+    if (t < plan.segments[i].to) {
+      idx = i;
+      break;
+    }
+  }
+  let seg = plan.segments[idx];
+  let curPos;
+  if (seg.mode === "course") {
+    curPos = t < seg.course.etaMonth ? positionOnCourse(seg.course, t) : seg.course.endPoint;
+  } else if (seg.mode === "point" && seg.contactWith) {
+    // Contact freezes into an explicit 'point' state (see buildFleetPlan)
+    // rather than staying a 'course' segment like an out-of-range stop does
+    // -- and that frozen state can itself be split across several adjacent
+    // 'point' segments (one right at the contact month, then another
+    // "forever after" one from the plan's own trailing close). Walk back
+    // through all of them to reach the course leg that actually led into
+    // contact, so the trail still ends exactly at the contact point.
+    let pointIdx = idx;
+    while (
+      pointIdx > 0 &&
+      plan.segments[pointIdx - 1].mode === "point" &&
+      plan.segments[pointIdx - 1].contactWith === seg.contactWith
+    ) {
+      pointIdx--;
+    }
+    if (pointIdx === 0 || plan.segments[pointIdx - 1].mode !== "course") return null;
+    idx = pointIdx - 1;
+    seg = plan.segments[idx];
+    curPos = seg.course.endPoint;
+  } else {
+    return null;
+  }
+  // Walk backward through this leg/chase's own contiguous course segments
+  // (same target, no gap) to find where it actually started.
+  let startIdx = idx;
+  while (
+    startIdx > 0 &&
+    plan.segments[startIdx - 1].mode === "course" &&
+    plan.segments[startIdx - 1].course.rawTarget === seg.course.rawTarget
+  ) {
+    startIdx--;
+  }
+  const start = plan.segments[startIdx].course.startPos;
+  const points = [[start.x, start.y]];
+  for (let i = startIdx; i < idx; i++) {
+    const c = plan.segments[i].course.endPoint;
+    points.push([c.x, c.y]);
+  }
+  points.push([curPos.x, curPos.y]);
+  return points;
 }
 
 function targetLabel(targetId) {
@@ -1576,46 +1676,48 @@ function updateScene(t) {
   fleetCourseLineEls = [];
   const namedFleetsByBody = {}; // bodyId -> [{fleet, res}, ...] currently resolved as parked there
 
-  // A chasing fleet's WHOLE pursuit curve (every tick's waypoint, see
-  // buildFleetPlan's chasePaths) is drawn as one persistent dashed line, same
-  // as the permanent trade lanes above -- unlike the current-segment
-  // transit line below, this doesn't depend on t at all, so it stays fully
-  // visible however the timeline is scrubbed, letting the whole bent curve
-  // be read at a glance instead of only revealed tick by tick.
+  // A fleet's trail (see computeFleetTrail) -- everywhere it's been on its
+  // CURRENT leg/chase, from that leg's departure up to its live position --
+  // drawn as a dim persistent line, same dash style as the current-segment
+  // transit line below but not cleared by the tick loop above (it's added
+  // here, before pathLayer gets cleared for this frame -- see updateScene's
+  // own pathLayer.innerHTML reset). It grows as the tick moves forward and
+  // disappears the moment the fleet arrives at a body (a fresh, empty trail
+  // then starts for whatever leg comes next) -- EXCEPT a chase that ends
+  // stuck (contact or out-of-range) keeps its trail on screen for good,
+  // since a stopped fleet sitting there is itself worth seeing.
   namedFleets.forEach((fleet) => {
     const plan = getFleetPlan(fleet, 0);
-    if (!plan.chasePaths.length) return;
+    const trail = computeFleetTrail(plan, t);
+    if (!trail || trail.length < 2) return;
     const ownerColor = familyColor(fleet.owner);
-    plan.chasePaths.forEach((cp) => {
-      if (cp.points.length < 2) return;
-      const pointsAttr = cp.points
-        .map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`)
-        .join(" ");
-      const hit = el("polyline", {
-        points: pointsAttr,
-        fill: "none",
-        stroke: "transparent",
-        "stroke-width": "18",
-        style: "cursor:pointer",
-      });
-      const line = el("polyline", {
-        points: pointsAttr,
-        fill: "none",
-        stroke: ownerColor,
-        opacity: "0.4",
-        "stroke-dasharray": "10 6",
-        "stroke-width": "2",
-      });
-      const pathG = el("g", {});
-      pathG.appendChild(hit);
-      pathG.appendChild(line);
-      pathG.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showFleetInfo(fleet, tick);
-      });
-      pathLayer.appendChild(pathG);
-      fleetCourseLineEls.push(line);
+    const pointsAttr = trail
+      .map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`)
+      .join(" ");
+    const hit = el("polyline", {
+      points: pointsAttr,
+      fill: "none",
+      stroke: "transparent",
+      "stroke-width": "18",
+      style: "cursor:pointer",
     });
+    const line = el("polyline", {
+      points: pointsAttr,
+      fill: "none",
+      stroke: ownerColor,
+      opacity: "0.4",
+      "stroke-dasharray": "10 6",
+      "stroke-width": "2",
+    });
+    const pathG = el("g", {});
+    pathG.appendChild(hit);
+    pathG.appendChild(line);
+    pathG.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showFleetInfo(fleet, tick);
+    });
+    pathLayer.appendChild(pathG);
+    fleetCourseLineEls.push(line);
   });
 
   namedFleets.forEach((fleet) => {
@@ -1631,39 +1733,11 @@ function updateScene(t) {
     const ghosted = res.mode === "disabled";
     const iconSize = 20;
 
-    if (res.mode === "transit") {
-      const c = res.course;
-      // Wrapped in a clickable group with a wide invisible hit-line, same
-      // pattern as the permanent trade-lane lines above -- clicking
-      // anywhere along the dashed course (not just the icon) opens the
-      // fleet's info panel.
-      const lineG = el("g", { style: "cursor:pointer" });
-      lineG.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showFleetInfo(fleet, t);
-      });
-      const hit = el("line", {
-        x1: c.startPos.x,
-        y1: c.startPos.y,
-        x2: c.endPoint.x,
-        y2: c.endPoint.y,
-        stroke: "transparent",
-        "stroke-width": "18",
-      });
-      const line = el("line", {
-        x1: c.startPos.x,
-        y1: c.startPos.y,
-        x2: c.endPoint.x,
-        y2: c.endPoint.y,
-        stroke: ownerColor,
-        opacity: "0.5",
-        "stroke-dasharray": "12 8",
-      });
-      lineG.appendChild(hit);
-      lineG.appendChild(line);
-      pathLayer.appendChild(lineG);
-      fleetCourseLineEls.push(line);
-    }
+    // The dashed course line itself is drawn once already, up above, for
+    // EVERY named fleet via computeFleetTrail (start-of-leg -> live
+    // position, growing with t, resetting on arrival) -- not repeated here,
+    // so a normal move's line actually grows with progress instead of
+    // always spanning the whole leg regardless of how far it's gotten.
 
     const iconG = el("g", {
       transform: `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`,
@@ -2120,6 +2194,7 @@ function setInfoMeta(lines) {
 }
 
 function showInfo(b) {
+  enterView(() => showInfo(b));
   document.getElementById("info-name").textContent = b.name || b.id;
   const oe = document.getElementById("info-owner");
   oe.innerHTML = "";
@@ -2304,6 +2379,7 @@ function renderResourceChips(resourceIds) {
 }
 
 function showPathInfo(path, totalLen) {
+  enterView(() => showPathInfo(path, totalLen));
   document.getElementById("info-name").textContent =
     path.name || path.ids.join(" → ");
   const oe = document.getElementById("info-owner");
@@ -2337,6 +2413,7 @@ function showPathInfo(path, totalLen) {
 // transit, holding at a bare rendezvous point, or ghosted/disabled -- see
 // updateScene()); reuses the same shared #info-panel showPathInfo does.
 function showFleetInfo(fleet, t) {
+  enterView(() => showFleetInfo(fleet, tick));
   const res = getFleetState(fleet, t);
   document.getElementById("info-name").textContent = fleet.name || fleet.id;
   const oe = document.getElementById("info-owner");
@@ -2521,6 +2598,7 @@ function renderInfiltrationBar(name) {
 
 function showFamilyOverlay(name) {
   name = canonicalFamilyName(name);
+  enterView(() => showFamilyOverlay(name));
   currentOverlayFamily = name;
   const overlay = document.getElementById("family-overlay");
   const company = companiesByName[name];
@@ -2829,11 +2907,10 @@ function renderFamilyTreaties(name) {
   }
   host.innerHTML = treaties
     .map((t, i) => {
-      const { base } = baseTreatyType(t.type);
-      const info = treatyTypesByName[base];
+      const info = treatyTypesByName[t.type];
       return `
             <div class="treaty-row" data-idx="${i}">
-                <span class="treaty-type">${escHtml(t.type)}</span>
+                <span class="treaty-type">${escHtml(treatyDisplayLabel(t))}</span>
                 <span class="treaty-partner">con ${escHtml(t.to)}</span>
                 ${info ? `<div class="trait-tooltip">${escHtml(info.description)}</div>` : ""}
             </div>`;
@@ -2883,8 +2960,7 @@ function renderAssets(name) {
   // static owner.
   const treatyGranted = (treatiesByFamily[name] || [])
     .map((t) => {
-      const { base } = baseTreatyType(t.type);
-      const info = treatyTypesByName[base];
+      const info = treatyTypesByName[t.type];
       return info && info.grantsAsset
         ? { ...info.grantsAsset, _via: t.type, _with: t.to }
         : null;
@@ -3290,9 +3366,7 @@ function opinionBreakdownHtml(from, to, { mods, baseline }) {
             <div class="trait-tooltip"><div>${escHtml(from)}: ${topRelA || "—"}</div><div>${escHtml(to)}: ${topRelB || "—"}</div>${(religionContribs.length ? religionContribs : ["(nessun contributo significativo)"]).map((l) => `<div class="modline">${l}</div>`).join("")}<div class="modline">Totale = ${fmtBaselineNum(baseline.religion)}</div></div></span>`;
   }
   mods.forEach((m) => {
-    const typeInfo =
-      treatyTypesByName[m.label] ||
-      treatyTypesByName[(m.label || "").replace(/ (su|da)$/, "")];
+    const typeInfo = treatyTypesByName[m.label];
     html += `<span class="opinion-mod ${m.value >= 0 ? "positive" : "negative"}">${escHtml(m.label)} ${m.value > 0 ? "+" : ""}${m.value}${typeInfo ? `<div class="trait-tooltip">${escHtml(typeInfo.description)}</div>` : ""}</span>`;
   });
   return html || '<div class="opinion-empty">Nessun modificatore.</div>';
@@ -3432,6 +3506,44 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+// Public keyboard shortcuts, listed in the "⌨ Scorciatoie" popover next to
+// the ruler button (#shortcuts-panel) -- deliberately excludes
+// Ctrl+Shift+G above, which stays undocumented in the UI. Ignored while
+// typing in a text field so the search box (and any future input) keeps
+// normal text-editing behavior, including its own "/" and arrow keys.
+window.addEventListener("keydown", (e) => {
+  const t = e.target;
+  if (
+    t &&
+    (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)
+  )
+    return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const key = e.key.toLowerCase();
+  if (key === "/") {
+    e.preventDefault();
+    searchInput.focus();
+  } else if (key === "f") {
+    toggleToolbarPanel("families");
+  } else if (key === "r") {
+    toggleToolbarPanel("resources");
+  } else if (key === "i") {
+    toggleToolbarPanel("info");
+  } else if (key === "t") {
+    toggleToolbarPanel("timeline");
+  } else if (key === "m") {
+    toggleRuler();
+  } else if (key === "q") {
+    goBack();
+  } else if (key === "arrowleft") {
+    e.preventDefault();
+    setTargetTick(targetTick - parseFloat(tickSlider.step || 0.03125));
+  } else if (key === "arrowright") {
+    e.preventDefault();
+    setTargetTick(targetTick + parseFloat(tickSlider.step || 0.03125));
+  }
+});
+
 // ── PERSISTENT FAMILY LIST ────────────────────────────────────────────────────
 function buildFamiliesPanel() {
   const list = document.getElementById("families-list");
@@ -3550,52 +3662,58 @@ function familyCraftableAssets(name) {
   return craftData.filter((a) => qualifiesFor(a, resourceIds));
 }
 
-// ── TREATY-DERIVED BONUSES (all_info/treaties.json + treaty_types.json) ──────
-// A treaty row's `type` string carries its own directional suffix (" su" =
-// lord, " da" = vassal/recipient) for the two feudal pacts; every other type
-// is symmetric. Stripping the suffix looks up the shared treaty_types.json
-// entry; the suffix (if any) picks which side's modifiers apply.
-function baseTreatyType(type) {
-  for (const suf of [" su", " da"]) {
-    if (type.endsWith(suf))
-      return { base: type.slice(0, -suf.length), side: suf.trim() };
-  }
-  return { base: type, side: null };
-}
+// ── TREATY-DERIVED BONUSES (all_info/treaties.json) ──────────────────────────
+// treaties.json is keyed by pact type; each pact carries its own definition
+// plus a `holders` list of {from, to, bidirectional}. Symmetric pacts use a
+// shared `modifiers` array; asymmetric ones (the two feudal pacts) use
+// modifiersAsFrom/modifiersAsTo instead, picked via the `side` field
+// treatiesByFamily stamps on each expanded row (see loadMap()).
 
 // Opinion contribution from treaties is computed once here (not per-render):
-// for every row in treaties.json, the SAME opinionValue is added to both
-// directions, regardless of whether the mechanical effect is one-sided. If
-// both sides independently hold their own row for the same treaty (e.g. a
-// mutual rivalry declaration), each row contributes its own mirrored pair,
-// so the totals simply stack -- no special-casing needed.
-function computeTreatyOpinions(treaties) {
+// for every holder of every pact, the SAME opinionValue is added to both
+// directions, regardless of whether the mechanical effect is one-sided (so
+// even Ousssek's unreciprocated Rivalità against La Mano still shifts both
+// sides' opinion of each other -- only the mechanical bonus is one-sided).
+function computeTreatyOpinions(pactsByType) {
   const result = {};
   const add = (from, to, label, value) => {
     result[from] = result[from] || {};
     (result[from][to] = result[from][to] || []).push({ label, value });
   };
-  treaties.forEach((t) => {
-    const { base } = baseTreatyType(t.type);
-    const info = treatyTypesByName[base];
-    const value = info ? info.opinionValue || 0 : 0;
-    add(t.from, t.to, t.type, value);
-    add(t.to, t.from, t.type, value);
+  Object.entries(pactsByType).forEach(([type, info]) => {
+    const value = info.opinionValue || 0;
+    (info.holders || []).forEach((h) => {
+      add(h.from, h.to, type, value);
+      add(h.to, h.from, type, value);
+    });
   });
   return result;
 }
 
 // Resolves which modifiers apply to the family on the `from` side of a
-// treaties.json row: modifiersAsLord/modifiersAsVassal for the two feudal
-// pacts (picked by the row's own su/da suffix), or the shared `modifiers`
-// array for every symmetric type. Missing arrays default to [].
+// treatiesByFamily row: modifiersAsFrom/modifiersAsTo for the two feudal
+// pacts (picked by the row's own `side`), or the shared `modifiers` array
+// for every symmetric type. Missing arrays default to [].
 function resolvedTreatyModifiers(treatyRow) {
-  const { base, side } = baseTreatyType(treatyRow.type);
-  const info = treatyTypesByName[base];
+  const info = treatyTypesByName[treatyRow.type];
   if (!info) return [];
-  if (side === "su") return info.modifiersAsLord || [];
-  if (side === "da") return info.modifiersAsVassal || [];
+  if (info.modifiersAsFrom || info.modifiersAsTo) {
+    return (treatyRow.side === "from"
+      ? info.modifiersAsFrom
+      : info.modifiersAsTo) || [];
+  }
   return info.modifiers || [];
+}
+
+// For asymmetric pacts (feudal ones), annotates the display label with which
+// side this family is on, since the type name alone no longer carries a
+// su/da suffix. Symmetric pacts get no annotation.
+function treatyDisplayLabel(treatyRow) {
+  const info = treatyTypesByName[treatyRow.type];
+  if (info && (info.modifiersAsFrom || info.modifiersAsTo)) {
+    return `${treatyRow.type} (${treatyRow.side === "from" ? "Signore" : "Vassallo"})`;
+  }
+  return treatyRow.type;
 }
 
 // Every currently-active flat/situational modifier a family has, from every
@@ -3621,14 +3739,14 @@ function familyActiveModifiers(name) {
   });
 
   (treatiesByFamily[name] || []).forEach((t) => {
+    const label = treatyDisplayLabel(t);
     resolvedTreatyModifiers(t).forEach((m) => {
-      out.push({ source: `Trattato: ${t.type} con ${t.to}`, modifier: m });
+      out.push({ source: `Trattato: ${label} con ${t.to}`, modifier: m });
     });
-    const { base } = baseTreatyType(t.type);
-    const info = treatyTypesByName[base];
+    const info = treatyTypesByName[t.type];
     if (info && info.grantsAsset && info.grantsAsset.effect) {
       out.push({
-        source: `Trattato: ${t.type} con ${t.to}`,
+        source: `Trattato: ${label} con ${t.to}`,
         modifier: {
           stat: info.grantsAsset.name,
           amount: 0,
@@ -3829,13 +3947,25 @@ const rulerLayer = document.createElementNS(NS, "g");
 rulerLayer.setAttribute("id", "ruler-layer");
 svg.appendChild(rulerLayer);
 
-rulerBtn.addEventListener("click", () => {
+function toggleRuler() {
   rulerActive = !rulerActive;
   rulerBtn.classList.toggle("active", rulerActive);
   rulerStart = null;
   rulerLayer.innerHTML = "";
   rulerTooltip.style.display = "none";
   svg.style.cursor = rulerActive ? "crosshair" : "grab";
+}
+rulerBtn.addEventListener("click", toggleRuler);
+
+// Shortcuts legend: a small standalone popover next to the ruler button (see
+// #shortcutsWrapper in the HTML), independent of the #top-toolbar dropdown
+// system above -- it lives in a different UI cluster (#controls, bottom-
+// center) so it doesn't share that system's "one panel open at a time" state.
+const shortcutsBtn = document.getElementById("shortcutsBtn");
+const shortcutsPanelEl = document.getElementById("shortcuts-panel");
+shortcutsBtn.addEventListener("click", () => {
+  const open = shortcutsPanelEl.classList.toggle("open");
+  shortcutsBtn.classList.toggle("active", open);
 });
 
 function svgPoint(e) {
@@ -4220,7 +4350,6 @@ async function init() {
     traits,
     leaders,
     opinions,
-    treatyTypes,
     treatiesFile,
     assetsFile,
     resourcesFile,
@@ -4239,8 +4368,7 @@ async function init() {
     loadJson("all_info/traits.json", { traits: [] }),
     loadJson("all_info/leaders.json", { leaders: {} }),
     loadJson("all_info/opinions.json", { opinions: {} }),
-    loadJson("all_info/treaty_types.json", { treatyTypes: {} }),
-    loadJson("all_info/treaties.json", { treaties: [] }),
+    loadJson("all_info/treaties.json", { pacts: {} }),
     loadJson("all_info/assets.json", {
       craftAssets: [],
       familyAssets: [],
@@ -4272,12 +4400,25 @@ async function init() {
     traitsById[t.id] = t;
   });
   opinionsByFamily = opinions.opinions || {};
-  treatyTypesByName = treatyTypes.treatyTypes || {};
+  treatyTypesByName = treatiesFile.pacts || {};
   treatiesByFamily = {};
-  (treatiesFile.treaties || []).forEach((t) => {
-    (treatiesByFamily[t.from] = treatiesByFamily[t.from] || []).push(t);
+  Object.entries(treatyTypesByName).forEach(([type, info]) => {
+    (info.holders || []).forEach((h) => {
+      (treatiesByFamily[h.from] = treatiesByFamily[h.from] || []).push({
+        type,
+        to: h.to,
+        side: "from",
+      });
+      if (h.bidirectional !== false) {
+        (treatiesByFamily[h.to] = treatiesByFamily[h.to] || []).push({
+          type,
+          to: h.from,
+          side: "to",
+        });
+      }
+    });
   });
-  treatyOpinionsByFamily = computeTreatyOpinions(treatiesFile.treaties || []);
+  treatyOpinionsByFamily = computeTreatyOpinions(treatyTypesByName);
   craftData = assetsFile.craftAssets || [];
   resourcesById = {};
   (resourcesFile.resources || []).forEach((r) => {

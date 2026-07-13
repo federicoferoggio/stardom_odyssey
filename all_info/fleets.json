@@ -65,9 +65,14 @@
       "type": "interceptor",
       "orders": [
         {
-          "month": 10224,
+          "month": 10225,
           "action": "move",
           "target": "gith-flotta-1"
+        },
+        {
+          "month": 10227.5,
+          "action": "move",
+          "target": "enides"
         }
       ],
       "startBody": "draconia"
@@ -122,19 +127,24 @@
       "startBody": "githcrechexller",
       "orders": [
         {
-          "month": 10221,
+          "month": 10222,
           "action": "move",
           "target": "stazioneminerariafsm1s"
         },
         {
-          "month": 10224,
+          "month": 10225,
           "action": "move",
           "target": "protblanc"
         },
         {
-          "month": 10225,
+          "month": 10226,
           "action": "move",
           "target": "stazioneminerariafsm4ogs"
+        },
+        {
+          "month": 10226.2,
+          "action": "move",
+          "target": "elbethel"
         }
       ]
     },
@@ -187,11 +197,11 @@
       "id": "ousssek-flotta-2",
       "name": "Salticidae",
       "owner": "Ousssek",
-      "type": "interceptor",
+      "type": "ground-support",
       "startBody": "saltar",
       "orders": [
         {
-          "month": 10225,
+          "month": 10226,
           "action": "move",
           "target": "elbethel"
         }
@@ -213,14 +223,14 @@
     },
     {
       "id": "grayshine-flotta-1",
-      "name": "1ª Flotta Grayshine",
+      "name": "Erario Blindato",
       "owner": "Grayshine",
       "type": "ground-support",
       "orders": []
     },
     {
       "id": "caillot-flotta-1",
-      "name": "1ª Flotta Caillot",
+      "name": "Falce Dorata",
       "owner": "Caillot",
       "type": "ground-support",
       "orders": [
@@ -241,7 +251,7 @@
     },
     {
       "id": "amoako-flotta-1",
-      "name": "1ª Flotta Amoako",
+      "name": "Velo Arcano",
       "owner": "Amoako",
       "type": "arcanic-shield",
       "orders": [
@@ -262,7 +272,7 @@
     },
     {
       "id": "zolinath-flotta-1",
-      "name": "1ª Flotta Zolinath",
+      "name": "Lama della Legge",
       "owner": "Zolinath",
       "type": "suppressor",
       "orders": []
@@ -276,17 +286,23 @@
     },
     {
       "id": "sifu-flotta-1",
-      "name": "1ª Flotta Sifu",
+      "name": "Argine Spezzato",
       "owner": "Sifu",
       "type": "ground-support",
       "orders": []
     },
     {
       "id": "rasaily-flotta-1",
-      "name": "1ª Flotta Rasaily",
+      "name": "Furia degli Orchi",
       "owner": "Rasaily",
       "type": "suppressor",
-      "orders": []
+      "orders": [
+        {
+          "month": 10225,
+          "action": "move",
+          "target": "githcrechexller"
+        }
+      ]
     },
     {
       "id": "rasaily-flotta-2",
@@ -297,14 +313,14 @@
     },
     {
       "id": "kesk-flotta-1",
-      "name": "1ª Flotta Kesk",
+      "name": "Manto Oscuro",
       "owner": "Kesk",
       "type": "arcanic-shield",
       "orders": []
     },
     {
       "id": "carxus-flotta-1",
-      "name": "1ª Flotta Carxus",
+      "name": "Onda d'Acciaio",
       "owner": "Carxus",
       "type": "interceptor",
       "orders": []
@@ -318,28 +334,28 @@
     },
     {
       "id": "stozav-flotta-1",
-      "name": "1ª Flotta Stozav",
+      "name": "Bruma Inebriante",
       "owner": "Stozav",
       "type": "interceptor",
       "orders": []
     },
     {
       "id": "hai-flotta-1",
-      "name": "1ª Flotta Hai",
+      "name": "Tregua Fragile",
       "owner": "Hai",
       "type": "ground-support",
       "orders": []
     },
     {
       "id": "sudriz-flotta-1",
-      "name": "1ª Flotta Sudriz",
+      "name": "Fucina Fiammeggiante",
       "owner": "Sudriz",
       "type": "ground-support",
       "orders": []
     },
     {
       "id": "eretici-flotta-1",
-      "name": "1ª Flotta Eretici",
+      "name": "Scisma Proibito",
       "owner": "Eretici",
       "type": "arcanic-shield",
       "orders": []
@@ -353,7 +369,7 @@
     },
     {
       "id": "eretici-flotta-3",
-      "name": "3ª Flotta Eretici",
+      "name": "Anatema Vivente",
       "owner": "Eretici",
       "type": "arcanic-shield",
       "orders": []

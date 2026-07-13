@@ -134,7 +134,7 @@
         "role": "Capo Politico",
         "traits": [
           "politico",
-          "geniale"
+          "inaffidabile"
         ]
       },
       {
@@ -143,7 +143,7 @@
         "role": "Primo Ministro",
         "traits": [
           "connesso",
-          "politico"
+          "codardo"
         ]
       },
       {
@@ -151,7 +151,7 @@
         "portrait": "images/members/Simen.webp",
         "role": "Capo Militare",
         "traits": [
-          "geniale",
+          "preparato",
           "previdente"
         ]
       }
@@ -210,7 +210,7 @@
         "role": "Capo Militare",
         "traits": [
           "geniale",
-          "esperto_territory"
+          "immortal_god"
         ]
       }
     ],
@@ -220,7 +220,7 @@
         "portrait": "images/members/Demryd.webp",
         "role": "Capo Politico",
         "traits": [
-          "politico",
+          "crudele",
           "connesso"
         ]
       },
@@ -229,7 +229,7 @@
         "portrait": "images/members/Arakne.webp",
         "role": "Primo Ministro",
         "traits": [
-          "connesso",
+          "geniale",
           "empatico"
         ]
       },
@@ -238,7 +238,7 @@
         "portrait": "images/members/Tolne.webp",
         "role": "Capo Militare",
         "traits": [
-          "empatico",
+          "politico",
           "esperto_influence"
         ]
       }

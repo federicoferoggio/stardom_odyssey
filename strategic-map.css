@@ -303,6 +303,31 @@ svg {
     color: #ffc840;
 }
 
+#shortcutsWrapper { position: relative; }
+#shortcutsBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #dfe1e4;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .2s;
+}
+#shortcutsBtn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+#shortcutsBtn.active {
+    background: rgba(79, 152, 163, 0.22);
+    border-color: rgba(79, 152, 163, 0.55);
+    color: #9fd7de;
+}
+#shortcuts-panel {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    z-index: 300;
+}
+
 .asset-card {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
@@ -1187,6 +1212,31 @@ svg {
     backdrop-filter: blur(6px);
 }
 #data-error-banner.show { display: flex; }
+
+/* ── SHORTCUTS PANEL ──────────────────────────────────────────────────────────
+   Just another .toolbar-dropdown (see #shortcuts-panel in the HTML), opened
+   via the "⌨ Scorciatoie" toolbar button like Famiglie/Risorse/Info/Timeline.
+   Ctrl+Shift+G (GM reveal-all) is deliberately never listed here. */
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 14px;
+    color: #dfe1e4;
+}
+.shortcut-row:last-child { border-bottom: none; }
+.shortcut-row kbd {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: inherit;
+    font-size: 12px;
+    color: #9fd7de;
+    flex-shrink: 0;
+}
 #data-error-banner button {
     background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.3);
