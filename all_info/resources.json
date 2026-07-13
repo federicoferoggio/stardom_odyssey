@@ -1,0 +1,225 @@
+{
+  "_readme": "Canonical catalog of every resource/property name found on planets and bases. Resources are inert by themselves -- they only gate which assets (all_info/assets.json craftAssets) a controlling family can use; the bonus text lives on the asset, not here. assets.json's craftAssets.requirementIds and bodies.json/points_of_interest.json's resourceIds both reference these same ids, so matching is exact by construction. 'aliases' lists alternate spellings (mostly the Italian Asset List names) that map onto this canonical id.",
+  "_review": [
+    "bobssium: craft_assets.json used 'Bossio', assumed to be the same material as 'Bobssium' (short form) -- please confirm.",
+    "zinale: craft_assets.json used 'Zinza', assumed to be the same material as 'Zinale' -- please confirm."
+  ],
+  "resources": [
+    {
+      "id": "adamantine",
+      "name": "Adamantine",
+      "category": "gems",
+      "aliases": [
+        "Adamantino"
+      ]
+    },
+    {
+      "id": "blu-kolbmony-drussiana",
+      "name": "Blu Kolbmony Drussiana",
+      "category": "opals",
+      "aliases": []
+    },
+    {
+      "id": "bobssium",
+      "name": "Bobssium",
+      "category": "shards",
+      "aliases": [
+        "Bossio"
+      ]
+    },
+    {
+      "id": "campi-di-cibo",
+      "name": "Campi di Cibo",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "centro-di-mercato",
+      "name": "Centro di mercato",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "cronvite",
+      "name": "Cronvite",
+      "category": "opals",
+      "aliases": [
+        "Crovite"
+      ]
+    },
+    {
+      "id": "diamond",
+      "name": "Diamond",
+      "category": "gems",
+      "aliases": [
+        "Diamante"
+      ]
+    },
+    {
+      "id": "emerald",
+      "name": "Emerald",
+      "category": "gems",
+      "aliases": [
+        "Smeraldo"
+      ]
+    },
+    {
+      "id": "giunglato",
+      "name": "Giunglato",
+      "category": "shards",
+      "aliases": [
+        "Giunglato Lopotome"
+      ]
+    },
+    {
+      "id": "gold",
+      "name": "Gold",
+      "category": "gems",
+      "aliases": [
+        "Oro"
+      ]
+    },
+    {
+      "id": "helium",
+      "name": "Helium",
+      "category": "gems",
+      "aliases": [
+        "Elio"
+      ]
+    },
+    {
+      "id": "ivory",
+      "name": "Ivory",
+      "category": "opals",
+      "aliases": [
+        "Avorio"
+      ]
+    },
+    {
+      "id": "knotime",
+      "name": "Knotime",
+      "category": "opals",
+      "aliases": []
+    },
+    {
+      "id": "livinohorite",
+      "name": "Livinohorite",
+      "category": "shards",
+      "aliases": []
+    },
+    {
+      "id": "luogo-sacro-ioun",
+      "name": "Luogo sacro (Ioun)",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "luogo-sacro-kord",
+      "name": "Luogo sacro (Kord)",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "luogo-sacro-lolth",
+      "name": "Luogo sacro (Lolth)",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "luogo-sacro-unico",
+      "name": "Luogo sacro (Unico)",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "niez",
+      "name": "Niez",
+      "category": "shards",
+      "aliases": []
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "category": "opals",
+      "aliases": [
+        "Ossidiana"
+      ]
+    },
+    {
+      "id": "perla-di-brauh",
+      "name": "Perla di Brauh",
+      "category": "shards",
+      "aliases": []
+    },
+    {
+      "id": "plasma-solido",
+      "name": "Plasma Solido",
+      "category": "opals",
+      "aliases": []
+    },
+    {
+      "id": "platinum",
+      "name": "Platinum",
+      "category": "gems",
+      "aliases": [
+        "Platino"
+      ]
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "category": "gems",
+      "aliases": [
+        "Rubino"
+      ]
+    },
+    {
+      "id": "seaurite",
+      "name": "Seaurite",
+      "category": "opals",
+      "aliases": []
+    },
+    {
+      "id": "silver",
+      "name": "Silver",
+      "category": "gems",
+      "aliases": [
+        "Argento"
+      ]
+    },
+    {
+      "id": "sovrappopolazione",
+      "name": "Sovrappopolazione",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "tholleite",
+      "name": "Tholleite",
+      "category": "opals",
+      "aliases": []
+    },
+    {
+      "id": "varisiana-nera",
+      "name": "Varisiana Nera",
+      "category": "shards",
+      "aliases": []
+    },
+    {
+      "id": "xifl",
+      "name": "Xifl",
+      "category": "shards",
+      "aliases": [
+        "Xilf"
+      ]
+    },
+    {
+      "id": "zinale",
+      "name": "Zinale",
+      "category": "opals",
+      "aliases": [
+        "Zinza"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,416 @@
+{
+  "_note": "craftAssets = global auto-computed catalog (requirementIds gate qualification per-family, no owner/bodyId -- see resources.json for what each requirementId grants). familyAssets = unique per-family assets (owner must match a companies.json name exactly). localizedAssets = tied to a place (bodyId must match a bodies.json/points_of_interest.json id, not a family) -- shown in that place's info panel regardless of who currently owns it. Optional 'modifiers' array (({stat|action, amount, situation, always, diceType}) on familyAssets entries is only consumed by index.html's action-roll calculator for La Mano -- a modifier binds to EITHER a stat (matched against a rolled quality) OR an action (matched exactly against one of index.html's action names), never both.",
+  "craftAssets": [
+    {
+      "name": "Armamenti arcani avanzati (abjuration)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Quando effettui un tiro di might+Territorio per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +1 al tiro.",
+      "requirementIds": [
+        "ivory",
+        "obsidian",
+        "bobssium"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (conjuration)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Quando tiri i dadi per might + Territorio da Difendere, puoi aggiungere +1 dado riducendo permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "obsidian"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (divination)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Quando effettui un tiro per attaccare, puoi tirare due volte tutti i dadi e scegliere quale set utilizzare.",
+      "requirementIds": [
+        "blu-kolbmony-drussiana"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (enchantment)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Ottieni +1 a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
+      "requirementIds": [
+        "obsidian",
+        "seaurite"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (evocation)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Quando effettui un tiro might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un +1 al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di territorio.",
+      "requirementIds": [
+        "obsidian",
+        "tholleite",
+        "plasma-solido"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (illusion)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Puoi aggiungere +1 alla tua potenza, al tuo Treasure o alla tua sovranità. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "requirementIds": [
+        "knotime"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (necromancy)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Per qualsiasi tiro che coinvolga il territorio, puoi cambiare il dado utilizzato in un d8, ma rimuovi -2d dal tuo pool.",
+      "requirementIds": [
+        "zinale"
+      ]
+    },
+    {
+      "name": "Armamenti arcani avanzati (transmutation)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Per qualsiasi tiro che utilizzi la might, puoi cambiare il dado utilizzato in un d12 e aggiungere +1d al tuo pool.",
+      "requirementIds": [
+        "cronvite"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (abjuration)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Quando effettui un tiro di might+Territorio per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +2 al tiro.",
+      "requirementIds": [
+        "adamantine",
+        "niez",
+        "varisiana-nera",
+        "bobssium"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (conjuration)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Quando tiri i dadi per might + Territorio da Difendere, puoi aggiungere +1 dado riducendo permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "adamantine",
+        "niez",
+        "livinohorite",
+        "perla-di-brauh"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (divination)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Quando effettui un tiro per attaccare, puoi sostituire un d10 con un d5. 1 conterà come 1-2, 2 come 3-4 e così via.",
+      "requirementIds": [
+        "adamantine",
+        "niez",
+        "xifl"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (enchantment)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Ottieni +2 a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
+      "requirementIds": [
+        "adamantine",
+        "livinohorite",
+        "perla-di-brauh"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (evocation)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Quando effettui un tiro might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un bonus di +2 al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di territorio.",
+      "requirementIds": [
+        "adamantine",
+        "livinohorite",
+        "giunglato",
+        "niez"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (illusion)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Puoi aggiungere +2 alla tua potenza, al tuo Treasure o alla tua sovreignity. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "requirementIds": [
+        "adamantine",
+        "xifl",
+        "varisiana-nera"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (necromancy)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Per qualsiasi tiro che coinvolga il territorio, puoi cambiare il dado utilizzato in un d8, ma rimuovi -1d dal tuo pool.",
+      "requirementIds": [
+        "adamantine",
+        "xifl",
+        "perla-di-brauh"
+      ]
+    },
+    {
+      "name": "Armamenti arcani semplici (transmutation)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Per qualsiasi tiro che utilizzi la might, puoi cambiare il dado utilizzato in un d12 e aggiungere +2d al tuo pool.",
+      "requirementIds": [
+        "adamantine",
+        "varisiana-nera",
+        "livinohorite"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (elio)",
+      "type": "Monouso",
+      "generationTime": "Immediato",
+      "description": "Puoi aggiungere +1 a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "helium"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (argento)",
+      "type": "Monouso",
+      "generationTime": "1 mese",
+      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 2 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "requirementIds": [
+        "silver"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (oro)",
+      "type": "Monouso",
+      "generationTime": "2 mesi",
+      "description": "Puoi aggiungere +ED a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "gold"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (rubini)",
+      "type": "Monouso",
+      "generationTime": "3 mesi",
+      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 3 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "requirementIds": [
+        "ruby"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (Emerald)",
+      "type": "Monouso",
+      "generationTime": "4 mesi",
+      "description": "Puoi aggiungere +2d a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "emerald"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (Platino)",
+      "type": "Monouso",
+      "generationTime": "5 mesi",
+      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 4 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "requirementIds": [
+        "platinum"
+      ]
+    },
+    {
+      "name": "Riserve monetarie (diamante)",
+      "type": "Monouso",
+      "generationTime": "6 mesi",
+      "description": "Puoi aggiungere +MD a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "requirementIds": [
+        "diamond"
+      ]
+    },
+    {
+      "name": "Sicurezza alimentare",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Rimuove l'asset \"Rischio Carestia\"",
+      "requirementIds": [
+        "campi-di-cibo"
+      ]
+    },
+    {
+      "name": "Attrezzature per Spelljamming",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Permette di far salire il proprio spelljamming level oltre livello 3, fintanto la famiglia ha la capacità tecnologica.",
+      "requirementIds": [
+        "diamond",
+        "helium",
+        "emerald",
+        "gold",
+        "silver"
+      ]
+    },
+    {
+      "name": "Autorità religiosa (Ioun)",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "requirementIds": [
+        "luogo-sacro-ioun"
+      ]
+    },
+    {
+      "name": "Autorità religiosa (Lolth)",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "requirementIds": [
+        "luogo-sacro-lolth"
+      ]
+    },
+    {
+      "name": "Autorità religiosa (Unico)",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "requirementIds": [
+        "luogo-sacro-unico"
+      ]
+    },
+    {
+      "name": "Autorità religiosa (Kord)",
+      "type": "Permanente",
+      "generationTime": "Immediato",
+      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "requirementIds": [
+        "luogo-sacro-kord"
+      ]
+    },
+    {
+      "name": "Tariffe elevate",
+      "type": "Permanente",
+      "generationTime": "12 mesi",
+      "description": "Il tuo Treasure massimo aumenta di 1 fino a un massimo di 7, e il tuo Treasure attuale aumenta permanentemente di 1. Se perdi questo Bene, il tuo Treasure massimo viene riportato al suo valore originale e perdi il 50% del tuo Treasure attuale, arrotondato per difetto.",
+      "requirementIds": [
+        "centro-di-mercato"
+      ]
+    },
+    {
+      "name": "Coscrizione obbligatoria",
+      "type": "Monouso",
+      "generationTime": "6 mesi",
+      "description": "Puoi aumentare permanentemente la tua might di uno, ma ridurre di uno la tua sovreignity",
+      "requirementIds": [
+        "sovrappopolazione"
+      ]
+    }
+  ],
+  "familyAssets": [
+    {
+      "id": "la-mano-crippling-debt",
+      "owner": "La Mano",
+      "name": "Crippling Debt",
+      "type": "Condizione Permanente",
+      "description": "I peccati del padre sono i peccati del figlio -- o in questo caso, un nuovo governo non è esente dai debiti di quello precedente. Ogni volta che la Compagnia tira e il tiro include Treasure, rimuovi qualsiasi risultato di dado superiore a 9.",
+      "effect": "Qualsiasi tiro di Treasure ignora risultati di dado superiori a 9.",
+      "modifiers": [
+        {
+          "stat": "Treasure",
+          "amount": 0,
+          "situation": "Quando si tira per Treasure, rimuovi tutti i risultati superiori a 9.",
+          "always": true,
+          "diceType": "Normal Dice"
+        }
+      ]
+    },
+    {
+      "id": "la-mano-defiant-tradition",
+      "owner": "La Mano",
+      "name": "Defiant Tradition",
+      "type": "Tratto Culturale",
+      "description": "El-Beth-El è un pianeta fiero e indipendente. Anche se la popolazione è divisa nei quattro regni, odierà sempre qualsiasi forza esterna più dei propri vicini. Le culture ribelli non sono le più facili da governare, ma non cedono quando i tempi si fanno duri.",
+      "effect": "+1 dado a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
+      "modifiers": [
+        {
+          "stat": "Territory",
+          "amount": 1,
+          "situation": "Bonus a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
+          "always": false,
+          "diceType": "Normal Dice"
+        }
+      ]
+    },
+    {
+      "id": "la-mano-spelljammers",
+      "owner": "La Mano",
+      "name": "Spelljammers (Livello 2)",
+      "type": "Tecnologia Navale",
+      "description": "Il tuo livello di spelljamming è attualmente pari a 2. Il livello di spelljamming definisce quanto sia equipaggiata la tua flotta rispetto alle altre famiglie -- limita il tuo Might, poiché anche l'esercito meglio addestrato non può affrontare una flotta nemica senza propri spelljammer. Il tuo Might può salire al massimo di un punto oltre il tuo livello di spelljamming attuale. Quando affronti un avversario privo di spelljammer, il livello di spelljamming diventa un bonus diretto a qualsiasi tiro di Might.",
+      "effect": "+1 dado di Might contro un nemico privo di spelljammers.",
+      "modifiers": [
+        {
+          "stat": "Might",
+          "amount": 1,
+          "situation": "Bonus quando si combatte contro una forza priva di spelljammer.",
+          "always": false,
+          "diceType": "Normal Dice"
+        }
+      ]
+    },
+    {
+      "id": "la-mano-fanatismo",
+      "owner": "La Mano",
+      "name": "Fanatismo (2)",
+      "type": "Condizione Religiosa",
+      "description": "Hai un bonus di +2 su tutti i tiri di dado. Se il Sael dovesse mai morire, la tua famiglia perde permanentemente 4 punti di Sovereignty. Inoltre, per i successivi 6 mesi subisci -2 a tutti i tiri.",
+      "effect": "+2 dadi a qualsiasi tiro -- ma se il Sael muore, -4 Sovereignty permanenti e -2 a tutti i tiri per 6 mesi.",
+      "modifiers": [
+        {
+          "stat": "all",
+          "amount": 2,
+          "situation": "Il popolo si stringe attorno alla volontà del Sael.",
+          "always": false,
+          "diceType": "Normal Dice"
+        }
+      ]
+    },
+    {
+      "id": "la-mano-spelljamming-boost",
+      "owner": "La Mano",
+      "name": "(Monouso prossimo tiro) Spelljamming Bonus",
+      "type": "Monouso",
+      "description": "Le truppe sono molto ben addestrate. Possono adattarsi e prepararsi facilmente a nuove situazioni, e in particolare sono pronte a diventare una forza spaziale.",
+      "effect": "+2 bonus al prossimo tiro per aumentare il livello di spelljamming."
+    },
+    {
+      "id": "la-mano-suppression-activity",
+      "owner": "La Mano",
+      "name": "Attività di Soppressione",
+      "type": "Rischio Permanente",
+      "description": "Ogni quattro mesi tira 1d4.",
+      "effect": "Con un 3, Might -1. Con un 4, Might -2."
+    }
+  ],
+  "localizedAssets": [
+    {
+      "id": "wueng-tiamat-chain",
+      "bodyId": "draconia",
+      "name": "Catena di Tiamat",
+      "type": "Reliquia",
+      "description": "Il manufatto draconico con cui i Wueng tengono legata Tiamat da quasi 300 anni.",
+      "effect": "+1 Might in qualsiasi tiro difensivo effettuato su Draconia."
+    },
+    {
+      "id": "aepra-fortezza",
+      "bodyId": "aepra",
+      "name": "Pianeta Fortezza",
+      "type": "Difesa",
+      "description": "Il tuo pianeta intero é una fortezza naturale. Hai +2d su tutti i tiri di difesa contro attacchi da flotte invadenti Aepra.",
+      "effect": "+1 Might in qualsiasi tiro difensivo effettuato su Aepra."
+    }
+  ]
+}

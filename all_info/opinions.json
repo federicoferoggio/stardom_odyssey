@@ -1,0 +1,62 @@
+{
+  "opinions": {
+    "Hai": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": 50 }
+      ]
+    },
+    "Ousssek": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": -50 },
+        { "label": "Ospitano Minerva", "value": -20 }
+      ]
+    },
+    "Amoako": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": -25 },
+        { "label": "Concorrente", "value": -5 }
+      ],
+      "Ousssek": [
+        { "label": "Concorrente", "value": -25 }
+      ]
+    },
+    "Caillot": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": -25 }
+      ]
+    },
+    "Mitsumoro": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": -5 }
+      ]
+    },
+    "Ntsu": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": -5 }
+      ]
+    },
+    "Wueng": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": 5 }
+      ]
+    },
+    "Rasaily": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": 10 }
+      ]
+    },
+    "Shawel": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": 10 }
+      ]
+    },
+    "Rivera": {
+      "La Mano": [
+        { "label": "Massacro della Luce (20225)", "value": 15 }
+      ],
+      "Ousssek": [
+        { "label": "Opprimenti", "value": -25 }
+      ]
+    }
+  }
+}

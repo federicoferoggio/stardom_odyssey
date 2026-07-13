@@ -1,0 +1,1430 @@
+/* ── FONT ───────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── BODY — space background dal vecchio map ─────────────────────────────────── */
+body {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        url('images/space-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #dfe1e4;
+    font-family: 'Outfit', 'Courier New', monospace;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* ── MAP CONTAINER ───────────────────────────────────────────────────────────── */
+#map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent;  /* ← aggiungi questa riga */
+}
+svg {
+  background-color: transparent;
+}
+#solar-svg {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    display: block;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+#solar-svg:active { cursor: grabbing; }
+
+/* ── CONTROLS — in alto, centrata ────────────────────────────────────────────── */
+#controls {
+    position: fixed;
+    bottom: 16px;       /* ← era top: 12px */
+    top: unset;         /* ← annulla eventuale top ereditato */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 7px 16px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    font-family: 'Outfit', sans-serif;
+}
+
+#controls label {
+    font-size: 15px;
+    color: #cfd2d8;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ── UNIFIED TOP TOOLBAR ──────────────────────────────────────────────────────
+   Every panel except the bottom control bar lives here: one row of buttons,
+   each opening its own dropdown below. Sits to the left of the site-wide
+   MENU button (nav.css: fixed, top:20px, right:20px). */
+#top-toolbar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 300;
+    display: flex;
+    gap: 8px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.toolbar-btn {
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #dfe1e4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background .2s, color .2s, border-color .2s;
+}
+.toolbar-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.toolbar-btn.active {
+    background: rgba(79, 152, 163, 0.22);
+    border-color: rgba(79, 152, 163, 0.55);
+    color: #9fd7de;
+}
+
+#top-toolbar-panel {
+    position: fixed;
+    top: 68px;
+    left: 20px;
+    z-index: 290;
+    font-family: 'Outfit', sans-serif;
+}
+
+.toolbar-dropdown {
+    display: none;
+    width: 340px;
+    max-height: 72vh;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 14px 16px 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+}
+.toolbar-dropdown.open { display: block; }
+
+/* ── SITE NAV MENU (nav.js/nav.css, shared across index.html/scrolls.html/
+   strategic-map.html) ────────────────────────────────────────────────────
+   nav.css ships its own plain black/white button that clashes with this
+   page's toolbar look. Page-scoped override only (via the extra
+   `.navigation-menu` ancestor, which also out-specifies nav.css's own
+   single-class rules regardless of stylesheet load order) -- the other two
+   pages keep nav.css's default styling untouched. Behavior (open/close,
+   outside-click-to-close) stays nav.js's own self-contained logic; this
+   only restyles it and gives it the same .active toggle the other toolbar
+   buttons get, purely visual, no coupling to this page's panel state. */
+.navigation-menu .navigation-menu-button {
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #dfe1e4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background .2s, color .2s, border-color .2s;
+}
+.navigation-menu .navigation-menu-button:hover,
+.navigation-menu .navigation-menu-button:focus {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+}
+.navigation-menu .navigation-menu-button.active {
+    background: rgba(79, 152, 163, 0.22);
+    border-color: rgba(79, 152, 163, 0.55);
+    color: #9fd7de;
+}
+.navigation-menu .navigation-menu-links {
+    background: rgba(0, 0, 0, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 8px;
+    margin-top: 8px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+}
+.navigation-menu .navigation-menu-links a {
+    color: #dfe1e4;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    font-family: 'Outfit', sans-serif;
+    transition: background .15s, color .15s;
+}
+.navigation-menu .navigation-menu-links a:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+#tickInput {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f1f2f3;
+    padding: 3px 7px;
+    border-radius: 4px;
+    width: 80px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+/* Reset native appearance */
+#tickSlider {
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 140px;
+    height: 4px;
+    background: transparent;
+    border-radius: 2px;
+    outline: none;
+    padding: 0;
+    margin: 0 4px;
+}
+/* outline:none above drops the native focus ring -- give keyboard users a
+   visible substitute instead of silently losing it (WCAG 2.4.7). */
+#tickSlider:focus-visible { box-shadow: 0 0 0 2px rgba(79,152,163,0.6); border-radius: 4px; }
+
+/* Thin track */
+#tickSlider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+#tickSlider::-moz-range-track {
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+
+/* Dot thumb */
+#tickSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4f98a3;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    margin-top: -5px;
+    box-shadow: 0 0 6px rgba(79,152,163,0.6);
+    transition: transform .15s, box-shadow .15s;
+}
+#tickSlider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(79,152,163,0.9);
+}
+#tickSlider::-moz-range-thumb {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #4f98a3;
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(79,152,163,0.6);
+    transition: transform .15s, box-shadow .15s;
+}
+#tickSlider::-moz-range-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(79,152,163,0.9);
+}
+
+/* NEW: label with teal month number */
+#tick-label {
+    font-size: 15px;
+    color: #cfd2d8;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+#tick-label span {
+    color: #4f98a3;
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+#status {
+    font-size: 15px;
+    color: #cfd2d8;
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Bottoni nella barra */
+#pasteBtn, #rulerBtn, #resetBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #dfe1e4;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+#pasteBtn:hover, #rulerBtn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+#rulerBtn.active {
+    background: rgba(255, 200, 80, 0.18);
+    border-color: rgba(255, 200, 80, 0.5);
+    color: #ffc840;
+}
+
+#shortcutsWrapper { position: relative; }
+#shortcutsBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #dfe1e4;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .2s;
+}
+#shortcutsBtn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+#shortcutsBtn.active {
+    background: rgba(79, 152, 163, 0.22);
+    border-color: rgba(79, 152, 163, 0.55);
+    color: #9fd7de;
+}
+#shortcuts-panel {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    z-index: 300;
+}
+
+.asset-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 9px 10px;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.res-header {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.owner-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* ── ORBIT / LABELS ──────────────────────────────────────────────────────────── */
+.orbit-ring {
+    stroke: rgba(120, 180, 255, 0.55);
+    stroke-width: 2;
+    fill: none;
+    filter: drop-shadow(0 0 5px rgba(120, 180, 255, 0.4));
+}
+.moon-orbit-ring {
+    stroke: rgba(180, 220, 255, 0.35);
+    stroke-width: 1.2;
+    fill: none;
+    filter: drop-shadow(0 0 3px rgba(180, 220, 255, 0.25));
+}
+
+.body-group { cursor: pointer; }
+
+.body-label {
+    font-size: 22px;
+    fill: rgba(255, 255, 255, 0.78);
+    pointer-events: none;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+.moon-label {
+    font-size: 16px;
+    fill: rgba(255, 255, 255, 0.58);
+    pointer-events: none;
+    font-family: 'Outfit', sans-serif;
+}
+
+.body-group:hover .body-label,
+.body-group:hover .moon-label { fill: #fff; }
+
+/* ── INFO PANEL content (hosted inside the unified top toolbar dropdown) ─────── */
+#info-panel h2 {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 2px;
+    letter-spacing: 0.04em;
+}
+
+#info-panel .owner {
+    font-size: 15px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.owner-link {
+    cursor: pointer;
+    border-bottom: 1px dashed currentColor;
+    transition: opacity .15s;
+}
+.owner-link:hover { opacity: 0.75; }
+
+#info-panel .desc {
+    font-size: 15px;
+    color: #fff;
+    line-height: 1.6;
+}
+
+#info-panel .meta {
+    font-size: 14px;
+    color: #c5c8cf;
+    margin-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+    white-space: pre-line;
+}
+
+/* ── SEARCH ──────────────────────────────────────────────────────────────────── */
+#searchWrapper { position: relative; }
+
+#searchInput {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f1f2f3;
+    padding: 3px 7px 3px 24px;
+    border-radius: 4px;
+    width: 160px;
+    font-family: inherit;
+    font-size: 16px;
+    outline: none;
+    transition: border-color .2s, width .2s;
+}
+#searchInput:focus { border-color: rgba(80,180,255,0.5); width: 200px; }
+
+#searchIcon {
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+#searchResults {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    min-width: 220px;
+    background: rgba(0,0,0,0.95);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    overflow: hidden;
+    display: none;
+    z-index: 300;
+    backdrop-filter: blur(10px);
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.search-item {
+    padding: 7px 12px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background .15s;
+    font-family: 'Outfit', sans-serif;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover, .search-item.active { background: rgba(80,180,255,0.12); }
+.search-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.search-name { color: #e6e7ea; }
+.search-sub { color: #868b96; font-size: 14px; margin-left: auto; }
+
+/* ── RULER ───────────────────────────────────────────────────────────────────── */
+#ruler-tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100000;
+    background: rgba(0,0,0,0.88);
+    border: 1px solid rgba(255,200,80,0.35);
+    color: #ffc840;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: none;
+    white-space: nowrap;
+}
+
+#tickPrevBtn, #tickNextBtn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #dfe1e4;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+    user-select: none;
+}
+#tickPrevBtn:hover, #tickNextBtn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+#tickPrevBtn:active, #tickNextBtn:active {
+    background: rgba(79, 152, 163, 0.3);
+    border-color: rgba(79, 152, 163, 0.6);
+}
+
+/* ── RESOURCES & ASSETS content (Atlas + Craftable, hosted in the toolbar dropdown) ── */
+#resources-subtabs { display: flex; gap: 6px; flex-shrink: 0; margin-bottom: 8px; }
+.res-subtab-btn {
+    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #c5c8cf; font-family: inherit; font-size: 14px; padding: 6px 4px; border-radius: 5px;
+    cursor: pointer; transition: background .15s, color .15s;
+}
+.res-subtab-btn:hover { background: rgba(255,255,255,0.09); color: #dfe1e4; }
+.res-subtab-btn.active { background: rgba(79,152,163,0.18); border-color: rgba(79,152,163,0.4); color: #9fd7de; }
+
+.res-subtab-panel { display: none; }
+.res-subtab-panel.active { display: block; }
+
+#resources-search-wrapper { position: relative; flex-shrink: 0; }
+#resources-search-input {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18); color: #f1f2f3;
+    padding: 5px 8px 5px 26px; border-radius: 5px;
+    font-family: 'Outfit', sans-serif; font-size: 15px;
+    outline: none; transition: border-color .2s;
+}
+#resources-search-input:focus { border-color: rgba(80,180,255,0.45); }
+#resources-search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; opacity: 0.4; }
+
+/* Atlas */
+.atlas-resource { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.atlas-resource:last-child { border-bottom: none; }
+.atlas-resource-name { font-size: 15px; color: #e6e7ea; cursor: help; margin-bottom: 3px; }
+.atlas-holders { display: flex; flex-wrap: wrap; gap: 4px; }
+.atlas-holder-chip {
+    font-size: 13px; color: #dfe1e4; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 2px 7px; cursor: pointer;
+}
+.atlas-holder-chip:hover { background: rgba(255,255,255,0.1); }
+.atlas-none { font-size: 13px; color: #868b96; font-style: italic; }
+
+.craft-qualifier-chip {
+    font-size: 13px; color: #e6e7ea; background: rgba(255,255,255,0.05);
+    border: 1px solid; border-radius: 8px; padding: 2px 7px;
+}
+
+#craft-list { display: flex; flex-direction: column; gap: 3px; }
+#craft-empty { font-size: 14px; color: #757a84; text-align: center; padding: 20px 0; display: none; }
+
+.craft-item { border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: border-color .2s; }
+.craft-item:hover { border-color: rgba(255,255,255,0.14); }
+.craft-item.expanded { border-color: rgba(79,152,163,0.35); }
+
+/* ── TIMELINE PANEL ──────────────────────────────────────────────────────────── */
+#timeline-panel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+#timeline-prev-btn, #timeline-next-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #dfe1e4;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .2s;
+}
+#timeline-prev-btn:hover, #timeline-next-btn:hover { background: rgba(255,255,255,0.15); }
+#timeline-panel-month {
+    font-size: 16px;
+    color: #4f98a3;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 90px;
+    text-align: center;
+}
+#timeline-panel-title {
+    font-size: 16px;
+    color: #f1f2f3;
+    text-align: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 8px;
+}
+#timeline-panel-events { display: flex; flex-direction: column; gap: 8px; }
+.timeline-event-row {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 8px 10px;
+}
+.timeline-event-desc { font-size: 15px; color: #dfe1e4; line-height: 1.6; }
+.timeline-event-modifier { font-size: 14px; color: #9fd7de; margin-top: 4px; }
+.timeline-event-row.auto { border-style: dashed; background: rgba(255,255,255,0.015); }
+.timeline-event-row.auto .timeline-event-desc { color: #9fb3d9; font-style: italic; }
+
+.craft-item-header { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px; cursor: pointer; background: rgba(255,255,255,0.03); transition: background .15s; user-select: none; }
+.craft-item-header:hover { background: rgba(255,255,255,0.07); }
+.craft-item.expanded .craft-item-header { background: rgba(79,152,163,0.1); }
+
+.craft-item-name { font-size: 15px; color: #e6e7ea; flex: 1; line-height: 1.4; }
+.craft-item-type { font-size: 13px; color: #4f98a3; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(79,152,163,0.3); border-radius: 3px; padding: 1px 5px; }
+.craft-item-chevron { font-size: 12px; color: #868b96; flex-shrink: 0; transition: transform .2s; }
+.craft-item.expanded .craft-item-chevron { transform: rotate(90deg); color: #4f98a3; }
+
+.craft-item-detail { display: none; padding: 8px 10px 10px; background: rgba(0,0,0,0.3); font-size: 14px; line-height: 1.6; color: #cfd2d8; border-top: 1px solid rgba(255,255,255,0.05); }
+.craft-item.expanded .craft-item-detail { display: block; }
+
+.craft-detail-row { display: flex; gap: 6px; margin-bottom: 5px; align-items: flex-start; }
+.craft-detail-label { color: #868b96; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; white-space: nowrap; padding-top: 1px; min-width: 70px; }
+.craft-detail-value { color: #dfe1e4; font-size: 14px; }
+.craft-detail-desc { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.05); color: #d8dade; font-size: 14px; line-height: 1.65; font-style: italic; }
+
+.craft-req-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.craft-req-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 1px 6px; font-size: 13px; color: #dfe1e4; }
+
+/* ── FAMILY / EMPIRE SCREEN OVERLAY ─────────────────────────────────────────── */
+#family-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+#family-overlay.open { display: flex; }
+
+#family-overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 6, 14, 0.82);
+    backdrop-filter: blur(3px);
+}
+
+#family-overlay-panel {
+    --family-accent: #4f98a3;
+    position: relative;
+    width: min(920px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: rgba(10, 12, 22, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 3px solid var(--family-accent);
+    border-radius: 14px;
+    padding: 28px 32px 34px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    font-family: 'Outfit', sans-serif;
+}
+
+#family-overlay-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #dfe1e4;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+#family-overlay-close:hover { background: rgba(255, 80, 80, 0.2); color: #fff; border-color: rgba(255,80,80,0.4); }
+
+#family-overlay-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+#family-crest {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--family-accent, rgba(255, 255, 255, 0.12));
+    padding: 6px;
+    flex-shrink: 0;
+}
+
+#family-name {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.03em;
+    margin-bottom: 2px;
+}
+
+#family-government {
+    font-size: 16px;
+    color: var(--family-accent, #4f98a3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 600;
+    cursor: help;
+    display: inline-block;
+}
+#family-government .trait-tooltip {
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: normal;
+    width: 260px;
+}
+
+#family-history {
+    font-size: 16px;
+    color: #d8dade;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+#family-planet {
+    font-size: 15px;
+    color: #b8bcc4;
+    margin-top: 2px;
+}
+
+#family-motto {
+    display: none;
+    font-size: 16px;
+    color: #c5c8cf;
+    font-style: italic;
+    margin: 2px 0 4px;
+}
+
+#family-fleet-warning {
+    display: none;
+    font-size: 15px;
+    color: #ffc857;
+    background: rgba(255, 200, 87, 0.1);
+    border: 1px solid rgba(255, 200, 87, 0.35);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 14px;
+}
+
+#family-stats-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.family-stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+}
+.family-stat-label {
+    font-size: 13px;
+    color: #a8acb6;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+}
+.family-stat-value {
+    font-size: 18px;
+    color: #f1f2f3;
+    font-weight: 600;
+}
+.family-stat-cap {
+    font-size: 15px;
+    color: #a8acb6;
+    font-weight: 400;
+}
+.family-stat-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+    margin-top: 6px;
+    overflow: hidden;
+}
+.family-stat-bar-fill {
+    height: 100%;
+    background: var(--family-accent, #4f98a3);
+    box-shadow: 0 0 6px rgba(79,152,163,0.7);
+}
+
+#family-description {
+    font-size: 16px;
+    color: #d8dade;
+    line-height: 1.7;
+    margin-bottom: 22px;
+    border-left: 2px solid var(--family-accent, rgba(79,152,163,0.4));
+    padding-left: 12px;
+}
+
+.family-section { margin-bottom: 24px; }
+.family-section h2 {
+    font-size: 16px;
+    color: #c5c8cf;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 6px;
+}
+.gm-only-tag {
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #ffb84d;
+    border: 1px solid rgba(255,184,77,0.4);
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Leaders */
+#family-leaders-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+.leader-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+}
+.leader-card.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #757a84;
+    font-size: 15px;
+    min-height: 140px;
+    font-style: italic;
+}
+.leader-portrait {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--family-accent, rgba(79,152,163,0.5));
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.05);
+}
+.leader-name {
+    font-size: 15px;
+    color: #f1f2f3;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.leader-role {
+    font-size: 14px;
+    color: #4f98a3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    min-height: 12px;
+}
+.leader-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+.trait-chip {
+    position: relative;
+    background: rgba(79,152,163,0.15);
+    border: 1px solid rgba(79,152,163,0.4);
+    color: #9fd7de;
+    font-size: 14px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    cursor: default;
+}
+.trait-chip.locked { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: #969ba6; cursor: help; }
+/* Standalone tooltip base (not scoped to .trait-chip) so it can also be
+   attached to other hoverable elements, e.g. #family-government below.
+   Shown/hidden and positioned entirely by JS (see attachViewportTooltips in
+   strategic-map.js): switched to position:fixed with viewport-clamped
+   left/top on hover so it can never be cut off by an ancestor panel's
+   overflow:auto/hidden or run off the edge of the screen. */
+.trait-tooltip {
+    display: none;
+    width: 210px;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.95);
+    border: 1px solid rgba(79,152,163,0.4);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #dfe1e4;
+    /* Reset explicitly: hosts like .opinion-mod set white-space:nowrap for
+       their own single-line pill label, which would otherwise be inherited
+       here and force every tooltip line onto one unbroken (overflowing)
+       line regardless of the fixed width above. */
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-transform: none;
+    letter-spacing: normal;
+    z-index: 100000;
+    pointer-events: none;
+}
+.trait-tooltip .modline { margin-top: 4px; color: #9fd7de; }
+
+/* Territories */
+#family-territories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+.territory-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background .15s, border-color .15s;
+}
+.territory-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
+.territory-icon { flex-shrink: 0; }
+.territory-name { color: #e6e7ea; flex: 1; }
+.territory-type { color: #969ba6; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; }
+.territory-res-count { color: #4f98a3; font-size: 13px; white-space: nowrap; }
+
+/* Resource summary ("Risorse Controllate") */
+#family-resources-summary { display: flex; flex-direction: column; gap: 10px; }
+.resource-summary-group { display: flex; flex-direction: column; gap: 5px; }
+.resource-summary-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.resource-summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.resource-summary-chips .trait-chip { font-size: 14px; padding: 3px 8px; }
+
+/* Fleets */
+#family-fleet-locations { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; }
+.fleet-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background .15s, border-color .15s;
+}
+.fleet-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
+.fleet-icon { flex-shrink: 0; }
+.fleet-location { color: #e6e7ea; flex: 1; }
+.fleet-count { color: #4f98a3; font-size: 13px; white-space: nowrap; }
+
+/* Named-fleet map tokens (in transit / holding at a bare point / ghosted while disabled) */
+.fleet-token { cursor: pointer; }
+.fleet-token-ghost { opacity: 0.6; }
+.fleet-ghost-badge { fill: #dfe1e4; font-size: 15px; }
+.fleet-warn-badge { fill: #ffb84d; font-size: 15px; }
+.fleet-wait-badge { fill: #7fd4e0; font-size: 14px; }
+.fleet-count-badge { fill: #e6e7ea; font-size: 12px; font-weight: 600; }
+
+/* Treaties */
+#family-treaties-list { display: flex; flex-direction: column; gap: 5px; max-height: 220px; overflow-y: auto; }
+.treaty-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background .15s, border-color .15s;
+}
+.treaty-row:hover { background: rgba(255,255,255,0.07); border-color: var(--family-accent, rgba(255,255,255,0.16)); }
+.treaty-type { color: #e6e7ea; flex: 1; }
+.treaty-partner { color: #4f98a3; font-size: 13px; white-space: nowrap; }
+
+/* Assets */
+.family-subsection-label {
+    font-size: 14px;
+    color: #a8acb6;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 12px 0 6px;
+}
+.family-subsection-label:first-of-type { margin-top: 0; }
+.family-asset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+.family-asset-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-size: 15px;
+}
+.family-asset-item.unique { border-color: var(--family-accent, rgba(255,255,255,0.16)); }
+.family-asset-header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+.family-asset-name { color: #e6e7ea; font-weight: 600; }
+.family-asset-type { color: #4f98a3; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; }
+.family-asset-desc { color: #c5c8cf; font-size: 14px; line-height: 1.5; }
+.family-asset-effect { color: #ffd76b; font-size: 14px; margin-top: 4px; }
+.family-asset-via { color: #4f98a3; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+
+/* Bonus Attivi: every currently-active modifier (leader traits, treaties,
+   assets), flattened and tagged by source -- stat bars above stay raw. */
+#family-active-bonuses { display: flex; flex-direction: column; gap: 12px; max-height: 320px; overflow-y: auto; }
+.active-bonus-group { display: flex; flex-direction: column; gap: 5px; }
+.active-bonus-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+.active-bonus-source { color: #4f98a3; text-transform: uppercase; letter-spacing: 0.04em; font-size: 13px; flex-shrink: 0; width: 150px; }
+.active-bonus-line { color: #dfe1e4; flex: 1; }
+.active-bonus-line .modline { margin-top: 0; }
+.active-bonus-row.armies-mod { border-color: rgba(255,199,64,0.25); }
+.armies-mod .modline, .modline.armies-mod { color: #ffc740; }
+
+/* Opinions table */
+#family-opinions-list { max-height: 420px; overflow-y: auto; }
+.opinion-table { display: flex; flex-direction: column; gap: 4px; }
+.opinion-table-row {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, 90px);
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+.opinion-table-row:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.16); }
+.opinion-table-header {
+    background: transparent;
+    border: none;
+    cursor: default;
+    padding: 0 12px;
+    font-size: 13px;
+    color: #969ba6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.opinion-table-header:hover { background: transparent; }
+.opinion-total-header { text-align: center; }
+.opinion-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; display: inline-block; margin-right: 6px; }
+.opinion-family-name { font-size: 16px; color: #e6e7ea; cursor: pointer; }
+.opinion-family-name:hover { text-decoration: underline; }
+.opinion-total {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    padding: 2px 0;
+    border-radius: 5px;
+}
+.opinion-total.positive { color: #7be08a; background: rgba(123,224,138,0.12); }
+.opinion-total.negative { color: #ff8a80; background: rgba(255,138,128,0.12); }
+.opinion-total.neutral { color: #c5c8cf; background: rgba(255,255,255,0.05); }
+
+.opinion-detail {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 10px 12px 12px;
+    margin-top: -6px;
+}
+.opinion-detail.open { display: flex; }
+.opinion-detail-block h4 { font-size: 13px; color: #a8acb6; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.opinion-modifiers { display: flex; flex-wrap: wrap; gap: 5px; }
+.opinion-mod {
+    position: relative;
+    font-size: 14px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    white-space: nowrap;
+    cursor: help;
+}
+.opinion-mod.positive { color: #a8f0b3; background: rgba(123,224,138,0.1); }
+.opinion-mod.negative { color: #ffb3ab; background: rgba(255,138,128,0.1); }
+.opinion-mod.baseline { border: 1px solid rgba(255,255,255,0.12); }
+.opinion-empty { font-size: 15px; color: #868b96; font-style: italic; padding: 10px 0; }
+
+@media (max-width: 720px) {
+    #family-stats-row { grid-template-columns: repeat(2, 1fr); }
+    #family-leaders-row { grid-template-columns: 1fr; }
+    .opinion-table-row { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .opinion-total-header { text-align: left; }
+    /* max-width (not right:20px -- setting both left and right on a fixed
+       element stretches it edge to edge) leaves room on the right for the
+       nav menu button instead of wrapping underneath it. */
+    #top-toolbar { flex-wrap: wrap; max-width: calc(100vw - 116px); }
+    .toolbar-dropdown { width: calc(100vw - 40px); }
+
+    /* Bottom control bar (time slider, prev/next, reset, ruler, search) had
+       no responsive handling at all -- a fixed-width nowrap row that runs
+       off-screen on a phone. Let it wrap onto extra lines instead of
+       clipping, and shrink its two widest elements. */
+    #controls {
+        max-width: calc(100vw - 24px);
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 10px;
+        padding: 8px 12px;
+    }
+    #tickSlider { width: min(140px, 32vw); }
+    #searchInput { width: 120px; }
+    #searchInput:focus { width: 150px; }
+    /* 26px was well under the ~44px touch-target guideline -- the most
+       frequently-tapped control in the app deserves to be easy to hit. */
+    #tickPrevBtn, #tickNextBtn { width: 36px; height: 36px; font-size: 16px; }
+}
+
+/* ── REVEAL-ALL (GM) TOGGLE ─────────────────────────────────────────────────────
+   No visible button (Ctrl+Shift+G instead, so players don't stumble onto it) --
+   just a transient confirmation toast so a GM gets feedback that it toggled. */
+#gm-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    z-index: 100000;
+    background: rgba(10, 12, 22, 0.92);
+    border: 1px solid rgba(120, 200, 255, 0.5);
+    color: #a8e0ff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    padding: 12px 22px;
+    border-radius: 8px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s, transform .2s;
+}
+#gm-toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* ── DATA LOAD ERROR BANNER ──────────────────────────────────────────────────────
+   Every all_info/*.json file is hand-edited directly by the GM (no in-app
+   editor) -- a 404 or a JSON syntax typo used to fail completely silently
+   (console.error only), leaving that section quietly empty. This surfaces
+   it on-screen instead; dismissible since a non-critical file failing
+   shouldn't block using the rest of the map. */
+#data-error-banner {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200000;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(120, 20, 20, 0.92);
+    border-bottom: 1px solid rgba(255, 120, 120, 0.5);
+    color: #ffd9d9;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    padding: 8px 16px;
+    backdrop-filter: blur(6px);
+}
+#data-error-banner.show { display: flex; }
+
+/* ── SHORTCUTS PANEL ──────────────────────────────────────────────────────────
+   Just another .toolbar-dropdown (see #shortcuts-panel in the HTML), opened
+   via the "⌨ Scorciatoie" toolbar button like Famiglie/Risorse/Info/Timeline.
+   Ctrl+Shift+G (GM reveal-all) is deliberately never listed here. */
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 14px;
+    color: #dfe1e4;
+}
+.shortcut-row:last-child { border-bottom: none; }
+.shortcut-row kbd {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: inherit;
+    font-size: 12px;
+    color: #9fd7de;
+    flex-shrink: 0;
+}
+#data-error-banner button {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffd9d9;
+    border-radius: 4px;
+    padding: 2px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+#data-error-banner button:hover { background: rgba(255, 255, 255, 0.22); }
+
+/* ── LOCKED / FOG-OF-WAR ───────────────────────────────────────────────────────── */
+.locked-badge {
+    display: inline-block;
+    cursor: help;
+    opacity: 0.75;
+    font-size: 16px;
+}
+
+.family-stat.locked { opacity: 0.55; }
+.family-stat.locked .locked-badge { display: block; margin-top: 6px; font-size: 16px; }
+
+.leader-card.locked { opacity: 0.6; }
+.leader-card.locked .locked-badge { font-size: 20px; margin-bottom: 6px; }
+
+#family-government .locked-badge,
+#family-description .locked-badge { margin-right: 5px; }
+
+.opinion-empty.locked { display: flex; align-items: center; gap: 6px; }
+
+/* Infiltration meter */
+#family-infiltration { margin-bottom: 14px; }
+.infiltration-label {
+    font-size: 14px;
+    color: #b8bcc4;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+}
+.infiltration-bar { display: flex; gap: 3px; }
+.infiltration-seg {
+    flex: 1;
+    height: 5px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+}
+.infiltration-seg.filled {
+    background: var(--family-accent, #4f98a3);
+    box-shadow: 0 0 5px rgba(79,152,163,0.7);
+}
+.full-knowledge-badge {
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 15px;
+    color: #ffd76b;
+    background: rgba(255, 215, 107, 0.1);
+    border: 1px solid rgba(255, 215, 107, 0.35);
+    border-radius: 6px;
+    padding: 3px 9px;
+    cursor: help;
+}
+
+/* ── PLANET COMPOSITION (top races/religions, from all_info/diplomacy.json) ─────── */
+#info-composition {
+    display: none;
+    margin-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+}
+.composition-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 5px; }
+.composition-row:last-child { margin-bottom: 0; }
+.composition-label { font-size: 13px; color: #a8acb6; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 2px; }
+.composition-pill {
+    font-size: 13px;
+    color: #dfe1e4;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 1px 7px;
+}
+
+/* ── INLINE FAMILY QUICK-VIEW (inside the planet/path info panel) ───────────────── */
+#info-bonuses {
+    display: none;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+}
+
+#info-family-quickview {
+    display: none;
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+}
+
+#info-localized-assets {
+    display: none;
+    margin-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 8px;
+}
+#info-localized-assets .family-asset-item { margin-bottom: 6px; }
+#info-localized-assets .family-asset-item:last-child { margin-bottom: 0; }
+
+.quickview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.quickview-crest {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 3px;
+    flex-shrink: 0;
+}
+.quickview-name { font-size: 15px; color: #fff; font-weight: 600; }
+.quickview-gov {
+    font-size: 14px;
+    color: #4f98a3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.quickview-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.quickview-stat-pill {
+    font-size: 13px;
+    color: #dfe1e4;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 2px 6px;
+}
+.quickview-stat-pill.locked { color: #969ba6; }
+.quickview-expand {
+    width: 100%;
+    background: rgba(79,152,163,0.15);
+    border: 1px solid rgba(79,152,163,0.4);
+    color: #9fd7de;
+    font-family: inherit;
+    font-size: 15px;
+    padding: 5px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s;
+}
+.quickview-expand:hover { background: rgba(79,152,163,0.28); }
+
+/* ── FAMILIES LIST content (hosted in the toolbar dropdown) ──────────────────── */
+#families-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.families-list-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    font-size: 15px;
+    color: #dfe1e4;
+    transition: background .15s;
+}
+.families-list-row:hover { background: color-mix(in srgb, var(--row-accent, #4f98a3) 16%, transparent); color: #fff; }
+.families-list-crest {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}

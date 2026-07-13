@@ -1,0 +1,283 @@
+{
+  "_howto": "Every pact/treaty type, in one place: its own definition AND the list of who currently holds it. Keyed by pact type name (Italian, matches the name shown in the UI). category: relational | benefit | unique. 'holders' is a list of {from, to, bidirectional} -- each entry written ONCE per relationship (no more mirrored from/to duplicate rows). bidirectional (default true if omitted) means both 'from' and 'to' are bound by the pact and each sees it listed in their own family panel; set to false only for a genuinely one-sided pact where 'to' isn't party to it at all (currently only Ousssek's unreciprocated Rivalità against La Mano -- see its diplomacyCost: a rivalry can be declared unilaterally). Opinion always mirrors regardless of bidirectional (both sides' opinion of each other shifts even if only one side mechanically acts on it). 'modifiers' (symmetric pacts, same effect for both from/to) OR 'modifiersAsFrom'/'modifiersAsTo' (asymmetric pacts where the two sides get different effects, e.g. the feudal pacts: from=Signore/lord, to=Vassallo/vassal) use the exact same shape as traits.json's leader-trait modifiers: {stat|action|armies, amount, situation, always}. Some types have no flat modifier at all (purely procedural effects, described only in 'effects' prose). 'grantsAsset' (the unique-category types) is an embedded asset object {name, type, description, effect} with no fixed owner -- it belongs to whoever holds that pact (every family in its 'holders' list), resolved dynamically at render time.",
+  "pacts": {
+    "Alleanza Militare": {
+      "description": "Un patto di ferro che lega due partiti nel sangue e nella guerra, giurando di difendersi reciprocamente contro ogni minaccia.",
+      "effects": "Se uno dei partiti fa una azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un patto di non aggressione.",
+      "category": "relational",
+      "diplomacyCost": "Larghezza pari a 3 meno i mesi trascorsi dall'ultimo attacco di una delle due parti (minimo 0). Altezza pari al doppio della differenza tra i rispettivi Might.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti. Il tuo Might viene ridotto di 2 punti fino alla fine del mese.",
+      "opinionValue": 40,
+      "modifiers": [],
+      "holders": []
+    },
+    "Patto di Non-Aggressione": {
+      "description": "Un giuramento solenne che proibisce ai firmatari di alzare le armi l'uno contro l'altro, sigillato sotto gli occhi degli dei.",
+      "effects": "I due partiti non possono prendere azioni di Attacco contro l'altro partito.",
+      "category": "relational",
+      "diplomacyCost": "Larghezza pari a 3 meno i mesi trascorsi dall'ultimo attacco tra le due parti (minimo 0).",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti.",
+      "opinionValue": 10,
+      "modifiers": [],
+      "holders": [
+        { "from": "Wueng", "to": "Kesk", "bidirectional": true },
+        { "from": "Ntsu", "to": "Kesk", "bidirectional": true },
+        { "from": "Mitsumoro", "to": "Kesk", "bidirectional": true },
+        { "from": "Shawel", "to": "La Mano", "bidirectional": true },
+        { "from": "Hai", "to": "La Mano", "bidirectional": true }
+      ]
+    },
+    "Patto di Vassallaggio": {
+      "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
+      "effects": "Signore: +2 Bonus Territory. Vassallo: +2 Bonus Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
+      "category": "relational",
+      "diplomacyCost": "Tre tiri di Attacco vinti consecutivamente.",
+      "breakupCost": "La tua Sovereignty viene ridotta permanentemente di 2 punti.",
+      "opinionValue": 0,
+      "modifiersAsFrom": [
+        {
+          "stat": "Territory",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "modifiersAsTo": [
+        {
+          "stat": "Might",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "holders": [
+        { "from": "Wueng", "to": "Rasaily", "bidirectional": true },
+        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
+        { "from": "Mitsumoro", "to": "Sifu", "bidirectional": true }
+      ]
+    },
+    "Patto Tributario": {
+      "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
+      "effects": "Signore: +2 Bonus Treasure. Vassallo: +2 Bonus Might, massimo Treasure scende a 3. Include automaticamente patto di non-aggressione.",
+      "category": "relational",
+      "diplomacyCost": "Tre tiri di Guerra Non Convenzionale vinti consecutivamente.",
+      "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 2 punti.",
+      "opinionValue": 0,
+      "modifiersAsFrom": [
+        {
+          "stat": "Treasure",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "modifiersAsTo": [
+        {
+          "stat": "Might",
+          "amount": 2,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "holders": []
+    },
+    "Rivalità": {
+      "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
+      "effects": "+1 dado su tutte le azioni di Attacco e Guerra Non Convenzionale contro l'altro partito. L'altra parte guadagna +2 dadi su tutti i tiri di Controspionaggio verso le spie del partito rivale.",
+      "category": "relational",
+      "diplomacyCost": "Nessuno: una rivalità si dichiara unilateralmente.",
+      "breakupCost": "La tua Sovereignty viene ridotta di 2 punti, a meno che tu non abbia già ridotto a 0 una delle loro statistiche o non li abbia attaccati per un anno intero.",
+      "opinionValue": -40,
+      "modifiers": [
+        {
+          "action": "Attacco",
+          "amount": 1,
+          "situation": "Solo contro l'altro partito di questa rivalità.",
+          "always": false
+        },
+        {
+          "action": "Guerra Non Convenzionale (richiede un leader)",
+          "amount": 1,
+          "situation": "Solo contro l'altro partito di questa rivalità.",
+          "always": false
+        },
+        {
+          "action": "Controspionaggio",
+          "amount": 2,
+          "situation": "Solo verso le spie dell'altro partito di questa rivalità.",
+          "always": false
+        }
+      ],
+      "holders": [
+        { "from": "Zolinath", "to": "Stozav", "bidirectional": true },
+        { "from": "Ousssek", "to": "La Mano", "bidirectional": false }
+      ]
+    },
+    "Accordo Commerciale": {
+      "description": "Un'alleanza mercantile che apre le rotte commerciali e crea prosperità condivisa tra i firmatari.",
+      "effects": "+1 ai tiri di Treasure per entrambi i partiti. Il partito con meno risorse può considerare una risorsa dell'altro come propria.",
+      "category": "benefit",
+      "diplomacyCost": "Riduci il tuo Treasure di 1 punto.",
+      "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 1 punto.",
+      "opinionValue": 15,
+      "modifiers": [
+        {
+          "stat": "Treasure",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "holders": [
+        { "from": "Mitsumoro", "to": "Amoako", "bidirectional": true },
+        { "from": "Ousssek", "to": "Rivera", "bidirectional": true },
+        { "from": "Ousssek", "to": "Amoako", "bidirectional": true }
+      ]
+    },
+    "Accordo di Migrazione": {
+      "description": "Un patto che regola il flusso di popolazioni tra territori, permettendo espansione controllata e crescita demografica.",
+      "effects": "+1 di Territory. Aumenta permanentemente, all'inizio e ogni anno, del 5% la popolazione della razza maggioritaria del partito con Territory più grande. Se il Territory è pari, non ha effetto.",
+      "category": "benefit",
+      "diplomacyCost": "Se le due famiglie non condividono la stessa religione principale, la tua Sovereignty viene ridotta di 2 punti.",
+      "breakupCost": "Il tuo Territory viene ridotto permanentemente di 1 punto.",
+      "opinionValue": 15,
+      "modifiers": [
+        {
+          "stat": "Territory",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        }
+      ],
+      "holders": [{ "from": "Ousssek", "to": "Rivera", "bidirectional": true }]
+    },
+    "Matrimonio": {
+      "description": "Un'unione di sangue che lega due casate attraverso matrimoni strategici, aumentando il prestigio e l'influenza reciproca.",
+      "effects": "Aumenta di +1 la Influence per il partito con la Influence più bassa tra i due.",
+      "diplomacyCost": "Nessuno.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "category": "benefit",
+      "opinionValue": 20,
+      "modifiers": [
+        {
+          "stat": "Influence",
+          "amount": 1,
+          "situation": "Solo per il partito con Influence più bassa tra i due.",
+          "always": false
+        }
+      ],
+      "holders": [
+        { "from": "Ntsu", "to": "Caillot", "bidirectional": true },
+        { "from": "Mitsumoro", "to": "Caillot", "bidirectional": true },
+        { "from": "Ousssek", "to": "Caillot", "bidirectional": true },
+        { "from": "Caillot", "to": "Carxus", "bidirectional": true },
+        { "from": "Caillot", "to": "Zolinath", "bidirectional": true },
+        { "from": "Sifu", "to": "Kesk", "bidirectional": true }
+      ]
+    },
+    "Accordo Spelljammer": {
+      "description": "Un contratto per costruire spelljammer avanzate.",
+      "effects": "Garantisce l'asset 'Riserve di Spelljammer'.",
+      "diplomacyCost": "Nessuno.",
+      "breakupCost": "La tua Might viene ridotta permanentemente di 2 punti.",
+      "category": "unique",
+      "opinionValue": 10,
+      "grantsAsset": {
+        "name": "Riserve di Spelljammer",
+        "type": "Permanente",
+        "description": "I Carxus permetto l'accesso per questa familgia a tutti gli armamenti migliori.",
+        "effect": "Durante un tiro di Genera Flotta, puoi ridurre di 2 la height necessaria per aver successo su un tiro. Inoltre, flotte disabilitate tornano in gioco con tre mesi di anticipo."
+      },
+      "holders": [
+        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
+        { "from": "Caillot", "to": "Carxus", "bidirectional": true }
+      ]
+    },
+    "Accordo di Finanziamento": {
+      "description": "Un finanziamento dei Grayshine.",
+      "effects": "Aumenta il tuo Treasure di +1 istantaneamente. Ottieni la risorsa 'Debiti' (conseguenze negative future).",
+      "category": "unique",
+      "diplomacyCost": "La famiglia di target deve avere un Treasure minore dei Grayshine.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "opinionValue": 0,
+      "grantsAsset": {
+        "name": "Finanziamenti",
+        "type": "Permanente",
+        "description": "Un guadagno di treasure che deve essere ripagato in lavoro.",
+        "effect": "+1d Treasure per la famiglia target, -1 sui suoi tiri di Territory. +1 Territory per i Grayshine."
+      },
+      "holders": [
+        { "from": "Grayshine", "to": "Sudriz", "bidirectional": true },
+        { "from": "Grayshine", "to": "Rivera", "bidirectional": true },
+        { "from": "Grayshine", "to": "Stozav", "bidirectional": true }
+      ]
+    },
+    "Supporto Arcano": {
+      "description": "Un'alleanza con gli Ntsu.",
+      "effects": "Ottieni l'asset 'Maghi di Ion'.",
+      "category": "unique",
+      "diplomacyCost": "Nessuno.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "opinionValue": 10,
+      "grantsAsset": {
+        "name": "Maghi di Ion",
+        "type": "Permanente",
+        "description": "Un collegio di maghi Ntsu messo a disposizione dal Faro di Ion.",
+        "effect": "+1d so ogni tiro che ragionevolmente includono strumenti o metodi magici."
+      },
+      "holders": [
+        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
+        { "from": "Ntsu", "to": "Caillot", "bidirectional": true }
+      ]
+    },
+    "Patto Draconico": {
+      "description": "Un'alleanza con i Wueng.",
+      "effects": "Ottieni l'asset 'Bestie di Tiamat'.",
+      "category": "unique",
+      "diplomacyCost": "Nessuno.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "opinionValue": 40,
+      "grantsAsset": {
+        "name": "Bestie di Tiamat",
+        "type": "Alleati Draconici",
+        "description": "Draghi minori prestati dagli allevamenti di Draconia.",
+        "effect": "+3d al primo attacco Might+Treasure del mese. Solo una volta per ogni 3 mesi."
+      },
+      "holders": [{ "from": "Wueng", "to": "Rasaily", "bidirectional": true }]
+    },
+    "Rete Alternativa": {
+      "description": "Un accordo mercantile ricco di opportunità non ovvie.",
+      "effects": "Ottieni l'asset 'Contatti con i Baroni'.",
+      "category": "unique",
+      "diplomacyCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "opinionValue": 20,
+      "grantsAsset": {
+        "name": "Contatti con i Baroni",
+        "type": "Rete di Contatti",
+        "description": "Una rete di intermediari e informatori attiva ai margini della legge.",
+        "effect": "+1d su tutti i tiri di Treasure, -1 su tutti i tiri di Influence."
+      },
+      "holders": []
+    },
+    "Ricerca e Sviluppo": {
+      "description": "Un supporto di ricerca dagli Shawel.",
+      "effects": "Ottieni l'asset 'Ricerca e Sviluppo'.",
+      "category": "unique",
+      "diplomacyCost": "Nessuno.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "opinionValue": 10,
+      "grantsAsset": {
+        "name": "Ricerca e Sviluppo",
+        "type": "Supporto Tecnico",
+        "description": "Accesso agli artigiani e ingegneri della bottega di Shawel.",
+        "effect": "Permette l'accesso a una risorsa a un asset monosuo a scelta ogni 2 mesi."
+      },
+      "holders": [
+        { "from": "Wueng", "to": "Shawel", "bidirectional": true },
+        { "from": "Ntsu", "to": "Shawel", "bidirectional": true },
+        { "from": "Mitsumoro", "to": "Shawel", "bidirectional": true }
+      ]
+    }
+  }
+}

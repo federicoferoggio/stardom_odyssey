@@ -1,0 +1,378 @@
+{
+  "_howto": "Everything about where every family's military currently is -- the 'changes constantly' tier (unlike bodies.json/points_of_interest.json, which are the never/rarely-changes tiers and no longer carry a fleets field at all). Two categories: 'stationed' = anonymous fleets sitting at a body right now, no identity, never move on their own (bodyId + fleets array of owner names) -- supported but no longer auto-seeded; every family now starts with real NAMED fleets instead (see below). 'fleets' = NAMED, orderable fleets -- give one an id (unique, kebab-case), a name, an owner (family), and a chronological 'orders' list mixing move/disable/enable entries: {month, action:'move', target} where target is a body id, another fleet's id (fleet-vs-fleet intercept), or the literal 'home'; or {month, action:'disable'} / {month, action:'enable'}. A move order's month is the EARLIEST possible departure, not a fixed one -- arrival is never authored, it's solved as a real intercept problem against the target's live/orbiting position using the fleet's own 'speed' (AU/month, defaults to 4 if omitted). 'maxDistance' (AU, same unit as speed, null/omitted = uncapped) caps how far a single order can travel in one leg -- if the target isn't reachable within that range yet, the fleet WAITS in place (still tracked live at wherever it's parked) until the first month it comes into range, then departs; only flagged in the family overlay if no in-range launch window is ever found. Before its first order a named fleet sits at its owner's home planet, UNLESS it has an optional 'startBody' field naming a different body id to start at instead. Between orders it holds wherever the last one resolved it to; disable/enable mark an inactive (ghosted) window without deleting the fleet, and any move order whose month falls inside one is inertly skipped. SPEED/MAXDISTANCE/BONUSRANGE/BONUS: a fleet just names a 'type' (one of the archetype keys in strategic-map.js's FLEET_ARCHETYPES -- currently 'interceptor', 'suppressor', 'ground-support', 'arcanic-shield') and gets that archetype's speed/maxDistance/bonusRange/bonus for free -- no need to fill these in per fleet any more. 'bonusRange' (AU, separate from maxDistance) is how far from its OWN home planet a fleet can be while its 'bonus' (free-text, shown on a planet's info panel while the fleet is parked there, informational only) still counts as active -- the map computes and shows this live (Bonus attivo/inattivo). A 'legendary'/special fleet can still override any one of these four fields by just writing it directly on the fleet -- its mere presence (even set to null/'') wins over the archetype's default for that field only; the 4 fleets with unique hand-written bonus text (lunicaflotta, rivera-originale, shawel-crociata, ousssek-flotta-1) do this and have no 'type' at all. Fleet count is no longer might-capped -- generating a new fleet is a roleplay/dice action (see script.js's 'Genera Flotta'), not something this file enforces a limit on.",
+  "fleets": [
+    {
+      "id": "lunicaflotta",
+      "name": "L'Unica Flotta",
+      "owner": "La Mano",
+      "type": "suppressor",
+      "startBody": "elbethel",
+      "orders": [
+        {
+          "month": 10214,
+          "action": "move",
+          "target": "promeneus"
+        },
+        {
+          "month": 10224,
+          "action": "move",
+          "target": "elbethel"
+        }
+      ]
+    },
+    {
+      "id": "rivera-originale",
+      "name": "Sanguinii di Ahleza",
+      "owner": "Rivera",
+      "type": "interceptor",
+      "startBody": "allenia",
+      "orders": [
+        {
+          "month": 10214,
+          "action": "move",
+          "target": "promeneus"
+        },
+        {
+          "month": 10224,
+          "action": "move",
+          "target": "allenia"
+        }
+      ]
+    },
+    {
+      "id": "shawel-crociata",
+      "name": "Rifornitori",
+      "owner": "Shawel",
+      "type": "arcanic-shield",
+      "startBody": "enides",
+      "orders": [
+        {
+          "month": 10214,
+          "action": "move",
+          "target": "promeneus"
+        },
+        {
+          "month": 10224,
+          "action": "move",
+          "target": "enides"
+        }
+      ]
+    },
+    {
+      "id": "wueng-flotta-1",
+      "name": "Spada di Bane",
+      "owner": "Wueng",
+      "type": "interceptor",
+      "orders": [
+        {
+          "month": 10225,
+          "action": "move",
+          "target": "gith-flotta-1"
+        },
+        {
+          "month": 10227.5,
+          "action": "move",
+          "target": "enides"
+        }
+      ],
+      "startBody": "draconia"
+    },
+    {
+      "id": "wueng-flotta-2",
+      "name": "Lancia di Bane",
+      "owner": "Wueng",
+      "type": "suppressor",
+      "orders": [],
+      "startBody": "draconia",
+      "speed": 2,
+      "maxDistance": 600
+    },
+    {
+      "id": "wueng-flotta-3",
+      "name": "Scudo di Bane",
+      "owner": "Wueng",
+      "type": "arcanic-shield",
+      "startBody": "draconia"
+    },
+    {
+      "id": "wueng-flotta-4",
+      "name": "Arco di Bane",
+      "owner": "Wueng",
+      "type": "interceptor",
+      "orders": [],
+      "startBody": "iltiratore"
+    },
+    {
+      "id": "ntsu-flotta-1",
+      "name": "Professorato Armato",
+      "owner": "Ntsu",
+      "speed": 20,
+      "maxDistance": 400,
+      "bonusRange": 1000,
+      "bonus": "Quando orbita un sistema, riduci di 1 tutte le statistiche avversarie su quel pianeta. Inoltre, ogni spell slot sopra il livello 5 non è usabile da nemici, e i nemici non possono usare la power pahse.",
+      "startBody": "ion",
+      "orders": [
+        {
+          "month": 10213,
+          "action": "move",
+          "target": "neres"
+        }
+      ]
+    },
+    {
+      "id": "gith-flotta-1",
+      "name": "Flottiglia X'nol",
+      "owner": "Gith",
+      "type": "interceptor",
+      "startBody": "githcrechexller",
+      "orders": [
+        {
+          "month": 10222,
+          "action": "move",
+          "target": "stazioneminerariafsm1s"
+        },
+        {
+          "month": 10225,
+          "action": "move",
+          "target": "protblanc"
+        },
+        {
+          "month": 10226,
+          "action": "move",
+          "target": "stazioneminerariafsm4ogs"
+        },
+        {
+          "month": 10226.2,
+          "action": "move",
+          "target": "elbethel"
+        }
+      ]
+    },
+    {
+      "id": "gith-flotta-2",
+      "name": "Flottiglia X'uel",
+      "owner": "Gith",
+      "type": "interceptor",
+      "orders": []
+    },
+    {
+      "id": "mitsumoro-flotta-1",
+      "name": "Ultraflotta A",
+      "owner": "Mitsumoro",
+      "type": "ground-support",
+      "orders": [
+        {
+          "month": 10213,
+          "action": "move",
+          "target": "neres"
+        }
+      ],
+      "startBody": "jetaras"
+    },
+    {
+      "id": "mitsumoro-flotta-2",
+      "name": "Ultraflotta B",
+      "owner": "Mitsumoro",
+      "type": "ground-support",
+      "orders": [],
+      "startBody": "jetaras"
+    },
+    {
+      "id": "mitsumoro-flotta-3",
+      "name": "Ultraflotta C",
+      "owner": "Mitsumoro",
+      "type": "ground-support",
+      "orders": []
+    },
+    {
+      "id": "ousssek-flotta-1",
+      "name": "Sparassidae",
+      "owner": "Ousssek",
+      "type": "arcanic-shield",
+      "startBody": "saltar",
+      "orders": [
+      ]
+    },
+    {
+      "id": "ousssek-flotta-2",
+      "name": "Salticidae",
+      "owner": "Ousssek",
+      "type": "ground-support",
+      "startBody": "saltar",
+      "orders": [
+        {
+          "month": 10226,
+          "action": "move",
+          "target": "elbethel"
+        }
+      ]
+    },
+    {
+      "id": "ousssek-flotta-3",
+      "name": "Tarantole",
+      "owner": "Ousssek",
+      "type": "interceptor",
+      "startBody": "saltar",
+      "orders": [
+        {
+          "month": 10224,
+          "action": "move",
+          "target": "aepra"
+        }
+      ]
+    },
+    {
+      "id": "grayshine-flotta-1",
+      "name": "Erario Blindato",
+      "owner": "Grayshine",
+      "type": "ground-support",
+      "orders": []
+    },
+    {
+      "id": "caillot-flotta-1",
+      "name": "Falce Dorata",
+      "owner": "Caillot",
+      "type": "ground-support",
+      "orders": [
+        {
+          "month": 10214,
+          "action": "move",
+          "target": "promeneus"
+        }
+      ],
+      "startBody": "tebara"
+    },
+    {
+      "id": "caillot-flotta-2",
+      "name": "Custode delle Stelle",
+      "owner": "Caillot",
+      "type": "arcanic-shield",
+      "orders": []
+    },
+    {
+      "id": "amoako-flotta-1",
+      "name": "Velo Arcano",
+      "owner": "Amoako",
+      "type": "arcanic-shield",
+      "orders": [
+        {
+          "month": 10214,
+          "action": "move",
+          "target": "promeneus"
+        }
+      ],
+      "startBody": "wandacker"
+    },
+    {
+      "id": "amoako-flotta-2",
+      "name": "Tempesta Nera",
+      "owner": "Amoako",
+      "type": "interceptor",
+      "orders": []
+    },
+    {
+      "id": "zolinath-flotta-1",
+      "name": "Lama della Legge",
+      "owner": "Zolinath",
+      "type": "suppressor",
+      "orders": []
+    },
+    {
+      "id": "zolinath-flotta-2",
+      "name": "Giuramento Infranto",
+      "owner": "Zolinath",
+      "type": "suppressor",
+      "orders": []
+    },
+    {
+      "id": "sifu-flotta-1",
+      "name": "Argine Spezzato",
+      "owner": "Sifu",
+      "type": "ground-support",
+      "orders": []
+    },
+    {
+      "id": "rasaily-flotta-1",
+      "name": "Furia degli Orchi",
+      "owner": "Rasaily",
+      "type": "suppressor",
+      "orders": [
+        {
+          "month": 10225,
+          "action": "move",
+          "target": "githcrechexller"
+        }
+      ]
+    },
+    {
+      "id": "rasaily-flotta-2",
+      "name": "Corvo di Ferro",
+      "owner": "Rasaily",
+      "type": "suppressor",
+      "orders": []
+    },
+    {
+      "id": "kesk-flotta-1",
+      "name": "Manto Oscuro",
+      "owner": "Kesk",
+      "type": "arcanic-shield",
+      "orders": []
+    },
+    {
+      "id": "carxus-flotta-1",
+      "name": "Onda d'Acciaio",
+      "owner": "Carxus",
+      "type": "interceptor",
+      "orders": []
+    },
+    {
+      "id": "carxus-flotta-2",
+      "name": "Ultimo Bastione",
+      "owner": "Carxus",
+      "type": "arcanic-shield",
+      "orders": []
+    },
+    {
+      "id": "stozav-flotta-1",
+      "name": "Bruma Inebriante",
+      "owner": "Stozav",
+      "type": "interceptor",
+      "orders": []
+    },
+    {
+      "id": "hai-flotta-1",
+      "name": "Tregua Fragile",
+      "owner": "Hai",
+      "type": "ground-support",
+      "orders": []
+    },
+    {
+      "id": "sudriz-flotta-1",
+      "name": "Fucina Fiammeggiante",
+      "owner": "Sudriz",
+      "type": "ground-support",
+      "orders": []
+    },
+    {
+      "id": "eretici-flotta-1",
+      "name": "Scisma Proibito",
+      "owner": "Eretici",
+      "type": "arcanic-shield",
+      "orders": []
+    },
+    {
+      "id": "eretici-flotta-2",
+      "name": "Spina del Cielo",
+      "owner": "Eretici",
+      "type": "interceptor",
+      "orders": []
+    },
+    {
+      "id": "eretici-flotta-3",
+      "name": "Anatema Vivente",
+      "owner": "Eretici",
+      "type": "arcanic-shield",
+      "orders": []
+    }
+  ]
+}

@@ -1,0 +1,452 @@
+{
+  "_readme": "GM-authored knowledge-reveal flags: what the PLAYERS currently know about each family, replacing the old numeric infiltration ladder. Missing family or missing field defaults to hidden (false). Leader identity (name/portrait/role) is NEVER gated here -- court membership is always public -- only individual leader traits are. La Mano (the player family) and the maintainer GM-mode toggle (Ctrl+Shift+G) both bypass this file entirely and always show full knowledge.",
+  "families": {
+    "Wueng": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Ntsu": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Gith": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {},
+      "uniqueAssetsKnown": false
+    },
+    "Mitsumoro": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Ousssek": {
+      "stats": {
+        "might": true,
+        "treasure": true,
+        "influence": true,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Primo Ministro": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Grayshine": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Caillot": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Amoako": {
+      "stats": {
+        "might": true,
+        "treasure": false,
+        "influence": false,
+        "territory": true,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Zolinath": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Sifu": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Rasaily": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Kesk": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Carxus": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Stozav": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": true,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Shawel": {
+      "stats": {
+        "might": true,
+        "treasure": false,
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Primo Ministro": {
+          "trait1Known": true,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": true
+    },
+    "Hai": {
+      "stats": {
+        "might": true,
+        "treasure": true,
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": true
+        }
+      },
+      "uniqueAssetsKnown": true
+    },
+    "La Mano": {
+      "stats": {
+        "might": true,
+        "treasure": true,
+        "influence": true,
+        "territory": true,
+        "sovereignty": true
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Primo Ministro": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Capo Militare": {
+          "trait1Known": true,
+          "trait2Known": true
+        }
+      },
+      "uniqueAssetsKnown": true
+    },
+    "Sudriz": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Capo Militare": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Rivera": {
+      "stats": {
+        "might": true,
+        "treasure": false,
+        "influence": false,
+        "territory": true,
+        "sovereignty": true
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": true,
+          "trait2Known": true
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    },
+    "Eretici": {
+      "stats": {
+        "might": false,
+        "treasure": false,
+        "influence": false,
+        "territory": false,
+        "sovereignty": false
+      },
+      "leaders": {
+        "Capo Politico": {
+          "trait1Known": false,
+          "trait2Known": false
+        },
+        "Primo Ministro": {
+          "trait1Known": false,
+          "trait2Known": false
+        }
+      },
+      "uniqueAssetsKnown": false
+    }
+  }
+}

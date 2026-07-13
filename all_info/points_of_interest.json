@@ -1,0 +1,331 @@
+{
+  "_readme": "Space stations/waypoints (pointsOfInterest, type base|point) and established trade lanes (tradePaths). Both change occasionally (a new outpost, a new trade route) but not every session.",
+  "pointsOfInterest": [
+    {
+      "id": "thesuneye",
+      "owner": "Stability Commission",
+      "offset": 117,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 0.5,
+      "speed": 1000000,
+      "color": "#F697D8",
+      "name": "The Suneye",
+      "descr": "Una base stellare dedicata al monitoraggio delle fluttuazioni solari — eretta dopo che una forza elementale sfuggì alle fiamme del cataclisma.",
+      "resourceIds": [
+        "helium"
+      ]
+    },
+    {
+      "id": "khraeeli",
+      "owner": "Ntsu",
+      "offset": 74,
+      "node": false,
+      "type": "base",
+      "anchor": "ion",
+      "distance": 0.2,
+      "speed": 24,
+      "color": "#613C24",
+      "name": "Khraeel-I",
+      "descr": "Portale di complessita leggendaria che fa da ponte con Khraeel-II.",
+      "resourceIds": []
+    },
+    {
+      "id": "khraeelii",
+      "owner": "Ntsu",
+      "offset": 105,
+      "node": false,
+      "type": "base",
+      "anchor": "wandacker",
+      "distance": 0.2,
+      "speed": 24,
+      "color": "#613C24",
+      "name": "Khraeel-II",
+      "descr": "Portale di complessita leggendaria che fa da ponte con Khraeel-I.",
+      "resourceIds": []
+    },
+    {
+      "id": "loslancio",
+      "owner": "Spunnik",
+      "offset": 270,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 60,
+      "speed": 500,
+      "color": "#E7AFF9",
+      "name": "Lo slancio",
+      "descr": "L unica stazione degli Spunnik nell Opazio. Centro commerciale e punto di rifornimento rapido per le loro esplorazioni oltre i confini dello spazio conosciuto.",
+      "resourceIds": [
+        "knotime"
+      ]
+    },
+    {
+      "id": "sognodellapace",
+      "owner": "Mercanti di Giada",
+      "offset": 116,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 3,
+      "speed": 9,
+      "color": "#C340FF",
+      "name": "Sogno della Pace",
+      "descr": "Un hotel fluttuante su un asteroide. Meta privilegiata per incontri riservati tra le grandi famiglie.",
+      "resourceIds": []
+    },
+    {
+      "id": "telakindori",
+      "owner": "Ousssek",
+      "offset": 177,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 32,
+      "speed": 5,
+      "color": "#C160FF",
+      "name": "Tela Kindori",
+      "descr": "Una stazione di caccia dedicata ai Kindori.",
+      "resourceIds": [
+        "campi-di-cibo"
+      ]
+    },
+    {
+      "id": "lalleanza",
+      "owner": "Confraternita",
+      "offset": 321,
+      "node": false,
+      "type": "base",
+      "anchor": "void",
+      "distance": 1,
+      "speed": 4,
+      "color": "#E7E2FD",
+      "name": "L alleanza",
+      "descr": "Base neutrale e sede della Confraternita. Il luogo dove la maggior parte delle trattative tra famiglie in conflitto trova risoluzione.",
+      "resourceIds": []
+    },
+    {
+      "id": "iltiratore",
+      "owner": "Wueng",
+      "offset": 330,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 28,
+      "speed": 330,
+      "color": "#0576ED",
+      "name": "Il Tiratore",
+      "descr": "Una colossale fortezza militare dei Wueng consacrata alla crociata perpetua contro gli eretici. Al suo interno si trova una delle poche armi interplanetarie capaci di colpire qualsiasi obiettivo nel sistema a distanza illimitata.",
+      "resourceIds": []
+    },
+    {
+      "id": "loscudofinale",
+      "owner": "Wueng",
+      "offset": 330,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 55,
+      "speed": 250,
+      "color": "#0576ED",
+      "name": "Lo Scudo Finale",
+      "descr": "Una colossale fortezza militare dei Wueng consacrata a difendere lo opazio da qualsiasi invasore del sistema.",
+      "resourceIds": []
+    },
+    {
+      "id": "teladelloro",
+      "owner": "Ousssek",
+      "offset": 122,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 29,
+      "speed": 290,
+      "color": "#C160FF",
+      "name": "Tela dell Oro",
+      "descr": "Stazione mineraria primaria per l estrazione e l esportazione di oro.",
+      "resourceIds": []
+    },
+    {
+      "id": "stazioneminerariafsm4ogs",
+      "owner": "Waytir-Yugani",
+      "offset": 132,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 30,
+      "speed": 2.5,
+      "color": "#DCF59D",
+      "name": "Stazione Mineraria FSM.4 O-G-S",
+      "descr": "Fluttuante Stazione Mineraria Fluttante 4 Opazi Gemme e Schegge. Uno dei centri piu importanti e neutri di estrazione mineraria.",
+      "resourceIds": [
+        "livinohorite",
+        "gold",
+        "platinum",
+        "zinale"
+      ]
+    },
+    {
+      "id": "stazioneminerariafsm3gs",
+      "owner": "Waytir-Yugani",
+      "offset": 234,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 32,
+      "speed": 2.5,
+      "color": "#DCF59D",
+      "name": "Stazione Mineraria FSM.3 G-S",
+      "descr": "Fluttuante Stazione Mineraria Fluttante 3 Gemme e Schegge.",
+      "resourceIds": [
+        "xifl",
+        "ruby"
+      ]
+    },
+    {
+      "id": "stazioneminerariafsm2o",
+      "owner": "Waytir-Yugani",
+      "offset": 943,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 33,
+      "speed": 2.5,
+      "color": "#DCF59D",
+      "name": "Stazione Mineraria FSM.2 O",
+      "descr": "Fluttuante Stazione Mineraria Fluttante 2 Opazi.",
+      "resourceIds": [
+        "tholleite"
+      ]
+    },
+    {
+      "id": "stazioneminerariafsm1s",
+      "owner": "Waytir-Yugani",
+      "offset": 23,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 34,
+      "speed": 2.5,
+      "color": "#DCF59D",
+      "name": "Stazione Mineraria FSM.1 S",
+      "descr": "Fluttuante Stazione Mineraria Fluttante 1 Schegge.",
+      "resourceIds": [
+        "varisiana-nera"
+      ]
+    },
+    {
+      "id": "ceneris",
+      "owner": "Wueng",
+      "offset": 108,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 31,
+      "speed": 300,
+      "color": "#0576ED",
+      "name": "Ceneris",
+      "descr": "La colonia mineraria più popolosa del sistema Ceneris. Porto neutrale sfruttato per aggirare embarghi e tariffe tra le famiglie.",
+      "resourceIds": [
+        "adamantine",
+        "sovrappopolazione"
+      ]
+    },
+    {
+      "id": "protblanc",
+      "owner": "Carxus",
+      "offset": 231,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 22,
+      "speed": 220,
+      "color": "#00CB6E",
+      "name": "Port Blanc",
+      "descr": "Un avamposto nascosto tra gli asteroidi. Il luogo segreto dove i Carxus testano nuove navi e armamenti.",
+      "resourceIds": [
+        "luogo-sacro-ioun"
+      ]
+    },
+    {
+      "id": "coloniab34",
+      "owner": "Ntsu",
+      "offset": 255,
+      "node": false,
+      "type": "base",
+      "anchor": "sun",
+      "distance": 50,
+      "speed": 480,
+      "color": "#613C24",
+      "name": "Colonia B-34",
+      "descr": "Una prigione arcana che custodisce maghi di potenza leggendaria condannati per aver infranto i voleri della Casata Perenne.",
+      "resourceIds": []
+    },
+    {
+      "id": "githcrechexller",
+      "owner": "Gith",
+      "offset": 108,
+      "node": false,
+      "type": "point",
+      "anchor": "sun",
+      "distance": 14,
+      "speed": 1,
+      "color": "#FADEA5",
+      "name": "Gith Crèche X ller",
+      "descr": "Una fortezza edificata su un ammasso di asteroidi e relitti di spelljammer abbattuti nel mondo reale dei Gith. La sua posizione e sconosciuta.",
+      "resourceIds": []
+    }
+  ],
+  "tradePaths": [
+    {
+      "ids": [
+        "hellcoast",
+        "jetaras",
+        "ion"
+      ],
+      "name": "Sunpath",
+      "color": "#ffffff",
+      "type": "path",
+      "owner": "Mitsumoro",
+      "descr": "La Rete commerciale che porta il Platino dei Sudriz fino al Faro di Ion rifornendone la università",
+      "departure": 2
+    },
+    {
+      "ids": [
+        "telakindori",
+        "saltar"
+      ],
+      "name": "La tela del Ragno",
+      "color": "#ffffff",
+      "type": "path",
+      "owner": "Ousssek",
+      "descr": "La Rete commerciale che porta il cibo degli Ousssek a Saltar",
+      "departure": 2
+    },
+    {
+      "ids": [
+        "ion",
+        "khraeeli"
+      ],
+      "name": "Il Salto degli Eterni",
+      "color": "#ffffff",
+      "type": "path",
+      "owner": "Ntsu",
+      "descr": "Il passaggio commerciale che porta gli armamenti arcani di Ion verso le discese degli Amoako su Wandacker",
+      "departure": 2
+    },
+    {
+      "ids": [
+        "khraeelii",
+        "wandacker"
+      ],
+      "name": "Il Salto degli Eterni",
+      "color": "#ffffff",
+      "type": "path",
+      "owner": "Ntsu",
+      "descr": "Il passaggio commerciale che porta gli armamenti arcani di Ion verso le discese degli Amoako su Wandacker",
+      "departure": 2
+    }
+  ]
+}
