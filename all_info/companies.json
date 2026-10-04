@@ -53,7 +53,7 @@
     },
     {
       "name": "Ousssek",
-      "might": 5,
+      "might": 4,
       "treasure": 3,
       "influence": 4,
       "territory": 3,
@@ -210,10 +210,10 @@
     {
       "name": "La Mano",
       "might": 2,
-      "treasure": 3,
+      "treasure": 2,
       "influence": 3,
       "territory": 3,
-      "sovereignty": 5,
+      "sovereignty": 3,
       "government": "Divine Mandate",
       "planet": "El-Beth-El",
       "color": "#CC6E35",
