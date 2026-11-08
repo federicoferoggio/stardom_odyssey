@@ -20,11 +20,31 @@
       "opinionValue": 10,
       "modifiers": [],
       "holders": [
-        { "from": "Wueng", "to": "Kesk", "bidirectional": true },
-        { "from": "Ntsu", "to": "Kesk", "bidirectional": true },
-        { "from": "Mitsumoro", "to": "Kesk", "bidirectional": true },
-        { "from": "Shawel", "to": "La Mano", "bidirectional": true },
-        { "from": "Hai", "to": "La Mano", "bidirectional": true }
+        {
+          "from": "Wueng",
+          "to": "Kesk",
+          "bidirectional": true
+        },
+        {
+          "from": "Ntsu",
+          "to": "Kesk",
+          "bidirectional": true
+        },
+        {
+          "from": "Mitsumoro",
+          "to": "Kesk",
+          "bidirectional": true
+        },
+        {
+          "from": "Shawel",
+          "to": "La Mano",
+          "bidirectional": true
+        },
+        {
+          "from": "Hai",
+          "to": "La Mano",
+          "bidirectional": true
+        }
       ]
     },
     "Patto di Vassallaggio": {
@@ -51,9 +71,21 @@
         }
       ],
       "holders": [
-        { "from": "Wueng", "to": "Rasaily", "bidirectional": true },
-        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
-        { "from": "Mitsumoro", "to": "Sifu", "bidirectional": true }
+        {
+          "from": "Wueng",
+          "to": "Rasaily",
+          "bidirectional": true
+        },
+        {
+          "from": "Ntsu",
+          "to": "Carxus",
+          "bidirectional": true
+        },
+        {
+          "from": "Mitsumoro",
+          "to": "Sifu",
+          "bidirectional": true
+        }
       ]
     },
     "Patto Tributario": {
@@ -109,8 +141,16 @@
         }
       ],
       "holders": [
-        { "from": "Zolinath", "to": "Stozav", "bidirectional": true },
-        { "from": "Ousssek", "to": "La Mano", "bidirectional": false }
+        {
+          "from": "Zolinath",
+          "to": "Stozav",
+          "bidirectional": true
+        },
+        {
+          "from": "Ousssek",
+          "to": "La Mano",
+          "bidirectional": false
+        }
       ]
     },
     "Accordo Commerciale": {
@@ -129,9 +169,21 @@
         }
       ],
       "holders": [
-        { "from": "Mitsumoro", "to": "Amoako", "bidirectional": true },
-        { "from": "Ousssek", "to": "Rivera", "bidirectional": true },
-        { "from": "Ousssek", "to": "Amoako", "bidirectional": true }
+        {
+          "from": "Mitsumoro",
+          "to": "Amoako",
+          "bidirectional": true
+        },
+        {
+          "from": "Ousssek",
+          "to": "Rivera",
+          "bidirectional": true
+        },
+        {
+          "from": "Ousssek",
+          "to": "Amoako",
+          "bidirectional": true
+        }
       ]
     },
     "Accordo di Migrazione": {
@@ -149,7 +201,13 @@
           "always": true
         }
       ],
-      "holders": [{ "from": "Ousssek", "to": "Rivera", "bidirectional": true }]
+      "holders": [
+        {
+          "from": "Ousssek",
+          "to": "Rivera",
+          "bidirectional": true
+        }
+      ]
     },
     "Matrimonio": {
       "description": "Un'unione di sangue che lega due casate attraverso matrimoni strategici, aumentando il prestigio e l'influenza reciproca.",
@@ -167,12 +225,36 @@
         }
       ],
       "holders": [
-        { "from": "Ntsu", "to": "Caillot", "bidirectional": true },
-        { "from": "Mitsumoro", "to": "Caillot", "bidirectional": true },
-        { "from": "Ousssek", "to": "Caillot", "bidirectional": true },
-        { "from": "Caillot", "to": "Carxus", "bidirectional": true },
-        { "from": "Caillot", "to": "Zolinath", "bidirectional": true },
-        { "from": "Sifu", "to": "Kesk", "bidirectional": true }
+        {
+          "from": "Ntsu",
+          "to": "Caillot",
+          "bidirectional": true
+        },
+        {
+          "from": "Mitsumoro",
+          "to": "Caillot",
+          "bidirectional": true
+        },
+        {
+          "from": "Ousssek",
+          "to": "Caillot",
+          "bidirectional": true
+        },
+        {
+          "from": "Caillot",
+          "to": "Carxus",
+          "bidirectional": true
+        },
+        {
+          "from": "Caillot",
+          "to": "Zolinath",
+          "bidirectional": true
+        },
+        {
+          "from": "Sifu",
+          "to": "Kesk",
+          "bidirectional": true
+        }
       ]
     },
     "Accordo Spelljammer": {
@@ -189,8 +271,16 @@
         "effect": "Durante un tiro di Genera Flotta, puoi ridurre di 2 la height necessaria per aver successo su un tiro. Inoltre, flotte disabilitate tornano in gioco con tre mesi di anticipo."
       },
       "holders": [
-        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
-        { "from": "Caillot", "to": "Carxus", "bidirectional": true }
+        {
+          "from": "Ntsu",
+          "to": "Carxus",
+          "bidirectional": true
+        },
+        {
+          "from": "Caillot",
+          "to": "Carxus",
+          "bidirectional": true
+        }
       ]
     },
     "Accordo di Finanziamento": {
@@ -207,9 +297,21 @@
         "effect": "+1d Treasure per la famiglia target, -1 sui suoi tiri di Territory. +1 Territory per i Grayshine."
       },
       "holders": [
-        { "from": "Grayshine", "to": "Sudriz", "bidirectional": true },
-        { "from": "Grayshine", "to": "Rivera", "bidirectional": true },
-        { "from": "Grayshine", "to": "Stozav", "bidirectional": true }
+        {
+          "from": "Grayshine",
+          "to": "Sudriz",
+          "bidirectional": true
+        },
+        {
+          "from": "Grayshine",
+          "to": "Rivera",
+          "bidirectional": true
+        },
+        {
+          "from": "Grayshine",
+          "to": "Stozav",
+          "bidirectional": true
+        }
       ]
     },
     "Supporto Arcano": {
@@ -226,8 +328,16 @@
         "effect": "+1d so ogni tiro che ragionevolmente includono strumenti o metodi magici."
       },
       "holders": [
-        { "from": "Ntsu", "to": "Carxus", "bidirectional": true },
-        { "from": "Ntsu", "to": "Caillot", "bidirectional": true }
+        {
+          "from": "Ntsu",
+          "to": "Carxus",
+          "bidirectional": true
+        },
+        {
+          "from": "Ntsu",
+          "to": "Caillot",
+          "bidirectional": true
+        }
       ]
     },
     "Patto Draconico": {
@@ -243,7 +353,13 @@
         "description": "Draghi minori prestati dagli allevamenti di Draconia.",
         "effect": "+3d al primo attacco Might+Treasure del mese. Solo una volta per ogni 3 mesi."
       },
-      "holders": [{ "from": "Wueng", "to": "Rasaily", "bidirectional": true }]
+      "holders": [
+        {
+          "from": "Wueng",
+          "to": "Rasaily",
+          "bidirectional": true
+        }
+      ]
     },
     "Rete Alternativa": {
       "description": "Un accordo mercantile ricco di opportunità non ovvie.",
@@ -274,9 +390,21 @@
         "effect": "Permette l'accesso a una risorsa a un asset monosuo a scelta ogni 2 mesi."
       },
       "holders": [
-        { "from": "Wueng", "to": "Shawel", "bidirectional": true },
-        { "from": "Ntsu", "to": "Shawel", "bidirectional": true },
-        { "from": "Mitsumoro", "to": "Shawel", "bidirectional": true }
+        {
+          "from": "Wueng",
+          "to": "Shawel",
+          "bidirectional": true
+        },
+        {
+          "from": "Ntsu",
+          "to": "Shawel",
+          "bidirectional": true
+        },
+        {
+          "from": "Mitsumoro",
+          "to": "Shawel",
+          "bidirectional": true
+        }
       ]
     }
   }

@@ -1,5 +1,5 @@
 {
-  "currentMonth": 10226.3,
+  "currentMonth": 10227,
   "months": [
     {
       "month": 10200,
@@ -141,11 +141,37 @@
     },
     {
       "month": 10226,
-      "title": "Presente",
+      "title": "Il Giorno del Silenzio",
       "events": [
         {
-          "description": "La mano si prepara all'arrivo degli Ousssek mentre la piramide cambia e Beca Haider cerca risposte per suo fratello.",
+          "description": "La Mano approfondisce le proprie indagini sulle catacombe degli Akbe, scoprendo che il luogo custodisce memorie del passato e che Arren è legato all'anima di Siona Shawel. Arren si immerge nel lago delle memorie per cercarla, mentre emergono nuovi indizi sul ruolo di Telio e Tenar. La Mano interviene inoltre in difesa dell'isola degli Akbe da un attacco nemico: salva la Torre delle Reliquie e le Tigri Blu, ma perde il Complesso dell'Addestramento.",
+          "modifier": "Persi i Mercenary Training Traits; mantenuto l'accesso ai Brutalizers."
+        },
+        {
+          "description": "La Mano scopre una misteriosa sfera legata alla storia di El-Beth-El e all'arcimago Hor (o Leor). Demir recupera entrambi gli occhi e attiva il potere custodito nella piramide, che emerge dal deserto e fa scomparire tutte le stelle dal cielo. L'intero esercito si inchina davanti alla verità dell'Unico, rafforzando enormemente il fanatismo religioso. Nel frattempo Vecna fugge terrorizzato dal confronto con Hor, interrompendo il loro collegamento; l'Eterno lo trascina poi a El-Beth-El attraverso un Gate. Hor acquisisce permanentemente la capacità di preparare innatamente tutti gli incantesimi da lui creati e viene battezzato da Demir.",
+          "modifier": "Due nuovi bonus al Fanatismo."
+        },
+        {
+          "description": "Gli Oussek intensificano la guerra contro El-Beth-El, conquistando le Miniere di El-Bolghari e attaccando Khor-Galimath. In vista dell'invasione, la Mano prepara una trappola nelle catacombe, progettando di far collassare alcuni quartieri della capitale con la polvere di Ghakis e inondarli deviando il fiume. L'invasione ha inizio con la flotta nemica che oscura il sole e disabilita le difese antispelljammer della città. La Mano fa esplodere quattro quartieri, infliggendo pesanti perdite agli invasori, ma Khor-Galimath cade e gli Oussek riescono a stabilirsi sul pianeta. Le truppe alleate vengono in parte salvate e la Mano ottiene una nuova abilità militare.",
+          "modifier": "Mano: -2 Sovereignty e rimosso Divided Population. Oussek: -1 Might. Esercito: 5/8 delle truppe fuori dalla città e 3/8 al suo interno. Sbloccata l'abilità militare Hold the Line. Level up."
+        },
+        {
+          "description": "Mentre la flotta nemica si avvicina, Minerva riceve da Arakne un avvertimento inquietante: Milodra è stata localizzata e gode dell'appoggio di uno dei Big Three. Arakne la esorta ad abbandonare immediatamente il pianeta, mettendola in guardia anche sui suoi stessi alleati. Due giorni prima dell'arrivo della flotta, Minerva fugge dalla reggia utilizzando l'elmo di teletrasporto di Arren e raggiunge il Piano dell'Abisso. La Mano prepara inoltre la dispersione della corte e dei propri alleati fuori dalla capitale in vista degli eventi imminenti.",
           "modifier": ""
+        },
+        {
+          "description": "Sul piano politico e strategico, la costa di Ashran rimane sotto il controllo della Mano, sebbene i ribelli locali risultino finanziati da un attore esterno a El-Beth-El. La regina di Samarkoi si proclama Prescelta del Profeta e consente a Leahm Shalaq, il Cane, di predicare liberamente. I Thrikreen giungono inoltre a El-Beth-El a bordo di una nave apparentemente commerciale.",
+          "modifier": ""
+        }
+      ]
+    },
+    {
+      "month": 10233,
+      "title": "Riassesto di Bataar",
+      "events": [
+        {
+          "description": "Fine della stabilizzazione di Bataar ",
+          "modifier": "+4 di Might, +2 di Territory. Se Might va sopra 4, ogni punto oltre diventa temporaneo per 6 mesi."
         }
       ]
     }

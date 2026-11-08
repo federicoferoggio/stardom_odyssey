@@ -2,60 +2,152 @@
   "opinions": {
     "Hai": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": 50 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": 50
+        }
       ]
     },
     "Ousssek": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": -50 },
-        { "label": "Ospitano Minerva", "value": -20 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": -50
+        },
+        {
+          "label": "Ospitano Minerva",
+          "value": -20
+        }
+      ],
+      "Hai": [
+        {
+          "label": "Governati da Razzisti Estremisti (Drow)",
+          "value": -50
+        }
       ]
     },
     "Amoako": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": -25 },
-        { "label": "Concorrente", "value": -5 }
+        {
+          "label": "Concorrente",
+          "value": -5
+        }
       ],
       "Ousssek": [
-        { "label": "Concorrente", "value": -25 }
+        {
+          "label": "Concorrente",
+          "value": -25
+        }
+      ],
+      "Gith": [
+        {
+          "label": "Razzie nel loro settore",
+          "value": -10
+        }
+      ],
+      "Hai": [
+        {
+          "label": "Governati da Razzisti Estremisti (Nani e Duergar)",
+          "value": -25
+        }
       ]
     },
     "Caillot": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": -25 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": -25
+        }
+      ],
+      "Hai": [
+        {
+          "label": "Ribellione di Schiavi",
+          "value": -50
+        }
       ]
     },
     "Mitsumoro": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": -5 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": -5
+        }
+      ],
+      "Wueng": [
+        {
+          "label": "Distruttori dei Draghivan",
+          "value": -10
+        }
+      ],
+      "Ntsu": [
+        {
+          "label": "Incompetenza di controllo arcano (Matrimonio)",
+          "value": -20
+        }
       ]
     },
     "Ntsu": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": -5 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": -5
+        }
+      ],
+      "Mitsumoro": [
+        {
+          "label": "Incapacità di salvare il matrimonio",
+          "value": -15
+        }
       ]
     },
     "Wueng": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": 5 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": 5
+        }
+      ],
+      "Mitsumoro": [
+        {
+          "label": "Figlio morto sotto la garanzia Mitsumoro",
+          "value": -25
+        }
       ]
     },
     "Rasaily": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": 10 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": 10
+        }
+      ],
+      "Hai": [
+        {
+          "label": "Brutali",
+          "value": 10
+        }
       ]
     },
     "Shawel": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": 10 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": 10
+        }
       ]
     },
     "Rivera": {
       "La Mano": [
-        { "label": "Massacro della Luce (20225)", "value": 15 }
+        {
+          "label": "Massacro della Luce (20225)",
+          "value": 15
+        }
       ],
       "Ousssek": [
-        { "label": "Opprimenti", "value": -25 }
+        {
+          "label": "Opprimenti",
+          "value": -25
+        }
       ]
     }
   }

@@ -407,7 +407,11 @@
         "traits": [
           "aggressivo",
           "conquistatore"
-        ]
+        ],
+        "trait1": "aggressivo",
+        "trait2": "conquistatore",
+        "description": "",
+        "id": "wueng-capo-politico-sun-hui-1794176983046"
       },
       {
         "name": "Luo Da",
@@ -465,16 +469,24 @@
         "traits": [
           "esperto_treasure",
           "connesso"
-        ]
+        ],
+        "trait1": "esperto_treasure",
+        "trait2": "connesso",
+        "description": "",
+        "id": "la-mano-capo-politico-rime-mugwes-1794176985217"
       },
       {
-        "name": "Barda Writingham",
+        "name": "Ennas",
         "portrait": "images/court/Barda Writingham.webp",
         "role": "Primo Ministro",
         "traits": [
           "crudele",
-          "esperto_influence"
-        ]
+          "passivo"
+        ],
+        "trait1": "crudele",
+        "trait2": "passivo",
+        "description": "Temporaneo, fino al ritorno di Elt.",
+        "id": "la-mano-primo-ministro-barda-writingham-1794176995167"
       },
       {
         "name": "Mado Bophubb",
@@ -483,7 +495,11 @@
         "traits": [
           "aggressivo",
           "zelota-religioso"
-        ]
+        ],
+        "trait1": "aggressivo",
+        "trait2": "zelota-religioso",
+        "description": "",
+        "id": "la-mano-capo-militare-mado-bophubb-1794176996033"
       }
     ],
     "Gith": [
