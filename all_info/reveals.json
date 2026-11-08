@@ -303,15 +303,15 @@
     "Stozav": {
       "stats": {
         "might": false,
-        "treasure": false,
-        "influence": false,
+        "treasure": true,
+        "influence": true,
         "territory": false,
         "sovereignty": false
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": true,
-          "trait2Known": false
+          "trait1Known": true
+          "trait2Known": true
         },
         "Primo Ministro": {
           "trait1Known": true,
