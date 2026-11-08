@@ -166,12 +166,12 @@
       ]
     },
     {
-      "month": 10227,
-      "title": "Presente",
+      "month": 10233,
+      "title": "Riassesto di Bataar",
       "events": [
         {
-          "description": "Il Mese in Corso!",
-          "modifier": ""
+          "description": "Fine della stabilizzazione di Bataar ",
+          "modifier": "+4 di Might, +2 di Territory. Se Might va sopra 4, ogni punto oltre diventa temporaneo per 6 mesi."
         }
       ]
     }
