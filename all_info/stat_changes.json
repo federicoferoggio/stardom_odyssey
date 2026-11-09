@@ -1,0 +1,36 @@
+{
+  "changes": [
+    {
+      "family": "Ousssek",
+      "stat": "might",
+      "amount": -1,
+      "from": 10226,
+      "to": null,
+      "reason": "Indebolimento durnate la battaglia di Khor Galimath"
+    },
+    {
+      "family": "La Mano",
+      "stat": "might",
+      "amount": -2,
+      "from": 10227,
+      "to": 10233,
+      "reason": "Base messa insieme a Bataar"
+    },
+    {
+      "family": "La Mano",
+      "stat": "might",
+      "amount": 1,
+      "from": 10227,
+      "to": 10230,
+      "reason": "Akbe uniti all'interno della famiglia della Mano"
+    },
+    {
+      "family": "La Mano",
+      "stat": "sovereignty",
+      "amount": -2,
+      "from": 10226,
+      "to": null,
+      "reason": "Perdita di Khor Golimath"
+    }
+  ]
+}

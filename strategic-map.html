@@ -16,13 +16,15 @@
 
     <div id="controls">
         <label for="tickSlider" id="tick-label">Mese: <span id="tick-display">0</span></label>
+        <button id="mthPrevBtn">⏮</button>
         <button id="tickPrevBtn">◀</button>
         <input type="range" id="tickSlider" min="0" max="100" step="0.01" value="0">
         <button id="tickNextBtn">▶</button>
+        <button id="mthNextBtn">⏭</button>
         <button id="resetBtn">🕰️ Corrente</button>
         <button id="rulerBtn">📏 Righello</button>
         <div id="shortcutsWrapper">
-            <button id="shortcutsBtn">⌨ Scorciatoie</button>
+            <button id="shortcutsBtn">🖲️ Scorciatoie</button>
             <div id="shortcuts-panel" class="toolbar-dropdown">
                 <div class="shortcut-row"><kbd>/</kbd><span>Vai alla ricerca</span></div>
                 <div class="shortcut-row"><kbd>F</kbd><span>Apri/chiudi Famiglie</span></div>
@@ -32,7 +34,8 @@
                 <div class="shortcut-row"><kbd>M</kbd><span>Attiva/disattiva il righello</span></div>
                 <div class="shortcut-row"><kbd>←</kbd><kbd>→</kbd><span>Scorri il tempo</span></div>
                 <div class="shortcut-row"><kbd>Q</kbd><span>Torna alla schermata precedente</span></div>
-                <div class="shortcut-row"><kbd>Esc</kbd><span>Chiudi la scheda famiglia / annulla il righello</span></div>
+                <div class="shortcut-row"><kbd>Esc</kbd><span>Chiudi la scheda famiglia / annulla il righello</span>
+                </div>
             </div>
         </div>
         <div id="searchWrapper">
@@ -82,10 +85,11 @@
 
     <!-- ── UNIFIED TOP TOOLBAR ─────────────────────────────────────────────────── -->
     <div id="top-toolbar">
+        <button id="toolbar-info-btn" class="toolbar-btn" data-panel="info">ℹ️ Info</button>
         <button id="toolbar-families-btn" class="toolbar-btn" data-panel="families">🏛 Famiglie</button>
-        <button id="toolbar-resources-btn" class="toolbar-btn" data-panel="resources">📦 Risorse &amp; Asset</button>
-        <button id="toolbar-info-btn" class="toolbar-btn" data-panel="info">ℹ Info</button>
         <button id="toolbar-timeline-btn" class="toolbar-btn" data-panel="timeline">🕰 Timeline</button>
+        <button id="toolbar-resources-btn" class="toolbar-btn" data-panel="resources">📦 Risorse &amp; Asset</button>
+        <button id="toolbar-pacts-btn" class="toolbar-btn" data-panel="pacts">🤝🏻 Trattati</button>
     </div>
 
     <div id="top-toolbar-panel">
@@ -130,6 +134,10 @@
             </div>
             <h2 id="timeline-panel-title">—</h2>
             <div id="timeline-panel-events"></div>
+        </div>
+        <div id="pacts-panel" class="toolbar-dropdown">
+            <h2 class="pacts-panel-heading">Current treaties</h2>
+            <div id="pacts-list"></div>
         </div>
     </div>
 

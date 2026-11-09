@@ -12,15 +12,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -36,15 +39,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -71,15 +77,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -95,15 +104,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -119,15 +131,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -143,15 +158,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -167,15 +185,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -191,15 +212,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -215,15 +239,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -239,15 +266,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -263,15 +293,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -287,15 +320,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -311,15 +347,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": true,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -335,11 +374,13 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": true,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": true
@@ -355,7 +396,8 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": true
@@ -371,15 +413,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": true
         },
         "Capo Militare": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": true
         }
       },
       "uniqueAssetsKnown": true
@@ -395,15 +440,18 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -419,11 +467,13 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": true,
-          "trait2Known": true
+          "trait2Known": true,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false
@@ -439,11 +489,13 @@
       "leaders": {
         "Capo Politico": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         },
         "Primo Ministro": {
           "trait1Known": false,
-          "trait2Known": false
+          "trait2Known": false,
+          "seethrough_trait": false
         }
       },
       "uniqueAssetsKnown": false

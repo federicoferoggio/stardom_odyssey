@@ -116,9 +116,9 @@ function generateFamilyDescription(stats) {
       b = sentences[i + 1];
     const conj =
       Math.abs(a.value - average) > 1 &&
-      Math.abs(b.value - average) > 1 &&
-      ((a.value > average && b.value < average) ||
-        (a.value < average && b.value > average))
+        Math.abs(b.value - average) > 1 &&
+        ((a.value > average && b.value < average) ||
+          (a.value < average && b.value > average))
         ? "ma"
         : "e";
     paired.push(`${a.phrase} ${conj} ${b.phrase}`);
@@ -157,14 +157,63 @@ function safeColor(color) {
     : "#888888";
 }
 
-// companies.json's own "color" field is the single source of truth for a
-// family's color (map body colors are seeded from/consistent with it); this
-// falls back to the map-derived ownerColors for non-family owners (e.g. an
-// NPC faction with no companies.json entry).
-function familyColor(name) {
-  return safeColor(
-    (companiesByName[name] && companiesByName[name].color) || ownerColors[name],
+// Secret late-game alignment overlay. The source colors in companies.json and
+// bodies.json are never changed; familyColor() temporarily resolves every
+// family to one of the two alignment colors while this mode is active.
+let corruptionMode = false;
+const CORRUPTION_RED = "#e44747";
+const CORRUPTION_BLUE = "#438fe8";
+
+function leaderHasSeethroughTrait(familyName, leader) {
+  const family = canonicalFamilyName(familyName);
+  const role = leader && leader.role;
+  if (!role) return false;
+
+  // reveals.json is keyed by family, then by the leader's role. The name
+  // fallback is harmless for older/custom data files that use leader names.
+  const familyData =
+    (revealsByFamily &&
+      (revealsByFamily[family] || revealsByFamily[familyName])) || {};
+  const roleFlags =
+    (familyData.leaders &&
+      (familyData.leaders[role] || familyData.leaders[leader.name])) || {};
+  return roleFlags.seethrough_trait === true;
+}
+
+function familyIsCorrupted(familyName) {
+  const family = canonicalFamilyName(familyName);
+  const leaders = leadersByFamily[family] || leadersByFamily[familyName] || [];
+  // Empty leadership rosters are not considered fully corrupted.
+  return leaders.length > 0 && leaders.every((leader) =>
+    leaderHasSeethroughTrait(family, leader),
   );
+}
+
+// companies.json remains the source of truth outside Corruption Mode. NPCs
+// without a company entry retain their existing ownerColors fallback.
+function familyColor(name) {
+  const family = canonicalFamilyName(name);
+  const company = companiesByName[family] || companiesByName[name];
+  if (corruptionMode && company)
+    return familyIsCorrupted(family) ? CORRUPTION_RED : CORRUPTION_BLUE;
+  return safeColor(
+    (company && company.color) || ownerColors[name] || ownerColors[family],
+  );
+}
+
+// Bodies and trade paths use their own authored colors normally, but inherit
+// their owner's alignment color in Corruption Mode.
+function bodyColor(body) {
+  const family = body && body.owner && canonicalFamilyName(body.owner);
+  if (corruptionMode && family && companiesByName[family])
+    return familyColor(family);
+  return safeColor(body && body.color);
+}
+function pathColor(path) {
+  const family = path && path.owner && canonicalFamilyName(path.owner);
+  if (corruptionMode && family && companiesByName[family])
+    return familyColor(family);
+  return safeColor(path && path.color);
 }
 
 // Loaded data
@@ -178,6 +227,8 @@ let treatiesByFamily = {}; // all_info/treaties.json rows, grouped by `from`
 let treatyOpinionsByFamily = {}; // live-computed, mirrored both ways -- see computeTreatyOpinions()
 let currentMonth = 0;
 let timelineByMonth = {};
+let statChanges = [];
+let statChangeEventsByMonth = {};
 let familyAssetsByOwner = {};
 let localizedAssetsByBody = {};
 let governmentCompatibility = {};
@@ -202,6 +253,8 @@ let bodyIdByName = {}; // body.name (lowercased) -> id, built once in loadMap, r
 let revealsByFamily = {};
 let devRevealAll = false;
 let currentOverlayFamily = null;
+let currentQuickViewFamily = null;
+let lastStatRefreshMonth = null;
 
 // ── SINGLE-SLOT BACK NAVIGATION (Q) ──────────────────────────────────────────
 // showInfo/showFleetInfo/showPathInfo/showFamilyOverlay each replace whatever
@@ -630,7 +683,7 @@ function computeAllPositions(t) {
       b.type === "point"
         ? ((b.offset || 0) * Math.PI) / 180
         : (b.speed > 0 ? (t / b.speed) * Math.PI * 2 : 0) +
-          ((b.offset || 0) * Math.PI) / 180;
+        ((b.offset || 0) * Math.PI) / 180;
     cache[id] = {
       x: parent.x + r * Math.cos(angle),
       y: parent.y + r * Math.sin(angle),
@@ -888,10 +941,10 @@ function buildFleetPlan(fleet, depth) {
         ? { mode: "course", course: state.course }
         : state.mode === "point"
           ? {
-              mode: "point",
-              position: state.position,
-              contactWith: state.contactWith,
-            }
+            mode: "point",
+            position: state.position,
+            contactWith: state.contactWith,
+          }
           : state.mode === "disabled"
             ? { mode: "disabled", position: state.position }
             : { mode: "body", bodyId: state.bodyId };
@@ -1196,30 +1249,30 @@ function evaluatePlanAt(plan, fleet, t) {
   const wait = plan.waits.find((w) => t >= w.from && t < w.to);
   const pending = wait
     ? {
-        order: wait.order,
-        departureMonth: wait.departureMonth,
-        rawTarget: wait.rawTarget,
-      }
+      order: wait.order,
+      departureMonth: wait.departureMonth,
+      rawTarget: wait.rawTarget,
+    }
     : null;
 
   if (seg.mode === "course") {
     if (t >= seg.course.etaMonth) {
       return seg.course.targetIsBody
         ? {
-            mode: "body",
-            bodyId: seg.course.rawTarget,
-            position: computeAllPositions(t)[seg.course.rawTarget],
-            fleet,
-            errors,
-            pending,
-          }
+          mode: "body",
+          bodyId: seg.course.rawTarget,
+          position: computeAllPositions(t)[seg.course.rawTarget],
+          fleet,
+          errors,
+          pending,
+        }
         : {
-            mode: "point",
-            position: seg.course.endPoint,
-            fleet,
-            errors,
-            pending,
-          };
+          mode: "point",
+          position: seg.course.endPoint,
+          fleet,
+          errors,
+          pending,
+        };
     }
     return {
       mode: "transit",
@@ -1338,7 +1391,12 @@ function targetLabel(targetId) {
 function ensureColorFilter(id, color) {
   const defs = document.getElementById("svg-defs");
   const fId = `cf-${id}`;
-  if (defs.querySelector(`#${fId}`)) return fId;
+  const existing = defs.querySelector(`#${fId}`);
+  if (existing) {
+    const flood = existing.querySelector("feFlood");
+    if (flood) flood.setAttribute("flood-color", color);
+    return fId;
+  }
   const f = el("filter", {
     id: fId,
     "color-interpolation-filters": "sRGB",
@@ -1448,7 +1506,8 @@ function buildScene() {
       point: "images/point.svg",
     };
     const iconSrc = typeMap[b.type] || "images/planet.svg";
-    const cfId = ensureColorFilter(b.id, b.color);
+    const currentBodyColor = bodyColor(b);
+    const cfId = ensureColorFilter(b.id, currentBodyColor);
 
     // Everything visual (halo/icon/label/fleet markers) lives inside an
     // inner "icon-scale" group so refreshIconScale() can grow it when
@@ -1459,7 +1518,7 @@ function buildScene() {
     g.appendChild(scaleG);
     if (b.type === "point" && b.speed > 0) {
       const zoneR = b.speed * DIST_SCALE;
-      const { r: cr, g: cg, b: cb } = hexToRgb(b.color);
+      const { r: cr, g: cg, b: cb } = hexToRgb(currentBodyColor);
       const zone = el("circle", {
         r: zoneR,
         fill: `rgba(${Math.round(cr * 0.4)},${Math.round(cg * 0.4)},${Math.round(cb * 0.4)},0.18)`,
@@ -1474,7 +1533,7 @@ function buildScene() {
     }
     const halo = el("circle", {
       r: r * 2.2,
-      fill: b.color,
+      fill: currentBodyColor,
       opacity: "0.0",
       style: "transition:opacity .2s",
     });
@@ -1601,6 +1660,7 @@ function updateScene(t) {
   // tradePaths) -- fleet movement has its own resolution below, replacing
   // the old warpath/progress mechanic entirely.
   (byId.__paths || []).forEach((path, pi) => {
+    const currentPathColor = pathColor(path);
     const arrowId = `arrow-${pi}`;
     if (!defs.querySelector(`#${arrowId}`)) {
       const marker = el("marker", {
@@ -1614,7 +1674,7 @@ function updateScene(t) {
       marker.appendChild(
         el("polygon", {
           points: "0,0 0,6 8,3",
-          fill: path.color,
+          fill: currentPathColor,
           opacity: "0.85",
         }),
       );
@@ -1647,7 +1707,7 @@ function updateScene(t) {
         y1: a.y + uy * trim,
         x2: b.x - ux * (trim + 10),
         y2: b.y - uy * (trim + 10),
-        stroke: path.color,
+        stroke: currentPathColor,
         "stroke-width": "2.5",
         opacity: "0.7",
       };
@@ -1955,8 +2015,32 @@ function applyTick() {
   if (!draggingSlider) tickSlider.value = tick;
   document.querySelector("#tick-label span").textContent =
     Math.round(tick * 100) / 100;
+
   updateScene(tick);
   renderTimelinePanel(tick);
+
+  // Refresh family statistics only when the displayed month changes.
+  const statMonth = Math.round(tick);
+
+  if (statMonth !== lastStatRefreshMonth) {
+    lastStatRefreshMonth = statMonth;
+
+    // Refresh compact family preview.
+    if (currentQuickViewFamily) {
+      renderFamilyQuickView(currentQuickViewFamily);
+    }
+
+    // Refresh the open family overlay without changing navigation history.
+    const familyOverlay = document.getElementById("family-overlay");
+
+    if (
+      currentOverlayFamily &&
+      familyOverlay.classList.contains("open")
+    ) {
+      showFamilyOverlay(currentOverlayFamily, true);
+    }
+  }
+
   applyCameraFollow();
 }
 
@@ -1967,22 +2051,63 @@ function applyTick() {
 function stepTick(delta) {
   setTargetTick(targetTick + delta * 0.03);
 }
-function startHold(delta) {
-  stepTick(delta);
-  tickHoldInterval = setInterval(() => stepTick(delta), 150);
+
+// Full month movement
+function stepMonth(delta) {
+  setTargetTick(targetTick + delta);
+}
+
+function startHold(delta, stepFunction = stepTick) {
+  stepFunction(delta);
+  tickHoldInterval = setInterval(() => stepFunction(delta), 150);
 }
 function stopHold() {
   clearInterval(tickHoldInterval);
   tickHoldInterval = null;
 }
 
+const mthPrevBtn = document.getElementById("mthPrevBtn");
 const tickPrevBtn = document.getElementById("tickPrevBtn");
 const tickNextBtn = document.getElementById("tickNextBtn");
+const mthNextBtn = document.getElementById("mthNextBtn");
+
+window.addEventListener("mouseup", stopHold);
+
+//----------
+
+mthPrevBtn.addEventListener("mousedown", () => startHold(-1, stepMonth));
+mthNextBtn.addEventListener("mousedown", () => startHold(1, stepMonth));
+
+mthPrevBtn.addEventListener("mouseleave", stopHold);
+mthNextBtn.addEventListener("mouseleave", stopHold);
+
+mthPrevBtn.addEventListener(
+  "touchstart",
+  (e) => {
+    e.preventDefault();
+    startHold(-1, stepMonth);
+  },
+  { passive: false },
+);
+mthNextBtn.addEventListener(
+  "touchstart",
+  (e) => {
+    e.preventDefault();
+    startHold(1, stepMonth);
+  },
+  { passive: false },
+);
+mthPrevBtn.addEventListener("touchend", stopHold);
+mthNextBtn.addEventListener("touchend", stopHold);
+
+//----------
+
 tickPrevBtn.addEventListener("mousedown", () => startHold(-1));
 tickNextBtn.addEventListener("mousedown", () => startHold(1));
-window.addEventListener("mouseup", stopHold);
+
 tickPrevBtn.addEventListener("mouseleave", stopHold);
 tickNextBtn.addEventListener("mouseleave", stopHold);
+
 tickPrevBtn.addEventListener(
   "touchstart",
   (e) => {
@@ -2053,6 +2178,7 @@ function loadMap(bodies, paths, timeline, stationedFleets) {
   // thereafter.
   buildAllFleetPlans();
   buildFleetDepartureEvents();
+  buildStatChangeEvents();
   buildScene();
   ready = true;
   updateScene(tick);
@@ -2082,6 +2208,63 @@ function fleetDepartureEventsForMonth(monthNum) {
   return fleetDepartureEventsByMonth[monthNum] || [];
 }
 
+// Generate timeline events for stat changes and their expiration.
+function buildStatChangeEvents() {
+  statChangeEventsByMonth = {};
+
+  const addEvent = (month, description) => {
+    const monthNum = Math.round(Number(month));
+    if (!Number.isFinite(monthNum)) return;
+
+    (statChangeEventsByMonth[monthNum] =
+      statChangeEventsByMonth[monthNum] || []).push(description);
+  };
+
+  statChanges.forEach((change) => {
+    const family = canonicalFamilyName(change.family || "");
+    const stat = STAT_LABELS[change.stat] ? change.stat : null;
+    const amount = Number(change.amount);
+    const from = Number(change.from);
+
+    if (
+      !family ||
+      !stat ||
+      !Number.isFinite(amount) ||
+      !Number.isFinite(from)
+    ) {
+      return;
+    }
+
+    const amountText = amount > 0 ? `+${amount}` : `${amount}`;
+    const reason = change.reason ? ` — ${change.reason}` : "";
+
+    // Starting event
+    addEvent(
+      from,
+      `📊 ${family}: ${STAT_LABELS[stat]} ${amountText}${reason}.`,
+    );
+
+    // Expiration event (unless permanent)
+    if (
+      change.to != null &&
+      String(change.to).toLowerCase() !== "infinity"
+    ) {
+      const to = Number(change.to);
+
+      if (Number.isFinite(to)) {
+        addEvent(
+          to,
+          `⌛ ${family}: ${STAT_LABELS[stat]} modifier (${amountText}) expires.`,
+        );
+      }
+    }
+  });
+}
+
+function statChangeEventsForMonth(monthNum) {
+  return statChangeEventsByMonth[monthNum] || [];
+}
+
 // ── TIMELINE PANEL ───────────────────────────────────────────────────────────────
 // all_info/timeline.json: { currentMonth, months: [{month, title, events:[{description,modifier}]}] }.
 // One toolbar panel, one month per "page" -- two-way synced with the map's
@@ -2100,7 +2283,10 @@ function renderTimelinePanel(currentTick) {
   const realEvents = ((month && month.events) || []).filter(
     (ev) => ev.description || ev.modifier,
   );
-  const autoEvents = fleetDepartureEventsForMonth(monthNum);
+  const autoEvents = [
+    ...fleetDepartureEventsForMonth(monthNum),
+    ...statChangeEventsForMonth(monthNum),
+  ];
   if (realEvents.length === 0 && autoEvents.length === 0) {
     eventsEl.innerHTML =
       '<div class="opinion-empty">Nessun evento registrato per questo mese.</div>';
@@ -2128,10 +2314,66 @@ document
   .getElementById("timeline-next-btn")
   .addEventListener("click", () => setTargetTick(Math.round(targetTick) + 1));
 
+function renderPactsPanel() {
+  const host = document.getElementById("pacts-list");
+  if (!host) return;
+
+  host.innerHTML = "";
+
+  Object.entries(treatyTypesByName || {}).forEach(([name, details]) => {
+
+    const holders = (details.holders || [])
+      .map(h => `${escHtml(h.from)} → ${escHtml(h.to)}`)
+      .join(", ") || "Nessuno";
+
+    const opinion = details.opinionValue ?? 0;
+    const opinionText = Number(opinion) > 0
+      ? `+${escHtml(opinion)}`
+      : escHtml(opinion);
+
+    const card = document.createElement("section");
+    card.className = "pact-card";
+
+    card.innerHTML = `
+            <h2 class="pact-card-title">${escHtml(name)}</h2>
+
+            <div class="pact-description">
+                ${escHtml(details.description || "")}
+                <em>${escHtml(details.effects || "")}</em>
+            </div>
+
+            <div class="pact-detail-row">
+                <span class="pact-detail-label">Costo Diplomatico:</span>
+                <div class="pact-detail-value">
+                    ${escHtml(details.diplomacyCost || "—")}
+                </div>
+            </div>
+
+            <div class="pact-detail-row">
+                <span class="pact-detail-label">Costo di Rottura:</span>
+                <div class="pact-detail-value">
+                    ${escHtml(details.breakupCost || "—")}
+                </div>
+            </div>
+
+            <div class="pact-detail-row">
+                <span class="pact-detail-label">Cambio di Opinione:</span>
+                <div class="pact-detail-value">${opinionText}</div>
+            </div>
+
+            <div class="pact-detail-row">
+                <span class="pact-detail-label">Trattati attuali:</span>
+                <div class="pact-detail-value">${holders}</div>
+            </div>
+        `;
+
+    host.appendChild(card);
+  });
+}
 // ── UNIFIED TOP TOOLBAR ────────────────────────────────────────────────────────
 // One dropdown open at a time (Famiglie / Risorse & Asset / Info), replacing
 // the three independently-positioned drawers from earlier iterations.
-const TOOLBAR_PANELS = ["families", "resources", "info", "timeline"];
+const TOOLBAR_PANELS = ["families", "resources", "info", "timeline", "pacts"];
 function closeAllToolbarPanels() {
   TOOLBAR_PANELS.forEach((name) => {
     document.getElementById(`${name}-panel`).classList.remove("open");
@@ -2198,7 +2440,7 @@ function showInfo(b) {
   document.getElementById("info-name").textContent = b.name || b.id;
   const oe = document.getElementById("info-owner");
   oe.innerHTML = "";
-  oe.style.color = b.color || "#aaa";
+  oe.style.color = bodyColor(b) || "#aaa";
   if (b.owner) {
     const link = document.createElement("span");
     link.textContent = `⚑ ${b.owner}`;
@@ -2384,7 +2626,7 @@ function showPathInfo(path, totalLen) {
     path.name || path.ids.join(" → ");
   const oe = document.getElementById("info-owner");
   oe.innerHTML = "";
-  oe.style.color = path.color || "#aaa";
+  oe.style.color = pathColor(path) || "#aaa";
   if (path.owner) {
     const link = document.createElement("span");
     link.textContent = `⚑ ${path.owner}`;
@@ -2474,6 +2716,10 @@ function showFleetInfo(fleet, t) {
 // a single click on the map surfaces both "what is this place" and "who runs
 // it" together — "Espandi" opens the full empire-screen overlay on demand.
 function renderFamilyQuickView(ownerName) {
+  currentQuickViewFamily = ownerName
+    ? canonicalFamilyName(ownerName)
+    : null;
+
   const host = document.getElementById("info-family-quickview");
   host.innerHTML = "";
   if (!ownerName) {
@@ -2521,7 +2767,7 @@ function renderFamilyQuickView(ownerName) {
       const pill = document.createElement("span");
       pill.className = "quickview-stat-pill";
       if (statKnown(ownerName, k)) {
-        pill.textContent = `${STAT_LABELS[k].slice(0, 3)} ${company[k] || 0}`;
+        pill.textContent = `${STAT_LABELS[k].slice(0, 3)} ${getFamilyStatValue(ownerName, k)}`;
       } else {
         pill.classList.add("locked");
         pill.textContent = `${STAT_LABELS[k].slice(0, 3)} 🔒`;
@@ -2569,7 +2815,49 @@ const OWNER_NAME_ALIASES = { Heretics: "Eretici" };
 function canonicalFamilyName(name) {
   return OWNER_NAME_ALIASES[name] || name;
 }
+// Returns whether a stat modifier is active during a given month.
+// The "to" month is exclusive. Null or "infinity" means permanent.
+function statChangeIsActive(change, monthNum) {
+  const from = Number(change.from);
+  const to =
+    change.to == null || String(change.to).toLowerCase() === "infinity"
+      ? Infinity
+      : Number(change.to);
 
+  return (
+    Number.isFinite(from) &&
+    Number.isFinite(monthNum) &&
+    monthNum >= from &&
+    monthNum < to
+  );
+}
+
+// companies.json contains the stats at currentMonth.
+// Adjust backwards or forwards according to the active modifiers.
+// companies.json contains the original stats at month 0.
+// Apply all modifiers active at the requested month.
+function getFamilyStatValue(family, stat, monthNum = Math.round(tick)) {
+  const familyName = canonicalFamilyName(family);
+  const company = companiesByName[familyName];
+
+  const changesAtMonth = (month) =>
+    statChanges.reduce((total, change) => {
+      if (
+        canonicalFamilyName(change.family) !== familyName ||
+        change.stat !== stat ||
+        !statChangeIsActive(change, month)
+      ) {
+        return total;
+      }
+
+      const amount = Number(change.amount);
+      return total + (Number.isFinite(amount) ? amount : 0);
+    }, 0);
+
+  const baseValue = Number(company && company[stat]) || 0;
+
+  return baseValue + changesAtMonth(Math.round(monthNum));
+}
 function renderInfiltrationBar(name) {
   const host = document.getElementById("family-infiltration");
   host.innerHTML = "";
@@ -2596,9 +2884,9 @@ function renderInfiltrationBar(name) {
   }
 }
 
-function showFamilyOverlay(name) {
+function showFamilyOverlay(name, refreshOnly = false) {
   name = canonicalFamilyName(name);
-  enterView(() => showFamilyOverlay(name));
+  if (!refreshOnly) enterView(() => showFamilyOverlay(name));
   currentOverlayFamily = name;
   const overlay = document.getElementById("family-overlay");
   const company = companiesByName[name];
@@ -2697,7 +2985,7 @@ function showFamilyOverlay(name) {
         statsRow.appendChild(card);
         return;
       }
-      const value = company[k] || 0;
+      const value = getFamilyStatValue(name, k);
       const cap = caps ? caps[STAT_LABELS[k]] || 7 : 7;
       // Current can exceed the government's cap -- shown as-is, only the
       // bar fill itself stays visually capped at 100%.
@@ -2715,7 +3003,7 @@ function showFamilyOverlay(name) {
     if (STAT_KEYS.every((k) => statKnown(name, k))) {
       const statObj = {};
       STAT_KEYS.forEach((k) => {
-        statObj[STAT_LABELS[k]] = company[k] || 0;
+        statObj[STAT_LABELS[k]] = getFamilyStatValue(name, k);
       });
       descEl.textContent = generateFamilyDescription(statObj);
     } else {
@@ -2798,14 +3086,14 @@ function renderResourceSummary(name) {
                 <div class="resource-summary-label" style="color:${rc.color}">${rc.icon} ${escHtml(rc.label)}</div>
                 <div class="resource-summary-chips">
                     ${byCategory[rc.key]
-                      .map(
-                        ({ res, bodies }) => `
+          .map(
+            ({ res, bodies }) => `
                         <div class="trait-chip" style="border-color:${rc.color}">
                             ${escHtml(res.name)}
                             <div class="trait-tooltip">${escHtml(bodies.join(", "))}</div>
                         </div>`,
-                      )
-                      .join("")}
+          )
+          .join("")}
                 </div>
             </div>`,
     )
@@ -2934,14 +3222,14 @@ function renderAssets(name) {
     craftable.length === 0
       ? '<div class="opinion-empty">Nessun asset craftabile con le risorse attuali.</div>'
       : craftable
-          .map((a) => {
-            const reqPills = (a.requirementIds || [])
-              .map((rid) => {
-                const res = resourcesById[rid];
-                return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
-              })
-              .join("");
-            return `
+        .map((a) => {
+          const reqPills = (a.requirementIds || [])
+            .map((rid) => {
+              const res = resourcesById[rid];
+              return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
+            })
+            .join("");
+          return `
                 <div class="family-asset-item">
                     <div class="family-asset-header">
                         <span class="family-asset-name">${escHtml(a.name || "—")}</span>
@@ -2950,8 +3238,8 @@ function renderAssets(name) {
                     <div class="family-asset-desc">${escHtml(a.description || "")}</div>
                     <div class="craft-req-list">${reqPills}</div>
                 </div>`;
-          })
-          .join("");
+        })
+        .join("");
 
   // Treaty-granted assets (unique-category treaties, e.g. Supporto Arcano
   // -> "Maghi di Ion") have no fixed owner in assets.json -- multiple
@@ -2977,8 +3265,8 @@ function renderAssets(name) {
     unique.length === 0
       ? '<div class="opinion-empty">Nessun asset unico registrato.</div>'
       : unique
-          .map(
-            (a) => `
+        .map(
+          (a) => `
             <div class="family-asset-item unique">
                 <div class="family-asset-header">
                     <span class="family-asset-name">${escHtml(a.name || "—")}</span>
@@ -2988,8 +3276,8 @@ function renderAssets(name) {
                 <div class="family-asset-desc">${escHtml(a.description || "")}</div>
                 ${a.effect ? `<div class="family-asset-effect">✦ ${escHtml(a.effect)}</div>` : ""}
             </div>`,
-          )
-          .join("");
+        )
+        .join("");
 }
 
 // Planet info panel: assets tied to this specific place (all_info/assets.json's
@@ -3037,6 +3325,12 @@ function renderLeaders(name) {
     card.className = "leader-card";
     const img = document.createElement("img");
     img.className = "leader-portrait";
+    const isCorruptedLeader = leaderHasSeethroughTrait(name, leader);
+    img.dataset.seethroughTrait = String(isCorruptedLeader);
+    img.classList.toggle(
+      "seethrough-trait-corrupted",
+      corruptionMode && isCorruptedLeader,
+    );
     img.src = leader.portrait;
     img.alt = leader.name;
     img.onerror = () => {
@@ -3287,18 +3581,18 @@ function computeDiplomaticBaseline(nameA, nameB) {
   const race =
     planetA && planetB
       ? weightedCompatibility(
-          raceCompatibility,
-          planetRaceComposition[planetA],
-          planetRaceComposition[planetB],
-        )
+        raceCompatibility,
+        planetRaceComposition[planetA],
+        planetRaceComposition[planetB],
+      )
       : 0;
   const religion =
     planetA && planetB
       ? weightedCompatibility(
-          religionCompatibility,
-          planetReligionComposition[planetA],
-          planetReligionComposition[planetB],
-        )
+        religionCompatibility,
+        planetReligionComposition[planetA],
+        planetReligionComposition[planetB],
+      )
       : 0;
   return { government, race, religion, total: government + race + religion };
 }
@@ -3413,9 +3707,9 @@ function renderOpinions(name) {
   header.className = "opinion-table-row opinion-table-header";
   header.innerHTML = `
         <span class="opinion-family-name">Famiglia</span>
-        <span class="opinion-total-header">Noi → Loro</span>
-        <span class="opinion-total-header">Loro → Noi</span>
-        ${showHandColumn ? `<span class="opinion-total-header">Loro → ${escHtml(PLAYER_FAMILY)}</span>` : ""}`;
+        <span class="opinion-total-header">${escHtml(name)} → </span>
+        <span class="opinion-total-header"> → ${escHtml(name)}</span>
+        ${showHandColumn ? `<span class="opinion-total-header"> → ${escHtml(PLAYER_FAMILY)}</span>` : ""}`;
   table.appendChild(header);
 
   rows.forEach(({ other, ours, theirs, theirsOfHand }) => {
@@ -3438,15 +3732,14 @@ function renderOpinions(name) {
                 <h4>Loro → Noi</h4>
                 <div class="opinion-modifiers">${opinionBreakdownHtml(other, name, theirs)}</div>
             </div>
-            ${
-              showHandColumn
-                ? `
+            ${showHandColumn
+        ? `
             <div class="opinion-detail-block">
                 <h4>Loro → ${escHtml(PLAYER_FAMILY)}</h4>
                 <div class="opinion-modifiers">${opinionBreakdownHtml(other, PLAYER_FAMILY, theirsOfHand)}</div>
             </div>`
-                : ""
-            }`;
+        : ""
+      }`;
 
     row.addEventListener("click", () => {
       const isOpen = detail.classList.contains("open");
@@ -3506,6 +3799,104 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+function toggleCorruptionMode() {
+  corruptionMode = !corruptionMode;
+
+  // Count the flags actually read from all_info/reveals.json. This makes a
+  // missing/wrongly named JSON file immediately diagnosable from the toast.
+  const corruptedLeaderCount = Object.entries(leadersByFamily).reduce(
+    (count, [family, leaders]) =>
+      count + (leaders || []).filter((leader) =>
+        leaderHasSeethroughTrait(family, leader),
+      ).length,
+    0,
+  );
+
+  // Rebuild the map symbols from the same source data. buildScene() preserves
+  // the current viewBox/camera; updateScene() redraws routes and fleet markers.
+  buildScene();
+  updateScene(tick);
+  buildFamiliesPanel();
+  const resourceSearch = document.getElementById("resources-search-input");
+  const resourceFilter = resourceSearch ? resourceSearch.value : "";
+  buildAtlasPanel(resourceFilter);
+  buildCraftPanel(resourceFilter);
+
+  // Re-render the open info/family view so all family accents and portraits
+  // switch immediately, without changing the one-step back-navigation stack.
+  if (currentView) {
+    const refreshCurrentView = currentView;
+    restoringView = true;
+    try {
+      refreshCurrentView();
+    } finally {
+      restoringView = false;
+    }
+  }
+  if (searchInput.value.trim()) renderSearchResults(searchInput.value);
+
+  showGmToast(
+    corruptionMode
+      ? `☠ Modalità Corruzione attiva · ${corruptedLeaderCount} leader corrotti`
+      : "Modalità Corruzione disattivata",
+  );
+  console.info(
+    `[STRATMAP] Corruption Mode ${corruptionMode ? "ON" : "OFF"}; ` +
+    `${corruptedLeaderCount} seethrough_trait=true leader(s) loaded.`,
+  );
+}
+
+// Secret chord: hold Shift, then press E and R while keeping Shift down.
+// Releasing any one key rearms the toggle.
+const corruptionKeysDown = new Set();
+let corruptionChordFired = false;
+function corruptionKeyToken(e) {
+  if (e.code === "ShiftLeft" || e.code === "ShiftRight") return "shift";
+  if (e.code === "KeyE") return "e";
+  if (e.code === "KeyR") return "r";
+  return null;
+}
+function isEditableKeyboardTarget(target) {
+  return !!(
+    target &&
+    (target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable)
+  );
+}
+window.addEventListener("keydown", (e) => {
+  if (isEditableKeyboardTarget(e.target)) return;
+  const token = corruptionKeyToken(e);
+  // Track all three keys regardless of press order. The chord activates only
+  // while Shift, E and R are physically held at the same time.
+  if (token) corruptionKeysDown.add(token);
+
+  const chordHeld =
+    e.shiftKey &&
+    corruptionKeysDown.has("shift") &&
+    corruptionKeysDown.has("e") &&
+    corruptionKeysDown.has("r");
+  if (chordHeld && !corruptionChordFired) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    corruptionChordFired = true;
+    toggleCorruptionMode();
+  }
+});
+window.addEventListener("keyup", (e) => {
+  const token = corruptionKeyToken(e);
+  if (token) corruptionKeysDown.delete(token);
+  if (
+    !corruptionKeysDown.has("shift") ||
+    !corruptionKeysDown.has("e") ||
+    !corruptionKeysDown.has("r")
+  ) corruptionChordFired = false;
+});
+window.addEventListener("blur", () => {
+  corruptionKeysDown.clear();
+  corruptionChordFired = false;
+});
+
 // Public keyboard shortcuts, listed in the "⌨ Scorciatoie" popover next to
 // the ruler button (#shortcuts-panel) -- deliberately excludes
 // Ctrl+Shift+G above, which stays undocumented in the UI. Ignored while
@@ -3520,6 +3911,7 @@ window.addEventListener("keydown", (e) => {
     return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const key = e.key.toLowerCase();
+  if (e.shiftKey && (key === "e" || key === "r")) return;
   if (key === "/") {
     e.preventDefault();
     searchInput.focus();
@@ -3857,10 +4249,10 @@ function buildCraftPanel(filter = "") {
 
   const filtered = q
     ? craftData.filter(
-        (r) =>
-          (r.name || "").toLowerCase().includes(q) ||
-          (r.type || "").toLowerCase().includes(q),
-      )
+      (r) =>
+        (r.name || "").toLowerCase().includes(q) ||
+        (r.type || "").toLowerCase().includes(q),
+    )
     : craftData;
 
   if (filtered.length === 0) {
@@ -3887,11 +4279,11 @@ function buildCraftPanel(filter = "") {
     );
     const qualifiersHtml = qualifiers.length
       ? qualifiers
-          .map(
-            (name) =>
-              `<span class="craft-qualifier-chip" style="border-color:${familyColor(name)}">${escHtml(name)}</span>`,
-          )
-          .join("")
+        .map(
+          (name) =>
+            `<span class="craft-qualifier-chip" style="border-color:${familyColor(name)}">${escHtml(name)}</span>`,
+        )
+        .join("")
       : '<span style="color:#444">Nessuna famiglia qualificata al momento</span>';
 
     item.innerHTML = `
@@ -4141,7 +4533,7 @@ function buildSearchIndex() {
       type: "body",
       id: b.id,
       name: b.name || b.id,
-      color: b.color || "#aaa",
+      color: bodyColor(b),
       sub: b.type || "",
     });
   });
@@ -4151,7 +4543,7 @@ function buildSearchIndex() {
       type: "path",
       id: p.ids[0],
       name: label,
-      color: p.color || "#aaa",
+      color: pathColor(p),
       sub: p.type,
       path: p,
     });
@@ -4347,6 +4739,7 @@ async function init() {
     companies,
     governi,
     timeline,
+    statChangesFile,
     traits,
     leaders,
     opinions,
@@ -4365,6 +4758,7 @@ async function init() {
     loadJson("all_info/companies.json", { companies: [] }),
     loadJson("all_info/governi.json", { governi: [] }),
     loadJson("all_info/timeline.json", { currentMonth: 0, months: [] }),
+    loadJson("all_info/stat_changes.json", { changes: [] }),
     loadJson("all_info/traits.json", { traits: [] }),
     loadJson("all_info/leaders.json", { leaders: {} }),
     loadJson("all_info/opinions.json", { opinions: {} }),
@@ -4390,6 +4784,9 @@ async function init() {
   (companies.companies || []).forEach((c) => {
     companiesByName[c.name] = c;
   });
+  statChanges = Array.isArray(statChangesFile.changes)
+    ? statChangesFile.changes
+    : [];
   governiByName = {};
   (governi.governi || []).forEach((g) => {
     governiByName[g.nome] = g;
@@ -4401,6 +4798,7 @@ async function init() {
   });
   opinionsByFamily = opinions.opinions || {};
   treatyTypesByName = treatiesFile.pacts || {};
+  renderPactsPanel();
   treatiesByFamily = {};
   Object.entries(treatyTypesByName).forEach(([type, info]) => {
     (info.holders || []).forEach((h) => {
