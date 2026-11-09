@@ -310,7 +310,7 @@
       },
       "leaders": {
         "Capo Politico": {
-          "trait1Known": true
+          "trait1Known": true,
           "trait2Known": true
         },
         "Primo Ministro": {
