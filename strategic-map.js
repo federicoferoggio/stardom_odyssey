@@ -2025,6 +2025,13 @@ function applyTick() {
   if (statMonth !== lastStatRefreshMonth) {
     lastStatRefreshMonth = statMonth;
 
+    // Refresh the family statistics table if its menu is open.
+    const familiesPanel = document.getElementById("families-panel");
+
+    if (familiesPanel && familiesPanel.classList.contains("open")) {
+        buildFamiliesPanel();
+    }
+
     // Refresh compact family preview.
     if (currentQuickViewFamily) {
       renderFamilyQuickView(currentQuickViewFamily);
@@ -3940,34 +3947,77 @@ window.addEventListener("keydown", (e) => {
 function buildFamiliesPanel() {
   const list = document.getElementById("families-list");
   list.innerHTML = "";
-  Object.keys(companiesByName)
-    .sort()
-    .forEach((name) => {
-      const color = familyColor(name);
-      const row = document.createElement("div");
-      row.className = "families-list-row";
-      row.style.borderLeftColor = color;
-      row.style.setProperty("--row-accent", color);
-      const crest = document.createElement("img");
-      crest.className = "families-list-crest";
-      const crestFile =
-        CREST_OVERRIDES[name] || `${name.replace(/\s+/g, "")}Icon.png`;
-      crest.src = `images/symbols/${crestFile}`;
-      crest.alt = name;
-      crest.onerror = () => {
-        crest.onerror = null;
-        crest.src = "images/court/Position Empty.webp";
-      };
-      row.appendChild(crest);
-      const label = document.createElement("span");
-      label.className = "families-list-name";
-      label.textContent = name;
-      row.appendChild(label);
-      row.addEventListener("click", () => showFamilyOverlay(name));
-      list.appendChild(row);
-    });
-}
 
+  const columns = document.createElement("div");
+  columns.className = "families-list-columns families-list-grid";
+
+  const familyHeading = document.createElement("span");
+  familyHeading.textContent = "Family";
+  columns.appendChild(familyHeading);
+
+  STAT_KEYS.forEach((key) => {
+    const heading = document.createElement("span");
+    heading.textContent = STAT_LABELS[key].slice(0, 3).toUpperCase();
+    heading.title = STAT_LABELS[key];
+    columns.appendChild(heading);
+  });
+
+  list.appendChild(columns);
+
+  Object.keys(companiesByName).sort().forEach((name) => {
+    const color = familyColor(name);
+    const row = document.createElement("div");
+
+    row.className = "families-list-row families-list-grid";
+    row.style.borderLeftColor = color;
+    row.style.setProperty("--row-accent", color);
+
+    const familyCell = document.createElement("div");
+    familyCell.className = "families-list-family";
+
+    const crest = document.createElement("img");
+    crest.className = "families-list-crest";
+
+    const crestFile =
+      CREST_OVERRIDES[name] || `${name.replace(/\s+/g, "")}Icon.png`;
+
+    crest.src = `images/symbols/${crestFile}`;
+    crest.alt = name;
+
+    crest.onerror = () => {
+      crest.onerror = null;
+      crest.src = "images/court/Position Empty.webp";
+    };
+
+    familyCell.appendChild(crest);
+
+    const label = document.createElement("span");
+    label.className = "families-list-name";
+    label.textContent = name;
+    familyCell.appendChild(label);
+
+    row.appendChild(familyCell);
+
+    STAT_KEYS.forEach((key) => {
+      const value = document.createElement("span");
+      value.className = "families-list-stat";
+      value.title = STAT_LABELS[key];
+
+      if (statKnown(name, key)) {
+        value.textContent = getFamilyStatValue(name, key);
+      } else {
+        value.textContent = "🔒";
+        value.classList.add("locked");
+        value.title = "Valore sconosciuto";
+      }
+
+      row.appendChild(value);
+    });
+
+    row.addEventListener("click", () => showFamilyOverlay(name));
+    list.appendChild(row);
+  });
+}
 // ── RESOURCES & ASSETS PANEL (merged Atlas + Craftable) ───────────────────────
 // Atlas: resource -> which planets/bases have it -> owning family.
 // Craftable: each craft asset, its required resources, and which families
@@ -4846,7 +4896,6 @@ async function init() {
   Object.keys(companiesByName).forEach((name) => {
     if (!ownerColors[name]) ownerColors[name] = "#888888";
   });
-  buildFamiliesPanel();
 
   const bodies = [
     ...(bodiesFile.bodies || []),
@@ -4863,6 +4912,7 @@ async function init() {
   // Atlas/Craftable both read byId (populated by loadMap), so build after.
   buildAtlasPanel();
   buildCraftPanel();
+  buildFamiliesPanel();
 }
 
 init();

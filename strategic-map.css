@@ -134,7 +134,7 @@ svg {
 
 .toolbar-dropdown {
     display: none;
-    width: 340px;
+    width: min(520px, calc(100vw - 40px));
     max-height: 72vh;
     overflow-y: auto;
     background: rgba(0, 0, 0, 0.82);
@@ -2223,34 +2223,82 @@ svg {
 #families-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
+}
+
+.families-list-grid {
+    display: grid;
+    grid-template-columns: minmax(125px, 1.7fr)
+        repeat(5, minmax(34px, 0.55fr));
+    align-items: center;
+    column-gap: 5px;
+}
+
+.families-list-columns {
+    padding: 2px 8px 6px 11px;
+    color: #868b96;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.families-list-columns span:first-child {
+    text-align: left;
 }
 
 .families-list-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 8px;
+    padding: 6px 8px;
     border-radius: 6px;
     border-left: 3px solid transparent;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     color: #dfe1e4;
     transition: background .15s;
 }
 
 .families-list-row:hover {
-    background: color-mix(in srgb, var(--row-accent, #4f98a3) 16%, transparent);
+    background: color-mix(
+        in srgb,
+        var(--row-accent, #4f98a3) 16%,
+        transparent
+    );
     color: #fff;
 }
 
+.families-list-family {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
 .families-list-crest {
-    width: 22px;
-    height: 22px;
+    width: 23px;
+    height: 23px;
     object-fit: contain;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255,255,255,0.05);
     flex-shrink: 0;
+}
+
+.families-list-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.families-list-stat {
+    text-align: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.families-list-stat.locked {
+    color: #969ba6;
+    font-weight: 400;
 }
 
 /* ── SECRET CORRUPTION MODE: corrupted leader portraits ─────────────────────── */
