@@ -1,131 +1,151 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Compagnia</title>
+    <meta name="theme-color" content="#080b12">
+    <title>La Compagnia · La Mano</title>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
-        rel="stylesheet">
-</head>
-
-<body id="container_all">
-    
-    <!-- Start Navigation Menu -->
-    <nav class="navigation-menu"></nav>
-    <script src="nav.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="nav.css">
-    <!-- End Navigation Menu-->
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navigation-menu" aria-label="Navigazione principale"></nav>
 
-    <div id="laManoBox">
-        <h1>La Mano</h1>
-        <img id="laManoLogo" src="images/symbols/HandIcon.png" alt="La Mano Logo" style="width:150px; height:150px;">
-        <h2 id="laManoSubtitle"></h2>
-        <p id="governmentEffects"></p>
-    </div>
-
-    <div id="bottomSections">
-
-        <div id="companyStats">
-            <h2>La Tua Famiglia</h2>
-            <div class="stats-bonus-container">
-                <div class="stat-input">
-                    <label for="might">Might:</label>
-                    <input type="number" id="might" value="1" min="1" max="6">
+    <main class="dashboard" aria-label="La Compagnia">
+        <!-- Actions deliberately come first so the roll calculator is at the top of the page. -->
+        <section id="companyActions" class="panel action-panel" aria-labelledby="actions-heading">
+            <header class="panel-header">
+                <div>
+                    <p class="eyebrow">CALCOLATORE DEI TIRI</p>
+                    <h1 id="actions-heading">Azioni della Compagnia</h1>
+                    <p class="panel-subtitle">Scegli un’azione. Il calcolo combina le statistiche attuali con asset, tratti della Corte, trattati e condizioni applicabili.</p>
                 </div>
-                <div class="stat-input">
-                    <label for="treasure">Treasure:</label>
-                    <input type="number" id="treasure" value="1" min="1" max="6">
+                <div class="current-month" aria-live="polite">
+                    <span class="current-month-label">MESE CORRENTE</span>
+                    <strong id="current-month">—</strong>
                 </div>
-                <div class="stat-input">
-                    <label for="influence">Influence:</label>
-                    <input type="number" id="influence" value="1" min="1" max="6">
-                </div>
-                <div class="stat-input">
-                    <label for="territory">Territory:</label>
-                    <input type="number" id="territory" value="1" min="1" max="6">
-                </div>
-                <div class="stat-input">
-                    <label for="sovereignty">Sovereignty:</label>
-                    <input type="number" id="sovereignty" value="1" min="1" max="6">
-                </div>
-            </div>
+            </header>
 
-            <div id="dynamicDescription">
-                <!-- Dynamic description will appear here -->
-            </div>
-
-            <div>
-                <label for="companyBonus">Asset Attuali:</label>
-                <select id="companyBonus">
-                    <option value="" disabled selected>Seleziona un asset</option>
-                    <!-- Bonuses will be populated here -->
-                </select>
-                <p id="bonusDescription"></p> <!-- To display the selected bonus description -->
-            </div>
-
-        </div>
-
-
-        <div id="companyActions">
-            <h2>Azioni della Compagnia</h2>
-            <label for="actionsMenu">Scegli un'Azione:</label>
-            <select id="actionsMenu">
-                <option value="" disabled selected>Seleziona un'Azione</option>
-                <!-- Actions from the Reign file will be populated here -->
-            </select>
-
-            <div id="actionDetails">
-                <!-- Action details and dice rolls will be displayed here -->
-
-            </div>
-
-            <div id="rivalSelection" style="display:none;">
-                <label for="rivalsMenu">Seleziona Compagnia Rivale:</label>
-                <select id="rivalsMenu">
-                    <!-- Rival companies loaded from CSV will populate here -->
+            <p id="data-status" class="data-status" role="status" hidden></p>
+            <div class="action-picker">
+                <label for="actionsMenu">Scegli un’azione</label>
+                <select id="actionsMenu">
+                    <option value="">Seleziona un’azione…</option>
                 </select>
             </div>
+            <div id="actionDetails" aria-live="polite">
+                <p class="empty-state">Seleziona un’azione per vedere la descrizione, i modificatori applicabili e la riserva di dadi.</p>
+            </div>
+        </section>
 
-            <!-- Table for displaying selected company statistics -->
-            <table id="companyStatsTable" style="display:none;">
-                <tr>
-                    <th>Might</th>
-                    <th>Treasure</th>
-                    <th>Influence</th>
-                    <th>Territory</th>
-                    <th>Sovereignty</th>
-                </tr>
-                <tr>
-                    <td id="statMight"></td>
-                    <td id="statTreasure"></td>
-                    <td id="statInfluence"></td>
-                    <td id="statTerritory"></td>
-                    <td id="statSovereignty"></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div id="timelineSection">
-        <h2>La Tua Cronologia</h2>
-        <div id="timelineContainer">
-            <!-- Events will be dynamically populated here -->
-        </div>
-    </div>
-    <div id="CourtSection">
-        <h2>La Tua Corte</h2>
-        <div class="court-container">
-            <!-- Court members will be populated here dynamically -->
-        </div>
-    </div>
+        <section id="companyStats" class="panel" aria-labelledby="family-heading">
+            <header class="panel-header">
+                <div>
+                    <p class="eyebrow">LA MANO</p>
+                    <h2 id="family-heading">La Tua Famiglia</h2>
+                    <p id="family-government" class="panel-subtitle">Caricamento governo…</p>
+                </div>
+            </header>
 
-    <script src="cache.js"></script>
-    <script src="parser.js"></script>
-    <script src="script.js"></script>
+            <div class="stats-grid" aria-label="Statistiche attuali della Mano">
+                <div class="stat-input">
+                    <label for="might">Might <span class="stat-cap" id="might-cap"></span></label>
+                    <input type="number" id="might" min="0" step="1" value="1" inputmode="numeric">
+                </div>
+                <div class="stat-input">
+                    <label for="treasure">Treasure <span class="stat-cap" id="treasure-cap"></span></label>
+                    <input type="number" id="treasure" min="0" step="1" value="1" inputmode="numeric">
+                </div>
+                <div class="stat-input">
+                    <label for="influence">Influence <span class="stat-cap" id="influence-cap"></span></label>
+                    <input type="number" id="influence" min="0" step="1" value="1" inputmode="numeric">
+                </div>
+                <div class="stat-input">
+                    <label for="territory">Territory <span class="stat-cap" id="territory-cap"></span></label>
+                    <input type="number" id="territory" min="0" step="1" value="1" inputmode="numeric">
+                </div>
+                <div class="stat-input">
+                    <label for="sovereignty">Sovereignty <span class="stat-cap" id="sovereignty-cap"></span></label>
+                    <input type="number" id="sovereignty" min="0" step="1" value="1" inputmode="numeric">
+                </div>
+            </div>
+            <p class="input-note">I valori iniziali derivano da companies.json più le modifiche attive in stat_changes.json per il mese corrente. Puoi modificarli per simulare un tiro: le modifiche non vengono salvate. Le regole del governo sono applicate al calcolo.</p>
+            <p id="dynamicDescription" class="family-description" aria-live="polite"></p>
+            <div id="government-effects" class="government-effects"></div>
+            <p id="government-adjustment" class="government-adjustment" aria-live="polite"></p>
+
+            <div class="asset-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">CORTE</p>
+                        <h3>Leader e tratti attivi</h3>
+                    </div>
+                    <span id="court-member-count" class="count-label">—</span>
+                </div>
+                <div id="court-members" class="court-list">
+                    <p class="empty-state">Caricamento Corte…</p>
+                </div>
+            </div>
+
+            <div class="asset-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">DIPLOMAZIA</p>
+                        <h3>Trattati attivi</h3>
+                    </div>
+                    <span id="treaty-count" class="count-label">—</span>
+                </div>
+                <div id="family-treaties" class="asset-list">
+                    <p class="empty-state">Caricamento trattati…</p>
+                </div>
+                <div id="unilateral-treaties" class="asset-list treaty-secondary"></div>
+            </div>
+
+            <div class="asset-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">ASSET POSSEDUTI</p>
+                        <h3>Asset della famiglia</h3>
+                    </div>
+                    <span id="owned-asset-count" class="count-label">—</span>
+                </div>
+                <div id="family-assets" class="asset-list">
+                    <p class="empty-state">Caricamento asset…</p>
+                </div>
+            </div>
+
+            <div class="asset-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">ASSET LEGATI AL LUOGO</p>
+                        <h3>Effetti territoriali</h3>
+                    </div>
+                    <span id="localized-asset-count" class="count-label">—</span>
+                </div>
+                <p class="input-note">Questi effetti dipendono dal luogo in cui avviene il tiro. Nel calcolatore diventano selezionabili solo quando l’azione e il luogo corrispondono.</p>
+                <div id="localized-assets" class="asset-list"></div>
+            </div>
+
+            <div class="asset-section craft-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">IN BASE ALLE RISORSE CONTROLLATE</p>
+                        <h3>Asset craftabili</h3>
+                    </div>
+                    <span id="craftable-asset-count" class="count-label">—</span>
+                </div>
+                <p id="controlled-resources" class="resource-summary"></p>
+                <div id="craftable-assets" class="asset-list">
+                    <p class="empty-state">Caricamento asset…</p>
+                </div>
+            </div>
+        </section>
+    </main>
 </body>
-
 </html>

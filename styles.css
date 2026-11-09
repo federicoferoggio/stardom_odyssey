@@ -1,632 +1,897 @@
-/* ── FONT ───────────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap');
+:root {
+    color-scheme: dark;
+    --page-bg: #080b12;
+    --panel-bg: rgba(0, 0, 0, 0.78);
+    --panel-border: rgba(255, 255, 255, 0.14);
+    --text: #dfe1e4;
+    --muted: #a8acb6;
+    --teal: #4f98a3;
+    --teal-light: #9fd7de;
+    --gold: #ffd76b;
+    --danger: #ffaaa4;
+}
 
-/* Prevent x-axis overflow */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--page-bg);
+}
+
 body {
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
+    padding: 88px 24px 36px;
+    color: var(--text);
     font-family: 'Outfit', sans-serif;
-    color: white;
-    height: 100vh;
-    overflow-x: hidden;
-    /* Prevent horizontal scrolling */
-    background-image: url('images/space-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    box-sizing: border-box;
-}
-
-#container_all {
-    line-height: 1.4;
     background:
-        linear-gradient(rgba(0, 0, 0, 0.7),
-            rgba(0, 0, 0, 0.7)),
-        /* Keep the dark opacity filter */
-        url('images/space-background.jpg');
-    /* Background image */
-    background-color: #000;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-    overflow-x: hidden;
-    /* Prevent x-axis overflow */
-    height: 100%;
+        linear-gradient(rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.76)),
+        url('images/space-background.jpg') center / cover fixed,
+        var(--page-bg);
 }
 
-#controls {
-    position: absolute;
-    top: 10px;
-    /* Adjust this value if needed */
-    left: 10px;
-    /* Adjust this value if needed */
-    background-color: #000000;
-    /* Ensure it's visible against the background */
-    padding: 10px;
-    /* Add padding for better visibility */
-    border-radius: 5px;
-    /* Optional: adds rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Optional: adds a subtle shadow */
-    z-index: 1000;
-    /* Ensures it stays on top of other elements */
-    display: inline-block;
-    /* Adjust this to match content size */
-    max-width: 200px;
-    /* Limit the width of the control box */
-    box-sizing: border-box;
-    /* Ensure padding is included in the width */
-    text-align: left;
-    /* Align text to the left */
+button,
+input,
+select {
+    font: inherit;
 }
 
-input[type="number"] {
-    box-sizing: border-box;
-    /* Ensures padding is included in width */
-    padding: 5px;
-    /* Adjust padding to be less, if necessary */
-    font-size: 16px;
-    /* Adjust font size if needed */
-    height: auto;
-    /* Adjust height to auto */
-    width: 100%;
-    /* Ensure the width of the input fits the container */
-    border-radius: 5px;
-    /* Match the border radius if necessary */
+button,
+select,
+input {
+    color: var(--text);
+}
+
+.navigation-menu {
+    z-index: 500;
+}
+
+.dashboard {
+    width: min(1440px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.panel {
+    min-width: 0;
+    padding: 24px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(12px);
+}
+
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    color: var(--teal-light);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+    text-transform: uppercase;
 }
 
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
-p,
-label,
-input,
-select,
-button,
-div {
-    font-family: 'Outfit', sans-serif;
-    /* Apply the font to all headings, inputs, etc. */
-    color: white;
-    /* Ensure text is white */
+p {
+    margin-top: 0;
 }
 
-/* Inline-block for label and input */
-.stat-input label {
-    display: inline-block;
-    width: auto;
-    /* Fixed width for labels */
-    /* margin-right: 10px; */
-    /* Space between the label and the input */
+h1,
+#actions-heading {
+    margin-bottom: 5px;
+    color: #f1f2f3;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-.stat-input input {
-    display: inline-block;
-    width: auto;
-    /* Set width for inputs */
-    padding: 5px;
+#actions-heading {
+    font-size: clamp(23px, 2.5vw, 30px);
+}
+
+.panel-subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.current-month {
+    display: grid;
+    flex: 0 0 auto;
+    gap: 3px;
+    min-width: 84px;
+    padding: 9px 12px;
+    border: 1px solid rgba(79, 152, 163, 0.32);
+    border-radius: 7px;
+    background: rgba(79, 152, 163, 0.1);
+    text-align: right;
+}
+
+.current-month-label {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.current-month strong {
+    color: var(--teal-light);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.data-status {
+    margin: -7px 0 16px;
+    padding: 10px 12px;
+    color: #f0dba7;
+    background: rgba(150, 111, 38, 0.14);
+    border: 1px solid rgba(255, 215, 107, 0.24);
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.data-status[hidden] {
+    display: none;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 9px;
 }
 
 .stat-input {
-    flex: 1;
-    margin-bottom: 15px;
+    min-width: 0;
+    padding: 10px 9px 9px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+}
+
+.stat-input label {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 3px;
+    min-height: 29px;
+    margin-bottom: 7px;
+    color: #cfd2d8;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.stat-cap {
+    color: #818895;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.stat-input input {
+    width: 100%;
+    min-width: 0;
+    padding: 7px 5px;
+    color: #f1f2f3;
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    transition: border-color 0.16s, box-shadow 0.16s;
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+    outline: 2px solid rgba(79, 152, 163, 0.8);
+    outline-offset: 2px;
+}
+
+.stat-input input:focus {
+    border-color: rgba(79, 152, 163, 0.75);
+    box-shadow: 0 0 0 2px rgba(79, 152, 163, 0.13);
+}
+
+.input-note {
+    margin: 9px 0 0;
+    color: #858b96;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.family-description {
+    margin: 18px 0 14px;
+    padding: 0 0 0 12px;
+    color: #d8dade;
+    border-left: 2px solid var(--teal);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.government-effects {
+    margin: 0 0 18px;
+    color: #c5c8cf;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.government-effects:empty {
+    display: none;
+}
+
+.government-effects ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.government-effects li + li {
+    margin-top: 5px;
+}
+
+.asset-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 11px;
+}
+
+.section-heading .eyebrow {
+    margin-bottom: 3px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    color: #e6e7ea;
+    font-family: 'Cinzel', serif;
+    font-size: 19px;
+}
+
+.count-label {
+    flex: 0 0 auto;
+    padding: 3px 8px;
+    color: var(--teal-light);
+    background: rgba(79, 152, 163, 0.12);
+    border: 1px solid rgba(79, 152, 163, 0.24);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.asset-list {
+    display: grid;
+    gap: 8px;
+}
+
+.asset-card {
+    min-width: 0;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.085);
+    border-radius: 7px;
+}
+
+.asset-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.asset-name {
+    color: #e6e7ea;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.asset-type {
+    flex: 0 0 auto;
+    padding: 2px 6px;
+    color: var(--teal-light);
+    border: 1px solid rgba(79, 152, 163, 0.3);
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.asset-description,
+.asset-effect {
+    margin: 0;
+    color: #c5c8cf;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.asset-effect {
+    margin-top: 5px;
+    color: var(--gold);
+}
+
+.asset-meta,
+.requirement-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.meta-pill,
+.requirement-pill {
+    padding: 2px 6px;
+    color: #cfd2d8;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+.resource-summary {
+    margin: -3px 0 10px;
+    color: #8f96a2;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.empty-state {
+    margin: 0;
+    padding: 12px 0;
+    color: #868b96;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.action-picker {
+    margin-bottom: 16px;
+}
+
+.action-picker label,
+.action-control label {
+    display: block;
+    margin: 0 0 7px;
+    color: #cfd2d8;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+}
+
+select {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    color: #f1f2f3;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+select option {
+    color: #f1f2f3;
+    background: #151922;
+}
+
+.action-description {
+    margin: 0 0 17px;
+    color: #c5c8cf;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.action-extra {
+    margin: 0 0 16px;
+    padding: 11px 12px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 7px;
+}
+
+.action-extra label {
+    display: block;
+    margin-bottom: 7px;
+    color: #dfe1e4;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.action-extra p {
+    margin: 7px 0 0;
+    color: #aeb4be;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.modifier-groups {
+    display: grid;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.modifier-group h3 {
+    margin: 0 0 7px;
+    color: #aeb4be;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.modifier-card {
+    margin-top: 6px;
+    padding: 10px 11px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.085);
+    border-radius: 6px;
+}
+
+.modifier-card.mandatory {
+    border-color: rgba(255, 215, 107, 0.22);
+}
+
+.modifier-toggle {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.modifier-toggle input {
+    width: 16px;
+    height: 16px;
+    margin: 2px 0 0;
+    accent-color: var(--teal);
+    cursor: pointer;
+}
+
+.modifier-toggle input:disabled {
+    cursor: not-allowed;
+}
+
+.modifier-asset-name {
+    color: #e6e7ea;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.modifier-delta {
+    color: var(--teal-light);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.modifier-delta.penalty {
+    color: var(--danger);
+}
+
+.modifier-situation,
+.modifier-asset-description {
+    margin: 6px 0 0 26px;
+    color: #aeb4be;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.modifier-asset-description {
+    color: #858d99;
+}
+
+.badge-mandatory,
+.badge-optional {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
+
+.badge-mandatory {
+    color: var(--gold);
+    background: rgba(255, 215, 107, 0.1);
+}
+
+.badge-optional {
+    color: var(--teal-light);
+    background: rgba(79, 152, 163, 0.12);
+}
+
+.no-modifiers {
+    color: #858b96;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.action-control {
+    margin: 16px 0;
+}
+
+.roll-summary {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(79, 152, 163, 0.09);
+    border: 1px solid rgba(79, 152, 163, 0.28);
+    border-radius: 7px;
+}
+
+.roll-summary-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.roll-summary-total {
+    color: var(--teal-light);
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.roll-summary-breakdown {
+    margin: 5px 0 0;
+    color: #aeb8c2;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.roll-warning {
+    margin: 7px 0 0;
+    color: var(--danger);
+    font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+    .dashboard {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 850px;
+    }
+}
+
+@media (max-width: 620px) {
+    body {
+        padding: 76px 12px 24px;
+    }
+
+    .panel {
+        padding: 17px;
+    }
+
+    .panel-header {
+        gap: 10px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-input:last-child {
+        grid-column: span 2;
+    }
+
+    .current-month {
+        min-width: 72px;
+        padding: 7px 8px;
+    }
+
+    .current-month strong {
+        font-size: 18px;
+    }
+
+    .asset-card-header {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .modifier-toggle {
+        grid-template-columns: 18px minmax(0, 1fr);
+    }
+
+    .modifier-delta {
+        grid-column: 2;
+    }
+}
+
+/* ── Revised layout: the action calculator is the first, full-width panel. ── */
+.dashboard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    max-width: 1260px;
+}
+
+#companyActions {
+    grid-row: 1;
+}
+
+#companyStats {
+    grid-row: 2;
+}
+
+#family-heading {
+    margin: 0 0 5px;
+    color: #f1f2f3;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(23px, 2.5vw, 30px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.section-heading h3 {
+    margin: 0;
+    color: #e6e7ea;
+    font-family: 'Cinzel', serif;
+    font-size: 19px;
+    line-height: 1.25;
+}
+
+.government-adjustment {
+    margin: 10px 0 0;
+    color: #f2d998;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.government-adjustment:empty {
+    display: none;
+}
+
+.court-list {
+    display: grid;
     gap: 10px;
 }
 
-h2 {
-    text-align: center;
+.court-member {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.085);
+    border-radius: 7px;
 }
 
-label {
-    display: block;
-    margin: 5px 0;
+.court-portrait {
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border: 1px solid rgba(79, 152, 163, 0.42);
+    border-radius: 50%;
 }
 
-input,
-select {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
+.court-member-main {
+    min-width: 0;
 }
 
-#actionDetails,
-#rivalSelection {
-    margin-top: 10px;
-}
-
-#actionDetails p {
-    white-space: pre-wrap;
-    /* Handle \n as new lines */
-    word-wrap: break-word;
-    /* Break long words */
-    line-height: 1.5;
-    /* Optional: Improve readability by adjusting line height */
-    margin-top: 10px;
-}
-
-#bottomSections {
-    margin: 30px;
-    gap: 30px;
+.court-member-heading {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-    /* Ensure no overflow */
-    /* Take up the full viewport height */
-    box-sizing: border-box;
-    /* Ensure padding doesn't cause overflow */
+    align-items: baseline;
+    gap: 6px 12px;
+    margin-bottom: 8px;
 }
 
-#companyStats,
-#companyActions {
-    display: table;
-    min-width: 260px;
-    flex: 1;
-    background-color: rgba(0, 0, 0, 0.9);
-    /* Maintain background consistency */
-    padding: 20px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    /* Prevent any content overflow */
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8),
-        /* White border */
-        0 0 10px rgba(255, 255, 255, 0.6),
-        /* Glow effect */
-        0 10px 30px rgba(255, 255, 255, 0);
-    /* Gradient fading to invisible */
+.court-member-heading strong {
+    color: #edf0f2;
+    font-size: 14px;
 }
 
-/* Flexbox container for stats and bonus */
-.stats-bonus-container {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    justify-content: space-between;
-    text-align: center;
-    /* Space between inputs and dropdown */
-    gap: 20px;
-    /* Space between the sections */
-}
-
-#laManoBox {
-    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
-    color: white;
-    text-align: center;
-    position: relative;
-    margin: 30px 30px 30px;
-    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
-    padding: 20px; /* Add internal padding */
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
-                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
-                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading */
-    border-radius: 5px; /* Rounded corners */
-    box-sizing: border-box; /* Include padding in width calculations */
-}
-
-#laManoBox h1 {
-    margin: 0;
-    font-family: 'Cinzel', serif;
-    font-size: 2.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-#laManoBox h2 {
-    margin: 10px 0 0;
-    font-size: 1.2rem;
-    font-style: italic;
-}
-
-#laManoBox p {
-    margin: 10px 0 0;
-    font-size: 1rem;
-    font-style: italic;
-}
-
-select {
-    padding: 5px;
-    width: 100%;
-    /* Ensure dropdown takes full width */
-}
-
-#bonusDescription {
-    white-space: normal;
-    /* Allow line breaks in the description */
-    word-wrap: break-word;
-    /* Ensure long words are broken correctly */
-    margin-top: 5px;
-    color: #ffffff;
-    max-width: 100%;
-    /* Make sure it uses the full width of the container */
-    overflow-y: auto;
-    /* Add a scrollbar if the text overflows */
-}
-
-
-
-/* General style for all dropdown menus */
-select {
-    appearance: none;
-    /* Remove default OS styling */
-    -webkit-appearance: none;
-    /* Remove Chrome and Safari default styling */
-    -moz-appearance: none;
-    /* Remove Firefox default styling */
-
-    font-family: 'Outfit', sans-serif;
-    /* Apply the Outfit font */
-    font-size: 16px;
-    /* Set the font size */
-    color: white;
-    /* White text */
-    background-color: #333;
-    /* Dark background for dropdown */
-    border: 1px solid #666;
-    /* Border around the dropdown */
-    border-radius: 5px;
-    /* Rounded corners */
-    padding: 10px;
-    /* Padding inside the dropdown */
-    width: 100%;
-    /* Ensure it takes full width */
-    cursor: pointer;
-    /* Show a pointer cursor when hovering */
-    outline: none;
-    /* Remove default outline on focus */
-}
-
-/* Style for dropdown arrow (custom icon if desired) */
-select::after {
-    content: '▼';
-    /* Custom arrow */
-    color: white;
-    /* Arrow color */
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-    /* Ensure the arrow isn't clickable */
-}
-
-/* Add some space between the options */
-select option {
-    padding: 10px;
-    background-color: #444;
-    /* Dark background for dropdown options */
-    color: white;
-    /* White text for options */
-}
-
-/* Hover state for the dropdown */
-select:hover {
-    background-color: #444;
-    /* Change background on hover */
-}
-
-/* Focus state (when clicked or tabbed into) */
-select:focus {
-    border-color: #fff;
-    /* Highlight border on focus */
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    /* Add subtle glow */
-}
-
-
-/* General style for all inputs and dropdown menus */
-input,
-select,
-textarea {
-    appearance: none;
-    /* Remove default OS styling */
-    -webkit-appearance: none;
-    /* Remove Chrome and Safari default styling */
-    -moz-appearance: none;
-    /* Remove Firefox default styling */
-
-    font-family: 'Outfit', sans-serif;
-    /* Use the Outfit font */
-    font-size: 16px;
-    /* Set font size */
-    color: white;
-    /* White text */
-    background-color: #333;
-    /* Dark background */
-    border: 1px solid #666;
-    /* Border around the input */
-    border-radius: 5px;
-    /* Rounded corners */
-    padding: 10px;
-    /* Padding inside the input */
-    width: 100%;
-    /* Ensure input takes full width */
-    cursor: pointer;
-    /* Pointer cursor for inputs */
-    outline: none;
-    /* Remove default outline on focus */
-    box-sizing: border-box;
-    /* Include padding and border in element's total width and height */
-}
-
-/* Style for dropdown menus (select) */
-select {
-    background-color: #333;
-    /* Dark background for dropdown */
-    color: white;
-    /* White text */
-    cursor: pointer;
-    /* Pointer cursor for dropdown */
-}
-
-/* Optional: style for dropdown arrow */
-select::after {
-    content: '▼';
-    /* Custom arrow */
-    color: white;
-    /* Arrow color */
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-    /* Arrow should not be clickable */
-}
-
-/* Add some space between the dropdown options */
-select option {
-    padding: 10px;
-    background-color: #444;
-    /* Dark background for dropdown options */
-    color: white;
-    /* White text for options */
-}
-
-/* Hover and focus states for inputs and dropdowns */
-input:hover,
-select:hover,
-textarea:hover {
-    background-color: #444;
-    /* Darker background on hover */
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #fff;
-    /* White border on focus */
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    /* Add subtle glow on focus */
-}
-
-/* Style for textarea to ensure it matches other inputs */
-textarea {
-    resize: vertical;
-    /* Allow vertical resizing only */
-}
-
-/* Disabled inputs and dropdowns */
-input[disabled],
-select[disabled],
-textarea[disabled] {
-    background-color: #555;
-    /* Darker background for disabled elements */
-    color: #cfd2d8;
-    /* Light gray text for disabled elements */
-    cursor: not-allowed;
-    /* Not allowed cursor for disabled elements */
-}
-
-
-/* General button styling */
-button {
-    font-family: 'Outfit', sans-serif;
-    /* Apply the Outfit font */
-    font-size: 16px;
-    /* Set font size */
-    color: white;
-    /* White text */
-    background-color: black;
-    /* Black background */
-    border: 2px solid white;
-    /* White border */
-    padding: 10px 20px;
-    /* Add padding inside the button */
-    border-radius: 5px;
-    /* Rounded corners */
-    cursor: pointer;
-    /* Pointer cursor */
+.court-member-heading span {
+    color: var(--teal-light);
+    font-size: 11px;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    /* Optional: Make text uppercase */
-    transition: background-color 0.3s ease, color 0.3s ease;
-    /* Smooth transition for hover */
-    text-align: center;
 }
 
-/* Hover and focus states for buttons */
-button:hover,
-button:focus {
-    background-color: white;
-    /* Change background to white */
-    color: black;
-    /* Change text color to black */
-    outline: none;
-    /* Remove default outline */
-}
-
-/* Disabled buttons */
-button:disabled {
-    background-color: #555;
-    /* Gray background for disabled buttons */
-    color: #cfd2d8;
-    /* Gray text for disabled buttons */
-    cursor: not-allowed;
-    /* Not allowed cursor for disabled state */
-    border: 2px solid #aaa;
-    /* Lighter gray border */
-}
-
-
-/* Court section styling */
-#CourtSection {
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
-    border-radius: 5px;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
-                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
-                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading to invisible */
-    margin: 0px 30px 30px;
-    /* Add margin to the bottom */
-
-}
-
-/* Court section styling */
-.court-container {
-    justify-content: center;
+.trait-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px; /* Space between members */
+    gap: 8px;
 }
 
-
-/* Individual court member styling */
-.court-member {
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+.trait-card {
+    min-width: 0;
+    padding: 9px 10px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
 }
 
-
-/* Image styling for court members */
-.court-member img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid white;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-/* Court member name */
-.court-member h3 {
-    font-size: 16px;
-    margin: 5px 0;
-}
-
-/* Court member bonuses */
-.court-member p {
-    font-size: 16px;
-    margin: 5px 0;
-    color: white;
-}
-
-.bonus-checkbox {
-    width: 20px;
-    height: 20px;
-    appearance: none; /* Remove the default checkbox styling */
-    border: 2px solid #ccc;
-    border-radius: 4px; /* Optional: Rounded corners */
-    background-color: white;
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-}
-
-.bonus-checkbox:checked {
-    background-color: #4CAF50; /* Green background when checked */
-    border-color: #4CAF50; /* Match border to background color */
-}
-
-.bonus-checkbox:checked::after {
-    content: '✔'; /* Unicode checkmark */
-    font-size: 16px; /* Adjust size of the checkmark */
-    color: white; /* Checkmark color */
-    position: absolute;
-    top: 2px; /* Adjust position */
-    left: 4px; /* Adjust position */
-}
-#timelineSection {
-    margin: 0px 30px 30px;
-    background-color: rgba(0, 0, 0, 0.9); /* Consistent dark background */
-    padding: 20px; /* Add internal padding */
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), /* White border */
-                0 0 10px rgba(255, 255, 255, 0.6), /* Glow effect */
-                0 10px 30px rgba(255, 255, 255, 0); /* Gradient fading */
-    border-radius: 5px; /* Rounded corners */
-    box-sizing: border-box; /* Include padding in width calculations */
-}
-
-#timelineContainer {
+.trait-card-heading {
     display: flex;
-    overflow-x: auto; /* Horizontal scrolling for the timeline */
-    gap: 10px; /* Add consistent spacing between items */
-    padding: 10px 0; /* Vertical padding for the scroll container */
-    scrollbar-width: thin;
-    scrollbar-color: #fff transparent;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 8px;
 }
 
-#timelineContainer::-webkit-scrollbar {
-    height: 8px; /* Set the height of the horizontal scrollbar */
+.trait-card-heading strong {
+    color: #e6e7ea;
+    font-size: 12px;
 }
 
-#timelineContainer::-webkit-scrollbar-thumb {
-    background: #fff;
-    border-radius: 5px; /* Rounded scrollbar thumb */
+.trait-id {
+    color: #7e8794;
+    font-size: 10px;
 }
 
-.timeline-item {
-    flex: 0 0 250px; /* Fixed width */
-    height: auto; /* Fixed height */
-    background-color: rgba(0, 0, 0, 0.6); /* Slightly transparent background */
-    border: 1px solid white;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;
-    color: white;
-    box-sizing: border-box; /* Include padding in size */
-    overflow: hidden; /* Ensure no overflow */
-    display: flex;
-    flex-direction: column; /* Stack content vertically */
-    justify-content: flex-start; /* Align content to the top */
-}
-
-.description-popup {
-    display: none; /* Initially hidden */
-    position: absolute;
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    pointer-events: none; /* Ensure the popup doesn't interfere with mouse events */
-    
-    /* Changes to allow multi-line text */
-    white-space: normal; /* Allow text to wrap */
-    max-width: 300px; /* Set a maximum width for the popup */
-    word-wrap: break-word; /* Ensure long words break to fit */
-}
-
-.timeline-item h3 {
-    margin: 10px 0 5px; /* Space above and below the title */
-    font-size: 16px;
-    white-space: nowrap; /* Prevent wrapping */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Show ellipsis for long titles */
-}
-
-.timeline-item p {
+.trait-card p {
     margin: 5px 0 0;
-    font-size: 16px;
-    line-height: 1.4; /* Adjust spacing for readability */
-    white-space: normal; /* Allow wrapping */
-    word-wrap: break-word; /* Break long words */
+    color: #aeb4be;
+    font-size: 11px;
+    line-height: 1.45;
 }
 
-.timeline-item h3:first-child {
-    margin-top: 5px; /* Ensure time number (first child) is close to the top */
+.trait-modifier-list {
+    margin: 7px 0 0;
+    padding-left: 16px;
+    color: #aeb4be;
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.trait-modifier-list li + li {
+    margin-top: 5px;
+}
+
+.trait-modifier-kind {
+    color: var(--teal-light);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.trait-no-modifiers {
+    color: #7e8794 !important;
+    font-style: italic;
+}
+
+.treaty-secondary {
+    margin-top: 8px;
+}
+
+.treaty-one-sided {
+    border-color: rgba(255, 170, 164, 0.24);
+}
+
+.modifier-area-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+    margin-bottom: 9px;
+}
+
+.modifier-area-heading label {
+    margin: 0;
+}
+
+.modifier-legend {
+    color: #89919d;
+    font-size: 10px;
+}
+
+.legend-auto {
+    color: var(--gold);
+}
+
+.legend-situational {
+    color: var(--teal-light);
+}
+
+.modifier-source {
+    margin: 6px 0 0 26px;
+    color: #7f8a98;
+    font-size: 10px;
+    letter-spacing: 0.025em;
+}
+
+.modifier-effect {
+    margin: 6px 0 0 26px;
+    color: var(--gold);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.modifier-note {
+    margin: 6px 0 0 26px;
+    color: #9da5b0;
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.modifier-conflict {
+    margin: 7px 0 0 26px;
+    color: var(--danger);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.modifier-card.conflicting {
+    border-color: rgba(255, 170, 164, 0.35);
+}
+
+.government-roll-control {
+    border-color: rgba(255, 215, 107, 0.18);
+}
+
+.fleet-details {
+    color: #c5c8cf;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.fleet-details strong {
+    color: #edf0f2;
+}
+
+@media (max-width: 760px) {
+    .trait-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 620px) {
+    .court-member {
+        grid-template-columns: 42px minmax(0, 1fr);
+        padding: 9px;
+    }
+
+    .court-portrait {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+.modifier-title {
+    color: #e6e7ea;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
 }

@@ -150,6 +150,11 @@
           "from": "Ousssek",
           "to": "La Mano",
           "bidirectional": false
+        },
+        {
+          "from": "La Mano",
+          "to": "Ousssek",
+          "bidirectional": false
         }
       ]
     },
