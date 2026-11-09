@@ -10,16 +10,6 @@ const actions = {
       "Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest, -1 Might nemica se successo, -1 might aggiuntiva per se stessi su fallimento).",
     rolls: ["might", "territory"],
   },
-  Spionaggio: {
-    description:
-      "Azione Diplomatica. Width determina il numero di informazioni ricevute, Height la loro qualità.",
-    rolls: ["influence", "treasure"],
-  },
-  Controspionaggio: {
-    description:
-      "Azione Diplomatica. La difesa sceglie se usare crittografia (Gobble Dice, non consuma risorse per il mese) o caccia (Dynamic Contest, rimuove 1 Influence all'avversario per un mese).",
-    rolls: ["influence", "territory"],
-  },
   "Controllo dell'Ordine": {
     description:
       "Azione di Forza Militare. Usa la polizia per contrattaccare guerra non convenzionale. Tira per fermare (Gobble, successo no malus) e tira per catturare (Dynamic Contest, successo leader catturato). Se conosci del plot in anticipo, hai un tiro aggiuntivo (gobble): su un successo la azione non prende luogo.",
@@ -30,15 +20,20 @@ const actions = {
       "Azione di Forza Militare. Usa violenza furba per attaccare. Tira per colpire (successo -2 stat a scelta per due mesi o leader fuori gioco per 6 mesi) e tira per scappare (Dynamic Contest, successo leader sfigge).",
     rolls: ["influence", "might"],
   },
+  Spionaggio: {
+    description:
+      "Azione Diplomatica. Width determina il numero di informazioni ricevute, Height la loro qualità.",
+    rolls: ["influence", "treasure"],
+  },
+  Controspionaggio: {
+    description:
+      "Azione Diplomatica. La difesa sceglie se usare crittografia (Gobble Dice, non consuma risorse per il mese) o caccia (Dynamic Contest, rimuove 1 Influence all'avversario per un mese).",
+    rolls: ["influence", "territory"],
+  },
   "Raccolta Informazioni": {
     description:
       "Azione Diplomatica. Rivela stat della famiglia (non individuali).",
     rolls: ["influence", "sovereignty"],
-  },
-  "Aumento Stat": {
-    description:
-      "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro della stessa stat + una a scelta contro una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
-    rolls: ["might", "sovereignty", "influence", "territory", "treasure"],
   },
   Diplomazia: {
     description:
@@ -51,6 +46,26 @@ const actions = {
       "Sviluppa e potenzia le capacità militari della compagnia. Forma una nuova flotta, che va nominata e assegnata dal GM. Costa Might e Treasure pari al numero di flotte attualmente possedute moltiplicato per 2 (entrambe le risorse) e richiede un tiro contro una Difficoltà in Height pari al numero di flotte attualmente possedute moltiplicato per 3.",
     rolls: ["might", "treasure"],
   },
+  "Aumento Stat (Might)": {
+    description:
+      "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Might + Sovereignty una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
+    rolls: ["might", "sovereignty"],
+  },
+  "Aumento Stat (Influence)": {
+    description:
+      "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Influence + Sovereignty una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
+    rolls: ["influence", "sovereignty"],
+  },
+  "Aumento Stat (Territory)": {
+    description:
+      "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Territory + Sovereignty una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
+    rolls: ["territory", "sovereignty"],
+  },
+  "Aumento Stat (Treasure)": {
+    description:
+      "Sviluppa e potenzia le capacità militari della compagnia. Richiede un tiro di Treasure + Sovereignty una Difficoltà pari al due volte il livello attuale della stat. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (Immediato).",
+    rolls: ["treasure", "sovereignty"],
+  },
 };
 
 // Popolato da fetchTreatyTypes() (all_info/treaties.json's `pacts`) al
@@ -62,26 +77,26 @@ let treatyTypes = {};
 const warReasons = [
   {
     nome: "Conquista",
-    descrizione: "+1 al proprio territorio se avversario soccombe",
+    descrizione: "+1 al proprio Territory in caso di vittoria se il Territory avversario è superiore.",
   },
   {
     nome: "Umiliazione",
-    descrizione: "+1 alla propria influence se avversario soccombe",
+    descrizione: "+1 alla propria Influence in caso di vittoria se la Influence avversaria è superiore.",
   },
   {
     nome: "Razzia",
-    descrizione: "+1 al proprio treasure se avversario soccombe",
+    descrizione: "+1 al proprio Treasure in caso di vittoria se il Treasure avversario è superiore.",
   },
-  { nome: "Destabilizzazione", descrizione: "-1 Sovereignty all'avversario" },
-  { nome: "Difesa", descrizione: "-1 Might all'avversario" },
+  { nome: "Destabilizzazione", descrizione: "-1 Sovereignty all'avversario in caso di vittoria." },
+  { nome: "Preattacco", descrizione: "Riduzione della Might dell'avversario in caso di vittoria: Height/2 determina di quanto scende la Might, Width determina per quanti mesi scende." },
   {
     nome: "Conquista Risorsa",
-    descrizione: "Acquisisci una risorsa dell'avversario",
+    descrizione: "Acquisisci una risorsa dell'avversario se narrativamente conquistabile.",
   },
   {
     nome: "Disingaggio",
     descrizione:
-      "Disabilita una flotta nemica: Height determina per quanti mesi resta disabilitata, Width determina di quanto (in UA) deve ritirarsi",
+      "Disabilita una flotta nemica: Height determina per quanti mesi resta disabilitata, Width determina di quanto (in UA) deve ritirarsi.",
   },
 ];
 

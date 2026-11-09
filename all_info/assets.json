@@ -5,7 +5,7 @@
       "name": "Armamenti arcani avanzati (abjuration)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando effettui un tiro di might+Territorio per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +1 al tiro.",
+      "description": "Quando effettui un tiro di Might+Territory per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +1 al tiro.",
       "requirementIds": [
         "ivory",
         "obsidian",
@@ -16,7 +16,7 @@
       "name": "Armamenti arcani avanzati (conjuration)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando tiri i dadi per might + Territorio da Difendere, puoi aggiungere +1 dado riducendo permanentemente il tuo Treasure di 1.",
+      "description": "Quando tiri i dadi per Might + Territory da Difendere, puoi aggiungere +1d riducendo permanentemente il tuo Treasure di 1.",
       "requirementIds": [
         "obsidian"
       ]
@@ -34,7 +34,7 @@
       "name": "Armamenti arcani avanzati (enchantment)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Ottieni +1 a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
+      "description": "Ottieni +1d a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
       "requirementIds": [
         "obsidian",
         "seaurite"
@@ -44,7 +44,7 @@
       "name": "Armamenti arcani avanzati (evocation)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando effettui un tiro might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un +1 al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di territorio.",
+      "description": "Quando effettui un tiro Might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un +1d al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di Territory.",
       "requirementIds": [
         "obsidian",
         "tholleite",
@@ -55,7 +55,7 @@
       "name": "Armamenti arcani avanzati (illusion)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Puoi aggiungere +1 alla tua potenza, al tuo Treasure o alla tua sovranità. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "description": "Puoi aggiungere +1d alla tua Might, al tuo Treasure o alla tua Sovereignty. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
       "requirementIds": [
         "knotime"
       ]
@@ -64,7 +64,7 @@
       "name": "Armamenti arcani avanzati (necromancy)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Per qualsiasi tiro che coinvolga il territorio, puoi cambiare il dado utilizzato in un d8, ma rimuovi -2d dal tuo pool.",
+      "description": "Per qualsiasi tiro che coinvolga il Territory, puoi cambiare il dado utilizzato in un d8, ma rimuovi -2d dal tuo pool.",
       "requirementIds": [
         "zinale"
       ]
@@ -73,7 +73,7 @@
       "name": "Armamenti arcani avanzati (transmutation)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Per qualsiasi tiro che utilizzi la might, puoi cambiare il dado utilizzato in un d12 e aggiungere +1d al tuo pool.",
+      "description": "Per qualsiasi tiro che utilizzi la Might, puoi cambiare il dado utilizzato in un d12 e aggiungere +1d al tuo pool.",
       "requirementIds": [
         "cronvite"
       ]
@@ -82,7 +82,7 @@
       "name": "Armamenti arcani semplici (abjuration)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Quando effettui un tiro di might+Territorio per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +2 al tiro.",
+      "description": "Quando effettui un tiro di Might+Territory per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +2d al tiro.",
       "requirementIds": [
         "adamantine",
         "niez",
@@ -94,7 +94,7 @@
       "name": "Armamenti arcani semplici (conjuration)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Quando tiri i dadi per might + Territorio da Difendere, puoi aggiungere +1 dado riducendo permanentemente il tuo Treasure di 1.",
+      "description": "Quando tiri i dadi per Might + Territory da Difendere, puoi aggiungere +1d riducendo permanentemente il tuo Treasure di 1.",
       "requirementIds": [
         "adamantine",
         "niez",
@@ -128,7 +128,7 @@
       "name": "Armamenti arcani semplici (evocation)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Quando effettui un tiro might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un bonus di +2 al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di territorio.",
+      "description": "Quando effettui un tiro Might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un bonus di +2d al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di Territory.",
       "requirementIds": [
         "adamantine",
         "livinohorite",
@@ -140,7 +140,7 @@
       "name": "Armamenti arcani semplici (illusion)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Puoi aggiungere +2 alla tua potenza, al tuo Treasure o alla tua sovreignity. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "description": "Puoi aggiungere +2d alla tua Might, al tuo Treasure o alla tua sovreignity. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
       "requirementIds": [
         "adamantine",
         "xifl",
@@ -151,7 +151,7 @@
       "name": "Armamenti arcani semplici (necromancy)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Per qualsiasi tiro che coinvolga il territorio, puoi cambiare il dado utilizzato in un d8, ma rimuovi -1d dal tuo pool.",
+      "description": "Per qualsiasi tiro che coinvolga il Territory, puoi cambiare il dado utilizzato in un d8, ma rimuovi -1d dal tuo pool.",
       "requirementIds": [
         "adamantine",
         "xifl",
@@ -162,7 +162,7 @@
       "name": "Armamenti arcani semplici (transmutation)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Per qualsiasi tiro che utilizzi la might, puoi cambiare il dado utilizzato in un d12 e aggiungere +2d al tuo pool.",
+      "description": "Per qualsiasi tiro che utilizzi la Might, puoi cambiare il dado utilizzato in un d12 e aggiungere +2d al tuo pool.",
       "requirementIds": [
         "adamantine",
         "varisiana-nera",
@@ -173,7 +173,7 @@
       "name": "Riserve monetarie (elio)",
       "type": "Monouso",
       "generationTime": "Immediato",
-      "description": "Puoi aggiungere +1 a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "description": "Puoi aggiungere +1d a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
       "requirementIds": [
         "helium"
       ]
@@ -258,7 +258,7 @@
       "name": "Autorità religiosa (Ioun)",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "description": "Ottieni un bonus di +2d a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
       "requirementIds": [
         "luogo-sacro-ioun"
       ]
@@ -267,7 +267,7 @@
       "name": "Autorità religiosa (Lolth)",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "description": "Ottieni un bonus di +2d a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
       "requirementIds": [
         "luogo-sacro-lolth"
       ]
@@ -276,7 +276,7 @@
       "name": "Autorità religiosa (Unico)",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "description": "Ottieni un bonus di +2d a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
       "requirementIds": [
         "luogo-sacro-unico"
       ]
@@ -285,7 +285,7 @@
       "name": "Autorità religiosa (Kord)",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Ottieni un bonus di +2 a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
+      "description": "Ottieni un bonus di +2d a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
       "requirementIds": [
         "luogo-sacro-kord"
       ]
@@ -303,7 +303,7 @@
       "name": "Coscrizione obbligatoria",
       "type": "Monouso",
       "generationTime": "6 mesi",
-      "description": "Puoi aumentare permanentemente la tua might di uno, ma ridurre di uno la tua sovreignity",
+      "description": "Puoi aumentare permanentemente la tua Might di uno, ma ridurre di uno la tua sovreignity",
       "requirementIds": [
         "sovrappopolazione"
       ]
@@ -333,7 +333,7 @@
       "name": "Defiant Tradition",
       "type": "Tratto Culturale",
       "description": "El-Beth-El è un pianeta fiero e indipendente. Anche se la popolazione è divisa nei quattro regni, odierà sempre qualsiasi forza esterna più dei propri vicini. Le culture ribelli non sono le più facili da governare, ma non cedono quando i tempi si fanno duri.",
-      "effect": "+1 dado a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
+      "effect": "+1d a tutti i tiri di Territory (Difesa) se la Compagnia è sotto attacco da una forza esterna.",
       "modifiers": [
         {
           "stat": "Territory",
@@ -350,7 +350,7 @@
       "name": "Spelljammers (Livello 2)",
       "type": "Tecnologia Navale",
       "description": "Il tuo livello di spelljamming è attualmente pari a 2. Il livello di spelljamming definisce quanto sia equipaggiata la tua flotta rispetto alle altre famiglie -- limita il tuo Might, poiché anche l'esercito meglio addestrato non può affrontare una flotta nemica senza propri spelljammer. Il tuo Might può salire al massimo di un punto oltre il tuo livello di spelljamming attuale. Quando affronti un avversario privo di spelljammer, il livello di spelljamming diventa un bonus diretto a qualsiasi tiro di Might.",
-      "effect": "+1 dado di Might contro un nemico privo di spelljammers.",
+      "effect": "+1d dado di Might contro un nemico privo di spelljammers.",
       "modifiers": [
         {
           "stat": "Might",
@@ -366,8 +366,8 @@
       "owner": "La Mano",
       "name": "Fanatismo (2)",
       "type": "Condizione Religiosa",
-      "description": "Hai un bonus di +2 su tutti i tiri di dado. Se il Sael dovesse mai morire, la tua famiglia perde permanentemente 4 punti di Sovereignty. Inoltre, per i successivi 6 mesi subisci -2 a tutti i tiri.",
-      "effect": "+2 dadi a qualsiasi tiro -- ma se il Sael muore, -4 Sovereignty permanenti e -2 a tutti i tiri per 6 mesi.",
+      "description": "Hai un bonus di +2d su tutti i tiri di dado. Se il Sael dovesse mai morire, la tua famiglia perde permanentemente 4 punti di Sovereignty. Inoltre, per i successivi 6 mesi subisci -2 a tutti i tiri.",
+      "effect": "+2d dadi a qualsiasi tiro -- ma se il Sael muore, -4 Sovereignty permanenti e -2 a tutti i tiri per 6 mesi.",
       "modifiers": [
         {
           "stat": "all",
@@ -384,7 +384,7 @@
       "name": "(Monouso prossimo tiro) Spelljamming Bonus",
       "type": "Monouso",
       "description": "Le truppe sono molto ben addestrate. Possono adattarsi e prepararsi facilmente a nuove situazioni, e in particolare sono pronte a diventare una forza spaziale.",
-      "effect": "+2 bonus al prossimo tiro per aumentare il livello di spelljamming."
+      "effect": "+2d bonus al prossimo tiro per aumentare il livello di spelljamming."
     },
     {
       "id": "la-mano-suppression-activity",
@@ -402,7 +402,7 @@
       "name": "Catena di Tiamat",
       "type": "Reliquia",
       "description": "Il manufatto draconico con cui i Wueng tengono legata Tiamat da quasi 300 anni.",
-      "effect": "+1 Might in qualsiasi tiro difensivo effettuato su Draconia."
+      "effect": "+1d Might in qualsiasi tiro difensivo effettuato su Draconia."
     },
     {
       "id": "aepra-fortezza",
@@ -410,7 +410,7 @@
       "name": "Pianeta Fortezza",
       "type": "Difesa",
       "description": "Il tuo pianeta intero é una fortezza naturale. Hai +2d su tutti i tiri di difesa contro attacchi da flotte invadenti Aepra.",
-      "effect": "+1 Might in qualsiasi tiro difensivo effettuato su Aepra."
+      "effect": "+1d Might in qualsiasi tiro difensivo effettuato su Aepra."
     }
   ]
 }

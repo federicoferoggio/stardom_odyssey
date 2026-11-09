@@ -49,7 +49,7 @@
     },
     "Patto di Vassallaggio": {
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
-      "effects": "Signore: +2 Bonus Territory. Vassallo: +2 Bonus Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
+      "effects": "Signore: +2d Territory. Vassallo: +2d Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
       "category": "relational",
       "diplomacyCost": "Tre tiri di Attacco vinti consecutivamente.",
       "breakupCost": "La tua Sovereignty viene ridotta permanentemente di 2 punti.",
@@ -90,7 +90,7 @@
     },
     "Patto Tributario": {
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
-      "effects": "Signore: +2 Bonus Treasure. Vassallo: +2 Bonus Might, massimo Treasure scende a 3. Include automaticamente patto di non-aggressione.",
+      "effects": "Signore: +2d Treasure. Vassallo: +2d Might, massimo Treasure scende a 3. Include automaticamente patto di non-aggressione.",
       "category": "relational",
       "diplomacyCost": "Tre tiri di Guerra Non Convenzionale vinti consecutivamente.",
       "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 2 punti.",
@@ -115,7 +115,7 @@
     },
     "Rivalità": {
       "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
-      "effects": "+1 dado su tutte le azioni di Attacco e Guerra Non Convenzionale contro l'altro partito. L'altra parte guadagna +2 dadi su tutti i tiri di Controspionaggio verso le spie del partito rivale.",
+      "effects": "+1d dado su tutte le azioni di Attacco e Guerra Non Convenzionale contro l'altro partito. L'altra parte guadagna +2d su tutti i tiri di Controspionaggio verso le spie del partito rivale.",
       "category": "relational",
       "diplomacyCost": "Nessuno: una rivalità si dichiara unilateralmente.",
       "breakupCost": "La tua Sovereignty viene ridotta di 2 punti, a meno che tu non abbia già ridotto a 0 una delle loro statistiche o non li abbia attaccati per un anno intero.",
@@ -155,7 +155,7 @@
     },
     "Accordo Commerciale": {
       "description": "Un'alleanza mercantile che apre le rotte commerciali e crea prosperità condivisa tra i firmatari.",
-      "effects": "+1 ai tiri di Treasure per entrambi i partiti. Il partito con meno risorse può considerare una risorsa dell'altro come propria.",
+      "effects": "+1d di Treasure per entrambi i partiti. Il partito con meno risorse può considerare una risorsa dell'altro come propria.",
       "category": "benefit",
       "diplomacyCost": "Riduci il tuo Treasure di 1 punto.",
       "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 1 punto.",
@@ -188,7 +188,7 @@
     },
     "Accordo di Migrazione": {
       "description": "Un patto che regola il flusso di popolazioni tra territori, permettendo espansione controllata e crescita demografica.",
-      "effects": "+1 di Territory. Aumenta permanentemente, all'inizio e ogni anno, del 5% la popolazione della razza maggioritaria del partito con Territory più grande. Se il Territory è pari, non ha effetto.",
+      "effects": "+1d di Territory. Aumenta permanentemente, all'inizio e ogni anno, del 5% la popolazione della razza maggioritaria del partito con Territory più grande. Se il Territory è pari, non ha effetto.",
       "category": "benefit",
       "diplomacyCost": "Se le due famiglie non condividono la stessa religione principale, la tua Sovereignty viene ridotta di 2 punti.",
       "breakupCost": "Il tuo Territory viene ridotto permanentemente di 1 punto.",
@@ -211,7 +211,7 @@
     },
     "Matrimonio": {
       "description": "Un'unione di sangue che lega due casate attraverso matrimoni strategici, aumentando il prestigio e l'influenza reciproca.",
-      "effects": "Aumenta di +1 la Influence per il partito con la Influence più bassa tra i due.",
+      "effects": "Aumenta di +1d la Influence per il partito con la Influence più bassa tra i due.",
       "diplomacyCost": "Nessuno.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "category": "benefit",
@@ -293,8 +293,8 @@
       "grantsAsset": {
         "name": "Finanziamenti",
         "type": "Permanente",
-        "description": "Un guadagno di treasure che deve essere ripagato in lavoro.",
-        "effect": "+1d Treasure per la famiglia target, -1 sui suoi tiri di Territory. +1 Territory per i Grayshine."
+        "description": "Un guadagno di Treasure che deve essere ripagato in lavoro.",
+        "effect": "+1d Treasure per la famiglia target, -1d sui suoi tiri di Territory. +1d Territory per i Grayshine."
       },
       "holders": [
         {
