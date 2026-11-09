@@ -1492,7 +1492,7 @@ function buildScene() {
   iconScaleGroups["sun"] = sunScale;
 
   Object.values(byId).forEach((b) => {
-    if (b.id === "sun") return;
+    if (!b || Array.isArray(b) || !b.id || b.id === "sun") return;
     const isMain = b.anchor === "sun" || b.type === "planet";
     const r =
       {
