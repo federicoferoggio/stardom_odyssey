@@ -3093,7 +3093,7 @@ function formatModifierLine(m) {
   const isArmies = !!m.armies;
   const sign = typeof m.amount === "number" && m.amount > 0 ? "+" : "";
   const marker = isArmies ? "⚔ " : "";
-  return `<div class="modline${isArmies ? " armies-mod" : ""}">${marker}${sign}${escHtml(m.amount)} ${escHtml(modifierLabel(m))} — ${escHtml(m.situation || "Always")}</div>`;
+  return `<div class="modline${isArmies ? " armies-mod" : ""}">${marker}${sign}${escHtml(m.amount)}d ${escHtml(modifierLabel(m))} — ${escHtml(m.situation || "Always")}</div>`;
 }
 
 // Mirrors script.js's `actions` object (the canonical 9-action list) so
