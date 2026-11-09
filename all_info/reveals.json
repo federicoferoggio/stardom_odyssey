@@ -88,7 +88,7 @@
         "Capo Militare": {
           "trait1Known": false,
           "trait2Known": false,
-          "seethrough_trait": false
+          "seethrough_trait": true
         }
       },
       "uniqueAssetsKnown": false
@@ -397,7 +397,7 @@
         "Capo Politico": {
           "trait1Known": true,
           "trait2Known": true,
-          "seethrough_trait": false
+          "seethrough_trait": true
         }
       },
       "uniqueAssetsKnown": true
@@ -419,7 +419,7 @@
         "Primo Ministro": {
           "trait1Known": true,
           "trait2Known": true,
-          "seethrough_trait": true
+          "seethrough_trait": false
         },
         "Capo Militare": {
           "trait1Known": true,

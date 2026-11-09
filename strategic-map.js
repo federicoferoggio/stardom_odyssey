@@ -1566,7 +1566,14 @@ function buildScene() {
     icon.setAttribute("opacity", "0.85");
     g.addEventListener("click", (e) => {
       e.stopPropagation();
-      showInfo(b);
+
+      const family = b.owner && canonicalFamilyName(b.owner);
+
+      if (corruptionMode && family && companiesByName[family]) {
+        showFamilyOverlay(family);
+      } else {
+        showInfo(b);
+      }
     });
 
     // Fleet markers (anonymous + named combined, deduped by family) are
@@ -2029,7 +2036,7 @@ function applyTick() {
     const familiesPanel = document.getElementById("families-panel");
 
     if (familiesPanel && familiesPanel.classList.contains("open")) {
-        buildFamiliesPanel();
+      buildFamiliesPanel();
     }
 
     // Refresh compact family preview.
@@ -3787,13 +3794,31 @@ window.addEventListener("keydown", (e) => {
 // button (players could stumble onto it) — Ctrl+Shift+G instead, with a
 // brief toast so a GM still gets confirmation it toggled.
 let gmToastTimeout = null;
-function showGmToast(text) {
-  const toast = document.getElementById("gm-toast");
-  if (!toast) return;
-  toast.textContent = text;
-  toast.classList.add("show");
-  clearTimeout(gmToastTimeout);
-  gmToastTimeout = setTimeout(() => toast.classList.remove("show"), 1800);
+let gmToastThemeTimeout = null;
+function showGmToast(text, theme = "evil") {
+    const toast = document.getElementById("gm-toast");
+    if (!toast) return;
+
+    clearTimeout(gmToastTimeout);
+    clearTimeout(gmToastThemeTimeout);
+
+    toast.textContent = text;
+
+    // Set the theme BEFORE showing the toast.
+    toast.classList.toggle("gm-toast-blue", theme === "gm");
+
+    toast.classList.add("show");
+
+    gmToastTimeout = setTimeout(() => {
+        // Start fade-out while preserving the current colour.
+        toast.classList.remove("show");
+
+        // Remove the blue theme only after the fade-out finishes.
+        gmToastThemeTimeout = setTimeout(() => {
+            toast.classList.remove("gm-toast-blue");
+        }, 250);
+
+    }, 1800);
 }
 window.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "g") {
@@ -3801,6 +3826,7 @@ window.addEventListener("keydown", (e) => {
     devRevealAll = !devRevealAll;
     showGmToast(
       devRevealAll ? "👁 Modalità GM attiva" : "Modalità GM disattivata",
+      "gm"
     );
     if (currentOverlayFamily) showFamilyOverlay(currentOverlayFamily);
   }
@@ -3808,6 +3834,7 @@ window.addEventListener("keydown", (e) => {
 
 function toggleCorruptionMode() {
   corruptionMode = !corruptionMode;
+  document.body.classList.toggle("corruption-mode", corruptionMode);
 
   // Count the flags actually read from all_info/reveals.json. This makes a
   // missing/wrongly named JSON file immediately diagnosable from the toast.
@@ -3844,7 +3871,7 @@ function toggleCorruptionMode() {
 
   showGmToast(
     corruptionMode
-      ? `☠ Modalità Corruzione attiva · ${corruptedLeaderCount} leader corrotti`
+      ? `Vista corrotta attiva · ${corruptedLeaderCount} leader corrotti`
       : "Modalità Corruzione disattivata",
   );
   console.info(
@@ -3853,16 +3880,6 @@ function toggleCorruptionMode() {
   );
 }
 
-// Secret chord: hold Shift, then press E and R while keeping Shift down.
-// Releasing any one key rearms the toggle.
-const corruptionKeysDown = new Set();
-let corruptionChordFired = false;
-function corruptionKeyToken(e) {
-  if (e.code === "ShiftLeft" || e.code === "ShiftRight") return "shift";
-  if (e.code === "KeyE") return "e";
-  if (e.code === "KeyR") return "r";
-  return null;
-}
 function isEditableKeyboardTarget(target) {
   return !!(
     target &&
@@ -3871,39 +3888,22 @@ function isEditableKeyboardTarget(target) {
       target.isContentEditable)
   );
 }
+
 window.addEventListener("keydown", (e) => {
   if (isEditableKeyboardTarget(e.target)) return;
-  const token = corruptionKeyToken(e);
-  // Track all three keys regardless of press order. The chord activates only
-  // while Shift, E and R are physically held at the same time.
-  if (token) corruptionKeysDown.add(token);
 
-  const chordHeld =
+  if (
+    e.ctrlKey &&
     e.shiftKey &&
-    corruptionKeysDown.has("shift") &&
-    corruptionKeysDown.has("e") &&
-    corruptionKeysDown.has("r");
-  if (chordHeld && !corruptionChordFired) {
+    !e.altKey &&
+    !e.metaKey &&
+    e.code === "KeyW"
+  ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    corruptionChordFired = true;
     toggleCorruptionMode();
   }
 });
-window.addEventListener("keyup", (e) => {
-  const token = corruptionKeyToken(e);
-  if (token) corruptionKeysDown.delete(token);
-  if (
-    !corruptionKeysDown.has("shift") ||
-    !corruptionKeysDown.has("e") ||
-    !corruptionKeysDown.has("r")
-  ) corruptionChordFired = false;
-});
-window.addEventListener("blur", () => {
-  corruptionKeysDown.clear();
-  corruptionChordFired = false;
-});
-
 // Public keyboard shortcuts, listed in the "⌨ Scorciatoie" popover next to
 // the ruler button (#shortcuts-panel) -- deliberately excludes
 // Ctrl+Shift+G above, which stays undocumented in the UI. Ignored while

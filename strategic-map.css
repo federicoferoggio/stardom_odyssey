@@ -1897,32 +1897,76 @@ svg {
     }
 }
 
-/* ── REVEAL-ALL (GM) TOGGLE ─────────────────────────────────────────────────────
-   No visible button (Ctrl+Shift+G instead, so players don't stumble onto it) --
-   just a transient confirmation toast so a GM gets feedback that it toggled. */
+/* ── TOGGLE ─────────────────────────────────────────────────────
+
+/* ── TOAST ───────────────────────────── */
+
 #gm-toast {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.96);
     z-index: 100000;
-    background: rgba(10, 12, 22, 0.92);
-    border: 1px solid rgba(120, 200, 255, 0.5);
-    color: #a8e0ff;
-    font-family: 'Outfit', sans-serif;
-    font-size: 16px;
-    letter-spacing: 0.04em;
-    padding: 12px 22px;
-    border-radius: 8px;
-    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+
+    background: linear-gradient(
+        135deg,
+        rgba(35, 0, 8, 0.97),
+        rgba(10, 0, 3, 0.97)
+    );
+
+    border: 1px solid rgba(255, 35, 55, 0.8);
+    color: #ff4058;
+
+    font-family: 'Cinzel', serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+    text-shadow:
+        0 0 5px rgba(255, 0, 35, 0.8),
+        0 0 15px rgba(255, 0, 35, 0.5);
+
+    padding: 16px 28px;
+    border-radius: 6px;
+
+    box-shadow:
+        0 0 12px rgba(255, 0, 30, 0.35),
+        0 0 35px rgba(180, 0, 20, 0.25),
+        inset 0 0 15px rgba(255, 0, 30, 0.12);
+
     opacity: 0;
     pointer-events: none;
     transition: opacity .2s, transform .2s;
+    backdrop-filter: blur(10px);
 }
 
 #gm-toast.show {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+    animation: evil-toast-pulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes evil-toast-pulse {
+    from {
+        box-shadow:
+            0 0 12px rgba(255, 0, 30, 0.35),
+            0 0 25px rgba(180, 0, 20, 0.25),
+            inset 0 0 15px rgba(255, 0, 30, 0.12);
+    }
+
+    to {
+        box-shadow:
+            0 0 20px rgba(255, 0, 30, 0.7),
+            0 0 55px rgba(220, 0, 35, 0.45),
+            inset 0 0 22px rgba(255, 0, 30, 0.22);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #gm-toast.show {
+        animation: none;
+    }
 }
 
 /* ── DATA LOAD ERROR BANNER ──────────────────────────────────────────────────────
@@ -2301,7 +2345,7 @@ svg {
     font-weight: 400;
 }
 
-/* ── SECRET CORRUPTION MODE: corrupted leader portraits ─────────────────────── */
+/* ──  MODE: leader portraits ─────────────────────── */
 @keyframes seethrough-red-pulse {
 
     0%,
@@ -2334,5 +2378,100 @@ svg {
         box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.9),
             0 0 18px 7px rgba(255, 25, 25, 0.7);
         filter: drop-shadow(0 0 8px rgba(255, 25, 25, 0.8));
+    }
+}
+
+
+/* Persistent  indicator */
+#corruption-mode-indicator {
+    display: none;
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200001;
+
+    padding: 10px 22px;
+    border-radius: 8px;
+
+    background: rgba(20, 0, 5, 0.94);
+    border: 1px solid rgba(255, 40, 65, 0.8);
+
+    color: #ff4058;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+
+    text-shadow: 0 0 12px rgba(255, 0, 35, 0.9);
+
+    box-shadow:
+        0 0 15px rgba(255, 0, 35, 0.35),
+        0 0 35px rgba(180, 0, 20, 0.2);
+
+    pointer-events: none;
+}
+
+/* Show indicator only when corruption mode is active */
+body.corruption-mode #corruption-mode-indicator {
+    display: block;
+}
+
+/* Corrupted atmosphere */
+body.corruption-mode {
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(70, 0, 12, 0.35),
+            rgba(0, 0, 0, 0.96)
+        ),
+        url('images/space-background.jpg') center / cover;
+
+    box-shadow: inset 0 0 120px rgba(255, 0, 30, 0.28);
+}
+
+/* Give the map a corrupted appearance */
+body.corruption-mode #map-container {
+    filter: saturate(1.55) contrast(1.12) hue-rotate(-18deg);
+}
+
+body.corruption-mode #controls,
+body.corruption-mode #top-toolbar,
+body.corruption-mode #top-toolbar-panel,
+body.corruption-mode .navigation-menu,
+body.corruption-mode #ruler-tooltip {
+    display: none !important;
+}
+
+
+#gm-toast.gm-toast-blue {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 15, 40, 0.97),
+        rgba(5, 5, 20, 0.97)
+    );
+
+    border-color: rgba(70, 160, 255, 0.8);
+    color: #70c5ff;
+
+    text-shadow:
+        0 0 5px rgba(0, 120, 255, 0.8),
+        0 0 15px rgba(0, 100, 255, 0.5);
+
+    box-shadow:
+        0 0 12px rgba(0, 100, 255, 0.35),
+        0 0 35px rgba(0, 60, 180, 0.25);
+}
+
+#gm-toast.gm-toast-blue.show {
+    animation: gm-toast-blue-pulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes gm-toast-blue-pulse {
+    from {
+        box-shadow: 0 0 12px rgba(0, 100, 255, 0.35);
+    }
+    to {
+        box-shadow: 0 0 35px rgba(0, 130, 255, 0.75);
     }
 }
