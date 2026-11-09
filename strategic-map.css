@@ -2383,7 +2383,7 @@ svg {
 
 
 /* Persistent  indicator */
-#corruption-mode-indicator {
+#tickle-mode-indicator {
     display: none;
     position: fixed;
     top: 18px;
@@ -2412,13 +2412,13 @@ svg {
     pointer-events: none;
 }
 
-/* Show indicator only when corruption mode is active */
-body.corruption-mode #corruption-mode-indicator {
+/* Show indicator only when tickle mode is active */
+body.tickle-mode #tickle-mode-indicator {
     display: block;
 }
 
 /* Corrupted atmosphere */
-body.corruption-mode {
+body.tickle-mode {
     background:
         radial-gradient(
             ellipse at center,
@@ -2431,15 +2431,15 @@ body.corruption-mode {
 }
 
 /* Give the map a corrupted appearance */
-body.corruption-mode #map-container {
+body.tickle-mode #map-container {
     filter: saturate(1.55) contrast(1.12) hue-rotate(-18deg);
 }
 
-body.corruption-mode #controls,
-body.corruption-mode #top-toolbar,
-body.corruption-mode #top-toolbar-panel,
-body.corruption-mode .navigation-menu,
-body.corruption-mode #ruler-tooltip {
+body.tickle-mode #controls,
+body.tickle-mode #top-toolbar,
+body.tickle-mode #top-toolbar-panel,
+body.tickle-mode .navigation-menu,
+body.tickle-mode #ruler-tooltip {
     display: none !important;
 }
 

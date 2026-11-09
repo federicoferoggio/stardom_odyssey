@@ -161,9 +161,9 @@ function safeColor(color) {
 // Secret late-game alignment overlay. The source colors in companies.json and
 // bodies.json are never changed; familyColor() temporarily resolves every
 // family to one of the two alignment colors while this mode is active.
-let corruptionMode = false;
-const CORRUPTION_RED = "#e44747";
-const CORRUPTION_BLUE = "#438fe8";
+let tickleMode = false;
+const tickle_RED = "#e44747";
+const tickle_BLUE = "#438fe8";
 
 function leaderHasSeethroughTrait(familyName, leader) {
   const family = canonicalFamilyName(familyName);
@@ -190,29 +190,29 @@ function familyIsCorrupted(familyName) {
   );
 }
 
-// companies.json remains the source of truth outside Corruption Mode. NPCs
+// companies.json remains the source of truth outside tickle Mode. NPCs
 // without a company entry retain their existing ownerColors fallback.
 function familyColor(name) {
   const family = canonicalFamilyName(name);
   const company = companiesByName[family] || companiesByName[name];
-  if (corruptionMode && company)
-    return familyIsCorrupted(family) ? CORRUPTION_RED : CORRUPTION_BLUE;
+  if (tickleMode && company)
+    return familyIsCorrupted(family) ? tickle_RED : tickle_BLUE;
   return safeColor(
     (company && company.color) || ownerColors[name] || ownerColors[family],
   );
 }
 
 // Bodies and trade paths use their own authored colors normally, but inherit
-// their owner's alignment color in Corruption Mode.
+// their owner's alignment color in tickle Mode.
 function bodyColor(body) {
   const family = body && body.owner && canonicalFamilyName(body.owner);
-  if (corruptionMode && family && companiesByName[family])
+  if (tickleMode && family && companiesByName[family])
     return familyColor(family);
   return safeColor(body && body.color);
 }
 function pathColor(path) {
   const family = path && path.owner && canonicalFamilyName(path.owner);
-  if (corruptionMode && family && companiesByName[family])
+  if (tickleMode && family && companiesByName[family])
     return familyColor(family);
   return safeColor(path && path.color);
 }
@@ -1571,7 +1571,7 @@ function buildScene() {
 
       const family = b.owner && canonicalFamilyName(b.owner);
 
-      if (corruptionMode && family && companiesByName[family]) {
+      if (tickleMode && family && companiesByName[family]) {
         showFamilyOverlay(family);
       } else {
         showInfo(b);
@@ -3345,7 +3345,7 @@ function renderLeaders(name) {
     img.dataset.seethroughTrait = String(isCorruptedLeader);
     img.classList.toggle(
       "seethrough-trait-corrupted",
-      corruptionMode && isCorruptedLeader,
+      tickleMode && isCorruptedLeader,
     );
     img.src = leader.portrait;
     img.alt = leader.name;
@@ -3827,9 +3827,9 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-function toggleCorruptionMode() {
-  corruptionMode = !corruptionMode;
-  document.body.classList.toggle("corruption-mode", corruptionMode);
+function toggletickleMode() {
+  tickleMode = !tickleMode;
+  document.body.classList.toggle("tickle-mode", tickleMode);
 
   // Count the flags actually read from all_info/reveals.json. This makes a
   // missing/wrongly named JSON file immediately diagnosable from the toast.
@@ -3865,12 +3865,12 @@ function toggleCorruptionMode() {
   if (searchInput.value.trim()) renderSearchResults(searchInput.value);
 
   showGmToast(
-    corruptionMode
+    tickleMode
       ? `Vista corrotta attiva · ${corruptedLeaderCount} leader corrotti`
       : "Modalità Corruzione disattivata",
   );
   console.info(
-    `[STRATMAP] Corruption Mode ${corruptionMode ? "ON" : "OFF"}; ` +
+    `[STRATMAP] tickle Mode ${tickleMode ? "ON" : "OFF"}; ` +
     `${corruptedLeaderCount} seethrough_trait=true leader(s) loaded.`,
   );
 }
@@ -3896,7 +3896,7 @@ window.addEventListener("keydown", (e) => {
   ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    toggleCorruptionMode();
+    toggletickleMode();
   }
 });
 // Public keyboard shortcuts, listed in the "⌨ Scorciatoie" popover next to
