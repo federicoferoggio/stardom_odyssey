@@ -3,9 +3,9 @@
   "pacts": {
     "Alleanza Militare": {
       "description": "Un patto di ferro che lega due partiti nel sangue e nella guerra, giurando di difendersi reciprocamente contro ogni minaccia.",
-      "effects": "Se uno dei partiti fa una azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un patto di non aggressione.",
+      "effects": "Se uno dei partiti fa una azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un Patto di Non-Aggressione.",
       "category": "relational",
-      "diplomacyCost": "Larghezza pari a 3 meno i mesi trascorsi dall'ultimo attacco di una delle due parti (minimo 0). Altezza pari al doppio della differenza tra i rispettivi Might.",
+      "diplomacyCost": "Almeno 3 mesi trascorsi dall'ultimo attacco di una delle due parti (minimo 0). Altezza pari al doppio della differenza tra i rispettivi Might.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti. Il tuo Might viene ridotto di 2 punti fino alla fine del mese.",
       "opinionValue": 40,
       "modifiers": [],

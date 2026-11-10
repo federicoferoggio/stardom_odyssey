@@ -108,12 +108,6 @@
       "aliases": []
     },
     {
-      "id": "luogo-sacro-ioun",
-      "name": "Luogo sacro (Ioun)",
-      "category": "resources",
-      "aliases": []
-    },
-    {
       "id": "luogo-sacro-kord",
       "name": "Luogo sacro (Kord)",
       "category": "resources",

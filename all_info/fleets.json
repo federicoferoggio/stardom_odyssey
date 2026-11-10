@@ -184,6 +184,23 @@
       "type": "ground-support",
       "orders": []
     },
+{
+      "id": "mitsumoro-flotta-4",
+      "name": "ULTRAFLOTTA",
+      "owner": "Mitsumoro",
+      "speed": 100,
+      "maxDistance": 1000,
+      "bonusRange": 2000,
+      "bonus": "Mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta.",
+      "startBody": "saltar",
+      "orders": [
+        {
+          "month": 10228,
+          "action": "move",
+          "target": "elbethel"
+        }
+      ]
+    },
     {
       "id": "ousssek-flotta-1",
       "name": "Sparassidae",

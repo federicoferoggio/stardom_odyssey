@@ -72,7 +72,7 @@
       "speed": 9,
       "color": "#C340FF",
       "name": "Sogno della Pace",
-      "descr": "Un hotel fluttuante su un asteroide. Meta privilegiata per incontri riservati tra le grandi famiglie.",
+      "descr": "Un hotel fluttuante su un asteroide. Meta privilegiata per incontri riservati tra le grandi famiglie e comune logo di incontro della Confraternita.",
       "resourceIds": []
     },
     {
@@ -245,7 +245,6 @@
       "name": "Port Blanc",
       "descr": "Un avamposto nascosto tra gli asteroidi. Il luogo segreto dove i Carxus testano nuove navi e armamenti.",
       "resourceIds": [
-        "luogo-sacro-ioun"
       ]
     },
     {

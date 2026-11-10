@@ -5,7 +5,7 @@
       "name": "Armamenti arcani avanzati (abjuration)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando effettui un tiro di Might+Territory per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +1 al tiro.",
+      "description": "Quando effettui un tiro di Difesa e l'attacco usa spelljammer o usa assetti arcani, ottieni +2 al tiro.",
       "requirementIds": [
         "ivory",
         "obsidian",
@@ -15,8 +15,8 @@
     {
       "name": "Armamenti arcani avanzati (conjuration)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Quando tiri i dadi per Might + Territory da Difendere, puoi aggiungere +1d riducendo permanentemente il tuo Treasure di 1.",
+      "generationTime": "6 mese",
+      "description": "Quando effettui un tiro di Difesa, puoi aggiungere +3 al tuo tiro sacrificando 1 punto di treasure per 6 mesi.",
       "requirementIds": [
         "obsidian"
       ]
@@ -24,8 +24,8 @@
     {
       "name": "Armamenti arcani avanzati (divination)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Quando effettui un tiro per attaccare, puoi tirare due volte tutti i dadi e scegliere quale set utilizzare.",
+      "generationTime": "3 mesi",
+      "description": "Quando effettui un tiro di Attacco, puoi tirare due volte tutti i dadi e scegliere quale set utilizzare.",
       "requirementIds": [
         "blu-kolbmony-drussiana"
       ]
@@ -33,8 +33,8 @@
     {
       "name": "Armamenti arcani avanzati (enchantment)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Ottieni +1d a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
+      "generationTime": "2 mesi",
+      "description": "Ottieni +1d a qualsiasi tiro di Raccolta Informazioni.",
       "requirementIds": [
         "obsidian",
         "seaurite"
@@ -44,7 +44,7 @@
       "name": "Armamenti arcani avanzati (evocation)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando effettui un tiro Might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un +1d al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di Territory.",
+      "description": "Quando effettui un tiro Attacco con obiettivo di Razzia o Conquista, ottieni un +3d al tiro ma una probabilità del 50% di non ottenere alcun Treasure o Territory.",
       "requirementIds": [
         "obsidian",
         "tholleite",
@@ -54,8 +54,8 @@
     {
       "name": "Armamenti arcani avanzati (illusion)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Puoi aggiungere +1d alla tua Might, al tuo Treasure o alla tua Sovereignty. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "generationTime": "24 mesi",
+      "description": "Hai una flotta aggiuntiva disponibile. Questa flotta non può essere usata per lanciare invasioni (Attacco), ma porta con se un bonus definito come: 'mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta'. La flotta ha velocita 100 e distanza massima e distanza di attivazione di 1000 e 2000 rispettivamente. La flotta sparisce se statica per 3 mesi.",
       "requirementIds": [
         "knotime"
       ]
@@ -63,8 +63,8 @@
     {
       "name": "Armamenti arcani avanzati (necromancy)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Per qualsiasi tiro che coinvolga il Territory, puoi cambiare il dado utilizzato in un d8, ma rimuovi -2d dal tuo pool.",
+      "generationTime": "3 mesi",
+      "description": "Per qualsiasi tiro che coinvolge il Territory, puoi cambiare il dado utilizzato dall avversario in un d8.",
       "requirementIds": [
         "zinale"
       ]
@@ -72,17 +72,17 @@
     {
       "name": "Armamenti arcani avanzati (transmutation)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Per qualsiasi tiro che utilizzi la Might, puoi cambiare il dado utilizzato in un d12 e aggiungere +1d al tuo pool.",
+      "generationTime": "3 mesi",
+      "description": "Per qualsiasi tiro che utilizzi la Might, puoi cambiare tuo dado utilizzato in un d12.",
       "requirementIds": [
         "cronvite"
       ]
     },
     {
-      "name": "Armamenti arcani semplici (abjuration)",
+      "name": "Difesa arcana semplice (abjuration)",
       "type": "Monouso",
-      "generationTime": "3 mesi",
-      "description": "Quando effettui un tiro di Might+Territory per difenderti e il tuo nemico sta usando una risorsa magica, ottieni +2d al tiro.",
+      "generationTime": "2 mesi",
+      "description": "Quando effettui un tiro di Controspionaggio, puoi aggiungere +1d al tuo pool.",
       "requirementIds": [
         "adamantine",
         "niez",
@@ -94,7 +94,7 @@
       "name": "Armamenti arcani semplici (conjuration)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Quando tiri i dadi per Might + Territory da Difendere, puoi aggiungere +1d riducendo permanentemente il tuo Treasure di 1.",
+      "description": "Quando tiri per Difendere, puoi aggiungere +1d al tuo pool.",
       "requirementIds": [
         "adamantine",
         "niez",
@@ -105,8 +105,8 @@
     {
       "name": "Armamenti arcani semplici (divination)",
       "type": "Monouso",
-      "generationTime": "3 mesi",
-      "description": "Quando effettui un tiro per attaccare, puoi sostituire un d10 con un d5. 1 conterà come 1-2, 2 come 3-4 e così via.",
+      "generationTime": "6 mesi",
+      "description": "Quando effettui un tiro di Attacco, puoi sostituire un d10 con un d5. 1 conterà come 1-2, 2 come 3-4 e così via.",
       "requirementIds": [
         "adamantine",
         "niez",
@@ -116,8 +116,8 @@
     {
       "name": "Armamenti arcani semplici (enchantment)",
       "type": "Monouso",
-      "generationTime": "3 mesi",
-      "description": "Ottieni +2 a qualsiasi tiro di Influence + Spionaggio del Treasure effettuato contro gruppi non magici.",
+      "generationTime": "12 mesi",
+      "description": "Puoi fare un trattato diplomatico senza dover spendere risorse per attivarlo.",
       "requirementIds": [
         "adamantine",
         "livinohorite",
@@ -128,7 +128,7 @@
       "name": "Armamenti arcani semplici (evocation)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Quando effettui un tiro Might+Treasure per attaccare con l'obiettivo di Saccheggiare o Annessione, ottieni un bonus di +2d al tiro ma una probabilità del 50% di non ottenere alcun Treasure o aumento di Territory.",
+      "description": "Quando effettui un Attacco per attaccare con l'obiettivo di Disingaggio, doppia la distanza di cui la spelljammer nemica si deve allontanare nel caso di una tua vittoria.",
       "requirementIds": [
         "adamantine",
         "livinohorite",
@@ -140,7 +140,7 @@
       "name": "Armamenti arcani semplici (illusion)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Puoi aggiungere +2d alla tua Might, al tuo Treasure o alla tua sovreignity. Questi bonus non vengono utilizzati per calcolare il tuo pool e scompaiono alla fine del mese o dopo aver perso un tiro di spionaggio da parte di un'altra compagnia.",
+      "description": "Puoi aggiungere +2d a un tuo qualsiasi pool, ma devi poi scegliere 4 dadi da rimuovere dopo aver rollato ma prima di sapere il risultato avverrsario.",
       "requirementIds": [
         "adamantine",
         "xifl",
@@ -151,7 +151,7 @@
       "name": "Armamenti arcani semplici (necromancy)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Per qualsiasi tiro che coinvolga il Territory, puoi cambiare il dado utilizzato in un d8, ma rimuovi -1d dal tuo pool.",
+      "description": "Per qualsiasi tiro che utilizzi il Territory, puoi cambiare tuo dado utilizzato in un d12.",
       "requirementIds": [
         "adamantine",
         "xifl",
@@ -162,7 +162,7 @@
       "name": "Armamenti arcani semplici (transmutation)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Per qualsiasi tiro che utilizzi la Might, puoi cambiare il dado utilizzato in un d12 e aggiungere +2d al tuo pool.",
+      "description": "Per qualsiasi tiro che coinvolge il Might, puoi cambiare il dado utilizzato dall avversario in un d8.",
       "requirementIds": [
         "adamantine",
         "varisiana-nera",
@@ -173,7 +173,7 @@
       "name": "Riserve monetarie (elio)",
       "type": "Monouso",
       "generationTime": "Immediato",
-      "description": "Puoi aggiungere +1d a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "description": "Puoi aggiungere +1d a qualsiasi tiro usante il Treasure, ma in tal caso riduci il tuo Treasure di 1 per 2 mesi.",
       "requirementIds": [
         "helium"
       ]
@@ -181,8 +181,8 @@
     {
       "name": "Riserve monetarie (argento)",
       "type": "Monouso",
-      "generationTime": "1 mese",
-      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 2 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "generationTime": "12 mesi",
+      "description": "Puoi convertire permanentemente un punto di Treasure in un punto di Might, o viceversa (2 per 1).",
       "requirementIds": [
         "silver"
       ]
@@ -191,7 +191,7 @@
       "name": "Riserve monetarie (oro)",
       "type": "Monouso",
       "generationTime": "2 mesi",
-      "description": "Puoi aggiungere +ED a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "description": "Puoi aggiungere +ED a qualsiasi tiro usante il Treasure, ma in tal caso riduci il tuo Treasure di 1 per 4 mesi.",
       "requirementIds": [
         "gold"
       ]
@@ -200,7 +200,7 @@
       "name": "Riserve monetarie (rubini)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 3 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "description": "Puoi convertire permanentemente un punto di Treasure un punto di Territory, o viceversa (2 per 1).",
       "requirementIds": [
         "ruby"
       ]
@@ -209,7 +209,7 @@
       "name": "Riserve monetarie (Emerald)",
       "type": "Monouso",
       "generationTime": "4 mesi",
-      "description": "Puoi aggiungere +2d a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "description": "Puoi aggiungere +2d a qualsiasi tiro usante il Treasure, ma in tal caso riduci il tuo Treasure di 1 per 8 mesi.",
       "requirementIds": [
         "emerald"
       ]
@@ -218,7 +218,7 @@
       "name": "Riserve monetarie (Platino)",
       "type": "Monouso",
       "generationTime": "5 mesi",
-      "description": "Il tuo tiro minimo per qualsiasi dado del Treasure è 4 se non aggiungi alcuna altra qualità aziendale al pool.",
+      "description": "Puoi convertire permanentemente un punto di Treasure un punto di Sovereignty, o viceversa (2 per 1).",
       "requirementIds": [
         "platinum"
       ]
@@ -227,7 +227,7 @@
       "name": "Riserve monetarie (diamante)",
       "type": "Monouso",
       "generationTime": "6 mesi",
-      "description": "Puoi aggiungere +MD a qualsiasi riserva usando il Treasure, ma in tal caso riduci permanentemente il tuo Treasure di 1.",
+      "description": "Puoi aggiungere +MD a qualsiasi tiro usante il Treasure, ma in tal caso riduci il tuo Treasure di 1 per 12 mesi.",
       "requirementIds": [
         "diamond"
       ]
@@ -236,7 +236,7 @@
       "name": "Sicurezza alimentare",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Rimuove l'asset \"Rischio Carestia\"",
+      "description": "Puoi liberamente muovere punti fra Territory e Sovereignty",
       "requirementIds": [
         "campi-di-cibo"
       ]
@@ -245,22 +245,13 @@
       "name": "Attrezzature per Spelljamming",
       "type": "Permanente",
       "generationTime": "Immediato",
-      "description": "Permette di far salire il proprio spelljamming level oltre livello 3, fintanto la famiglia ha la capacità tecnologica.",
+      "description": "Permette di far salire il proprio spelljamming level oltre livello 3.",
       "requirementIds": [
         "diamond",
         "helium",
         "emerald",
         "gold",
         "silver"
-      ]
-    },
-    {
-      "name": "Autorità religiosa (Ioun)",
-      "type": "Permanente",
-      "generationTime": "Immediato",
-      "description": "Ottieni un bonus di +2d a qualsiasi tiro che utilizzi l'Influence contro le compagnie per le quali più del 30% della popolazione segue quella divinità.",
-      "requirementIds": [
-        "luogo-sacro-ioun"
       ]
     },
     {
@@ -293,8 +284,8 @@
     {
       "name": "Tariffe elevate",
       "type": "Permanente",
-      "generationTime": "12 mesi",
-      "description": "Il tuo Treasure massimo aumenta di 1 fino a un massimo di 7, e il tuo Treasure attuale aumenta permanentemente di 1. Se perdi questo Bene, il tuo Treasure massimo viene riportato al suo valore originale e perdi il 50% del tuo Treasure attuale, arrotondato per difetto.",
+      "generationTime": "Immediato",
+      "description": "Il tuo Treasure massimo aumenta di 1 fino a un massimo di 7.",
       "requirementIds": [
         "centro-di-mercato"
       ]
@@ -302,8 +293,8 @@
     {
       "name": "Coscrizione obbligatoria",
       "type": "Monouso",
-      "generationTime": "6 mesi",
-      "description": "Puoi aumentare permanentemente la tua Might di uno, ma ridurre di uno la tua sovreignity",
+      "generationTime": "12 mesi",
+      "description": "Riduci di 1 la tua Sovereignty per 12 mesi e aumenta permanentemente la tua Might di 1.",
       "requirementIds": [
         "sovrappopolazione"
       ]
@@ -402,7 +393,7 @@
       "name": "Catena di Tiamat",
       "type": "Reliquia",
       "description": "Il manufatto draconico con cui i Wueng tengono legata Tiamat da quasi 300 anni.",
-      "effect": "+1d Might in qualsiasi tiro difensivo effettuato su Draconia."
+      "effect": "+3d Might su qalsiasi Attacco per Disingaggio."
     },
     {
       "id": "aepra-fortezza",
@@ -410,7 +401,55 @@
       "name": "Pianeta Fortezza",
       "type": "Difesa",
       "description": "Il tuo pianeta intero é una fortezza naturale. Hai +2d su tutti i tiri di difesa contro attacchi da flotte invadenti Aepra.",
-      "effect": "+1d Might in qualsiasi tiro difensivo effettuato su Aepra."
+      "effect": "+2d Might in qualsiasi tiro di Difesa effettuato su Aepra."
+    },
+    {
+      "id": "pure_energy",
+      "bodyId": "thesuneye",
+      "name": "Collettore di Energia Solare",
+      "type": "Potere",
+      "description": "Una volta al mese, puoi tirare 4d10, Se ottieni almeno un dieci guadagni la abilita di concentrare la luce solare in un punto del sistema, direttamente riducendo la Might di tutte le compagnie con una popolazione in maggioranza sensitiva al sole.",
+      "effect": "-1d Might in qualsiasi tiro di Difesa effettuato da una famiglia a maggoranza sensitiva al sole."
+    },
+    {
+      "id": "void_curse",
+      "bodyId": "void",
+      "name": "Vortice dell'Abisso",
+      "type": "Potere",
+      "description": "Ogni mese, tira un d4. Su un quattro, un'orda di demoni passa il portale e attacca l'opazio. Se la compagnia controllante ha might inferiore a 5, non ha abbastanza forza per contenerla e una flotta di demoni appare. La flotta si mette in rotta verso un pianeta a caso, quando in orbita garantisce ai demoni invasori la abilità di doppiare i deployment points in ogni battaglia. I demoni contano come una famiglia con Might: 6, Treasure: 6, Influence: 1, Territory: 4, Sovereignty: 1, e possono attaccare usando lo scopo 'Devastazione', che garantisce un MD al tiro e su un successo riduce di uno tutte le statistiche della compagnia bersaglio.",
+      "effect": "None"
+    },
+    {
+      "id": "illuminato_da_ion",
+      "bodyId": "ion",
+      "name": "Illuminato dal Faro di Ion",
+      "type": "Potere",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "effect": "Blocco Magico."
+    },
+    {
+      "id": "illuminato_da_ion",
+      "bodyId": "tophadus",
+      "name": "Illuminato dal Faro di Ion",
+      "type": "Potere",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "effect": "Blocco Magico."
+    },
+    {
+      "id": "illuminato_da_ion",
+      "bodyId": "hoter",
+      "name": "Illuminato dal Faro di Ion",
+      "type": "Potere",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "effect": "Blocco Magico."
+    },
+    {
+      "id": "illuminato_da_ion",
+      "bodyId": "zimurn",
+      "name": "Illuminato dal Faro di Ion",
+      "type": "Potere",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "effect": "Blocco Magico."
     }
   ]
 }
