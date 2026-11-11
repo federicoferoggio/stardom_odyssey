@@ -5,8 +5,8 @@
       "description": "Un patto di ferro che lega due partiti nel sangue e nella guerra, giurando di difendersi reciprocamente contro ogni minaccia.",
       "effects": "Se uno dei partiti fa una azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un Patto di Non-Aggressione.",
       "category": "relational",
-      "diplomacyCost": "Almeno 3 mesi trascorsi dall'ultimo attacco di una delle due parti (minimo 0). Altezza pari al doppio della differenza tra i rispettivi Might.",
-      "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti. Il tuo Might viene ridotto di 2 punti fino alla fine del mese.",
+      "diplomacyCost": "Almeno 12 mesi trascorsi dall'ultimo Attacco da una delle due parti verso l'altra e un Patto di Non-Aggressione firmato almeno 3 mesi prima.",
+      "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti. Il tuo Might viene ridotto di 2 punti per 12 mesi.",
       "opinionValue": 40,
       "modifiers": [],
       "holders": []
@@ -15,7 +15,7 @@
       "description": "Un giuramento solenne che proibisce ai firmatari di alzare le armi l'uno contro l'altro, sigillato sotto gli occhi degli dei.",
       "effects": "I due partiti non possono prendere azioni di Attacco contro l'altro partito.",
       "category": "relational",
-      "diplomacyCost": "Larghezza pari a 3 meno i mesi trascorsi dall'ultimo attacco tra le due parti (minimo 0).",
+      "diplomacyCost": "Almeno 6 mesi trascorsi dall'ultimo Attacco da una delle due parti verso l'altra.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti.",
       "opinionValue": 10,
       "modifiers": [],
@@ -49,10 +49,10 @@
     },
     "Patto di Vassallaggio": {
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
-      "effects": "Signore: +2d Territory. Vassallo: +2d Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e patto di non-aggressione.",
+      "effects": "Signore: +2d Territory e +1d Might. Vassallo: +1d Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e un Patto di Non-Aggressione.",
       "category": "relational",
-      "diplomacyCost": "Tre tiri di Attacco vinti consecutivamente.",
-      "breakupCost": "La tua Sovereignty viene ridotta permanentemente di 2 punti.",
+      "diplomacyCost": "Una differenza totale di statistiche di almeno 5.",
+      "breakupCost": "La Sovereignty del signore viene ridotta permanentemente di 2 punti se rompe il vassallaggio. Se il Vassallo rompe il Vassallaggio, il signore avra +3d sugli attacchi verso il vassallo per 12 mesi.",
       "opinionValue": 0,
       "modifiersAsFrom": [
         {
@@ -60,12 +60,24 @@
           "amount": 2,
           "situation": "Sempre",
           "always": true
+        },
+        {
+          "stat": "Might",
+          "amount": 1,
+          "situation": "Sempre",
+          "always": true
+        },
+        {
+          "stat": "Might",
+          "amount": 3,
+          "situation": "Verso ex vassallo per 12 mesi dalla rottura del patto.",
+          "always": false
         }
       ],
       "modifiersAsTo": [
         {
           "stat": "Might",
-          "amount": 2,
+          "amount": 1,
           "situation": "Sempre",
           "always": true
         }
@@ -92,8 +104,8 @@
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
       "effects": "Signore: +2d Treasure. Vassallo: +2d Might, massimo Treasure scende a 3. Include automaticamente patto di non-aggressione.",
       "category": "relational",
-      "diplomacyCost": "Tre tiri di Guerra Non Convenzionale vinti consecutivamente.",
-      "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 2 punti.",
+      "diplomacyCost": "Riduzione might Signore di uno.",
+      "breakupCost": "Il Treasure del signore viene ridotto permanentemente di 2 punti. La Might del Vassallo viene ridotta permanentemente di 2.",
       "opinionValue": 0,
       "modifiersAsFrom": [
         {
@@ -111,7 +123,11 @@
           "always": true
         }
       ],
-      "holders": []
+      "holders": [{
+  "from": "Ousssek",
+  "to": "Rivera",
+  "bidirectional": true
+}]
     },
     "Rivalità": {
       "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
@@ -181,11 +197,6 @@
         },
         {
           "from": "Ousssek",
-          "to": "Rivera",
-          "bidirectional": true
-        },
-        {
-          "from": "Ousssek",
           "to": "Amoako",
           "bidirectional": true
         }
@@ -193,9 +204,9 @@
     },
     "Accordo di Migrazione": {
       "description": "Un patto che regola il flusso di popolazioni tra territori, permettendo espansione controllata e crescita demografica.",
-      "effects": "+1d di Territory. Aumenta permanentemente, all'inizio e ogni anno, del 5% la popolazione della razza maggioritaria del partito con Territory più grande. Se il Territory è pari, non ha effetto.",
+      "effects": "+1d a qualsiasi pool che include Territory. Quando firmato, e una volta per ogni anno, la popolazione della razza maggioritaria del partito con Territory più grande aumenta del 50% fino a un massimo del 50%. Se non presente parte da 3%. Se il Territory è pari, non ci sono migrazioni significative.",
       "category": "benefit",
-      "diplomacyCost": "Se le due famiglie non condividono la stessa religione principale, la tua Sovereignty viene ridotta di 2 punti.",
+      "diplomacyCost": "Se le due famiglie non condividono la stessa religione principale, la tua Sovereignty viene ridotta permanentemente di 2 punti.",
       "breakupCost": "Il tuo Territory viene ridotto permanentemente di 1 punto.",
       "opinionValue": 15,
       "modifiers": [
@@ -263,17 +274,17 @@
       ]
     },
     "Accordo Spelljammer": {
-      "description": "Un contratto per costruire spelljammer avanzate.",
+      "description": "Un contratto per semplificare il processo di creazione di Spelljammer garantito dai Carxus.",
       "effects": "Garantisce l'asset 'Riserve di Spelljammer'.",
       "diplomacyCost": "Nessuno.",
-      "breakupCost": "La tua Might viene ridotta permanentemente di 2 punti.",
+      "breakupCost": "Nessuno",
       "category": "unique",
       "opinionValue": 10,
       "grantsAsset": {
         "name": "Riserve di Spelljammer",
         "type": "Permanente",
-        "description": "I Carxus permetto l'accesso per questa familgia a tutti gli armamenti migliori.",
-        "effect": "Durante un tiro di Genera Flotta, puoi ridurre di 2 la height necessaria per aver successo su un tiro. Inoltre, flotte disabilitate tornano in gioco con tre mesi di anticipo."
+        "description": "I Carxus permettono l'accesso per questa famiglia a tutti gli armamenti migliori.",
+        "effect": "Durante un tiro di Genera Flotta, puoi creare flotte con abilità. Inoltre puoi dimezzare tutti i tempi di rigenerazione per la flotta."
       },
       "holders": [
         {
@@ -288,33 +299,73 @@
         }
       ]
     },
-    "Accordo di Finanziamento": {
-      "description": "Un finanziamento dei Grayshine.",
-      "effects": "Aumenta il tuo Treasure di +1 istantaneamente. Ottieni la risorsa 'Debiti' (conseguenze negative future).",
+    "Credito Semplice": {
+      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
+      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Leggero'.",
       "category": "unique",
-      "diplomacyCost": "La famiglia di target deve avere un Treasure minore dei Grayshine.",
-      "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
+      "diplomacyCost": "Il creditore perde 1 punto di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno due punti di Treasure.",
+      "breakupCost": "Il creditore aumenta il suo Treasure di 1 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -60 punti di opinione per tutte le famiglie parte della confraternita.",
       "opinionValue": 0,
+      "modifiers": [],
       "grantsAsset": {
-        "name": "Finanziamenti",
-        "type": "Permanente",
-        "description": "Un guadagno di Treasure che deve essere ripagato in lavoro.",
-        "effect": "+1d Treasure per la famiglia target, -1d sui suoi tiri di Territory. +1d Territory per i Grayshine."
+        "name": "Debito Leggero",
+        "type": "Relazionale",
+        "description": "Un debito da pagare nel tempo.",
+        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 9. Le creditore, ogni 9 vale come 10."
       },
       "holders": [
         {
           "from": "Grayshine",
-          "to": "Sudriz",
+          "to": "La Mano",
           "bidirectional": true
         },
         {
           "from": "Grayshine",
           "to": "Rivera",
           "bidirectional": true
-        },
+        }
+      ]
+    },
+    "Credito Intermedio": {
+      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
+      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Intermedio'.",
+      "category": "unique",
+      "diplomacyCost": "Il creditore perde 2 punti di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno 3 punti di Treasure.",
+      "breakupCost": "Il creditore aumenta il suo Treasure di 2 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -120 punti di opinione per tutte le famiglie parte della confraternita.",
+      "opinionValue": 0,
+      "modifiers": [],
+      "grantsAsset": {
+        "name": "Debito Intermedio",
+        "type": "Relazionale",
+        "description": "Un debito da pagare nel tempo.",
+        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 8. Se creditore, ogni risultato di 8 o superiore vale come 10."
+      },
+      "holders": [
         {
           "from": "Grayshine",
           "to": "Stozav",
+          "bidirectional": true
+        }
+      ]
+    },
+    "Credito Significativo": {
+      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
+      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Leggero'.",
+      "category": "unique",
+      "diplomacyCost": "Il creditore perde 3 punti di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno 4 punti di Treasure.",
+      "breakupCost": "Il creditore aumenta il suo Treasure di 3 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -180 punti di opinione per tutte le famiglie parte della confraternita.",
+      "opinionValue": 0,
+      "modifiers": [],
+      "grantsAsset": {
+        "name": "Debito Pesante",
+        "type": "Relazionale",
+        "description": "Un debito da pagare nel tempo.",
+        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 7. Se creditore, ogni risultato di 7 o superiore vale come 10."
+      },
+      "holders": [
+        {
+          "from": "Grayshine",
+          "to": "Sudriz",
           "bidirectional": true
         }
       ]
@@ -330,7 +381,7 @@
         "name": "Maghi di Ion",
         "type": "Permanente",
         "description": "Un collegio di maghi Ntsu messo a disposizione dal Faro di Ion.",
-        "effect": "+1d so ogni tiro che ragionevolmente includono strumenti o metodi magici."
+        "effect": "Una volta al mese, +2d su qualsiasi tiro. Ogni azione compiuta conta come Magica."
       },
       "holders": [
         {
@@ -392,7 +443,7 @@
         "name": "Ricerca e Sviluppo",
         "type": "Supporto Tecnico",
         "description": "Accesso agli artigiani e ingegneri della bottega di Shawel.",
-        "effect": "Permette l'accesso a una risorsa a un asset monosuo a scelta ogni 2 mesi."
+        "effect": "Permette l'accesso a una risorsa a un asset monouso a scelta ogni 3 mesi."
       },
       "holders": [
         {

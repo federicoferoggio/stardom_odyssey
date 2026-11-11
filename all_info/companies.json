@@ -10,7 +10,7 @@
       "government": "Martial Empire",
       "planet": "Draconia",
       "color": "#0576ED",
-      "description": "La famiglia Wueng è una delle più formidabili dello Stardom, con il loro potere radicato in una forza militare impareggiabile. Comandano la flotta più grande e ben addestrata, affiancata da centiania di draghi. Il loro mondo, Draconia, è una forgia per le anime dei suoi abitanti, dove ogni individuo o diventa parte della macchina bellica o finisce ad essere uno schiavo dei draghi. La loro stretta su Tiamat (ottenuta in un modo misterioso quasi 300 anni fa) e la loro fedeltà culto di Bane li rende una forza inarrestabile e temuta, il cui unico valore è la vittoria sul campo di battaglia.",
+      "description": "La famiglia Wueng è una delle più formidabili dello Stardom, con il loro potere radicato in una forza militare impareggiabile. Comandano la flotta più grande e ben addestrata, affiancata da centinaia di draghi. Il loro mondo, Draconia, è una forgia per le anime dei suoi abitanti, dove ogni individuo o diventa parte della macchina bellica o finisce ad essere uno schiavo dei draghi. La loro stretta su Tiamat (ottenuta in un modo misterioso quasi 300 anni fa) e la loro fedeltà al culto di Bane li rende una forza inarrestabile e temuta, il cui unico valore è la vittoria sul campo di battaglia.",
       "motto": "In pace in guerra, in guerra in pace"
     },
     {
@@ -61,7 +61,7 @@
       "government": "Hegemonic Imperialists",
       "planet": "Saltar",
       "color": "#C160FF",
-      "description": "Gli Ousssek sono la famiglia dominante tra i drow, devoti a Lolth e al perfezionamento della loro società attraverso conflitti interni costanti. La loro società si basa sui Duelli del Destino, che rafforzano i meritevoli e eliminano i deboli. Estendono il loro potere attraverso asteroidi e stazioni, con la loro flotta che prioetta la loro forza nelle profondità dello spazio. La loro rete di assassini, il Punto Rosso, è conosciuta in tutto l'opazio, portando a termine omicidi per mantenere il potere e l'influenza della famiglia.",
+      "description": "Gli Ousssek sono la famiglia dominante tra i drow, devoti a Lolth e al perfezionamento della loro società attraverso conflitti interni costanti. La loro società si basa sui Duelli del Destino, che rafforzano i meritevoli e eliminano i deboli. Estendono il loro potere attraverso asteroidi e stazioni, con la loro flotta che proietta la loro forza nelle profondità dello spazio. La loro rete di assassini, il Punto Rosso, è conosciuta in tutto l'opazio, portando a termine omicidi per mantenere il potere e l'influenza della famiglia.",
       "motto": "Nel nome di Lei"
     },
     {
@@ -74,7 +74,7 @@
       "government": "Plutocratic Oligarchy",
       "planet": "Enov",
       "color": "#C005ED",
-      "description": "I Grayshine sono i padroni indiscussi della ricchezza nello Stardom. Dalla loro fortezza su Deimos, accumulano e proteggono immense riserve d'oro e ricchezze, facendo affidamento su una vasta rete di alleanze per mantenere la loro posizione. Sebbene non comandino eserciti vasti, il loro vero potere risiede nella capacità di controllare il flusso economico dell'opazio, influenzando le sorti di imperi e famiglie con un singolo investimento o prestito.",
+      "description": "I Grayshine sono i padroni indiscussi della ricchezza nello Stardom. Dalla loro fortezza su Enov, accumulano e proteggono immense riserve d'oro e ricchezze, facendo affidamento su una vasta rete di alleanze per mantenere la loro posizione. Sebbene non comandino eserciti vasti, il loro vero potere risiede nella capacità di controllare il flusso economico dell'opazio, influenzando le sorti di imperi e famiglie con un singolo investimento o prestito.",
       "motto": "Oro e potere, come alba e giorno."
     },
     {
@@ -98,7 +98,7 @@
       "territory": 5,
       "sovereignty": 3,
       "government": "Megacorporation",
-      "planet": "Zimurn",
+      "planet": "Wandacker",
       "color": "#FF5B01",
       "description": "La famiglia Amoako domina l'industria dell'estrazione mineraria, gestendo vaste flotte e appaltatori che estraggono risorse preziose dalla pericolosa superficie di Wandacker. Sebbene siano ricchi e militarizzati, non sono mai riusciti a liberare la superficie di Wandacker dalle orde di gnoll che la infestano. Senza possedimenti terrestri, gli Amoako operano da stazioni spaziali altamente efficienti, diventando indispensabili per la loro esperienza nella gestione delle stazioni. Nonostante il loro potere, sono costantemente contestati del conglomerato Waytir-Yugani.",
       "motto": "Il rischio è il gioco, il guadagno il trofeo"
@@ -111,9 +111,9 @@
       "territory": 4,
       "sovereignty": 5,
       "government": "Fanatic Purifiers",
-      "planet": "Wandacker",
+      "planet": "Zimurn",
       "color": "#FB005F",
-      "description": "I Zolinath sono i principali arbitri di giustizia nello Stardom, governando la luna di Zimurn con un pugno di ferro. La loro società è guidata da potenti Giudici, incaricati di mantenere l'ordine e di eseguire le sentenze. L'élite, nota come gli Argaonne, sono rispettati ed usati in tutto il sistema per la loro totale incapacità di mentire, fungendo da garanti di verità nelle negoziazioni e nei processi legali fra diverse famiglie.",
+      "description": "Gli Zolinath sono i principali arbitri di giustizia nello Stardom, governando la luna di Zimurn con un pugno di ferro. La loro società è guidata da potenti Giudici, incaricati di mantenere l'ordine e di eseguire le sentenze. L'élite, nota come gli Argaonne, sono rispettati ed usati in tutto il sistema per la loro totale incapacità di mentire, fungendo da garanti di verità nelle negoziazioni e nei processi legali fra diverse famiglie.",
       "motto": "Il falso cade, il vero resta"
     },
     {
@@ -191,7 +191,7 @@
       "government": "Megacorporation",
       "planet": "Enides",
       "color": "#00EEFA",
-      "description": "Nonostante siano una famiglia piccola e apparentemente insignificante, i Shawel hanno trasformato la luna desolata di Erebos in un centro di artigianato magico senza pari. Le loro creazioni -spade, armature e altri oggetti magici- sono famose per la loro potenza e rarità, e hanno garantito a Beca Haider la possibilità di salire fra i più alti ranghi della società del sistema.",
+      "description": "Nonostante siano una famiglia piccola e apparentemente insignificante, i Shawel hanno trasformato la luna desolata di Enides in un centro di artigianato magico senza pari. Le loro creazioni -spade, armature e altri oggetti magici- sono famose per la loro potenza e rarità, e hanno garantito a Beca Haider la possibilità di salire fra i più alti ranghi della società del sistema.",
       "motto": "La forza sta nel metallo, l'anima nella fucina"
     },
     {

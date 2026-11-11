@@ -15,7 +15,7 @@
     {
       "name": "Armamenti arcani avanzati (conjuration)",
       "type": "Monouso",
-      "generationTime": "6 mese",
+      "generationTime": "6 mesi",
       "description": "Quando effettui un tiro di Difesa, puoi aggiungere +3 al tuo tiro sacrificando 1 punto di treasure per 6 mesi.",
       "requirementIds": [
         "obsidian"
@@ -55,7 +55,7 @@
       "name": "Armamenti arcani avanzati (illusion)",
       "type": "Monouso",
       "generationTime": "24 mesi",
-      "description": "Hai una flotta aggiuntiva disponibile. Questa flotta non può essere usata per lanciare invasioni (Attacco), ma porta con se un bonus definito come: 'mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta'. La flotta ha velocita 100 e distanza massima e distanza di attivazione di 1000 e 2000 rispettivamente. La flotta sparisce se statica per 3 mesi.",
+      "description": "Hai una flotta aggiuntiva disponibile. Questa flotta non può essere usata per lanciare invasioni (Attacco), ma porta con se un bonus definito come: 'mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta'. La flotta ha velocità 100 e distanza massima e distanza di attivazione di 1000 e 2000 rispettivamente. La flotta sparisce se statica per 3 mesi.",
       "requirementIds": [
         "knotime"
       ]
@@ -140,7 +140,7 @@
       "name": "Armamenti arcani semplici (illusion)",
       "type": "Monouso",
       "generationTime": "3 mesi",
-      "description": "Puoi aggiungere +2d a un tuo qualsiasi pool, ma devi poi scegliere 4 dadi da rimuovere dopo aver rollato ma prima di sapere il risultato avverrsario.",
+      "description": "Puoi aggiungere +2d a un tuo qualsiasi pool, ma devi poi scegliere 4 dadi da rimuovere dopo aver rollato ma prima di sapere il risultato avversario.",
       "requirementIds": [
         "adamantine",
         "xifl",
@@ -393,7 +393,7 @@
       "name": "Catena di Tiamat",
       "type": "Reliquia",
       "description": "Il manufatto draconico con cui i Wueng tengono legata Tiamat da quasi 300 anni.",
-      "effect": "+3d Might su qalsiasi Attacco per Disingaggio."
+      "effect": "+3d Might su qualsiasi Attacco per Disingaggio."
     },
     {
       "id": "aepra-fortezza",

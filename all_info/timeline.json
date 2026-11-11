@@ -31,7 +31,7 @@
       "events": [
         {
           "description": "La Mano negozia con i quattro regni di El-Beth-El senza ancora essersi guadagnata il loro rispetto: Kerr chiede il Richiamo delle Stelle (tassa del 10% dagli altri regni) per la sua bancarotta; Bataar chiede aiuto contro i clan ribelli; i Samarkhoy temono la crescita di Bataar; Ashran chiede la rimozione del Limite del Cielo sulle proprie navi. Ciononostante, i regni rispettano la loro autorità (almeno in apparenza).",
-          "modifier": "Rete di spie costruita ad Ashtran."
+          "modifier": "Rete di spie costruita ad Ashran."
         }
       ]
     },
@@ -61,7 +61,7 @@
       "events": [
         {
           "description": "Il Khan mantiene la parola data e cede le sue truppe alla Mano. Il comando dell'esercito unificato viene affidato alla famiglia Akbe (Elt). Preparazione alla guerra contro gli Hai.",
-          "modifier": "Spy Network in Khor Galimah"
+          "modifier": "Spy Network in Khor Galimath"
         }
       ]
     },
@@ -70,8 +70,8 @@
       "title": "Vittoria",
       "events": [
         {
-          "description": "La flotta della Mano affronta e cattura l'Ammiraglio Astrul in una battaglia navale costosa (Minerva catturata dagli Hai, l'anima di Arren spaccata). Si raggiunge un cessate il fuoco con gli Hai: scambio Astrul-Minerva, resa pubblica dignitosa, rotte commerciali Hai aperte a prezzi maggiorati. Patto di Non Aggressione di 3 anni firmato.",
-          "modifier": "Army is ready. Spelljaming level increases by one. Civil war roll. Hai arrive."
+          "description": "La flotta della Mano affronta e cattura l'Ammiraglio Astrul in una battaglia navale costosa (Minerva catturata dagli Hai, l'anima di Arren spaccata). Si raggiunge un cessate il fuoco con gli Hai: scambio Astrul-Minerva, resa pubblica dignitosa, rotte commerciali Hai aperte a prezzi maggiorati. Patto di Non-Aggressione di 3 anni firmato.",
+          "modifier": "Army is ready. Spelljamming level increases by one. Civil war roll. Hai arrive."
         }
       ]
     },
@@ -90,7 +90,7 @@
       "title": "Ordine",
       "events": [
         {
-          "description": "Il Concilio di Rizmahal: il party raggiunge l'80% di supporto richiesto, ottenendo il sostegno di tutte le fazioni tranne i Deossiani (Casa delle Ultime Luci e Cenere e Spirito) e Cavalcante Garil (dopo che si scopre che il Khan di Bataar è morto, avvelenato dalla Regina Zila'ach dei Samarkhoy). La Religione dell'Unico si diffonde in Samarkoi.",
+          "description": "Il Concilio di Rizmahal: il party raggiunge l'80% di supporto richiesto, ottenendo il sostegno di tutte le fazioni tranne i Deossiani (Casa delle Ultime Luci e Cenere e Spirito) e Cavalcante Garil (dopo che si scopre che il Khan di Bataar è morto, avvelenato dalla Regina Zila'ach dei Samarkhoy). La Religione dell'Unico si diffonde in Samarkhoy.",
           "modifier": "Il Concilio stabilisce il nuovo ordine di El-Beth-El. Treasure +1, Might a 2. Bataar rischia il collasso (10%/mese di -1 Might). Deossiani ostili."
         }
       ]
@@ -152,15 +152,15 @@
           "modifier": "Due nuovi bonus al Fanatismo."
         },
         {
-          "description": "Gli Oussek intensificano la guerra contro El-Beth-El, conquistando le Miniere di El-Bolghari e attaccando Khor-Galimath. In vista dell'invasione, la Mano prepara una trappola nelle catacombe, progettando di far collassare alcuni quartieri della capitale con la polvere di Ghakis e inondarli deviando il fiume. L'invasione ha inizio con la flotta nemica che oscura il sole e disabilita le difese antispelljammer della città. La Mano fa esplodere quattro quartieri, infliggendo pesanti perdite agli invasori, ma Khor-Galimath cade e gli Oussek riescono a stabilirsi sul pianeta. Le truppe alleate vengono in parte salvate e la Mano ottiene una nuova abilità militare.",
-          "modifier": "Mano: -2 Sovereignty e rimosso Divided Population. Oussek: -1 Might. Esercito: 5/8 delle truppe fuori dalla città e 3/8 al suo interno. Sbloccata l'abilità militare Hold the Line. Level up."
+          "description": "Gli Ousssek intensificano la guerra contro El-Beth-El, conquistando le Miniere di El-Bolghari e attaccando Khor Galimath. In vista dell'invasione, la Mano prepara una trappola nelle catacombe, progettando di far collassare alcuni quartieri della capitale con la polvere di Ghakis e inondarli deviando il fiume. L'invasione ha inizio con la flotta nemica che oscura il sole e disabilita le difese antispelljammer della città. La Mano fa esplodere quattro quartieri, infliggendo pesanti perdite agli invasori, ma Khor Galimath cade e gli Ousssek riescono a stabilirsi sul pianeta. Le truppe alleate vengono in parte salvate e la Mano ottiene una nuova abilità militare.",
+          "modifier": "Mano: -2 Sovereignty e rimosso Divided Population. Ousssek: -1 Might. Esercito: 5/8 delle truppe fuori dalla città e 3/8 al suo interno. Sbloccata l'abilità militare Hold the Line. Level up."
         },
         {
           "description": "Mentre la flotta nemica si avvicina, Minerva riceve da Arakne un avvertimento inquietante: Milodra è stata localizzata e gode dell'appoggio di uno dei Big Three. Arakne la esorta ad abbandonare immediatamente il pianeta, mettendola in guardia anche sui suoi stessi alleati. Due giorni prima dell'arrivo della flotta, Minerva fugge dalla reggia utilizzando l'elmo di teletrasporto di Arren e raggiunge il Piano dell'Abisso. La Mano prepara inoltre la dispersione della corte e dei propri alleati fuori dalla capitale in vista degli eventi imminenti.",
           "modifier": ""
         },
         {
-          "description": "Sul piano politico e strategico, la costa di Ashran rimane sotto il controllo della Mano, sebbene i ribelli locali risultino finanziati da un attore esterno a El-Beth-El. La regina di Samarkoi si proclama Prescelta del Profeta e consente a Leahm Shalaq, il Cane, di predicare liberamente. I Thrikreen giungono inoltre a El-Beth-El a bordo di una nave apparentemente commerciale.",
+          "description": "Sul piano politico e strategico, la costa di Ashran rimane sotto il controllo della Mano, sebbene i ribelli locali risultino finanziati da un attore esterno a El-Beth-El. La regina di Samarkhoy si proclama Prescelta del Profeta e consente a Leahm Shalaq, il Cane, di predicare liberamente. I Thrikreen giungono inoltre a El-Beth-El a bordo di una nave apparentemente commerciale.",
           "modifier": ""
         }
       ]

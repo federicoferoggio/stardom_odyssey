@@ -109,7 +109,7 @@
       "speed": 20,
       "maxDistance": 400,
       "bonusRange": 1000,
-      "bonus": "Quando orbita un sistema, riduci di 1 tutte le statistiche avversarie su quel pianeta. Inoltre, ogni spell slot sopra il livello 5 non è usabile da nemici, e i nemici non possono usare la power pahse.",
+      "bonus": "Quando orbita un sistema, riduci di 1 tutte le statistiche avversarie su quel pianeta. Inoltre, ogni spell slot sopra il livello 5 non è usabile da nemici, e i nemici non possono usare la power phase.",
       "startBody": "ion",
       "orders": [
         {

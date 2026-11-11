@@ -728,28 +728,28 @@ const FLEET_ARCHETYPES = {
   interceptor: {
     speed: 16,
     maxDistance: 40,
-    bonusRange: 120,
+    bonusRange: 80,
     bonus:
-      "Quando questa flotta ingaggia un'altra flotta in combattimento, ottiene +1 a Might per il tiro d'attacco.",
+      "Quando questa flotta ingaggia un'altra flotta in combattimento, ottiene +1d a Might per il tiro d'attacco.",
   },
   suppressor: {
     speed: 4,
     maxDistance: 600,
-    bonusRange: 90,
+    bonusRange: 40,
     bonus:
-      "Finché orbita attorno a un pianeta nemico, ogni tiro nemico che coinvolge Territory su quel corpo subisce -1.",
+      "Finché orbita attorno a un pianeta nemico, ogni tiro nemico che coinvolge Territory su quel corpo subisce -1d.",
   },
   "ground-support": {
     speed: 8,
     maxDistance: 60,
-    bonusRange: 30,
+    bonusRange: 20,
     bonus:
       "Per ogni cobattimento di tipo esercito contro esercito su questo corpo, ottieni 750 punti schieramento aggiuntivi.",
   },
   "arcanic-shield": {
     speed: 6,
     maxDistance: 90,
-    bonusRange: 60,
+    bonusRange: 30,
     bonus:
       "Finché questa flotta orbita attorno a un pianeta, né tu né il nemico potete usare la fase Poteri su quel corpo.",
   },

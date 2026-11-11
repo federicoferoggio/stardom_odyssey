@@ -296,7 +296,7 @@
     "Erathis": {
       "Erathis": 20.0,
       "Kord": -5.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 5.0,
       "Deos": 5.0,
       "Asmodeus": 5.0,
@@ -313,7 +313,7 @@
     "Kord": {
       "Erathis": -5.0,
       "Kord": 20.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": -5.0,
       "Asmodeus": 0.0,
@@ -330,7 +330,7 @@
     "Raven Queen": {
       "Erathis": 0.0,
       "Kord": 0.0,
-      "R. Queen": 20.0,
+      "Raven Queen": 20.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": 0.0,
@@ -347,7 +347,7 @@
     "Ioun": {
       "Erathis": 5.0,
       "Kord": 0.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 20.0,
       "Deos": 0.0,
       "Asmodeus": 0.0,
@@ -364,7 +364,7 @@
     "Deos": {
       "Erathis": 5.0,
       "Kord": -5.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 20.0,
       "Asmodeus": 0.0,
@@ -381,7 +381,7 @@
     "Asmodeus": {
       "Erathis": 5.0,
       "Kord": 0.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": 20.0,
@@ -398,7 +398,7 @@
     "Bane": {
       "Erathis": 5.0,
       "Kord": 5.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": -5.0,
@@ -415,7 +415,7 @@
     "Gruumsh": {
       "Erathis": -10.0,
       "Kord": 5.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": 0.0,
@@ -432,7 +432,7 @@
     "Lolth": {
       "Erathis": -10.0,
       "Kord": 5.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": -5.0,
@@ -449,7 +449,7 @@
     "Tiamat": {
       "Erathis": -5.0,
       "Kord": 0.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": -5.0,
@@ -466,7 +466,7 @@
     "Torog": {
       "Erathis": 0.0,
       "Kord": 0.0,
-      "R. Queen": 0.0,
+      "Raven Queen": 0.0,
       "Ioun": 0.0,
       "Deos": 0.0,
       "Asmodeus": 0.0,
@@ -483,7 +483,7 @@
     "Vecna": {
       "Erathis": 0.0,
       "Kord": 0.0,
-      "R. Queen": -10.0,
+      "Raven Queen": -10.0,
       "Ioun": -5.0,
       "Deos": 0.0,
       "Asmodeus": 10.0,
@@ -500,7 +500,7 @@
     "Unico": {
       "Erathis": -5.0,
       "Kord": -5.0,
-      "R. Queen": -5.0,
+      "Raven Queen": -5.0,
       "Ioun": -5.0,
       "Deos": -15.0,
       "Asmodeus": -5.0,
@@ -511,13 +511,13 @@
       "Torog": -5.0,
       "Vecna": -5.0,
       "Unico": 20.0,
-      "Old Gods": -5.0,
+      "Old Gods": 0.0,
       "Tharizdun": -100.0
     },
     "Old Gods": {
       "Erathis": -15.0,
       "Kord": -15.0,
-      "R. Queen": -15.0,
+      "Raven Queen": -15.0,
       "Ioun": -15.0,
       "Deos": -100.0,
       "Asmodeus": -15.0,
@@ -534,7 +534,7 @@
     "Tharizdun": {
       "Erathis": -100.0,
       "Kord": -100.0,
-      "R. Queen": -100.0,
+      "Raven Queen": -100.0,
       "Ioun": -100.0,
       "Deos": -100.0,
       "Asmodeus": -100.0,
@@ -614,7 +614,7 @@
       "Drows": 0.0,
       "Orcs": 0.0,
       "Goblinoids": 0.0,
-      "Elves": 80.0,
+      "Elves": 60.0,
       "Genasi": 20.0,
       "Alienatics": 0.0,
       "Gith": 0.0,
@@ -735,7 +735,7 @@
     "Enides": {
       "Humans": 75.0,
       "Dwarves": 0.0,
-      "Halflings": 15.0,
+      "Halflings": 25.0,
       "Gnomes": 0.0,
       "Drows": 0.0,
       "Orcs": 0.0,
@@ -818,7 +818,7 @@
     },
     "El-Beth-El": {
       "Humans": 70.0,
-      "Dwarves": 25.0,
+      "Dwarves": 15.0,
       "Halflings": 0.0,
       "Gnomes": 0.0,
       "Drows": 5.0,

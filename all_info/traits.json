@@ -105,7 +105,7 @@
           "action": "Attacco (Umiliazione)",
           "amount": 2,
           "situation": "Quando attacchi un nemico che ha usato l'azione Attacco contro di te nei tre mesi precedenti.",
-          "always": true
+          "always": false
         }
       ]
     },
@@ -163,7 +163,7 @@
           "action": "Attacco (Conquista)",
           "amount": 1,
           "situation": "Quando attacchi un nemico con cui hai una rivalità.",
-          "always": true
+          "always": false
         }
       ]
     },
@@ -240,13 +240,13 @@
           "stat": "Might",
           "amount": 1,
           "situation": "Quando la nazione ha come maggioranza religiosa la stessa di questo leader.",
-          "always": true
+          "always": false
         },
         {
           "armies": "Fight Phase",
           "amount": 3,
           "situation": "Per tre volte durante un combattimento, una unita della stessa religione del leader puo aggiungere +1 alla sua Attack Ability fino alla fine del turno.",
-          "always": true
+          "always": false
         }
       ]
     },
@@ -316,7 +316,7 @@
           "stat": "Sovereignty",
           "amount": -1,
           "situation": "Quando attaccato durante l'ultimo mese",
-          "always": true
+          "always": false
         },
         {
           "stat": "Might",

@@ -6,6 +6,18 @@
           "label": "Massacro della Luce (20225)",
           "value": 50
         }
+      ],
+      "Wueng": [
+        {
+          "label": "La parata del cattivo gusto: Hai e Wueng",
+          "value": -10
+        }
+      ],
+      "Sifu": [
+        {
+          "label": "Una verità scomoda: Hai e Sifu",
+          "value": -10
+        }
       ]
     },
     "Ousssek": {
@@ -23,6 +35,18 @@
         {
           "label": "Governati da Razzisti Estremisti (Drow)",
           "value": -50
+        }
+      ],
+      "Carxus": [
+        {
+          "label": "Scandalo in diretta orbitale: Ousssek e Carxus",
+          "value": -10
+        }
+      ],
+      "Sifu": [
+        {
+          "label": "Una verità scomoda: Ousssek e Sifu",
+          "value": -10
         }
       ]
     },
@@ -50,6 +74,18 @@
           "label": "Governati da Razzisti Estremisti (Nani e Duergar)",
           "value": -25
         }
+      ],
+      "Shawel": [
+        {
+          "label": "Un favore dal prezzo imbarazzante: Amoako e Shawel",
+          "value": 10
+        }
+      ],
+      "Rivera": [
+        {
+          "label": "Intesa di convenienza: Amoako e Rivera",
+          "value": 10
+        }
       ]
     },
     "Caillot": {
@@ -63,6 +99,18 @@
         {
           "label": "Ribellione di Schiavi",
           "value": -50
+        }
+      ],
+      "Amoako": [
+        {
+          "label": "Un favore dal prezzo imbarazzante: Caillot e Amoako",
+          "value": 10
+        }
+      ],
+      "Rivera": [
+        {
+          "label": "Scandalo in diretta orbitale: Caillot e Rivera",
+          "value": -10
         }
       ]
     },
@@ -84,6 +132,18 @@
           "label": "Incompetenza di controllo arcano (Matrimonio)",
           "value": -20
         }
+      ],
+      "Amoako": [
+        {
+          "label": "La parata del cattivo gusto: Mitsumoro e Amoako",
+          "value": -10
+        }
+      ],
+      "Carxus": [
+        {
+          "label": "Il patto dei tre timbri: Mitsumoro e Carxus",
+          "value": 10
+        }
       ]
     },
     "Ntsu": {
@@ -97,6 +157,18 @@
         {
           "label": "Incapacità di salvare il matrimonio",
           "value": -15
+        }
+      ],
+      "Zolinath": [
+        {
+          "label": "Scandalo in diretta orbitale: Ntsu e Zolinath",
+          "value": -10
+        }
+      ],
+      "Ousssek": [
+        {
+          "label": "Una verità scomoda: Ntsu e Ousssek",
+          "value": -10
         }
       ]
     },
@@ -112,6 +184,18 @@
           "label": "Figlio morto sotto la garanzia Mitsumoro",
           "value": -25
         }
+      ],
+      "Zolinath": [
+        {
+          "label": "Il patto dei tre timbri: Wueng e Zolinath",
+          "value": 10
+        }
+      ],
+      "Stozav": [
+        {
+          "label": "La parata del cattivo gusto: Wueng e Stozav",
+          "value": -10
+        }
       ]
     },
     "Rasaily": {
@@ -126,12 +210,36 @@
           "label": "Brutali",
           "value": 10
         }
+      ],
+      "Mitsumoro": [
+        {
+          "label": "Scandalo in diretta orbitale: Rasaily e Mitsumoro",
+          "value": -10
+        }
+      ],
+      "Zolinath": [
+        {
+          "label": "Una verità scomoda: Rasaily e Zolinath",
+          "value": -10
+        }
       ]
     },
     "Shawel": {
       "La Mano": [
         {
           "label": "Massacro della Luce (20225)",
+          "value": 10
+        }
+      ],
+      "Sudriz": [
+        {
+          "label": "Scandalo in diretta orbitale: Shawel e Sudriz",
+          "value": -10
+        }
+      ],
+      "Sifu": [
+        {
+          "label": "Il patto dei tre timbri: Shawel e Sifu",
           "value": 10
         }
       ]
@@ -147,6 +255,130 @@
         {
           "label": "Opprimenti",
           "value": -25
+        }
+      ],
+      "Sudriz": [
+        {
+          "label": "La parata del cattivo gusto: Rivera e Sudriz",
+          "value": -10
+        }
+      ],
+      "Mitsumoro": [
+        {
+          "label": "Intesa di convenienza: Rivera e Mitsumoro",
+          "value": 10
+        }
+      ]
+    },
+    "Carxus": {
+      "Sudriz": [
+        {
+          "label": "Scandalo in diretta orbitale: Carxus e Sudriz",
+          "value": -10
+        }
+      ],
+      "Stozav": [
+        {
+          "label": "La parata del cattivo gusto: Carxus e Stozav",
+          "value": -10
+        }
+      ]
+    },
+    "Grayshine": {
+      "Rivera": [
+        {
+          "label": "Una verità scomoda: Grayshine e Rivera",
+          "value": -10
+        }
+      ],
+      "Shawel": [
+        {
+          "label": "Un favore dal prezzo imbarazzante: Grayshine e Shawel",
+          "value": 10
+        }
+      ]
+    },
+    "Sifu": {
+      "Caillot": [
+        {
+          "label": "Il dazio della discordia: Sifu e Caillot",
+          "value": -10
+        }
+      ],
+      "Wueng": [
+        {
+          "label": "Il patto dei tre timbri: Sifu e Wueng",
+          "value": 10
+        }
+      ]
+    },
+    "Stozav": {
+      "Ntsu": [
+        {
+          "label": "Intesa di convenienza: Stozav e Ntsu",
+          "value": 10
+        }
+      ],
+      "Sudriz": [
+        {
+          "label": "Intesa di convenienza: Stozav e Sudriz",
+          "value": 10
+        }
+      ]
+    },
+    "La Mano": {
+      "Zolinath": [
+        {
+          "label": "Soccorso sotto gli occhi di tutti: La Mano e Zolinath",
+          "value": 10
+        }
+      ],
+      "Stozav": [
+        {
+          "label": "Una verità scomoda: La Mano e Stozav",
+          "value": -10
+        }
+      ]
+    },
+    "Kesk": {
+      "Grayshine": [
+        {
+          "label": "Un favore dal prezzo imbarazzante: Kesk e Grayshine",
+          "value": 10
+        }
+      ],
+      "Caillot": [
+        {
+          "label": "Il dazio della discordia: Kesk e Caillot",
+          "value": -10
+        }
+      ]
+    },
+    "Zolinath": {
+      "Stozav": [
+        {
+          "label": "Un favore dal prezzo imbarazzante: Zolinath e Stozav",
+          "value": 10
+        }
+      ],
+      "Sudriz": [
+        {
+          "label": "La parata del cattivo gusto: Zolinath e Sudriz",
+          "value": -10
+        }
+      ]
+    },
+    "Sudriz": {
+      "Ntsu": [
+        {
+          "label": "Il dazio della discordia: Sudriz e Ntsu",
+          "value": -10
+        }
+      ],
+      "Caillot": [
+        {
+          "label": "Scandalo in diretta orbitale: Sudriz e Caillot",
+          "value": -10
         }
       ]
     }
