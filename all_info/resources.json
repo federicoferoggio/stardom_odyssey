@@ -194,6 +194,12 @@
       "aliases": []
     },
     {
+      "id": "polvere-di-ghakis",
+      "name": "Polvere di Ghakis",
+      "category": "resources",
+      "aliases": []
+    },
+    {
       "id": "varisiana-nera",
       "name": "Varisiana Nera",
       "category": "shards",
