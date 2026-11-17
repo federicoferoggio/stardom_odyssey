@@ -130,7 +130,7 @@
         {
           "action": "Diplomazia",
           "amount": 0,
-          "situation": "Puoi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
+          "situation": "puòi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
           "always": false
         },
         {
@@ -245,7 +245,7 @@
         {
           "armies": "Fight Phase",
           "amount": 3,
-          "situation": "Per tre volte durante un combattimento, una unita della stessa religione del leader puo aggiungere +1 alla sua Attack Ability fino alla fine del turno.",
+          "situation": "Per tre volte durante un combattimento, un'unità della stessa religione del leader può aggiungere +1 alla sua Attack Ability fino alla fine del turno.",
           "always": false
         }
       ]
@@ -419,12 +419,12 @@
 {
       "id": "immortal_god",
       "label": "Immortale",
-      "description": "Immortale, e coseguentemente imbattibile.",
+      "description": "Immortale, e conseguentemente imbattibile.",
       "modifiers": [
         {
           "action": "Attacco",
           "amount": 3,
-          "situation": "Sempre un bonus di piu 3 sui tiri di might.",
+          "situation": "Sempre un bonus di più 3 sui tiri di might.",
           "always": true
         }
       ]

@@ -122,6 +122,7 @@ let currentMonth = 0;
 let familyAssets = [];
 let craftableAssets = [];
 let localizedAssets = [];
+let treatyGrantedAssets = [];
 let resourceById = new Map();
 let bodyById = new Map();
 let companies = [];
@@ -294,6 +295,14 @@ function getAllPlaces(dataBodies, dataPoi) {
   ];
 }
 
+function getLocalizedAssetsForOwner(assets, places) {
+  const ownedPlaceIds = new Set((Array.isArray(places) ? places : [])
+    .filter((place) => normalise(place.owner) === normalise(HAND_NAME))
+    .map((place) => String(place.id)));
+  return (Array.isArray(assets) ? assets : [])
+    .filter((asset) => ownedPlaceIds.has(String(asset.bodyId)));
+}
+
 function getControlledResources(places) {
   const resourceIds = new Set();
   const ownedPlaces = places.filter((place) => normalise(place.owner) === normalise(HAND_NAME));
@@ -390,8 +399,9 @@ function modifierMatches(modifier, actionName, rollStats, warReason) {
 function getPactRole(holder) {
   const isFrom = normalise(holder.from) === normalise(HAND_NAME);
   const isTo = normalise(holder.to) === normalise(HAND_NAME);
-  if (isFrom) return { role: 'from', counterpart: holder.to };
-  if (isTo && holder.bidirectional !== false) return { role: 'to', counterpart: holder.from };
+  const bidirectional = holder.bidirectional !== false;
+  if (isFrom) return { role: 'from', counterpart: holder.to, bidirectional };
+  if (isTo && bidirectional) return { role: 'to', counterpart: holder.from, bidirectional };
   return null;
 }
 
@@ -406,12 +416,14 @@ function collectRollModifiers(actionName, rollStats, context) {
   let nextId = 0;
   const push = (entry) => entries.push({ ...entry, id: `modifier-${nextId++}` });
 
-  for (const asset of familyAssets) {
+  for (const asset of [...familyAssets, ...treatyGrantedAssets]) {
     for (const modifier of Array.isArray(asset.modifiers) ? asset.modifiers : []) {
       if (!modifierMatches(modifier, actionName, rollStats, context.warReason)) continue;
       push({
         group: 'assets',
-        source: 'Asset della famiglia',
+        source: asset.treatyName
+          ? `Asset da trattato · ${asset.treatyName} · ${asset.counterpart || ''}`.trim()
+          : 'Asset della famiglia',
         name: asset.name || 'Asset senza nome',
         modifier,
         description: asset.description || '',
@@ -637,7 +649,7 @@ function buildDivineWillMarkup() {
 function buildFleetDetails() {
   const cost = fleetCount * 2;
   const difficulty = fleetCount * 3;
-  return `<div class="action-extra fleet-details"><strong>Flotte attualmente possedute:</strong> ${fleetCount}. <strong>Costo:</strong> Might −${cost} e Treasure −${cost}. <strong>Difficoltà:</strong> Height ${difficulty}.</div>`;
+  return `<div class="action-extra fleet-details"><strong>Flotte attualmente possedute:</strong> ${fleetCount}. <strong>Costo:</strong> Might −${cost} e Treasure −${cost} permanente. <strong>Difficoltà (3 volte il numero di flotte attuali possedute):</strong> Height ${difficulty}.</div>`;
 }
 
 function buildActionContext() {
@@ -862,12 +874,13 @@ function populateActions() {
 
 function renderFamilyAssets() {
   const host = $('family-assets');
-  $('owned-asset-count').textContent = String(familyAssets.length);
-  if (!familyAssets.length) {
+  const visibleAssets = [...familyAssets, ...treatyGrantedAssets];
+  $('owned-asset-count').textContent = String(visibleAssets.length);
+  if (!visibleAssets.length) {
     host.innerHTML = '<p class="empty-state">Nessun asset unico registrato per La Mano.</p>';
     return;
   }
-  host.innerHTML = familyAssets.map((asset) => {
+  host.innerHTML = visibleAssets.map((asset) => {
     const modifiers = Array.isArray(asset.modifiers) ? asset.modifiers : [];
     const modifierPills = modifiers.map((modifier) => {
       const delta = parseModifierAmount(modifier.amount, modifier.diceType);
@@ -876,6 +889,9 @@ function renderFamilyAssets() {
     }).join('');
     const notes = [];
     if (!modifiers.length) notes.push('<span class="meta-pill">Nessun modificatore dadi strutturato</span>');
+    if (asset.treatyName) {
+      notes.push(`<span class="meta-pill">Concesso dal trattato: ${escapeHtml(asset.treatyName)} · con ${escapeHtml(asset.counterpart || 'controparte non specificata')}</span>`);
+    }
     return `
       <article class="asset-card">
         <div class="asset-card-header">
@@ -950,6 +966,20 @@ function getPactRecords() {
     }
   }
   return { active, unilateral };
+}
+
+function getTreatyGrantedAssets(pacts) {
+  return pacts.flatMap((pact) => {
+    if (pact.bidirectional !== true) return [];
+    const grantedAsset = pact.definition?.grantsAsset;
+    if (!grantedAsset || typeof grantedAsset !== 'object' || Array.isArray(grantedAsset)) return [];
+    return [{
+      ...grantedAsset,
+      id: `treaty-${normalise(pact.name)}-${normalise(pact.counterpart)}`,
+      treatyName: pact.name,
+      counterpart: pact.counterpart,
+    }];
+  });
 }
 
 function renderTreaties() {
@@ -1083,13 +1113,13 @@ async function init() {
   const assets = data['assets.json'];
   familyAssets = (Array.isArray(assets.familyAssets) ? assets.familyAssets : [])
     .filter((asset) => normalise(asset.owner) === normalise(HAND_NAME));
-  localizedAssets = Array.isArray(assets.localizedAssets) ? assets.localizedAssets : [];
 
   const resourceEntries = Array.isArray(data['resources.json'].resources) ? data['resources.json'].resources : [];
   resourceById = new Map(resourceEntries.map((resource) => [String(resource.id), resource]));
 
   const places = getAllPlaces(data['bodies.json'].bodies, data['points_of_interest.json'].pointsOfInterest);
   bodyById = new Map(places.map((place) => [String(place.id), place]));
+  localizedAssets = getLocalizedAssetsForOwner(assets.localizedAssets, places);
   const { resourceIds } = getControlledResources(places);
   const craftCatalog = Array.isArray(assets.craftAssets) ? assets.craftAssets : [];
   craftableAssets = craftCatalog.filter((asset) => qualifiesFor(asset, resourceIds));
@@ -1103,6 +1133,9 @@ async function init() {
   const pactRecords = getPactRecords();
   activePacts = pactRecords.active;
   oneSidedPactsAgainstHand = pactRecords.unilateral;
+  // Treaty-granted assets are shown only for bidirectional pacts. A one-way
+  // pact's `to` side is not a party and is excluded from activePacts entirely.
+  treatyGrantedAssets = getTreatyGrantedAssets(activePacts);
   fleetCount = (Array.isArray(data['fleets.json'].fleets) ? data['fleets.json'].fleets : [])
     .filter((fleet) => normalise(fleet.owner) === normalise(HAND_NAME)).length;
 

@@ -13,11 +13,11 @@
       "effetti_speciali": [
         {
           "nome": "Dottrina del Comando Unificato",
-          "descrizione": "Non puoi mai avere più di un leader attivo per le azioni della Compagnia."
+          "descrizione": "Non puòi mai avere più di un leader attivo per le azioni della Compagnia."
         },
         {
           "nome": "Requisizione Militare",
-          "descrizione": "Una volta per mese, puoi 'rubare' 1d da qualsiasi altro set di un tuo tiro e aggiungerlo a un tiro Might. Il tiro originale perde permanentemente quel dado."
+          "descrizione": "Una volta per mese, puòi 'rubare' 1d da qualsiasi altro set di un tuo tiro e aggiungerlo a un tiro Might. Il tiro originale perde permanentemente quel dado."
         }
       ]
     },
@@ -38,7 +38,7 @@
         },
         {
           "nome": "Mobilitazione Totale",
-          "descrizione": "Puoi sacrificare permanentemente 1 punto di Territory per avere un bonus su Might di +2d per tutto il mese successivo."
+          "descrizione": "puòi sacrificare permanentemente 1 punto di Territory per avere un bonus su Might di +2d per tutto il mese successivo."
         }
       ]
     },
@@ -55,7 +55,7 @@
       "effetti_speciali": [
         {
           "nome": "Votazioni Obbligatorie",
-          "descrizione": "Prima di ogni azione importante, devi 'votare' lanciando 1d10. Su 1-3 l'azione è bloccata dalla burocrazia democratica e non puoi farla questo mese."
+          "descrizione": "Prima di ogni azione importante, devi 'votare' lanciando 1d10. Su 1-3 l'azione è bloccata dalla burocrazia democratica e non puòi farla questo mese."
         },
         {
           "nome": "Mandato Popolare",
@@ -76,7 +76,7 @@
       "effetti_speciali": [
         {
           "nome": "Vassallaggio Complesso",
-          "descrizione": "Non puoi mai scendere a 0 per nessuna quality eccetto per la Sovereignty. In compenso, non puoi mai raggiungere 6 punti per nessuna statistica."
+          "descrizione": "Non puòi mai scendere a 0 per nessuna quality eccetto per la Sovereignty. In compenso, non puòi mai raggiungere 6 punti per nessuna statistica."
         },
         {
           "nome": "Obblighi Feudali",
@@ -101,7 +101,7 @@
         },
         {
           "nome": "Liquidità Aziendale",
-          "descrizione": "Puoi 'vendere' permanentemente punti di altre Qualities per ottenere +2 Treasure temporaneo per quel mese."
+          "descrizione": "puòi 'vendere' permanentemente punti di altre Qualities per ottenere +2 Treasure temporaneo per quel mese."
         }
       ]
     },
@@ -122,7 +122,7 @@
         },
         {
           "nome": "Compra-Voti",
-          "descrizione": "Puoi spendere 1 punto di Treasure permanente per aggiungere +3d a qualsiasi tiro Sovereignty+Territory, rappresentando corruzione su vasta scala."
+          "descrizione": "puòi spendere 1 punto di Treasure permanente per aggiungere +3d a qualsiasi tiro Sovereignty+Territory, rappresentando corruzione su vasta scala."
         }
       ]
     },
@@ -139,7 +139,7 @@
       "effetti_speciali": [
         {
           "nome": "Purezza Ideologica",
-          "descrizione": "Non puoi mai avere alleanze con Compagnie che hanno forme di governo diverse dalla tua. Ogni mese che commerci pacificamente con 'eretici' perdi 2 di Sovereignty."
+          "descrizione": "Non puòi mai avere alleanze con Compagnie che hanno forme di governo diverse dalla tua. Ogni mese che commerci pacificamente con 'eretici' perdi 2 di Sovereignty."
         },
         {
           "nome": "Zelo Fanatico",
@@ -202,11 +202,11 @@
       "effetti_speciali": [
         {
           "nome": "Conoscenza Segreta",
-          "descrizione": "Puoi 'osservare' le azioni di altre Compagnie. Una volta per mese, dopo che un'altra Compagnia dichiara un'azione ma prima che tiri, puoi forzarla a rivelarti esattamente che tiro farà e con che modificatori."
+          "descrizione": "puòi 'osservare' le azioni di altre Compagnie. Una volta per mese, dopo che un'altra Compagnia dichiara un'azione ma prima che tiri, puòi forzarla a rivelarti esattamente che tiro farà e con che modificatori."
         },
         {
           "nome": "Isolamento Enigmatico",
-          "descrizione": "Non puoi mai iniziare azioni aggressive (Attack, Unconventional Warfare) contro altre Compagnie. Se lo fai, perdi immediatamente 2 punti di Influence permanenti per aver rivelato troppo di te stesso."
+          "descrizione": "Non puòi mai iniziare azioni aggressive (Attack, Unconventional Warfare) contro altre Compagnie. Se lo fai, perdi immediatamente 2 punti di Influence permanenti per aver rivelato troppo di te stesso."
         }
       ]
     }

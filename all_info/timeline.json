@@ -41,7 +41,7 @@
       "events": [
         {
           "description": "Viene dichiarata guerra alla Mano dagli Hai (per vendicare la Setta dei Sopravvissuti, come favore agli Ousssek contro Minerva, e come favore alla confraternita contro la nuova religione dell'Unico). La famiglia si reca ad Ashran per assicurarsi la sua lealtà e cacciare Arakne dal sistema. Il Duello del Destino fra Minerva e Arakne non viene mai conclusivamente risolto. Arakne lascia El-Beth-El; Jasval Perr e gli Ashran finanziano in parte una flotta di Galeoni per la Mano, respingendo un attentato notturno di assassini Deossiani durante l'incontro.",
-          "modifier": "Gli Hai dichiarano guerra. +1 Spelljamming Level (flotta finanziata da Ashran/Jasval Perr)."
+          "modifier": "Gli Hai dichiarano guerra. +1 Flotta (finanziata da Ashran/Jasval Perr)."
         }
       ]
     },
@@ -71,7 +71,7 @@
       "events": [
         {
           "description": "La flotta della Mano affronta e cattura l'Ammiraglio Astrul in una battaglia navale costosa (Minerva catturata dagli Hai, l'anima di Arren spaccata). Si raggiunge un cessate il fuoco con gli Hai: scambio Astrul-Minerva, resa pubblica dignitosa, rotte commerciali Hai aperte a prezzi maggiorati. Patto di Non-Aggressione di 3 anni firmato.",
-          "modifier": "Army is ready. Spelljamming level increases by one. Civil war roll. Hai arrive."
+          "modifier": "Army is ready. Civil war roll. Hai arrive."
         }
       ]
     },

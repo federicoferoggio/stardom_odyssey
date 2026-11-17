@@ -184,7 +184,7 @@
       "type": "ground-support",
       "orders": []
     },
-{
+    {
       "id": "mitsumoro-flotta-4",
       "name": "ULTRAFLOTTA",
       "owner": "Mitsumoro",
@@ -207,8 +207,7 @@
       "owner": "Ousssek",
       "type": "arcanic-shield",
       "startBody": "saltar",
-      "orders": [
-      ]
+      "orders": []
     },
     {
       "id": "ousssek-flotta-2",

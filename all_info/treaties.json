@@ -123,11 +123,13 @@
           "always": true
         }
       ],
-      "holders": [{
-  "from": "Ousssek",
-  "to": "Rivera",
-  "bidirectional": true
-}]
+      "holders": [
+        {
+          "from": "Ousssek",
+          "to": "Rivera",
+          "bidirectional": true
+        }
+      ]
     },
     "Rivalità": {
       "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
@@ -284,7 +286,7 @@
         "name": "Riserve di Spelljammer",
         "type": "Permanente",
         "description": "I Carxus permettono l'accesso per questa famiglia a tutti gli armamenti migliori.",
-        "effect": "Durante un tiro di Genera Flotta, puoi creare flotte con abilità. Inoltre puoi dimezzare tutti i tempi di rigenerazione per la flotta."
+        "effect": "Durante un tiro di Genera Flotta, puòi creare flotte con abilità. Inoltre puòi dimezzare tutti i tempi di rigenerazione per la flotta."
       },
       "holders": [
         {
@@ -300,73 +302,150 @@
       ]
     },
     "Credito Semplice": {
-      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
-      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Leggero'.",
+      "description": "Un finanziamento di piccola entità concesso a una famiglia in cambio di un obbligo di restituzione nel tempo.",
+      "bonus": "Alla firma, il creditore perde 1 Treasure e il debitore riceve 1 Treasure.",
+      "effects": "Il creditore beneficia di una condizione favorevole nei tiri che utilizzano Treasure: ogni risultato pari a 9 vale come 10.",
       "category": "unique",
-      "diplomacyCost": "Il creditore perde 1 punto di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno due punti di Treasure.",
-      "breakupCost": "Il creditore aumenta il suo Treasure di 1 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -60 punti di opinione per tutte le famiglie parte della confraternita.",
+      "diplomacyCost": "Il creditore deve avere almeno 2 Treasure prima del trasferimento e perde immediatamente 1 Treasure. Il debitore non può avere altri Debiti Semplici.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +1 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -60 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
       "modifiers": [],
       "grantsAsset": {
-        "name": "Debito Leggero",
+        "name": "Credito Semplice",
         "type": "Relazionale",
-        "description": "Un debito da pagare nel tempo.",
-        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 9. Le creditore, ogni 9 vale come 10."
+        "description": "Un credito di piccola entità concesso a un'altra famiglia.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, ogni risultato pari a 9 vale come 10."
       },
       "holders": [
         {
           "from": "Grayshine",
           "to": "La Mano",
-          "bidirectional": true
+          "bidirectional": false
         },
         {
           "from": "Grayshine",
           "to": "Rivera",
-          "bidirectional": true
+          "bidirectional": false
+        }
+      ]
+    },
+    "Debito Semplice": {
+      "description": "Un obbligo finanziario contratto da una famiglia che ha ricevuto un finanziamento di piccola entità.",
+      "bonus": "Alla firma, il debitore riceve 1 Treasure, trasferito dal creditore.",
+      "effects": "Il debitore subisce una limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 9 vengono rimossi.",
+      "category": "unique",
+      "diplomacyCost": "Il creditore deve avere almeno 2 Treasure prima del trasferimento e perde immediatamente 1 Treasure. Il debitore non può avere altri Debiti Semplici.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +1 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -60 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
+      "opinionValue": 0,
+      "modifiers": [],
+      "grantsAsset": {
+        "name": "Debito Semplice",
+        "type": "Relazionale",
+        "description": "Un debito di piccola entità da restituire nel tempo.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, rimuovi ogni risultato superiore a 9."
+      },
+      "holders": [
+        {
+          "from": "La Mano",
+          "to": "Grayshine",
+          "bidirectional": false
+        },
+        {
+          "from": "Rivera",
+          "to": "Grayshine",
+          "bidirectional": false
         }
       ]
     },
     "Credito Intermedio": {
-      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
-      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Intermedio'.",
+      "description": "Un finanziamento di media entità concesso a una famiglia in cambio di un obbligo di restituzione nel tempo.",
+      "bonus": "Alla firma, il creditore perde 2 Treasure e il debitore riceve 2 Treasure.",
+      "effects": "Il creditore beneficia di una condizione favorevole nei tiri che utilizzano Treasure: ogni risultato pari o superiore a 8 vale come 10.",
       "category": "unique",
-      "diplomacyCost": "Il creditore perde 2 punti di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno 3 punti di Treasure.",
-      "breakupCost": "Il creditore aumenta il suo Treasure di 2 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -120 punti di opinione per tutte le famiglie parte della confraternita.",
+      "diplomacyCost": "Il creditore deve avere almeno 3 Treasure prima del trasferimento e perde immediatamente 2 Treasure. Il debitore non può avere altri debiti semplici o intermedi.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +2 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -120 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
       "modifiers": [],
       "grantsAsset": {
-        "name": "Debito Intermedio",
+        "name": "Credito Intermedio",
         "type": "Relazionale",
-        "description": "Un debito da pagare nel tempo.",
-        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 8. Se creditore, ogni risultato di 8 o superiore vale come 10."
+        "description": "Un credito di media entità concesso a un'altra famiglia.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, ogni risultato pari o superiore a 8 vale come 10."
       },
       "holders": [
         {
           "from": "Grayshine",
           "to": "Stozav",
-          "bidirectional": true
+          "bidirectional": false
+        }
+      ]
+    },
+    "Debito Intermedio": {
+      "description": "Un obbligo finanziario contratto da una famiglia che ha ricevuto un finanziamento di media entità.",
+      "bonus": "Alla firma, il debitore riceve 2 Treasure, trasferiti dal creditore.",
+      "effects": "Il debitore subisce una limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 8 vengono rimossi.",
+      "category": "unique",
+      "diplomacyCost": "Il creditore deve avere almeno 3 Treasure prima del trasferimento e perde immediatamente 2 Treasure. Il debitore non può avere altri debiti semplici o intermedi.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +2 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -120 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
+      "opinionValue": 0,
+      "modifiers": [],
+      "grantsAsset": {
+        "name": "Debito Intermedio",
+        "type": "Relazionale",
+        "description": "Un debito di media entità da restituire nel tempo.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, rimuovi ogni risultato superiore a 8."
+      },
+      "holders": [
+        {
+          "from": "Stozav",
+          "to": "Grayshine",
+          "bidirectional": false
         }
       ]
     },
     "Credito Significativo": {
-      "description": "Un debito monetario volto ad aiutare una famiglia in cambio di futuri miglioramenti.",
-      "effects": "Il debitore aumenta di uno il suo treasure e ottiene la risorsa 'Debito Leggero'.",
+      "description": "Un finanziamento di considerevole entità concesso a una famiglia, creando un forte vincolo finanziario tra le due parti.",
+      "bonus": "Alla firma, il creditore perde 3 Treasure e il debitore riceve 3 Treasure.",
+      "effects": "Il creditore beneficia di una condizione particolarmente favorevole nei tiri che utilizzano Treasure: ogni risultato pari o superiore a 7 vale come 10.",
       "category": "unique",
-      "diplomacyCost": "Il creditore perde 3 punti di treasure immediatamente. Il debitore non può avere altri debiti semplici. Il creditore deve avere almeno 4 punti di Treasure.",
-      "breakupCost": "Il creditore aumenta il suo Treasure di 3 permanentemente se almeno 12 mesi sono passati. Se rotto dal debitore prima di 12 mesi dalla prima firma, egli immediatamente riceverà -180 punti di opinione per tutte le famiglie parte della confraternita.",
+      "diplomacyCost": "Il creditore deve avere almeno 4 Treasure prima del trasferimento e perde immediatamente 3 Treasure. Il debitore non può avere altri debiti intermedi o significativi.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +3 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -180 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
       "modifiers": [],
       "grantsAsset": {
-        "name": "Debito Pesante",
+        "name": "Credito Significativo",
         "type": "Relazionale",
-        "description": "Un debito da pagare nel tempo.",
-        "effect": "Se debitore, per qualsiasi tiro che usi Treasure rimuovi ogni risultato superiore a 7. Se creditore, ogni risultato di 7 o superiore vale come 10."
+        "description": "Un credito di considerevole entità concesso a un'altra famiglia.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, ogni risultato pari o superiore a 7 vale come 10."
       },
       "holders": [
         {
           "from": "Grayshine",
           "to": "Sudriz",
-          "bidirectional": true
+          "bidirectional": false
+        }
+      ]
+    },
+    "Debito Pesante": {
+      "description": "Un obbligo finanziario di considerevole entità contratto da una famiglia che ha ricevuto un finanziamento importante.",
+      "bonus": "Alla firma, il debitore riceve 3 Treasure, trasferiti dal creditore.",
+      "effects": "Il debitore subisce una forte limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 7 vengono rimossi.",
+      "category": "unique",
+      "diplomacyCost": "Il creditore deve avere almeno 4 Treasure prima del trasferimento e perde immediatamente 3 Treasure. Il debitore non può avere altri debiti intermedi o significativi.",
+      "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +3 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -180 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
+      "opinionValue": 0,
+      "modifiers": [],
+      "grantsAsset": {
+        "name": "Debito Pesante",
+        "type": "Relazionale",
+        "description": "Un debito considerevole che vincola finanziariamente una famiglia al proprio creditore.",
+        "effect": "In qualsiasi tiro che utilizza Treasure, rimuovi ogni risultato superiore a 7."
+      },
+      "holders": [
+        {
+          "from": "Sudriz",
+          "to": "Grayshine",
+          "bidirectional": false
         }
       ]
     },
@@ -407,7 +486,7 @@
         "name": "Bestie di Tiamat",
         "type": "Alleati Draconici",
         "description": "Draghi minori prestati dagli allevamenti di Draconia.",
-        "effect": "+3d al primo attacco Might+Treasure del mese. Solo una volta per ogni 3 mesi."
+        "effect": "+3d a un attacco di Disingaggio, una volta al mese. Su un successo, la flotta avversaria è distrutta."
       },
       "holders": [
         {
@@ -428,7 +507,7 @@
         "name": "Contatti con i Baroni",
         "type": "Rete di Contatti",
         "description": "Una rete di intermediari e informatori attiva ai margini della legge.",
-        "effect": "+1d su tutti i tiri di Treasure, -1 su tutti i tiri di Influence."
+        "effect": "+1d su tutti i tiri di Treasure, -1d su tutti i tiri di Influence."
       },
       "holders": []
     },
@@ -443,7 +522,7 @@
         "name": "Ricerca e Sviluppo",
         "type": "Supporto Tecnico",
         "description": "Accesso agli artigiani e ingegneri della bottega di Shawel.",
-        "effect": "Permette l'accesso a una risorsa a un asset monouso a scelta ogni 3 mesi."
+        "effect": "Permette l'accesso un asset monouso a scelta ogni 12 mesi."
       },
       "holders": [
         {
