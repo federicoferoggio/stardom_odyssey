@@ -201,6 +201,11 @@
           "from": "Ousssek",
           "to": "Amoako",
           "bidirectional": true
+        },
+        {
+          "from": "La Mano",
+          "to": "Hai",
+          "bidirectional": true
         }
       ]
     },

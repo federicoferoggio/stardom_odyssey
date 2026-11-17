@@ -1,5 +1,5 @@
 {
-  "currentMonth": 10227,
+  "currentMonth": 10227.3,
   "months": [
     {
       "month": 10200,
@@ -162,6 +162,16 @@
         {
           "description": "Sul piano politico e strategico, la costa di Ashran rimane sotto il controllo della Mano, sebbene i ribelli locali risultino finanziati da un attore esterno a El-Beth-El. La regina di Samarkhoy si proclama Prescelta del Profeta e consente a Leahm Shalaq, il Cane, di predicare liberamente. I Thrikreen giungono inoltre a El-Beth-El a bordo di una nave apparentemente commerciale.",
           "modifier": ""
+        }
+      ]
+    },
+    {
+      "month": 10227,
+      "title": "Alleanze",
+      "events": [
+        {
+          "description": "Alleanza con gli Hai",
+          "modifier": "Viene messo inseme un accordo commerciale con gli Hai."
         }
       ]
     },

@@ -26,6 +26,38 @@
     },
     {
       "family": "La Mano",
+      "stat": "influence",
+      "amount": -1,
+      "from": 10227,
+      "to": 10228,
+      "reason": "Patto Commerciale con gli Hai"
+    },
+    {
+      "family": "La Mano",
+      "stat": "treasure",
+      "amount": -1,
+      "from": 10227,
+      "to": 10228,
+      "reason": "Patto Commerciale con gli Hai"
+    },
+    {
+      "family": "La Mano",
+      "stat": "treasure",
+      "amount": 1,
+      "from": 10230,
+      "to": null,
+      "reason": "Aumento permanente Treasure."
+    },
+    {
+      "family": "La Mano",
+      "stat": "treasure",
+      "amount": -1,
+      "from": 10227,
+      "to": null,
+      "reason": "Aumento permanente Treasure."
+    },
+    {
+      "family": "La Mano",
       "stat": "sovereignty",
       "amount": -2,
       "from": 10226,
