@@ -166,11 +166,21 @@
       ]
     },
     {
+      "month": 10230,
+      "title": "La Fortezza di Bataar",
+      "events": [
+        {
+          "description": "Costruzione della Fortezza",
+          "modifier": "Fine della costruzione della stanza di Velluto."
+        }
+      ]
+    },
+    {
       "month": 10233,
       "title": "Riassesto di Bataar",
       "events": [
         {
-          "description": "Fine della stabilizzazione di Bataar ",
+          "description": "Fine della stabilizzazione di Bataar.",
           "modifier": "+4 di Might, +2 di Territory. Se Might va sopra 4, ogni punto oltre diventa temporaneo per 6 mesi."
         }
       ]
