@@ -57,14 +57,14 @@
     },
     "Gith": {
       "stats": {
-        "might": false,
+        "might": true,
         "treasure": false,
         "influence": false,
         "territory": false,
         "sovereignty": false
       },
       "leaders": {},
-      "uniqueAssetsKnown": false
+      "uniqueAssetsKnown": true
     },
     "Mitsumoro": {
       "stats": {
