@@ -390,7 +390,7 @@
       "bodyId": "ion",
       "name": "Illuminato dal Faro di Ion",
       "type": "Potere",
-      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto la permette. Se non permessa, agisci come se la spell non esistesse come opzione.",
       "effect": "Blocco Magico."
     },
     {
@@ -398,7 +398,7 @@
       "bodyId": "tophadus",
       "name": "Illuminato dal Faro di Ion",
       "type": "Potere",
-      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto la permette. Se non permessa, agisci come se la spell non esistesse come opzione.",
       "effect": "Blocco Magico."
     },
     {
@@ -406,7 +406,7 @@
       "bodyId": "hoter",
       "name": "Illuminato dal Faro di Ion",
       "type": "Potere",
-      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto la permette. Se non permessa, agisci come se la spell non esistesse come opzione.",
       "effect": "Blocco Magico."
     },
     {
@@ -414,8 +414,104 @@
       "bodyId": "zimurn",
       "name": "Illuminato dal Faro di Ion",
       "type": "Potere",
-      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto. Se non permessa, agisci come se la spell non esistesse come opzione.",
+      "description": "Illuminata dal faro di Ion, questa terra non è arcanamente libera. Qualsiasi spell di Guerra, e qualsiasi spell di livello 6 o superiore, può essere castata soltanto se il Non-Morto la permette. Se non permessa, agisci come se la spell non esistesse come opzione.",
       "effect": "Blocco Magico."
+    },
+    {
+      "id": "hellcoast-linea-del-crepuscolo",
+      "bodyId": "hellcoast",
+      "name": "Linea del Crepuscolo",
+      "type": "Terreno",
+      "description": "Le città della fascia abitabile sono collegate dalla Lightning Train, che permette di spostare rapidamente le riserve lungo il fronte.",
+      "effect": "Una volta per battaglia terrestre su Hellcoast, il difensore può tenere 1 unità in riserva e schierarla alla fine di una propria fase di movimento, applicando le normali restrizioni di schieramento delle riserve."
+    },
+    {
+      "id": "jetaras-altopiani-urbani",
+      "bodyId": "jetaras",
+      "name": "Altopiani delle Tre Ultracittà",
+      "type": "Terreno",
+      "description": "Le tre ultracittà e le loro fortificazioni offrono al difensore posizioni urbane preparate.",
+      "effect": "Durante una battaglia terrestre, terreni controllati garantiscono +1 ai save delle truppe della famiglia controllante il pianeta."
+    },
+    {
+      "id": "tithion-foreste-vardenwood",
+      "bodyId": "tithion",
+      "name": "Foreste di Vardenwood",
+      "type": "Terreno",
+      "description": "Le foreste di Vardenwood e le piattaforme costruite con il loro legno sono tra i pochi punti stabili sopra il mare corrosivo.",
+      "effect": "Ogni battaglia su Tithion è considerata una battaglia spelljammer."
+    },
+    {
+      "id": "enov-crepacci-e-nebbie",
+      "bodyId": "enov",
+      "name": "Crepacci e Nebbie di Enov",
+      "type": "Terreno",
+      "description": "Le fenditure profonde e la nebbia generata dall'evaporazione dei fiumi dividono il campo di battaglia.",
+      "effect": "Su Enov ogni truppa ha range massimo eguale a un massimo di 10 per i suoi attacchi a distanza."
+    },
+    {
+      "id": "ion-archivi-del-faro",
+      "bodyId": "ion",
+      "name": "Archivi del Faro",
+      "type": "Conoscenza",
+      "description": "Il Faro di Ion permette di osservare e raccogliere informazioni sui movimenti delle flotte presenti nel sistema.",
+      "effect": "+1d all’azione Reigns Raccolta Informazioni quando la compagnia bersaglio ha una propria flotta in orbita attorno a Ion."
+    },
+    {
+      "id": "tophadus-citta-sommerse",
+      "bodyId": "tophadus",
+      "name": "Città a Strati",
+      "type": "Terreno",
+      "description": "Le città verticali e le strutture sommerse offrono posizioni difensive su più livelli.",
+      "effect": "Nelle battaglie terrestri su Tophadus, il difensore può schierare fino a 300 punti aggiuntivi di unità durante il terzo round di Battaglia. Queste unita devono essere schierate entro 10 da una qualsiasi altra unità controllata dal difensore."
+    },
+    {
+      "id": "zimurn-templi-sospesi",
+      "bodyId": "zimurn",
+      "name": "Templi Sospesi della Giustizia",
+      "type": "Preghiera",
+      "description": "I templi sospesi sono luoghi di preghiera e giudizio, frequentati da chi cerca guida e protezione.",
+      "effect": "Una volta per battaglia su Zimurn, un Prete del proprietario del pianeta può aggiungere +5 al proprio tiro di chanting per una preghiera."
+    },
+    {
+      "id": "saltar-mare-blu",
+      "bodyId": "saltar",
+      "name": "Mare Blu",
+      "type": "Magia",
+      "description": "Il Mare Blu sospeso al centro di Saltar è attraversato da energia arcana e scariche magiche.",
+      "effect": "Una volta per battaglia su Saltar, un Wizard  del proprietario del pianeta può aggiungere +5 al proprio tiro di casting per lanciare uno spell."
+    },
+    {
+      "id": "wandacker-bastioni-borzatium",
+      "bodyId": "wandacker",
+      "name": "Bastioni di Borzatium",
+      "type": "Fortificazione",
+      "description": "Wandacker è un pianeta disabitato, e tutta la sua vita si svolge sulla base planetare che orbita il pianeta.",
+      "effect": "Ogni battaglia terrestre combattuta su Wandacker è considerata una battaglia Spelljammer. Durante la battaglia, tutte le unità del controllore del pianeta hanno accesso alla spell \"Distruttore\": scegli un punto entro gittata; tutte le unità entro 15\" da quel punto subiscono 3D3 danni mortali. La spell può essere utilizzata al massimo tre volte per battaglia; dopo il terzo utilizzo non può essere lanciata nuovamente."
+    },
+    {
+      "id": "tebara-praterie-aperte",
+      "bodyId": "tebara",
+      "name": "Praterie della Primavera Eterna",
+      "type": "Terreno",
+      "description": "Le vaste praterie aperte di Tebara permettono alle forze di attraversare il campo senza ostacoli significativi.",
+      "effect": "Nelle battaglie terrestri su Tebara, tutte le unità ricevono +3 al tiro di charge."
+    },
+    {
+      "id": "xan-bastioni-giff",
+      "bodyId": "xan",
+      "name": "Bastioni dei Giff",
+      "type": "Fortificazione",
+      "description": "I Giff hanno costruito una rete di fortezze, mentre la vegetazione aggressiva ostacola l'avanzata degli invasori.",
+      "effect": "Nelle battaglie terrestri su Xan, gli eretici ricevono sempre il doppio dei Deployment Point durante la Deployment Phase."
+    },
+    {
+      "id": "brion7-scudo-arcano",
+      "bodyId": "brion7",
+      "name": "Scudo Arcano di Brion 7",
+      "type": "Difesa",
+      "description": "Lo scudo blu che avvolge Brion 7 impedisce ogni accesso al pianeta. È immune ai danni e non può essere dissolto.",
+      "effect": "Non è possibile schierare unità su Brion 7, usare i bonus flotta, o teletrasportare alcun personaggio sulla sua superficie."
     }
   ]
 }
