@@ -13,13 +13,13 @@ const STAT_DEFINITIONS = [
 
 const ACTIONS = {
   Attacco: {
-    description: "Azione di Forza Militare. Prima del tiro, scegli l'obiettivo desiderato.",
+    description: "Azione di Forza Militare. Prima del tiro, scegli l'obiettivo desiderato. Un attacco è considerato Spelljammer se l'attaccante ha una flotta in orbita, altrimenti è terrestre. Un attacco spelljammer garantisce +1d per ogni flotta alleata in orbita in eccesso rispetto a quelle neutrali o nemiche, se la difesa non è Spelljammer.",
     rolls: ['might', 'treasure'],
     hasWarReasons: true,
     needsOpponent: true,
   },
   Difesa: {
-    description: 'Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest: -1 Might nemica in caso di successo; in caso di fallimento, -1 Might aggiuntiva per sé).',
+    description: 'Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest: -1 Might nemica in caso di successo; in caso di fallimento, -1 Might aggiuntiva per sé). Se il numero di flotte alleate del difensore che orbitano il pianeta è superiore a quelle a quelle neutrali o nemiche, la difesa è considerata Spelljammer.',
     rolls: ['might', 'territory'],
     needsOpponent: true,
     hasLocation: true,

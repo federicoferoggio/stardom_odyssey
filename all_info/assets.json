@@ -5,7 +5,7 @@
       "name": "Armamenti arcani avanzati (abjuration)",
       "type": "Monouso",
       "generationTime": "1 mese",
-      "description": "Quando effettui un tiro di Difesa e l'attacco usa spelljammer o usa assetti arcani, ottieni +2 al tiro.",
+      "description": "Quando effettui un tiro di Difesa e l'attacco è spelljammer o usa assetti arcani, ottieni +1d al tiro.",
       "requirementIds": [
         "ivory",
         "obsidian",
@@ -439,7 +439,7 @@
       "name": "Foreste di Vardenwood",
       "type": "Terreno",
       "description": "Le foreste di Vardenwood e le piattaforme costruite con il loro legno sono tra i pochi punti stabili sopra il mare corrosivo.",
-      "effect": "Ogni battaglia su Tithion è considerata una battaglia spelljammer."
+      "effect": "Ogni difesa su Tithion è considerata una difesa spelljammer."
     },
     {
       "id": "enov-crepacci-e-nebbie",
@@ -487,7 +487,7 @@
       "name": "Bastioni di Borzatium",
       "type": "Fortificazione",
       "description": "Wandacker è un pianeta disabitato, e tutta la sua vita si svolge sulla base planetare che orbita il pianeta.",
-      "effect": "Ogni battaglia terrestre combattuta su Wandacker è considerata una battaglia Spelljammer. Durante la battaglia, tutte le unità del controllore del pianeta hanno accesso alla spell \"Distruttore\": scegli un punto entro gittata; tutte le unità entro 15\" da quel punto subiscono 3D3 danni mortali. La spell può essere utilizzata al massimo tre volte per battaglia; dopo il terzo utilizzo non può essere lanciata nuovamente."
+      "effect": "Ogni difesa combattuta su Wandacker è considerata Spelljammer. Durante la battaglia, tutte le unità del controllore del pianeta hanno accesso alla spell \"Distruttore\": scegli un punto entro gittata; tutte le unità entro 15\" da quel punto subiscono 3D3 danni mortali. La spell può essere utilizzata al massimo tre volte per battaglia; dopo il terzo utilizzo non può essere lanciata nuovamente."
     },
     {
       "id": "tebara-praterie-aperte",
