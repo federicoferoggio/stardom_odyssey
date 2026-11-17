@@ -491,7 +491,7 @@
         "name": "Bestie di Tiamat",
         "type": "Alleati Draconici",
         "description": "Draghi minori prestati dagli allevamenti di Draconia.",
-        "effect": "+3d a un attacco di Disingaggio, una volta al mese. Su un successo, la flotta avversaria è distrutta."
+        "effect": "+3d a un attacco di Disingaggio, una volta ogni 12 mesi. Su un successo, la flotta avversaria è distrutta."
       },
       "holders": [
         {
