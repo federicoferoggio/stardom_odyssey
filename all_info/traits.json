@@ -130,7 +130,7 @@
         {
           "action": "Diplomazia",
           "amount": 0,
-          "situation": "puòi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
+          "situation": "puoi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
           "always": false
         },
         {

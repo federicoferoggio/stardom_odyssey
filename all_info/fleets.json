@@ -191,7 +191,7 @@
       "speed": 100,
       "maxDistance": 1000,
       "bonusRange": 2000,
-      "bonus": "Mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta.",
+      "bonus": "Questa flotta non può essere usata per lanciare invasioni (Attacco): mentre la flotta orbita questo pianeta, togli due dadi dai risultati di ogni azione che tu scegli che avviene su questo pianeta.",
       "startBody": "saltar",
       "orders": [
         {
