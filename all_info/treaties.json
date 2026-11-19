@@ -1,10 +1,13 @@
 {
-  "_howto": "Every pact/treaty type, in one place: its own definition AND the list of who currently holds it. Keyed by pact type name (Italian, matches the name shown in the UI). category: relational | benefit | unique. 'holders' is a list of {from, to, bidirectional} -- each entry written ONCE per relationship (no more mirrored from/to duplicate rows). bidirectional (default true if omitted) means both 'from' and 'to' are bound by the pact and each sees it listed in their own family panel; set to false only for a genuinely one-sided pact where 'to' isn't party to it at all (currently only Ousssek's unreciprocated Rivalità against La Mano -- see its diplomacyCost: a rivalry can be declared unilaterally). Opinion always mirrors regardless of bidirectional (both sides' opinion of each other shifts even if only one side mechanically acts on it). 'modifiers' (symmetric pacts, same effect for both from/to) OR 'modifiersAsFrom'/'modifiersAsTo' (asymmetric pacts where the two sides get different effects, e.g. the feudal pacts: from=Signore/lord, to=Vassallo/vassal) use the exact same shape as traits.json's leader-trait modifiers: {stat|action|armies, amount, situation, always}. Some types have no flat modifier at all (purely procedural effects, described only in 'effects' prose). 'grantsAsset' (the unique-category types) is an embedded asset object {name, type, description, effect} with no fixed owner -- it belongs to whoever holds that pact (every family in its 'holders' list), resolved dynamically at render time.",
+  "_howto": "Every pact/treaty type, in one place: its own definition AND the list of who currently holds it. Keyed by pact type name (Italian, matches the name shown in the UI). category: relational | benefit | unique. 'holders' is a list of {from, to, bidirectional} -- each entry written ONCE per relationship (no more mirrored from/to duplicate rows). bidirectional (default true if omitted) means both 'from' and 'to' are bound by the pact and each sees it listed in their own family panel; set to false only for a genuinely one-sided pact where 'to' isn't party to it at all (currently only Ousssek's unreciprocated Rivalità against La Mano -- see its diplomacyCost: a rivalry can be declared unilaterally). Opinion always mirrors regardless of bidirectional (both sides' opinion of each other shifts even if only one side mechanically acts on it). 'modifiers' (symmetric pacts, same effect for both from/to) OR 'modifiersAsFrom'/'modifiersAsTo' (asymmetric pacts where the two sides get different effects, e.g. the feudal pacts: from=Signore/lord, to=Vassallo/vassal) use the exact same shape as traits.json's leader-trait modifiers: {stat|action|armies, amount, situation, always}. Some types have no flat modifier at all (purely procedural effects, described only in 'effects' prose). 'grantsAsset' (the unique-category types) is an embedded asset object {name, type, description, effect} with no fixed owner -- it belongs to whoever holds that pact (every family in its 'holders' list), resolved dynamically at render time. 'resourceAccess' {mode} declares how this pact type affects who can use a controlled resource, resolved live (not stored per-instance) against places.json's resourceIds: 'none' (no effect), 'symmetric-conditional-fewer' (Accordo Commerciale -- whichever side of the holder entry currently has fewer resources of a category may use the other's), 'from-gets-to-all' (the feudal pacts -- 'from'/Signore gains non-exclusive access to everything 'to'/Vassallo controls), or 'from-gets-to-exclusive' (Risorsa Conquistata only -- 'to' loses access entirely). 'Risorsa Conquistata' is the one pact type whose holders entries are scoped to a single resource instead of 'everything the other side controls', so each holder row there additionally carries 'resourceId' (all_info/resources.json id) and 'placeId' (all_info/places.json id) naming exactly what was seized.",
   "pacts": {
     "Alleanza Militare": {
       "description": "Un patto di ferro che lega due partiti nel sangue e nella guerra, giurando di difendersi reciprocamente contro ogni minaccia.",
-      "effects": "Se uno dei partiti fa una azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un Patto di Non-Aggressione.",
+      "effects": "Se uno dei partiti fa un'azione di attacco o di difesa verso un terzo, l'altro deve prendere la stessa azione entro tre mesi. Questa alleanza porta anche gli effetti di un Patto di Non-Aggressione.",
       "category": "relational",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Almeno 12 mesi trascorsi dall'ultimo Attacco da una delle due parti verso l'altra e un Patto di Non-Aggressione firmato almeno 3 mesi prima.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti. Il tuo Might viene ridotto di 2 punti per 12 mesi.",
       "opinionValue": 40,
@@ -15,6 +18,9 @@
       "description": "Un giuramento solenne che proibisce ai firmatari di alzare le armi l'uno contro l'altro, sigillato sotto gli occhi degli dei.",
       "effects": "I due partiti non possono prendere azioni di Attacco contro l'altro partito.",
       "category": "relational",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Almeno 6 mesi trascorsi dall'ultimo Attacco da una delle due parti verso l'altra.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 2 punti.",
       "opinionValue": 10,
@@ -51,8 +57,11 @@
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
       "effects": "Signore: +2d Territory e +1d Might. Vassallo: +1d Might, massimo Sovereignty scende a 3. Include automaticamente alleanza militare e un Patto di Non-Aggressione.",
       "category": "relational",
+      "resourceAccess": {
+        "mode": "from-gets-to-all"
+      },
       "diplomacyCost": "Una differenza totale di statistiche di almeno 5.",
-      "breakupCost": "La Sovereignty del signore viene ridotta permanentemente di 2 punti se rompe il vassallaggio. Se il Vassallo rompe il Vassallaggio, il signore avra +3d sugli attacchi verso il vassallo per 12 mesi.",
+      "breakupCost": "La Sovereignty del signore viene ridotta permanentemente di 2 punti se rompe il vassallaggio. Se il Vassallo rompe il Vassallaggio, il signore avrà +3d sugli attacchi verso il vassallo per 12 mesi.",
       "opinionValue": 0,
       "modifiersAsFrom": [
         {
@@ -104,6 +113,9 @@
       "description": "Un vincolo feudale dove una famiglia si sottomette a un'altra in cambio di protezione e sostegno militare.",
       "effects": "Signore: +2d Treasure. Vassallo: +2d Might, massimo Treasure scende a 3. Include automaticamente patto di non-aggressione.",
       "category": "relational",
+      "resourceAccess": {
+        "mode": "from-gets-to-all"
+      },
       "diplomacyCost": "Riduzione might Signore di uno.",
       "breakupCost": "Il Treasure del signore viene ridotto permanentemente di 2 punti. La Might del Vassallo viene ridotta permanentemente di 2.",
       "opinionValue": 0,
@@ -135,6 +147,9 @@
       "description": "Una dichiarazione pubblica di rivalità, dove l'onore di una famiglia può essere restaurato solo attraverso la distruzione dell'altra.",
       "effects": "+1d dado su tutte le azioni di Attacco e Guerra Non Convenzionale contro l'altro partito. L'altra parte guadagna +2d su tutti i tiri di Controspionaggio verso le spie del partito rivale.",
       "category": "relational",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Nessuno: una rivalità si dichiara unilateralmente.",
       "breakupCost": "La tua Sovereignty viene ridotta di 2 punti, a meno che tu non abbia già ridotto a 0 una delle loro statistiche o non li abbia attaccati per un anno intero.",
       "opinionValue": -40,
@@ -180,6 +195,9 @@
       "description": "Un'alleanza mercantile che apre le rotte commerciali e crea prosperità condivisa tra i firmatari.",
       "effects": "+1d di Treasure per entrambi i partiti. Il partito con meno risorse può considerare una risorsa dell'altro come propria.",
       "category": "benefit",
+      "resourceAccess": {
+        "mode": "symmetric-conditional-fewer"
+      },
       "diplomacyCost": "Riduci il tuo Treasure di 1 punto.",
       "breakupCost": "Il tuo Treasure viene ridotto permanentemente di 1 punto.",
       "opinionValue": 15,
@@ -213,6 +231,9 @@
       "description": "Un patto che regola il flusso di popolazioni tra territori, permettendo espansione controllata e crescita demografica.",
       "effects": "+1d a qualsiasi pool che include Territory. Quando firmato, e una volta per ogni anno, la popolazione della razza maggioritaria del partito con Territory più grande aumenta del 50% fino a un massimo del 50%. Se non presente parte da 3%. Se il Territory è pari, non ci sono migrazioni significative.",
       "category": "benefit",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Se le due famiglie non condividono la stessa religione principale, la tua Sovereignty viene ridotta permanentemente di 2 punti.",
       "breakupCost": "Il tuo Territory viene ridotto permanentemente di 1 punto.",
       "opinionValue": 15,
@@ -234,10 +255,13 @@
     },
     "Matrimonio": {
       "description": "Un'unione di sangue che lega due casate attraverso matrimoni strategici, aumentando il prestigio e l'influenza reciproca.",
-      "effects": "Aumenta di +1d la Influence per il partito con la Influence più bassa tra i due.",
+      "effects": "Aumenta di +1d l'Influence per il partito con l'Influence più bassa tra i due.",
       "diplomacyCost": "Nessuno.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "category": "benefit",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "opinionValue": 20,
       "modifiers": [
         {
@@ -286,6 +310,9 @@
       "diplomacyCost": "Nessuno.",
       "breakupCost": "Nessuno",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "opinionValue": 10,
       "grantsAsset": {
         "name": "Riserve di Spelljammer",
@@ -311,6 +338,9 @@
       "bonus": "Alla firma, il creditore perde 1 Treasure e il debitore riceve 1 Treasure.",
       "effects": "Il creditore beneficia di una condizione favorevole nei tiri che utilizzano Treasure: ogni risultato pari a 9 vale come 10.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 2 Treasure prima del trasferimento e perde immediatamente 1 Treasure. Il debitore non può avere altri Debiti Semplici.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +1 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -60 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -339,6 +369,9 @@
       "bonus": "Alla firma, il debitore riceve 1 Treasure, trasferito dal creditore.",
       "effects": "Il debitore subisce una limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 9 vengono rimossi.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 2 Treasure prima del trasferimento e perde immediatamente 1 Treasure. Il debitore non può avere altri Debiti Semplici.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +1 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -60 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -367,6 +400,9 @@
       "bonus": "Alla firma, il creditore perde 2 Treasure e il debitore riceve 2 Treasure.",
       "effects": "Il creditore beneficia di una condizione favorevole nei tiri che utilizzano Treasure: ogni risultato pari o superiore a 8 vale come 10.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 3 Treasure prima del trasferimento e perde immediatamente 2 Treasure. Il debitore non può avere altri debiti semplici o intermedi.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +2 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -120 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -390,6 +426,9 @@
       "bonus": "Alla firma, il debitore riceve 2 Treasure, trasferiti dal creditore.",
       "effects": "Il debitore subisce una limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 8 vengono rimossi.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 3 Treasure prima del trasferimento e perde immediatamente 2 Treasure. Il debitore non può avere altri debiti semplici o intermedi.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +2 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -120 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -413,6 +452,9 @@
       "bonus": "Alla firma, il creditore perde 3 Treasure e il debitore riceve 3 Treasure.",
       "effects": "Il creditore beneficia di una condizione particolarmente favorevole nei tiri che utilizzano Treasure: ogni risultato pari o superiore a 7 vale come 10.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 4 Treasure prima del trasferimento e perde immediatamente 3 Treasure. Il debitore non può avere altri debiti intermedi o significativi.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +3 Treasure. Se viene rotto dal debitore prima dei 12 mesi, quest'ultimo riceve immediatamente -180 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -436,6 +478,9 @@
       "bonus": "Alla firma, il debitore riceve 3 Treasure, trasferiti dal creditore.",
       "effects": "Il debitore subisce una forte limitazione nei tiri che utilizzano Treasure: tutti i risultati superiori a 7 vengono rimossi.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Il creditore deve avere almeno 4 Treasure prima del trasferimento e perde immediatamente 3 Treasure. Il debitore non può avere altri debiti intermedi o significativi.",
       "breakupCost": "Se il trattato viene sciolto dopo almeno 12 mesi, il creditore ottiene permanentemente +3 Treasure. Se il debitore rompe il trattato prima dei 12 mesi, riceve immediatamente -180 punti di opinione presso tutte le famiglie appartenenti alla Confraternita.",
       "opinionValue": 0,
@@ -458,6 +503,9 @@
       "description": "Un'alleanza con gli Ntsu.",
       "effects": "Ottieni l'asset 'Maghi di Ion'.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Nessuno.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "opinionValue": 10,
@@ -484,6 +532,9 @@
       "description": "Un'alleanza con i Wueng.",
       "effects": "Ottieni l'asset 'Bestie di Tiamat'.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Nessuno.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "opinionValue": 40,
@@ -505,6 +556,9 @@
       "description": "Un accordo mercantile ricco di opportunità non ovvie.",
       "effects": "Ottieni l'asset 'Contatti con i Baroni'.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "opinionValue": 20,
@@ -520,6 +574,9 @@
       "description": "Un supporto di ricerca dagli Shawel.",
       "effects": "Ottieni l'asset 'Ricerca e Sviluppo'.",
       "category": "unique",
+      "resourceAccess": {
+        "mode": "none"
+      },
       "diplomacyCost": "Nessuno.",
       "breakupCost": "La tua Influence viene ridotta permanentemente di 1 punto.",
       "opinionValue": 10,
@@ -546,6 +603,19 @@
           "bidirectional": true
         }
       ]
+    },
+    "Risorsa Conquistata": {
+      "description": "La formalizzazione di una conquista: una famiglia si impossessa di una singola risorsa specifica di un'altra, senza che sia necessario alcun altro accordo preesistente.",
+      "effects": "Il controllore originale perde l'accesso a questa risorsa. Il conquistatore ne ottiene l'uso esclusivo.",
+      "category": "unique",
+      "resourceAccess": {
+        "mode": "from-gets-to-exclusive"
+      },
+      "diplomacyCost": "Nessuno: si registra dopo i fatti, a seguito di un'azione di Attacco (Conquista) risolta con successo su quella risorsa specifica.",
+      "breakupCost": "Nessuno strutturale: la risorsa torna disponibile al precedente controllore solo se riconquistata o se questa voce viene rimossa.",
+      "opinionValue": -20,
+      "modifiers": [],
+      "holders": []
     }
   }
 }

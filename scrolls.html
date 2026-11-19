@@ -1,42 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Warscroll Library</title>
+    <title>Libreria dei Warscroll</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Josefin+Sans:wght@300;400;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@400;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="scrolls.css" />
+    <link rel="stylesheet" href="stylesheet.css" />
 </head>
 
-<body>
+<body class="page-army">
 
     <!-- Start Navigation Menu -->
     <nav class="navigation-menu"></nav>
     <script src="nav.js"></script>
-    <link rel="stylesheet" href="nav.css">
     <!-- End Navigation Menu-->
 
     <!-- Header -->
     <header class="app-header">
         <div class="header-side">
             <!-- Army builder + Dice roller + Rules moved to left side -->
-            <button id="army-trigger" class="panel-trigger" aria-label="Open army builder">
-                <span>Army</span>
+            <button id="army-trigger" class="panel-trigger" aria-label="Apri il costruttore di eserciti">
+                <span>Esercito</span>
             </button>
-            <button id="dice-trigger" class="panel-trigger" aria-label="Open dice roller">
-                <span>Dice</span>
+            <button id="dice-trigger" class="panel-trigger" aria-label="Apri il tiratore di dadi">
+                <span>Dadi</span>
             </button>
-            <button id="rules-trigger" class="panel-trigger" aria-label="Open rules recap">
-                <span>Rules</span>
+            <button id="rules-trigger" class="panel-trigger" aria-label="Apri il riassunto delle regole">
+                <span>Regole</span>
             </button>
         </div>
         <h1 class="header-title">
-            Army of the Hand
+            Esercito della Mano
         </h1>
         <div class="header-side header-right">
             <!-- intentionally empty — all triggers are now on the left -->
@@ -44,7 +43,7 @@
     </header>
 
     <!-- Phase Selector Bar -->
-    <div class="phase-bar" id="phase-bar" role="toolbar" aria-label="Phase filter">
+    <div class="phase-bar" id="phase-bar" role="toolbar" aria-label="Filtro per fase">
         <button class="phase-btn" data-phase="Deployment" aria-pressed="false">Deployment</button>
         <button class="phase-btn" data-phase="Start Turn" aria-pressed="false">Start Turn</button>
         <button class="phase-btn" data-phase="Power" aria-pressed="false">Power</button>
@@ -60,10 +59,10 @@
         <div class="panel-overlay" id="panel-overlay"></div>
 
         <!-- Army Builder -->
-        <aside class="side-panel left-panel" id="army-panel" aria-label="Army Builder">
+        <aside class="side-panel left-panel" id="army-panel" aria-label="Costruttore di eserciti">
             <div class="panel-header">
-                <h2>Army Builder</h2>
-                <button id="close-army-panel" class="close-panel-btn" aria-label="Close">
+                <h2>Costruttore di Eserciti</h2>
+                <button id="close-army-panel" class="close-panel-btn" aria-label="Chiudi">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
@@ -80,15 +79,15 @@
                     </div>
                 </div>
                 <ul id="army-units-list" class="army-units-list"></ul>
-                <button id="clear-army-btn" class="clear-army-btn">Clear Army</button>
+                <button id="clear-army-btn" class="clear-army-btn">Svuota Esercito</button>
             </div>
         </aside>
 
         <!-- Dice Roller -->
-        <aside class="side-panel left-panel" id="dice-panel" aria-label="Dice Roller">
+        <aside class="side-panel left-panel" id="dice-panel" aria-label="Tiratore di dadi">
             <div class="panel-header">
-                <h2>Dice Roller</h2>
-                <button id="close-dice-panel" class="close-panel-btn" aria-label="Close">
+                <h2>Tiratore di Dadi</h2>
+                <button id="close-dice-panel" class="close-panel-btn" aria-label="Chiudi">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
@@ -97,7 +96,7 @@
             </div>
             <div class="panel-body">
                 <div class="dice-quick">
-                    <p class="section-label">Quick Roll</p>
+                    <p class="section-label">Tiro Rapido</p>
                     <div class="dice-quick-btns">
                         <button class="dice-quick-btn" data-sides="4">D4</button>
                         <button class="dice-quick-btn" data-sides="6">D6</button>
@@ -109,38 +108,38 @@
                     <div id="quick-result" class="quick-result" aria-live="polite"></div>
                 </div>
                 <div class="dice-calc">
-                    <p class="section-label">Attack Calculator</p>
+                    <p class="section-label">Calcolatore degli Attacchi</p>
                     <div class="calc-grid">
-                        <label>Tokens<input id="tok-input" type="number" min="1" max="100" value="10" /></label>
-                        <label>Attacks<input id="atk-input" type="number" min="1" max="20" value="2" /></label>
-                        <label>Hit<input id="hit-input" type="number" min="2" max="6" value="3" /></label>
-                        <label>Wound<input id="wnd-input" type="number" min="2" max="6" value="4" /></label>
+                        <label>Pedine<input id="tok-input" type="number" min="1" max="100" value="10" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Attack">Attacks</span><input id="atk-input" type="number" min="1" max="20" value="2" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Hit">Hit</span><input id="hit-input" type="number" min="2" max="6" value="3" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Wound">Wound</span><input id="wnd-input" type="number" min="2" max="6" value="4" /></label>
                         <label>Crit<input id="crit-threshold-input" type="number" min="1" max="6" value="6" /></label>
-                        <label>Rend<input id="rnd-input" type="number" min="0" max="6" value="0" /></label>
-                        <label>Save<input id="save-input" type="number" min="2" max="6" value="4" /></label>
-                        <label>Ward<input id="ward-input" type="number" min="2" max="7" value="7" /></label>
-                        <label>Damage<input id="dmg-input" type="number" min="1" max="10" value="1" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Rend">Rend</span><input id="rnd-input" type="number" min="0" max="6" value="0" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Save">Save</span><input id="save-input" type="number" min="2" max="6" value="4" /></label>
+                        <label>Protezione<input id="ward-input" type="number" min="2" max="7" value="7" /></label>
+                        <label><span class="glossary-term" data-glossary-term="Damage">Damage</span><input id="dmg-input" type="number" min="1" max="10" value="1" /></label>
                     </div>
-                    <div class="calc-flags" aria-label="Critical hit options">
-                        <label class="calc-flag"><input id="crit-2-hits-input" type="checkbox" />Crit (2 Hits)</label>
-                        <label class="calc-flag"><input id="crit-auto-wound-input" type="checkbox" />Crit (Auto-wound)</label>
-                        <label class="calc-flag"><input id="crit-mortal-input" type="checkbox" />Crit (Mortal)</label>
+                    <div class="calc-flags" aria-label="Opzioni colpo critico">
+                        <label class="calc-flag"><input id="crit-2-hits-input" type="checkbox" /><span class="glossary-term" data-glossary-term="Crit (2 Hits)">Crit (2 Hits)</span></label>
+                        <label class="calc-flag"><input id="crit-auto-wound-input" type="checkbox" /><span class="glossary-term" data-glossary-term="Crit (Auto-wound)">Crit (Auto-wound)</span></label>
+                        <label class="calc-flag"><input id="crit-mortal-input" type="checkbox" /><span class="glossary-term" data-glossary-term="Crit (Mortal)">Crit (Mortal)</span></label>
                     </div>
-                    <button id="roll-dice-btn" class="roll-btn">Roll Attack</button>
+                    <button id="roll-dice-btn" class="roll-btn">Tira Attacco</button>
                     <div id="roll-result" class="roll-result" aria-live="polite"></div>
                 </div>
                 <div class="dice-history">
-                    <p class="section-label">History</p>
+                    <p class="section-label">Cronologia</p>
                     <ul id="roll-history" class="roll-history-list"></ul>
                 </div>
             </div>
         </aside>
 
         <!-- Rules Recap -->
-        <aside class="side-panel left-panel" id="rules-panel" aria-label="Rules Recap">
+        <aside class="side-panel left-panel" id="rules-panel" aria-label="Riassunto delle regole">
             <div class="panel-header">
-                <h2>Rules Recap</h2>
-                <button id="close-rules-panel" class="close-panel-btn" aria-label="Close">
+                <h2>Riassunto delle Regole</h2>
+                <button id="close-rules-panel" class="close-panel-btn" aria-label="Chiudi">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
@@ -157,99 +156,101 @@
 
                 <div class="rules-section">
 
-                    <h2>General Rules</h2>
+                    <h2>Regole Generali</h2>
 
-                    <h3>Bonuses and Maluses</h3>
+                    <h3>Bonus e Malus</h3>
                     <ul>
-                        <li>All modifiers to rolls are capped at +1 or −1.</li>
-                        <li>If the total of all bonuses would give +2 or more, treat it as +1.</li>
-                        <li>If the total of all maluses would give −2 or more, treat it as −1.</li>
+                        <li>Tutti i modificatori ai tiri sono limitati a un massimo di +1 o −1.</li>
+                        <li>Se il totale di tutti i bonus darebbe +2 o più, trattalo come +1.</li>
+                        <li>Se il totale di tutti i malus darebbe −2 o più, trattalo come −1.</li>
                     </ul>
 
-                    <h3>Objective Control</h3>
+                    <h3>Controllo degli Obiettivi</h3>
                     <ul>
-                        <li>To control an objective, you must have the highest degree of control over it at the end of a
-                            turn.</li>
-                        <li>Once an objective is secured, it remains under your control until an enemy unit takes
-                            control from you.</li>
+                        <li>Per controllare un obiettivo, devi avere il grado di controllo più alto su di esso alla fine
+                            di un turno.</li>
+                        <li>Una volta assicurato, un obiettivo resta sotto il tuo controllo finché un'unità nemica non
+                            te lo sottrae.</li>
                     </ul>
 
-                    <h3>Underdog Bonus</h3>
+                    <h3>Bonus dello Svantaggiato</h3>
                     <ul>
-                        <li>The player controlling fewer objectives is the “underdog”.</li>
-                        <li>If you are the underdog at the start of a turn, you may use one free card that turn.</li>
-                    </ul>
-
-                </div>
-                <div class="rules-section">
-
-                    <h2>Victory Points</h2>
-
-                    <h3>Scoring from Objectives</h3>
-                    Victory points (VP) are awarded as follows:
-                    <ul>
-                        <li>1 VP for controlling one objective.</li>
-                        <li>1 VP for controlling two objectives.</li>
-                        <li>1 VP for controlling more objectives than your opponent.</li>
-                        <li>1 VP for each more valuable objective you control.</li>
-                    </ul>
-
-                    <h3>Missions</h3>
-                    <ul>
-                        <li>Missions are specific to each map and depend on the map’s layout and conditions.</li>
-                    </ul>
-
-                    <h3>Tactics</h3>
-                    <ul>
-                        <li>At the start of each round, both you and your opponent may declare a tactic.</li>
-                        <li>A tactic is a self‑written strategy goal (for example: “Kill the Distant: one enemy ranged
-                            unit with at least 5 starting tokens must be killed”).</li>
-                        <li>Tactics must be accepted by your opponent to be valid.</li>
-                        <li>A successfully completed tactic grants 2 VP.</li>
-                        <li>If a tactic is not completed by the end of the round, it instead grants 1 VP to your
-                            opponent.</li>
-                    </ul>
-
-                    <b>Example Tactics</b>
-                    <ul>
-                        <li><b>Take Their Land – Secure a foothold within enemy territory:</b>
-                            <ul>
-                                <li>Pick a terrain feature that is wholly or partially within enemy territory and fully
-                                    outside friendly territory.</li>
-                                <li>You complete this tactic if you control that terrain feature at the end of your
-                                    turn.</li>
-                            </ul>
-                        </li>
-                    </ul>
-
-
-                    <h2>How the Opponent Scores</h2>
-                    Your opponent gains VP from:
-                    <ul>
-                        <li>Killing one of your hero units.</li>
-                        <li>Objectives (as described above).</li>
-                        <li>Specific declared missions.</li>
+                        <li>Il giocatore che controlla meno obiettivi è lo "svantaggiato".</li>
+                        <li>Se sei lo svantaggiato all'inizio di un turno, puoi usare una carta gratuita in quel turno.</li>
                     </ul>
 
                 </div>
                 <div class="rules-section">
 
-                    <h2>Hero Units</h2>
+                    <h2>Punti Vittoria</h2>
+
+                    <h3>Punteggio dagli Obiettivi</h3>
+                    I punti vittoria (PV) vengono assegnati come segue:
                     <ul>
-                        <li>During the deployment phase, you must assign each of your characters to a different unit.
-                        </li>
-                        <li>Each assigned unit gains a label:
+                        <li>1 PV per il controllo di un obiettivo.</li>
+                        <li>1 PV per il controllo di due obiettivi.</li>
+                        <li>1 PV se controlli più obiettivi del tuo avversario.</li>
+                        <li>1 PV per ogni obiettivo di maggior valore che controlli.</li>
+                    </ul>
+
+                    <h3>Missioni</h3>
+                    <ul>
+                        <li>Le missioni sono specifiche per ogni mappa e dipendono dalla sua disposizione e dalle sue
+                            condizioni.</li>
+                    </ul>
+
+                    <h3>Tattiche</h3>
+                    <ul>
+                        <li>All'inizio di ogni round, sia tu che il tuo avversario potete dichiarare una tattica.</li>
+                        <li>Una tattica è un obiettivo strategico scritto da voi (per esempio: "Uccidi il Lontano:
+                            un'unità nemica a distanza con almeno 5 pedine iniziali deve essere uccisa").</li>
+                        <li>Le tattiche devono essere accettate dal tuo avversario per essere valide.</li>
+                        <li>Una tattica completata con successo garantisce 2 PV.</li>
+                        <li>Se una tattica non viene completata entro la fine del round, garantisce invece 1 PV al tuo
+                            avversario.</li>
+                    </ul>
+
+                    <b>Esempi di Tattiche</b>
+                    <ul>
+                        <li><b>Prendi la Loro Terra – Assicurati un punto d'appoggio in territorio nemico:</b>
                             <ul>
-                                <li>Demir, Darius: Priest.</li>
-                                <li>Hor, Minerva: Wizard.</li>
-                                <li>Arren: Warrior.</li>
+                                <li>Scegli un elemento del terreno che sia interamente o parzialmente in territorio
+                                    nemico e completamente fuori dal territorio amico.</li>
+                                <li>Completi questa tattica se controlli quell'elemento del terreno alla fine del tuo
+                                    turno.</li>
                             </ul>
                         </li>
-                        <li>If a hero unit is killed by the enemy:
+                    </ul>
+
+
+                    <h2>Come Segna Punti l'Avversario</h2>
+                    Il tuo avversario guadagna PV da:
+                    <ul>
+                        <li>Uccidere una delle tue unità eroe.</li>
+                        <li>Obiettivi (come descritto sopra).</li>
+                        <li>Missioni specifiche dichiarate.</li>
+                    </ul>
+
+                </div>
+                <div class="rules-section">
+
+                    <h2>Unità Eroe</h2>
+                    <ul>
+                        <li>Durante la fase Deployment, devi assegnare ciascuno dei tuoi personaggi a un'unità
+                            diversa.</li>
+                        <li>Ogni unità assegnata ottiene un'etichetta:
                             <ul>
-                                <li>The enemy gains 1 VP.</li>
-                                <li>The assigned character loses half of their hit points.</li>
-                                <li>The assigned character gains 2 exhaustion points until the next long rest.</li>
+                                <li>Demir, Darius: Sacerdote.</li>
+                                <li>Hor, Minerva: Mago.</li>
+                                <li>Arren: Guerriero.</li>
+                            </ul>
+                        </li>
+                        <li>Se un'unità eroe viene uccisa dal nemico:
+                            <ul>
+                                <li>Il nemico guadagna 1 PV.</li>
+                                <li>Il personaggio assegnato perde metà dei suoi punti vita.</li>
+                                <li>Il personaggio assegnato ottiene 2 punti di esaurimento fino al prossimo riposo
+                                    lungo.</li>
                             </ul>
                         </li>
                     </ul>
@@ -257,29 +258,29 @@
                 </div>
                 <div class="rules-section">
 
-                    <h2>Formations</h2>
+                    <h2>Formazioni</h2>
                     <ul>
-                        <li>A unit is considered “in formation” only if all of its tokens are arranged in that
-                            formation.</li>
-                        <li>You cannot create a formation with a unit that has fewer than 3 tokens.</li>
-                        <li>Formations may only be created if there is enough space on the terrain to place them as
-                            intended.</li>
+                        <li>Un'unità è considerata "in formazione" solo se tutte le sue pedine sono disposte in quella
+                            formazione.</li>
+                        <li>Non puoi creare una formazione con un'unità che ha meno di 3 pedine.</li>
+                        <li>Le formazioni possono essere create solo se c'è abbastanza spazio sul terreno per
+                            posizionarle come previsto.</li>
                     </ul>
 
-                    <h3>Breaking a Formation</h3>
+                    <h3>Rompere una Formazione</h3>
                     <ul>
-                        <li>After a charge, check each unit in your formation that is in combat against your opponent,
-                            using a Risk‑style roll‑off.</li>
-                        <li>For each unit in combat, roll a d6.</li>
-                        <li>If you win more than half of the rolls, you may move 2 units to break the formation.</li>
-                        <li>In ties, the result goes to the defender.</li>
+                        <li>Dopo una carica, controlla ogni unità della tua formazione in combattimento contro il
+                            tuo avversario, usando uno spareggio in stile Risiko.</li>
+                        <li>Per ogni unità in combattimento, tira un d6.</li>
+                        <li>Se vinci più della metà dei tiri, puoi muovere 2 unità per rompere la formazione.</li>
+                        <li>In caso di parità, il risultato va al difensore.</li>
                     </ul>
 
-                    <h3>Line Formation</h3>
+                    <h3>Formazione in Linea</h3>
 
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="69 96.96 510 291.96">
                         <g class="layer">
-                            <title>Line</title>
+                            <title>Linea</title>
                             <rect fill="none" fill-opacity="null" height="70" id="svg_16" stroke="#858585ab"
                                 stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null"
                                 stroke-opacity="null" stroke-width="2" width="70" x="70" y="98.33"></rect>
@@ -373,18 +374,18 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Declare a front of the line.</li>
-                        <li>Units gain +1 to saves against melee attacks that come from enemy tokens on the front of the
-                            line.</li>
-                        <li>Units suffer −1 to saves against melee attacks that come from enemy tokens behind the line.
-                        </li>
-                        <li>Saves against attacks from the sides are unaffected.</li>
+                        <li>Dichiara un fronte della linea.</li>
+                        <li>Le unità ottengono +1 ai tiri salvezza contro attacchi in mischia che provengono da
+                            pedine nemiche sul fronte della linea.</li>
+                        <li>Le unità subiscono −1 ai tiri salvezza contro attacchi in mischia che provengono da
+                            pedine nemiche dietro la linea.</li>
+                        <li>I tiri salvezza contro attacchi dai lati non sono influenzati.</li>
                     </ul>
 
-                    <h3>Spread Formation</h3>
+                    <h3>Formazione a Ventaglio</h3>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="69 96.96 510 291.96">
                         <g class="layer">
-                            <title>Spread</title>
+                            <title>Ventaglio</title>
                             <rect fill="none" height="70" id="svg_16" stroke="#858585ab" stroke-dasharray="null"
                                 stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="2"
                                 transform="matrix(1 0 0 1 0 0)" width="70" x="70" y="98.33"></rect>
@@ -480,15 +481,15 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Grants +1 to saves against ranged attacks.</li>
-                        <li>Grants -1 to saves against melee attacks.</li>
-                        <li>Charging units gain +1 additional damage during the turn they charge.</li>
+                        <li>Garantisce +1 ai tiri salvezza contro attacchi a distanza.</li>
+                        <li>Garantisce -1 ai tiri salvezza contro attacchi in mischia.</li>
+                        <li>Le unità che caricano ottengono +1 danno aggiuntivo durante il turno in cui caricano.</li>
                     </ul>
 
-                    <h3>Spear Formation</h3>
+                    <h3>Formazione a Lancia</h3>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="69 96.96 510 291.96">
                         <g class="layer">
-                            <title>Spear</title>
+                            <title>Lancia</title>
                             <rect fill="none" fill-opacity="null" height="70" id="svg_16" stroke="#858585ab"
                                 stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null"
                                 stroke-opacity="null" stroke-width="2" width="70" x="70" y="98.33"></rect>
@@ -584,16 +585,17 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>You may re‑roll any failed formation break roll.</li>
-                        <li>Units suffer −1 to saves against both ranged and melee attacks while in this formation.</li>
+                        <li>Puoi ritirare qualsiasi tiro di rottura della formazione fallito.</li>
+                        <li>Le unità subiscono −1 ai tiri salvezza contro attacchi sia a distanza che in mischia
+                            mentre sono in questa formazione.</li>
                     </ul>
 
 
 
-                    <h3>Column Formation</h3>
+                    <h3>Formazione in Colonna</h3>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="69 96.96 510 291.96">
                         <g class="layer">
-                            <title>Column</title>
+                            <title>Colonna</title>
                             <rect fill="none" height="70" id="svg_16" stroke="#858585ab" stroke-dasharray="null"
                                 stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="2"
                                 transform="matrix(1 0 0 1 0 0)" width="70" x="70" y="98.33"></rect>
@@ -685,129 +687,138 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Requires at least 1 unit.</li>
-                        <li>Grants +2 movement to the unit(s) in the formation.</li>
-                        <li>Units suffer −1 to saves against melee attacks.</li>
+                        <li>Richiede almeno 1 unità.</li>
+                        <li>Garantisce +2 movimento all'unità (o unità) nella formazione.</li>
+                        <li>Le unità subiscono −1 ai tiri salvezza contro attacchi in mischia.</li>
                     </ul>
 
-                    <h3>Formations and Movement</h3>
+                    <h3>Formazioni e Movimento</h3>
                     <ul>
-                        <li>Each token is limited by its base movement and can never move farther than that value.</li>
-                        <li>For simplicity, when moving a formation, you may move the center of the formation and freely
-                            rotate it around the ending position.</li>
-                        <li>Entering a formation always costs 1 point of movement.</li>
-                        <li>During the fight phase, you may perform a “shuffle in”.</li>
-                        <li>In a shuffle in, each token may move up to 3 inches to enter melee with a target unit; doing
-                            so breaks the formation.</li>
-                        <li>Units that are already in melee cannot shuffle in.</li>
-                        <li>If a shuffling unit would end its move already in melee, it stops short instead.</li>
-                    </ul>
-
-                </div>
-                <div class="rules-section">
-
-
-                    <h2>Terrain Rules</h2>
-                    Terrain features may have one or more of the following attributes:
-
-                    <h3>Cover</h3>
-                    <ul>
-                        <li>Subtract 1 from wound rolls for attacks that target a unit that is behind or wholly on
-                            terrain with the “Cover” attribute.</li>
-                        <li>This modifier does not apply if the unit charged this turn or has the Fly keyword.</li>
-                    </ul>
-
-                    <h3>Impassable</h3>
-                    <ul>
-                        <li>Models cannot move across, be set up on, or end any move on any part of an Impassable
-                            terrain feature.</li>
-                    </ul>
-
-                    <h3>Obscuring</h3>
-                    <ul>
-                        <li>Enemy units that are not within combat range cannot target a unit with shooting attacks if
-                            that unit is behind or wholly on an Obscuring terrain feature.</li>
-                        <li>This restriction does not apply if the targeted unit has the Fly keyword.</li>
-                    </ul>
-
-                    <h3>Unstable</h3>
-                    <ul>
-                        <li>Models can move across Unstable terrain.</li>
-                        <li>Models cannot be set up on, or end any type of move on, any part of Unstable terrain that is
-                            more than 1 inch tall.</li>
+                        <li>Ogni pedina è limitata dal proprio movimento base e non può mai muoversi oltre quel
+                            valore.</li>
+                        <li>Per semplicità, quando muovi una formazione, puoi muovere il centro della formazione e
+                            ruotarla liberamente attorno alla posizione finale.</li>
+                        <li>Entrare in una formazione costa sempre 1 punto di movimento.</li>
+                        <li>Durante la fase Fight, puoi eseguire uno "spostamento d'ingresso".</li>
+                        <li>In uno spostamento d'ingresso, ogni pedina può muoversi fino a 3 pollici per entrare in
+                            mischia con un'unità bersaglio; farlo rompe la formazione.</li>
+                        <li>Le unità già in mischia non possono eseguire uno spostamento d'ingresso.</li>
+                        <li>Se una pedina che si sposta finirebbe il movimento già in mischia, si ferma prima
+                            invece.</li>
                     </ul>
 
                 </div>
                 <div class="rules-section">
 
-                    <h2>Height Rules</h2>
+
+                    <h2>Regole del Terreno</h2>
+                    Gli elementi del terreno possono avere uno o più dei seguenti attributi:
+
+                    <h3>Copertura</h3>
                     <ul>
-                        <li>Each map has three height layers: −2, −1, 0, +1, and +2.</li>
-                        <li>Attacks from a unit at one height layer to a unit at another height layer receive a bonus
-                            equal to the difference in layers.</li>
-                        <li>For example:
+                        <li>Sottrai 1 dai tiri per ferire per gli attacchi che hanno come bersaglio un'unità dietro o
+                            interamente su un terreno con l'attributo "Copertura".</li>
+                        <li>Questo modificatore non si applica se l'unità ha caricato questo turno o ha la parola
+                            chiave Fly.</li>
+                    </ul>
+
+                    <h3>Invalicabile</h3>
+                    <ul>
+                        <li>Le miniature non possono muoversi attraverso, essere posizionate su, o terminare alcun
+                            movimento su qualsiasi parte di un elemento del terreno Invalicabile.</li>
+                    </ul>
+
+                    <h3>Ostruente</h3>
+                    <ul>
+                        <li>Le unità nemiche che non sono a distanza di combattimento non possono bersagliare con
+                            attacchi a distanza un'unità se quest'ultima è dietro o interamente su un elemento del
+                            terreno Ostruente.</li>
+                        <li>Questa restrizione non si applica se l'unità bersaglio ha la parola chiave Fly.</li>
+                    </ul>
+
+                    <h3>Instabile</h3>
+                    <ul>
+                        <li>Le miniature possono muoversi attraverso il terreno Instabile.</li>
+                        <li>Le miniature non possono essere posizionate su, o terminare alcun tipo di movimento su,
+                            qualsiasi parte di terreno Instabile alto più di 1 pollice.</li>
+                    </ul>
+
+                </div>
+                <div class="rules-section">
+
+                    <h2>Regole di Altezza</h2>
+                    <ul>
+                        <li>Ogni mappa ha livelli di altezza: −2, −1, 0, +1 e +2.</li>
+                        <li>Gli attacchi da un'unità a un livello di altezza verso un'unità a un altro livello
+                            ricevono un bonus pari alla differenza tra i livelli.</li>
+                        <li>Per esempio:
                             <ul>
-                                <li>A shooting attack from layer +1 to layer −1 has a +2 bonus to the roll.</li>
-                                <li>A shooting attack from layer −2 to layer 0 has a −2 penalty to the roll.</li>
+                                <li>Un attacco a distanza dal livello +1 al livello −1 ha un bonus di +2 al tiro.</li>
+                                <li>Un attacco a distanza dal livello −2 al livello 0 ha una penalità di −2 al
+                                    tiro.</li>
                             </ul>
                         </li>
                     </ul>
 
-                    <h3>Height in Melee and Charges</h3>
+                    <h3>Altezza in Mischia e nelle Cariche</h3>
                     <ul>
-                        <li>The same height‑difference bonus or penalty applies to melee attacks when the units are at
-                            different layers.</li>
-                        <li>For example, if one unit is at layer 0 and the other at layer 1, melee rolls are affected by
-                            the +1/−1 difference.</li>
-                        <li>When a unit charges from one layer to another (for example, charging from layer 0 to a unit
-                            at layer 1), the charge and attack rolls are affected by the height difference, even if the
-                            charge fully moves the charging unit into the new layer.</li>
+                        <li>Lo stesso bonus o penalità da differenza di altezza si applica agli attacchi in mischia
+                            quando le unità sono a livelli diversi.</li>
+                        <li>Per esempio, se un'unità è al livello 0 e l'altra al livello 1, i tiri in mischia sono
+                            influenzati dalla differenza di +1/−1.</li>
+                        <li>Quando un'unità carica da un livello a un altro (per esempio, caricando dal livello 0
+                            verso un'unità al livello 1), i tiri di carica e di attacco sono influenzati dalla
+                            differenza di altezza, anche se la carica porta completamente l'unità attaccante nel
+                            nuovo livello.</li>
                     </ul>
 
                 </div>
 
                 <div class="rules-section">
 
-                    <h2>Weather</h2>
-                    <p>Different weather conditions affect fighting conditions. The possible conditions and their
-                        effects are listed below.</p>
+                    <h2>Meteo</h2>
+                    <p>Diverse condizioni meteo influenzano le condizioni di combattimento. Le condizioni possibili e
+                        i loro effetti sono elencati di seguito.</p>
 
                     <ul>
-                        <li><strong>Rain:</strong> Units cannot catch fire and are considered wet.</li>
-                        <li><strong>Snow:</strong> Wet units may move or charge only half their normal movement and
-                            charge values.</li>
-                        <li><strong>Heavy Snow:</strong> All effects of Snow apply, and all units have their movement
-                            reduced by 2.</li>
-                        <li><strong>Heavy Fog:</strong> All enemy units more than 6" away from an allied unit are
-                            treated as if behind Obscuring terrain.</li>
-                        <li><strong>Extreme Heat:</strong> Units on fire receive an additional D3 mortal wounds at the
-                            end of their turn. Units cannot be wet.</li>
-                        <li><strong>Sandstorm:</strong> All effects of Heavy Fog apply, and all units have their
-                            movement reduced by 1".</li>
+                        <li><strong>Pioggia:</strong> Le unità non possono prendere fuoco e sono considerate
+                            bagnate.</li>
+                        <li><strong>Neve:</strong> Le unità bagnate possono muoversi o caricare solo per metà dei
+                            loro valori normali di movimento e carica.</li>
+                        <li><strong>Neve Intensa:</strong> Si applicano tutti gli effetti della Neve, e tutte le
+                            unità hanno il movimento ridotto di 2.</li>
+                        <li><strong>Nebbia Densa:</strong> Tutte le unità nemiche a più di 6" da un'unità alleata
+                            sono trattate come se fossero dietro un terreno Ostruente.</li>
+                        <li><strong>Calore Estremo:</strong> Le unità in fiamme ricevono 1D3 ferite mortali
+                            aggiuntive alla fine del loro turno. Le unità non possono essere bagnate.</li>
+                        <li><strong>Tempesta di Sabbia:</strong> Si applicano tutti gli effetti della Nebbia Densa, e
+                            tutte le unità hanno il movimento ridotto di 1".</li>
                     </ul>
 
-                    <h3>Wind</h3>
+                    <h3>Vento</h3>
                     <p>
-                        Wind is defined by both <strong>direction</strong> and <strong>intensity</strong>. It may also
-                        be
-                        <strong>static</strong> or <strong>inconsistent</strong> — if static, the direction remains
-                        constant each round;
-                        if inconsistent, roll a D6 at the start of each new round to determine the wind direction.
+                        Il vento è definito sia dalla <strong>direzione</strong> che dall'<strong>intensità</strong>.
+                        Può anche essere
+                        <strong>fisso</strong> o <strong>incostante</strong> — se fisso, la direzione resta costante
+                        a ogni round;
+                        se incostante, tira un D6 all'inizio di ogni nuovo round per determinare la direzione del
+                        vento.
                     </p>
 
                     <ul>
-                        <li><strong>Moderate:</strong> Archery (±1), Gunpowder (±0)</li>
-                        <li><strong>Strong:</strong> Archery (±2), Gunpowder (±1)</li>
-                        <li><strong>Hurricane:</strong> Archery (±2), Gunpowder (±2). Units with the
-                            <strong>Fly</strong> keyword are treated as if they do not have it.</li>
+                        <li><strong>Moderato:</strong> Archery (±1), Gunpowder (±0)</li>
+                        <li><strong>Forte:</strong> Archery (±2), Gunpowder (±1)</li>
+                        <li><strong>Uragano:</strong> Archery (±2), Gunpowder (±2). Le unità con la parola chiave
+                            <strong>Fly</strong> sono trattate come se non l'avessero.</li>
                     </ul>
 
                     <p>
-                        Wind directions are defined by cardinal direction only. When shooting <strong>with the
-                            wind</strong>
-                        (target is downwind), <strong>add</strong> the modifier to your hit roll. When shooting
-                        <strong>against the wind</strong> (target is upwind), <strong>subtract</strong> the modifier
-                        from your hit roll.
+                        Le direzioni del vento sono definite solo per direzione cardinale. Quando si spara
+                        <strong>con il vento</strong>
+                        (il bersaglio è sottovento), <strong>aggiungi</strong> il modificatore al tuo tiro per
+                        colpire. Quando si spara
+                        <strong>contro il vento</strong> (il bersaglio è sopravvento), <strong>sottrai</strong> il
+                        modificatore dal tuo tiro per colpire.
                     </p>
 
                 </div>
@@ -819,7 +830,7 @@
 
         <!-- Units -->
         <main class="units-main">
-            <ul id="units-list" class="units-list" aria-label="Warscroll units"></ul>
+            <ul id="units-list" class="units-list" aria-label="Unità dei warscroll"></ul>
         </main>
     </div>
 
@@ -827,7 +838,7 @@
     <div class="cards-drawer" id="cards-drawer">
         <button class="cards-toggle" id="cards-toggle" aria-expanded="false" aria-controls="cards-body">
             <span class="cards-toggle-label">
-                Cards Collection
+                Collezione Carte
             </span>
             <span class="card-count-badge" id="card-count-badge">0</span>
             <svg class="drawer-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -841,13 +852,11 @@
     </div>
 
     <!-- Card Modal -->
-    <div class="card-modal-backdrop" id="card-modal-backdrop" role="dialog" aria-modal="true" aria-label="Card detail">
+    <div class="card-modal-backdrop" id="card-modal-backdrop" role="dialog" aria-modal="true" aria-label="Dettaglio carta">
         <div class="card-modal" id="card-modal"></div>
     </div>
 
-    <!-- Keyword Tooltip -->
-    <div id="keyword-tooltip" class="keyword-tooltip" role="tooltip" aria-hidden="true"></div>
-
+    <script src="shared.js"></script>
     <script src="scrolls.js"></script>
 </body>
 

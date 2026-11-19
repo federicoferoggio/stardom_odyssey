@@ -1,0 +1,74 @@
+[
+  {
+    "id": "i-can-do-that-too",
+    "name": "I Can do That too!",
+    "type": "General",
+    "cost": "One use of any limited ability (spells not included) that recharge every long rest.",
+    "phase": "fight",
+    "use": "A unit using an Attack ability.",
+    "effect": "Add 1 to hit rolls for attacks made as part of that Attack ability. This also affects weapons that have the Companion weapon ability."
+  },
+  {
+    "id": "i-studied-for-this",
+    "name": "I studied for this!",
+    "type": "General",
+    "cost": "Reduce your two highest attribute score by 6 points until the end of your next long rest.",
+    "phase": "deployment",
+    "use": "An objective point on the map.",
+    "effect": "For the rest of the battle, whomever controls that objective gains an extra victory point at the end of each round."
+  },
+  {
+    "id": "mayhaps-nope",
+    "name": "Mayhaps, Nope!",
+    "type": "Hor, Minerva",
+    "cost": "Consume spellslots up to 8 total points (obtained by summing up spell slots of the appropriate level).",
+    "phase": "power",
+    "use": "A visibile friendly unit wholly within 12\" of your units.",
+    "effect": "That unit gains Ward (6+) until your next powers phase."
+  },
+  {
+    "id": "religious-commitment",
+    "name": "Religious Commitment",
+    "type": "Demir, Darius",
+    "cost": "Consume spellslots up to 12 total points (obtained by summing up spell slots of the appropriate level).",
+    "phase": "endturn",
+    "use": "Pick a friendly unit that charged this turn to use this ability, then you must pick an enemy unit in combat with it to be the target. The target must have a lower Health characteristic than the unit using this ability.",
+    "effect": "Inflict D3 mortal damage on the target. Then, the unit using this ability can move a distance up to its Move characteristic. It can pass through and end that move within the combat ranges of enemy units that were in combat with it at the start of the move, but not those of other enemy units. It does not have to end the move in combat."
+  },
+  {
+    "id": "sexy-blue-tigers",
+    "name": "Sexy blue tigers",
+    "type": "Arren",
+    "cost": "Consume all abilities of Inka's Claw, or one Rage use",
+    "phase": "charge",
+    "use": "During the enemy's charge phase, any unit that you control and that is not in combat.",
+    "effect": "That unit can use a Charge ability as if it were your charge phase."
+  },
+  {
+    "id": "tactical-walkback",
+    "name": "'Tactical Walkback'",
+    "type": "General",
+    "cost": "You gain one point of exhaustion.",
+    "phase": "movement",
+    "use": "Your own unit, if not in combat, during the enemy's movement phase. Roll a 2D6",
+    "effect": "That unit can move up to a distance equal to the number you rolled."
+  },
+  {
+    "id": "tatakae-tatakae",
+    "name": "Tatakae, Tatakae!",
+    "type": "General",
+    "cost": "Deal to your character 30 points of damage.",
+    "phase": "passive",
+    "use": "As a reaction when one of your units is targeted by an Attack ability.",
+    "effect": "Add 1 to save rolls for that unit in this phase."
+  },
+  {
+    "id": "throw-away-your-trash",
+    "name": "Throw Away Your Trash",
+    "type": "General",
+    "cost": "Remove one saving throw proficiency until your next long rest.",
+    "phase": "startturn",
+    "use": "During a Start of the Turn, any unit you control that has less than half (rounded down) of its morale units.",
+    "effect": "Completely remove the unit from the battlefield. During your next start turn you can redeploy this unit with a number of tokens added equal to one third of its morale."
+  }
+]

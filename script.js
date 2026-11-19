@@ -11,110 +11,11 @@ const STAT_DEFINITIONS = [
   { key: 'sovereignty', label: 'Sovereignty' },
 ];
 
-const ACTIONS = {
-  Attacco: {
-    description: "Azione di Forza Militare. Prima del tiro, scegli l'obiettivo desiderato. Un attacco è considerato Spelljammer se l'attaccante ha una flotta in orbita, altrimenti è terrestre. Un attacco spelljammer garantisce +1d per ogni flotta alleata in orbita in eccesso rispetto a quelle neutrali o nemiche, se la difesa non è Spelljammer.",
-    rolls: ['might', 'treasure'],
-    hasWarReasons: true,
-    needsOpponent: true,
-  },
-  Difesa: {
-    description: 'Azione di Forza Militare. La difesa sceglie se usare logoramento (Gobble Dice) o contrattacco (Dynamic Contest: -1 Might nemica in caso di successo; in caso di fallimento, -1 Might aggiuntiva per sé). Se il numero di flotte alleate del difensore che orbitano il pianeta è superiore a quelle a quelle neutrali o nemiche, la difesa è considerata Spelljammer.',
-    rolls: ['might', 'territory'],
-    needsOpponent: true,
-    hasLocation: true,
-  },
-  "Controllo dell'Ordine": {
-    description: 'Azione di Forza Militare. Usa la polizia per contrastare la guerra non convenzionale. Tira per fermare (Gobble: in caso di successo non subisci malus) e per catturare (Dynamic Contest: in caso di successo il leader viene catturato). Se conosci il piano in anticipo, hai un tiro Gobble aggiuntivo: in caso di successo l’azione non ha luogo.',
-    rolls: ['might', 'sovereignty'],
-    needsOpponent: true,
-  },
-  'Guerra Non Convenzionale (richiede un leader)': {
-    description: 'Azione di Forza Militare. Usa la violenza in modo strategico per attaccare. Tira per colpire (in caso di successo: -2 a una statistica a scelta per due mesi oppure leader fuori gioco per sei mesi) e per scappare (Dynamic Contest: in caso di successo il leader fugge).',
-    rolls: ['influence', 'might'],
-    needsOpponent: true,
-  },
-  Spionaggio: {
-    description: 'Azione Diplomatica. La Width determina il numero di informazioni ricevute; la Height ne determina la qualità.',
-    rolls: ['influence', 'treasure'],
-    needsOpponent: true,
-  },
-  Controspionaggio: {
-    description: 'Azione Diplomatica. La difesa sceglie se usare crittografia (Gobble Dice, senza consumare risorse per il mese) o caccia (Dynamic Contest: rimuove 1 Influence all’avversario per un mese).',
-    rolls: ['influence', 'territory'],
-    needsOpponent: true,
-  },
-  'Raccolta Informazioni': {
-    description: 'Azione Diplomatica. Rivela le statistiche della famiglia, non quelle individuali.',
-    rolls: ['influence', 'sovereignty'],
-    needsOpponent: true,
-  },
-  Diplomazia: {
-    description: 'Azione Diplomatica. Genera un nuovo trattato con un’altra Compagnia.',
-    rolls: ['influence', 'treasure'],
-    hasTreatyMenu: true,
-    needsOpponent: true,
-  },
-  'Genera Flotta': {
-    description: 'Sviluppa e potenzia le capacità militari della Compagnia. Forma una nuova flotta, che dovrà essere nominata e assegnata dal GM.',
-    rolls: ['might', 'treasure'],
-  },
-  'Aumento Stat (Might)': {
-    description: 'Sviluppa e potenzia le capacità militari della Compagnia. Richiede un tiro di Might + Sovereignty con una Difficoltà pari al doppio del livello attuale della statistica. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (immediato).',
-    rolls: ['might', 'sovereignty'],
-  },
-  'Aumento Stat (Influence)': {
-    description: 'Sviluppa e potenzia le capacità della Compagnia. Richiede un tiro di Influence + Sovereignty con una Difficoltà pari al doppio del livello attuale della statistica. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (immediato).',
-    rolls: ['influence', 'sovereignty'],
-  },
-  'Aumento Stat (Territory)': {
-    description: 'Sviluppa e potenzia il territorio della Compagnia. Richiede un tiro di Territory + Sovereignty con una Difficoltà pari al doppio del livello attuale della statistica. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (immediato).',
-    rolls: ['territory', 'sovereignty'],
-  },
-  'Aumento Stat (Treasure)': {
-    description: 'Sviluppa e potenzia le risorse della Compagnia. Richiede un tiro di Treasure + Sovereignty con una Difficoltà pari al doppio del livello attuale della statistica. Tempo necessario: da W2 (3 mesi), da W3 (2 mesi), da W4 (1 mese), da W5+ (immediato).',
-    rolls: ['treasure', 'sovereignty'],
-  },
-};
-
-const WAR_REASONS = [
-  { name: 'Conquista', description: '+1 al proprio Territory in caso di vittoria se il Territory avversario è superiore.' },
-  { name: 'Umiliazione', description: '+1 alla propria Influence in caso di vittoria se l’Influence avversaria è superiore.' },
-  { name: 'Razzia', description: '+1 al proprio Treasure in caso di vittoria se il Treasure avversario è superiore.' },
-  { name: 'Destabilizzazione', description: '-1 Sovereignty all’avversario in caso di vittoria.' },
-  { name: 'Preattacco', description: 'Riduzione della Might avversaria in caso di vittoria: Height / 2 determina di quanto scende la Might; Width determina per quanti mesi resta ridotta.' },
-  { name: 'Conquista Risorsa', description: 'Acquisisci una risorsa dell’avversario se è narrativamente conquistabile.' },
-  { name: 'Disingaggio', description: 'Disabilita una flotta nemica: Height determina per quanti mesi resta disabilitata; Width determina di quanto (in UA) deve ritirarsi.' },
-];
-
-// Shared phrase bank used by the strategic map.
-const FAMILY_QUALITIES = {
-  Might: [
-    ['le loro truppe sono contadini con spade', 'il loro esercito è più simbolico che reale'],
-    ['le loro forze sono ben addestrate e pronte alla battaglia', 'i loro soldati non temono lo scontro'],
-    ['le loro forze sono terrificanti da affrontare in battaglia', 'il loro esercito semina il terrore ovunque'],
-  ],
-  Treasure: [
-    ['hanno solo risparmi di poco valore', 'le loro casse contengono appena il necessario'],
-    ['trattano in monete d’oro', 'la loro ricchezza è notevole'],
-    ['commerciano in lingotti d’oro', 'il loro tesoro è inestimabile'],
-  ],
-  Influence: [
-    ['a pochi interessa della loro esistenza', 'sono ignorati da tutti nel sistema'],
-    ['sono rispettati nel sistema', 'godono di una discreta considerazione'],
-    ['sono leggendari e riveriti in ogni angolo del sistema', 'la loro parola è legge'],
-  ],
-  Territory: [
-    ['controllano una regione dimenticata', 'i loro territori sono insignificanti'],
-    ['governano un pianeta vasto e sviluppato, e numerose colonie', 'le loro terre si espandono su più sistemi'],
-    ['dominano pianeti, asteroidi, colonie e persino di più', 'il loro dominio si estende oltre l’immaginabile'],
-  ],
-  Sovereignty: [
-    ['i loro sudditi li tollerano appena', 'sono mal sopportati dalla popolazione'],
-    ['i loro sudditi li sostengono', 'hanno il supporto della popolazione'],
-    ['i loro sudditi li venerano', 'il loro regno è visto come sacro'],
-  ],
-};
+// ACTIONS, WAR_REASONS, FAMILY_QUALITIES, escapeHtml, loadJson, qualifiesFor,
+// generateFamilyDescription, hasGovernmentEffect and applyGovernmentStatRules
+// now live in shared.js (loaded before this file) so the Court and Strategic
+// Map pages can't drift out of sync on them the way ACTIONS/ACTION_ROLLS and
+// the government stat rules previously did.
 
 let hand = null;
 let government = null;
@@ -139,13 +40,15 @@ let divineOutcome = 'none';
 
 const $ = (id) => document.getElementById(id);
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+// escapeHtml and the generic loadJson fetch helper live in shared.js; this
+// thin wrapper keeps script.js's existing call style (path, fallback,
+// optional) and DATA_ROOT-prefixing/missingDataFiles tracking behavior.
+function fetchGameData(path, fallback, optional = false) {
+  return loadJson(path, fallback, {
+    prefix: DATA_ROOT,
+    optional,
+    onError: (p) => missingDataFiles.push(p),
+  });
 }
 
 function normalise(value) {
@@ -154,18 +57,6 @@ function normalise(value) {
 
 function isTrue(value) {
   return value === true || String(value).toLowerCase() === 'true';
-}
-
-async function loadJson(path, fallback, optional = false) {
-  try {
-    const response = await fetch(`${DATA_ROOT}${path}`, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.error(`[La Compagnia] Impossibile caricare ${path}`, error);
-    if (!optional) missingDataFiles.push(path);
-    return fallback;
-  }
 }
 
 function statChangeIsActive(change, month) {
@@ -197,55 +88,25 @@ function currentInputStats() {
   }));
 }
 
-function hasGovernmentEffect(name) {
-  return (Array.isArray(government?.effetti_speciali) ? government.effetti_speciali : [])
-    .some((effect) => normalise(effect.nome) === normalise(name));
-}
-
-function applyGovernmentStatRules(stats) {
-  const adjusted = { ...stats };
-  if (hasGovernmentEffect('Diritto Divino') && adjusted.sovereignty <= 2) {
-    ['might', 'treasure', 'influence', 'territory'].forEach((key) => {
-      adjusted[key] = Math.max(0, adjusted[key] - 1);
-    });
-  }
-  return adjusted;
-}
-
+// hasGovernmentEffect/applyGovernmentStatRules/generateFamilyDescription now
+// live in shared.js (parameterized on an explicit effects array, instead of
+// reading this page's `government` global directly) so the Strategic Map
+// page applies the exact same government stat rules instead of silently
+// skipping them.
 function getEffectiveInputStats() {
-  return applyGovernmentStatRules(currentInputStats());
-}
-
-function generateFamilyDescription(stats) {
-  const entries = STAT_DEFINITIONS.map(({ key, label }) => ({ key: label, value: stats[key] }));
-  const average = entries.reduce((sum, item) => sum + item.value, 0) / entries.length;
-  const tierFor = (value) => (value <= 2 ? 0 : value <= 4 ? 1 : 2);
-  const sentences = entries.map((item) => ({
-    ...item,
-    phrase: FAMILY_QUALITIES[item.key][tierFor(item.value)][Math.floor(Math.random() * 2)],
-  }));
-  const pairs = [];
-  for (let index = 0; index < sentences.length - 1; index += 2) {
-    const first = sentences[index];
-    const second = sentences[index + 1];
-    const contrast = Math.abs(first.value - average) > 1
-      && Math.abs(second.value - average) > 1
-      && ((first.value > average && second.value < average)
-        || (first.value < average && second.value > average));
-    pairs.push(`${first.phrase} ${contrast ? 'ma' : 'e'} ${second.phrase}`);
-  }
-  if (sentences.length % 2) pairs.push(sentences[sentences.length - 1].phrase);
-  return `${pairs.join('. ')}.`.replace(/(^\w|\.\s*\w)/g, (letter) => letter.toUpperCase());
+  return applyGovernmentStatRules(currentInputStats(), government?.effetti_speciali);
 }
 
 function updateFamilyDescription() {
-  $('dynamicDescription').textContent = generateFamilyDescription(getEffectiveInputStats());
+  const effective = getEffectiveInputStats();
+  const statsByLabel = Object.fromEntries(STAT_DEFINITIONS.map(({ key, label }) => [label, effective[key]]));
+  $('dynamicDescription').textContent = generateFamilyDescription(statsByLabel);
   updateGovernmentAdjustment();
 }
 
 function updateGovernmentAdjustment() {
   const host = $('government-adjustment');
-  if (!hasGovernmentEffect('Diritto Divino')) {
+  if (!hasGovernmentEffect(government?.effetti_speciali, 'Diritto Divino')) {
     host.textContent = '';
     return;
   }
@@ -266,7 +127,7 @@ function renderGovernmentDetails() {
 
   const effects = Array.isArray(government?.effetti_speciali) ? government.effetti_speciali : [];
   $('government-effects').innerHTML = effects.length
-    ? `<ul>${effects.map((effect) => `<li><strong>${escapeHtml(effect.nome || 'Effetto')}:</strong> ${escapeHtml(effect.descrizione || '')}</li>`).join('')}</ul>`
+    ? `<ul>${effects.map((effect) => `<li><strong>${linkifyGlossaryTerms(effect.nome || 'Effetto')}:</strong> ${linkifyGlossaryTerms(effect.descrizione || '')}</li>`).join('')}</ul>`
     : '';
 
   const caps = government?.statistiche || {};
@@ -288,12 +149,8 @@ function setFamilyStats() {
   updateFamilyDescription();
 }
 
-function getAllPlaces(dataBodies, dataPoi) {
-  return [
-    ...(Array.isArray(dataBodies) ? dataBodies : []),
-    ...(Array.isArray(dataPoi) ? dataPoi : []),
-  ];
-}
+// Places (planets/moons/stations/waypoints) now live together in
+// all_info/places.json -- no more need to concatenate two separate files.
 
 function getLocalizedAssetsForOwner(assets, places) {
   const ownedPlaceIds = new Set((Array.isArray(places) ? places : [])
@@ -316,9 +173,7 @@ function assetRequirements(asset) {
   return Array.isArray(asset.requirementIds) ? asset.requirementIds.map(String) : [];
 }
 
-function qualifiesFor(asset, resourceIds) {
-  return assetRequirements(asset).every((id) => resourceIds.has(id));
-}
+// qualifiesFor (asset, resourceIds) now lives in shared.js.
 
 function resourceName(resourceId) {
   return resourceById.get(String(resourceId))?.name || String(resourceId);
@@ -544,13 +399,13 @@ function modifierCardMarkup(entry) {
     <article class="modifier-card${mandatory ? ' mandatory' : ''}${entry.conflict ? ' conflicting' : ''}">
       <label class="modifier-toggle">
         <input type="checkbox" class="modifier-checkbox" data-modifier-id="${escapeHtml(entry.id)}" ${checked}>
-        <span class="modifier-title">${escapeHtml(entry.name)} ${badge}</span>
-        <span class="${deltaClass}">${escapeHtml(formatDelta(delta))}</span>
+        <span class="modifier-title">${linkifyGlossaryTerms(entry.name)} ${badge}</span>
+        <span class="${deltaClass}">${linkifyGlossaryTerms(formatDelta(delta))}</span>
       </label>
-      <p class="modifier-source">${escapeHtml(entry.source)}</p>
-      ${modifier.situation ? `<p class="modifier-situation"><strong>Quando applicarlo:</strong> ${escapeHtml(modifier.situation)}</p>` : ''}
-      ${entry.effect ? `<p class="modifier-effect"><strong>Effetto:</strong> ${escapeHtml(entry.effect)}</p>` : ''}
-      ${entry.description ? `<p class="modifier-asset-description">${escapeHtml(entry.description)}</p>` : ''}
+      <p class="modifier-source">${linkifyGlossaryTerms(entry.source)}</p>
+      ${modifier.situation ? `<p class="modifier-situation"><strong>Quando applicarlo:</strong> ${linkifyGlossaryTerms(modifier.situation)}</p>` : ''}
+      ${entry.effect ? `<p class="modifier-effect"><strong>Effetto:</strong> ${linkifyGlossaryTerms(entry.effect)}</p>` : ''}
+      ${entry.description ? `<p class="modifier-asset-description">${linkifyGlossaryTerms(entry.description)}</p>` : ''}
       ${specialNote}${conflictNote}
     </article>`;
 }
@@ -631,7 +486,7 @@ function buildTreatyMarkup() {
 }
 
 function buildDivineWillMarkup() {
-  if (!hasGovernmentEffect('Volontà Divina')) return '';
+  if (!hasGovernmentEffect(government?.effetti_speciali, 'Volontà Divina')) return '';
   const effect = government.effetti_speciali.find((item) => normalise(item.nome) === normalise('Volontà Divina'));
   return `
     <div class="action-extra government-roll-control">
@@ -641,7 +496,7 @@ function buildDivineWillMarkup() {
         <option value="blessing">Benedizione · +2d a tutti i tiri</option>
         <option value="punishment">Castigo · −2d a tutti i tiri</option>
       </select>
-      <p>${escapeHtml(effect?.descrizione || '')}</p>
+      <p>${linkifyGlossaryTerms(effect?.descrizione || '')}</p>
       <p class="input-note">La pagina non tira il d10 mensile: seleziona l’esito effettivamente ottenuto.</p>
     </div>`;
 }
@@ -676,7 +531,7 @@ function renderActionDetails() {
   }
 
   host.innerHTML = `
-    <p class="action-description">${escapeHtml(action.description)}</p>
+    <p class="action-description">${linkifyGlossaryTerms(action.description)}</p>
     ${buildActionContext()}
     ${buildDivineWillMarkup()}
     <div class="action-extra modifier-extra">
@@ -730,10 +585,10 @@ function renderActionDetails() {
     treatySelect.addEventListener('change', () => {
       const info = treatyTypes[treatySelect.value];
       $('treatyTypeDetails').innerHTML = info
-        ? `<p><strong>Descrizione:</strong> ${escapeHtml(info.description || '—')}</p>
-           <p><strong>Effetti:</strong> ${escapeHtml(info.effects || '—')}</p>
-           <p><strong>Costo di creazione:</strong> ${escapeHtml(info.diplomacyCost || '—')}</p>
-           <p><strong>Costo di rottura:</strong> ${escapeHtml(info.breakupCost || '—')}</p>`
+        ? `<p><strong>Descrizione:</strong> ${linkifyGlossaryTerms(info.description || '—')}</p>
+           <p><strong>Effetti:</strong> ${linkifyGlossaryTerms(info.effects || '—')}</p>
+           <p><strong>Costo di creazione:</strong> ${linkifyGlossaryTerms(info.diplomacyCost || '—')}</p>
+           <p><strong>Costo di rottura:</strong> ${linkifyGlossaryTerms(info.breakupCost || '—')}</p>`
         : '';
     });
   }
@@ -885,22 +740,22 @@ function renderFamilyAssets() {
     const modifierPills = modifiers.map((modifier) => {
       const delta = parseModifierAmount(modifier.amount, modifier.diceType);
       const category = modifierIsMandatory(modifier) ? 'Automatico' : 'Situazionale';
-      return `<span class="meta-pill">${category} · ${escapeHtml(formatDelta(delta))}</span>`;
+      return `<span class="meta-pill">${category} · ${linkifyGlossaryTerms(formatDelta(delta))}</span>`;
     }).join('');
     const notes = [];
     if (!modifiers.length) notes.push('<span class="meta-pill">Nessun modificatore dadi strutturato</span>');
     if (asset.treatyName) {
-      notes.push(`<span class="meta-pill">Concesso dal trattato: ${escapeHtml(asset.treatyName)} · con ${escapeHtml(asset.counterpart || 'controparte non specificata')}</span>`);
+      notes.push(`<span class="meta-pill">Concesso dal trattato: ${linkifyGlossaryTerms(asset.treatyName)} · con ${linkifyGlossaryTerms(asset.counterpart || 'controparte non specificata')}</span>`);
     }
     return `
       <article class="asset-card">
         <div class="asset-card-header">
-          <span class="asset-name">${escapeHtml(asset.name || 'Asset senza nome')}</span>
-          <span class="asset-type">${escapeHtml(asset.type || 'Asset')}</span>
+          <span class="asset-name">${linkifyGlossaryTerms(asset.name || 'Asset senza nome')}</span>
+          <span class="asset-type">${linkifyGlossaryTerms(asset.type || 'Asset')}</span>
         </div>
-        <p class="asset-description">${escapeHtml(asset.description || 'Descrizione non disponibile.')}</p>
-        ${asset.effect ? `<p class="asset-effect">${escapeHtml(asset.effect)}</p>` : ''}
-        <div class="asset-meta">${asset.generationTime ? `<span class="meta-pill">Tempo: ${escapeHtml(asset.generationTime)}</span>` : ''}${modifierPills}${notes.join('')}</div>
+        <p class="asset-description">${linkifyGlossaryTerms(asset.description || 'Descrizione non disponibile.')}</p>
+        ${asset.effect ? `<p class="asset-effect">${linkifyGlossaryTerms(asset.effect)}</p>` : ''}
+        <div class="asset-meta">${asset.generationTime ? `<span class="meta-pill">Tempo: ${linkifyGlossaryTerms(asset.generationTime)}</span>` : ''}${modifierPills}${notes.join('')}</div>
       </article>`;
   }).join('');
 }
@@ -918,7 +773,7 @@ function renderCourt() {
       : [leader.trait1, leader.trait2].filter(Boolean);
     const traitMarkup = traitIds.map((traitId) => {
       const trait = traitById.get(String(traitId));
-      if (!trait) return `<div class="trait-card"><strong>${escapeHtml(traitId)}</strong><p>Tratto non trovato in traits.json.</p></div>`;
+      if (!trait) return `<div class="trait-card"><strong>${linkifyGlossaryTerms(traitId)}</strong><p>Tratto non trovato in traits.json.</p></div>`;
       const modifiers = Array.isArray(trait.modifiers) ? trait.modifiers : [];
       const modifierMarkup = modifiers.map((modifier) => {
         const isArmyRule = Boolean(modifier.armies);
@@ -930,12 +785,12 @@ function renderCourt() {
             : ` · ${formatRawModifier(modifier.amount, modifier.diceType)}`;
         const category = modifierIsMandatory(modifier) ? 'Automatico' : 'Situazionale';
         const scopeNote = isArmyRule ? ' (non incluso nella riserva della Compagnia)' : '';
-        return `<li><strong>${escapeHtml(target)}${escapeHtml(delta)}</strong> <span class="trait-modifier-kind">${category}</span>${escapeHtml(scopeNote)}<br>${escapeHtml(modifier.situation || 'Nessuna condizione specificata.')}</li>`;
+        return `<li><strong>${linkifyGlossaryTerms(target)}${linkifyGlossaryTerms(delta)}</strong> <span class="trait-modifier-kind">${category}</span>${linkifyGlossaryTerms(scopeNote)}<br>${linkifyGlossaryTerms(modifier.situation || 'Nessuna condizione specificata.')}</li>`;
       }).join('');
       return `
         <div class="trait-card">
-          <div class="trait-card-heading"><strong>${escapeHtml(trait.label || trait.name || traitId)}</strong><span class="trait-id">${escapeHtml(traitId)}</span></div>
-          <p>${escapeHtml(trait.description || '')}</p>
+          <div class="trait-card-heading"><strong>${linkifyGlossaryTerms(trait.label || trait.name || traitId)}</strong><span class="trait-id">${linkifyGlossaryTerms(traitId)}</span></div>
+          <p>${linkifyGlossaryTerms(trait.description || '')}</p>
           ${modifierMarkup ? `<ul class="trait-modifier-list">${modifierMarkup}</ul>` : '<p class="trait-no-modifiers">Nessun modificatore definito.</p>'}
         </div>`;
     }).join('');
@@ -946,7 +801,7 @@ function renderCourt() {
       <article class="court-member">
         ${portrait}
         <div class="court-member-main">
-          <div class="court-member-heading"><strong>${escapeHtml(leader.name || 'Leader senza nome')}</strong><span>${escapeHtml(leader.role || 'Ruolo non specificato')}</span></div>
+          <div class="court-member-heading"><strong>${linkifyGlossaryTerms(leader.name || 'Leader senza nome')}</strong><span>${linkifyGlossaryTerms(leader.role || 'Ruolo non specificato')}</span></div>
           <div class="trait-list">${traitMarkup}</div>
         </div>
       </article>`;
@@ -996,10 +851,10 @@ function renderTreaties() {
         : 'Nessun bonus o malus diretto alla riserva di dadi.';
       return `
         <article class="asset-card treaty-card">
-          <div class="asset-card-header"><span class="asset-name">${escapeHtml(pact.name)}</span><span class="asset-type">Con ${escapeHtml(pact.counterpart)}</span></div>
-          <p class="asset-description">${escapeHtml(pact.definition.description || '')}</p>
-          ${pact.definition.effects ? `<p class="asset-effect">${escapeHtml(pact.definition.effects)}</p>` : ''}
-          <div class="asset-meta"><span class="meta-pill">${escapeHtml(modifierText)}</span></div>
+          <div class="asset-card-header"><span class="asset-name">${linkifyGlossaryTerms(pact.name)}</span><span class="asset-type">Con ${linkifyGlossaryTerms(pact.counterpart)}</span></div>
+          <p class="asset-description">${linkifyGlossaryTerms(pact.definition.description || '')}</p>
+          ${pact.definition.effects ? `<p class="asset-effect">${linkifyGlossaryTerms(pact.definition.effects)}</p>` : ''}
+          <div class="asset-meta"><span class="meta-pill">${linkifyGlossaryTerms(modifierText)}</span></div>
         </article>`;
     }).join('');
   }
@@ -1007,8 +862,8 @@ function renderTreaties() {
   secondary.innerHTML = oneSidedPactsAgainstHand.length
     ? oneSidedPactsAgainstHand.map((pact) => `
       <article class="asset-card treaty-one-sided">
-        <div class="asset-card-header"><span class="asset-name">${escapeHtml(pact.name)}</span><span class="asset-type">Unilaterale</span></div>
-        <p class="asset-description">Dichiarato da ${escapeHtml(pact.from)} verso La Mano, ma <strong>bidirectional: false</strong>. La Mano non è parte del patto e non riceve i suoi modificatori.</p>
+        <div class="asset-card-header"><span class="asset-name">${linkifyGlossaryTerms(pact.name)}</span><span class="asset-type">Unilaterale</span></div>
+        <p class="asset-description">Dichiarato da ${linkifyGlossaryTerms(pact.from)} verso La Mano, ma <strong>bidirectional: false</strong>. La Mano non è parte del patto e non riceve i suoi modificatori.</p>
       </article>`).join('')
     : '';
 }
@@ -1028,10 +883,10 @@ function renderLocalizedAssets() {
       : '';
     return `
       <article class="asset-card">
-        <div class="asset-card-header"><span class="asset-name">${escapeHtml(asset.name || 'Asset localizzato')}</span><span class="asset-type">${escapeHtml(place?.name || asset.bodyId || 'Luogo')}</span></div>
-        <p class="asset-description">${escapeHtml(asset.description || '')}</p>
-        ${asset.effect ? `<p class="asset-effect">${escapeHtml(asset.effect)}</p>` : ''}
-        <div class="asset-meta"><span class="meta-pill">Controllo del luogo: ${escapeHtml(place?.owner || 'non specificato')}</span>${delta.conflict ? '<span class="meta-pill">Dato da verificare</span>' : `<span class="meta-pill">Bonus contestuale: ${escapeHtml(formatDelta({ normal: delta.amount, expert: 0, master: 0 }))}</span>`}</div>
+        <div class="asset-card-header"><span class="asset-name">${linkifyGlossaryTerms(asset.name || 'Asset localizzato')}</span><span class="asset-type">${linkifyGlossaryTerms(place?.name || asset.bodyId || 'Luogo')}</span></div>
+        <p class="asset-description">${linkifyGlossaryTerms(asset.description || '')}</p>
+        ${asset.effect ? `<p class="asset-effect">${linkifyGlossaryTerms(asset.effect)}</p>` : ''}
+        <div class="asset-meta"><span class="meta-pill">Controllo del luogo: ${linkifyGlossaryTerms(place?.owner || 'non specificato')}</span>${delta.conflict ? '<span class="meta-pill">Dato da verificare</span>' : `<span class="meta-pill">Bonus contestuale: ${linkifyGlossaryTerms(formatDelta({ normal: delta.amount, expert: 0, master: 0 }))}</span>`}</div>
         ${conflictText}
       </article>`;
   }).join('');
@@ -1052,14 +907,14 @@ function renderCraftableAssets(resourceIds) {
   host.innerHTML = craftableAssets.map((asset) => {
     const required = assetRequirements(asset);
     const requirements = required.length
-      ? required.map((id) => `<span class="requirement-pill">${escapeHtml(resourceName(id))}</span>`).join('')
+      ? required.map((id) => `<span class="requirement-pill">${linkifyGlossaryTerms(resourceName(id))}</span>`).join('')
       : '<span class="requirement-pill">Nessuna risorsa richiesta</span>';
     return `
       <article class="asset-card">
-        <div class="asset-card-header"><span class="asset-name">${escapeHtml(asset.name || 'Asset senza nome')}</span><span class="asset-type">${escapeHtml(asset.type || 'Craftabile')}</span></div>
-        <p class="asset-description">${escapeHtml(asset.description || 'Descrizione non disponibile.')}</p>
+        <div class="asset-card-header"><span class="asset-name">${linkifyGlossaryTerms(asset.name || 'Asset senza nome')}</span><span class="asset-type">${linkifyGlossaryTerms(asset.type || 'Craftabile')}</span></div>
+        <p class="asset-description">${linkifyGlossaryTerms(asset.description || 'Descrizione non disponibile.')}</p>
         <div class="requirement-list">${requirements}</div>
-        ${asset.generationTime ? `<div class="asset-meta"><span class="meta-pill">Tempo di creazione: ${escapeHtml(asset.generationTime)}</span></div>` : ''}
+        ${asset.generationTime ? `<div class="asset-meta"><span class="meta-pill">Tempo di creazione: ${linkifyGlossaryTerms(asset.generationTime)}</span></div>` : ''}
         <p class="input-note">Disponibile alla creazione, ma non conteggiato nei tiri finché non compare tra gli asset posseduti in familyAssets.</p>
       </article>`;
   }).join('');
@@ -1083,20 +938,26 @@ async function init() {
     ['companies.json', { companies: [] }],
     ['governi.json', { governi: [] }],
     ['timeline.json', { currentMonth: 0, months: [] }],
-    ['stat_changes.json', { changes: [] }],
     ['assets.json', { craftAssets: [], familyAssets: [], localizedAssets: [] }],
     ['resources.json', { resources: [] }],
-    ['bodies.json', { bodies: [] }],
-    ['points_of_interest.json', { pointsOfInterest: [] }],
+    ['places.json', { places: [], tradePaths: [] }],
     ['leaders.json', { leaders: {} }],
     ['traits.json', { traits: [] }],
     ['treaties.json', { pacts: {} }],
-    ['fleets.json', { fleets: [] }],
+    ['fleets.json', { fleets: {} }],
+    ['action_log.json', { entries: [] }],
   ];
-  const results = await Promise.all(files.map(async ([file, fallback]) => ({
-    file,
-    data: await loadJson(file, fallback),
-  })));
+  // loadGlossary() is awaited alongside the rest of the data so
+  // glossaryTerms/linkifyGlossaryTerms() are ready before the first
+  // family-description render -- otherwise inline glossary highlighting
+  // in narrative text can silently no-op on first paint.
+  const [results] = await Promise.all([
+    Promise.all(files.map(async ([file, fallback]) => ({
+      file,
+      data: await fetchGameData(file, fallback),
+    }))),
+    loadGlossary(),
+  ]);
   const data = Object.fromEntries(results.map(({ file, data: contents }) => [file, contents]));
 
   companies = Array.isArray(data['companies.json'].companies) ? data['companies.json'].companies : [];
@@ -1106,7 +967,15 @@ async function init() {
 
   currentMonth = Math.round(Number(data['timeline.json'].currentMonth) || 0);
   $('current-month').textContent = String(currentMonth);
-  statChanges = Array.isArray(data['stat_changes.json'].changes) ? data['stat_changes.json'].changes : [];
+  // Structured stat deltas now live in action_log.json (category:"stat")
+  // instead of timeline.json's old months[].statChanges; re-attach `from`
+  // from the entry's own `month` field so getCurrentFamilyStat()/
+  // statChangeIsActive() -- which expect {family,stat,amount,to,from} --
+  // stay unchanged.
+  const logEntries = Array.isArray(data['action_log.json'].entries) ? data['action_log.json'].entries : [];
+  statChanges = logEntries
+    .filter((entry) => entry.category === 'stat')
+    .map((entry) => ({ ...entry, from: entry.month }));
   if (hand) setFamilyStats();
   else renderGovernmentDetails();
 
@@ -1117,7 +986,7 @@ async function init() {
   const resourceEntries = Array.isArray(data['resources.json'].resources) ? data['resources.json'].resources : [];
   resourceById = new Map(resourceEntries.map((resource) => [String(resource.id), resource]));
 
-  const places = getAllPlaces(data['bodies.json'].bodies, data['points_of_interest.json'].pointsOfInterest);
+  const places = Array.isArray(data['places.json'].places) ? data['places.json'].places : [];
   bodyById = new Map(places.map((place) => [String(place.id), place]));
   localizedAssets = getLocalizedAssetsForOwner(assets.localizedAssets, places);
   const { resourceIds } = getControlledResources(places);
@@ -1136,8 +1005,9 @@ async function init() {
   // Treaty-granted assets are shown only for bidirectional pacts. A one-way
   // pact's `to` side is not a party and is excluded from activePacts entirely.
   treatyGrantedAssets = getTreatyGrantedAssets(activePacts);
-  fleetCount = (Array.isArray(data['fleets.json'].fleets) ? data['fleets.json'].fleets : [])
-    .filter((fleet) => normalise(fleet.owner) === normalise(HAND_NAME)).length;
+  const fleetsByOwner = data['fleets.json'].fleets || {};
+  const handFleetsKey = Object.keys(fleetsByOwner).find((owner) => normalise(owner) === normalise(HAND_NAME));
+  fleetCount = handFleetsKey ? fleetsByOwner[handFleetsKey].length : 0;
 
   renderFamilyAssets();
   renderCourt();
@@ -1160,4 +1030,5 @@ document.addEventListener('DOMContentLoaded', () => {
     $('data-status').hidden = false;
     $('data-status').textContent = `Errore durante il caricamento dei dati: ${error.message}`;
   });
+  initGlossaryTooltips();
 });

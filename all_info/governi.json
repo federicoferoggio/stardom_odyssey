@@ -38,7 +38,7 @@
         },
         {
           "nome": "Mobilitazione Totale",
-          "descrizione": "puoi sacrificare permanentemente 1 punto di Territory per avere un bonus su Might di +2d per tutto il mese successivo."
+          "descrizione": "Puoi sacrificare permanentemente 1 punto di Territory per avere un bonus su Might di +2d per tutto il mese successivo."
         }
       ]
     },
@@ -101,7 +101,7 @@
         },
         {
           "nome": "Liquidità Aziendale",
-          "descrizione": "puoi 'vendere' permanentemente punti di altre Qualities per ottenere +2 Treasure temporaneo per quel mese."
+          "descrizione": "Puoi 'vendere' permanentemente punti di altre Qualities per ottenere +2 Treasure temporaneo per quel mese."
         }
       ]
     },
@@ -122,7 +122,7 @@
         },
         {
           "nome": "Compra-Voti",
-          "descrizione": "puoi spendere 1 punto di Treasure permanente per aggiungere +3d a qualsiasi tiro Sovereignty+Territory, rappresentando corruzione su vasta scala."
+          "descrizione": "Puoi spendere 1 punto di Treasure permanente per aggiungere +3d a qualsiasi tiro Sovereignty+Territory, rappresentando corruzione su vasta scala."
         }
       ]
     },
@@ -202,7 +202,7 @@
       "effetti_speciali": [
         {
           "nome": "Conoscenza Segreta",
-          "descrizione": "puoi 'osservare' le azioni di altre Compagnie. Una volta per mese, dopo che un'altra Compagnia dichiara un'azione ma prima che tiri, puoi forzarla a rivelarti esattamente che tiro farà e con che modificatori."
+          "descrizione": "Puoi 'osservare' le azioni di altre Compagnie. Una volta per mese, dopo che un'altra Compagnia dichiara un'azione ma prima che tiri, puoi forzarla a rivelarti esattamente che tiro farà e con che modificatori."
         },
         {
           "nome": "Isolamento Enigmatico",

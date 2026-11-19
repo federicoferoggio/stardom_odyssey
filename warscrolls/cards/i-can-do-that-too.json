@@ -1,9 +1,0 @@
-{
-  "id": "i-can-do-that-too",
-  "name": "I Can do That too!",
-  "type": "General",
-  "cost": "One use of any limited ability (spells not included) that recharge every long rest.",
-  "phase": "fight",
-  "use": "A unit using an Attack ability.",
-  "effect": "Add 1 to hit rolls for attacks made as part of that Attack ability. This also affects weapons that have the Companion weapon ability."
-}

@@ -20,11 +20,9 @@ document.addEventListener("DOMContentLoaded", function() {
     menuLinks.className = 'navigation-menu-links';
 
     const links = [
-        { href: 'index.html', text: 'Court' },
-        { href: 'scrolls.html', text: 'Army' },
-        { href: 'strategic-map.html', text: 'Strategic Map' },
-        { href: 'https://www.dndbeyond.com/campaigns/5380810', text: 'D&D Beyond Campaign' },
-        { href: 'https://federicoferoggio.github.io/planetnavigator/', text: 'Planets Explorer' }
+        { href: 'index.html', text: 'Corte' },
+        { href: 'scrolls.html', text: 'Esercito' },
+        { href: 'strategic-map.html', text: 'Mappa Strategica' }
     ];
 
     links.forEach(linkInfo => {

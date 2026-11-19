@@ -8,13 +8,13 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="nav.css">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheet.css">
     <script src="nav.js" defer></script>
+    <script src="shared.js" defer></script>
     <script src="script.js" defer></script>
 </head>
-<body>
+<body class="page-court">
     <nav class="navigation-menu" aria-label="Navigazione principale"></nav>
 
     <main class="dashboard" aria-label="La Compagnia">
@@ -55,23 +55,23 @@
 
             <div class="stats-grid" aria-label="Statistiche attuali della Mano">
                 <div class="stat-input">
-                    <label for="might">Might <span class="stat-cap" id="might-cap"></span></label>
+                    <label for="might"><span class="glossary-term" data-glossary-term="Might">Might</span> <span class="stat-cap" id="might-cap"></span></label>
                     <input type="number" id="might" min="0" step="1" value="1" inputmode="numeric">
                 </div>
                 <div class="stat-input">
-                    <label for="treasure">Treasure <span class="stat-cap" id="treasure-cap"></span></label>
+                    <label for="treasure"><span class="glossary-term" data-glossary-term="Treasure">Treasure</span> <span class="stat-cap" id="treasure-cap"></span></label>
                     <input type="number" id="treasure" min="0" step="1" value="1" inputmode="numeric">
                 </div>
                 <div class="stat-input">
-                    <label for="influence">Influence <span class="stat-cap" id="influence-cap"></span></label>
+                    <label for="influence"><span class="glossary-term" data-glossary-term="Influence">Influence</span> <span class="stat-cap" id="influence-cap"></span></label>
                     <input type="number" id="influence" min="0" step="1" value="1" inputmode="numeric">
                 </div>
                 <div class="stat-input">
-                    <label for="territory">Territory <span class="stat-cap" id="territory-cap"></span></label>
+                    <label for="territory"><span class="glossary-term" data-glossary-term="Territory">Territory</span> <span class="stat-cap" id="territory-cap"></span></label>
                     <input type="number" id="territory" min="0" step="1" value="1" inputmode="numeric">
                 </div>
                 <div class="stat-input">
-                    <label for="sovereignty">Sovereignty <span class="stat-cap" id="sovereignty-cap"></span></label>
+                    <label for="sovereignty"><span class="glossary-term" data-glossary-term="Sovereignty">Sovereignty</span> <span class="stat-cap" id="sovereignty-cap"></span></label>
                     <input type="number" id="sovereignty" min="0" step="1" value="1" inputmode="numeric">
                 </div>
             </div>

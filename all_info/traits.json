@@ -9,7 +9,7 @@
         {
           "stat": "Might",
           "amount": 1,
-          "situation": "Quando usa una azione di attacco una seconda volta nello stesso mese.",
+          "situation": "Quando usa un'azione di attacco una seconda volta nello stesso mese.",
           "always": false
         },
         {
@@ -34,7 +34,7 @@
         {
           "stat": "Might",
           "amount": -1,
-          "situation": "Quando usa una azione di attacco.",
+          "situation": "Quando usa un'azione di attacco.",
           "always": false
         }
       ]
@@ -130,7 +130,7 @@
         {
           "action": "Diplomazia",
           "amount": 0,
-          "situation": "puoi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
+          "situation": "Puoi ignorare tutti i malus che si attivano se rompi un patto che possiedi.",
           "always": false
         },
         {

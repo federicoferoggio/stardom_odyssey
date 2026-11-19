@@ -1,0 +1,272 @@
+[
+  {
+    "id": "butalizers",
+    "name": "Butalizers",
+    "tags": ["Cavalry", "Akbe", "The Hand"],
+    "health": 5,
+    "save": 3,
+    "move": 14,
+    "control": 2,
+    "morale": 5,
+    "points": 60,
+    "melee_weapons": [
+      {
+        "name": "Greatswords",
+        "attack": 2,
+        "hit": 4,
+        "wound": 4,
+        "rend": 1,
+        "damage": 2,
+        "properties": ["Charge (+1 Damage)"]
+      },
+      {
+        "name": "Tiger's Claws",
+        "attack": 3,
+        "hit": 4,
+        "wound": 3,
+        "rend": 0,
+        "damage": 1,
+        "properties": ["Companion"]
+      }
+    ],
+    "ranged_weapons": [
+      {
+        "name": "Hand-Cannon",
+        "range": 8,
+        "attack": 2,
+        "hit": 4,
+        "wound": 4,
+        "rend": 0,
+        "damage": 1,
+        "properties": ["Shoot in Combat", "Gunpowder"]
+      },
+      {
+        "name": "Starred Javelin",
+        "range": 6,
+        "attack": 1,
+        "hit": 3,
+        "wound": 3,
+        "rend": 0,
+        "damage": 2,
+        "properties": ["Requires Charging Volley"]
+      }
+    ],
+    "abilities": [
+      {
+        "name": "Readings of the Future",
+        "phase": "passive",
+        "uses_per_round": 999,
+        "description": "This unit can use its Shooting ability even if it has used the Run or Retreat abilities this round."
+      },
+      {
+        "name": "Charging Volley",
+        "phase": "charge",
+        "uses_per_round": 1,
+        "description": "Declare an enemy unit that you are not in combat with to be the target of this ability. This unit can use a Shoot ability as if it were your shooting phase against that target. You must then charge against that unit."
+      },
+      {
+        "name": "Mercenary Training",
+        "phase": "deployment",
+        "uses_per_round": 999,
+        "description": "You can use one point of personal wealth on this unit to increase each tokens health by 1, their control by 2, and their movement by 2. Furthermore, all of the weapons of that unit gain Crit (Auto-wound)."
+      }
+    ]
+  },
+  {
+    "id": "imperial-guard",
+    "name": "Imperial Guard",
+    "tags": ["Infantry", "The Hand"],
+    "health": 1,
+    "save": 3,
+    "move": 4,
+    "control": 2,
+    "morale": 10,
+    "points": 11,
+    "melee_weapons": [
+      {
+        "name": "Golden Blades",
+        "attack": 2,
+        "hit": 3,
+        "wound": 4,
+        "rend": 1,
+        "damage": 1,
+        "properties": []
+      }
+    ],
+    "ranged_weapons": [],
+    "abilities": [
+      {
+        "name": "Defensive Wall",
+        "phase": "passive",
+        "uses_per_round": 999,
+        "description": "If this unit did not charge this turn, all of its weapons have the Strike-First property."
+      },
+      {
+        "name": "Mercenary Training",
+        "phase": "deployment",
+        "uses_per_round": 999,
+        "description": "You can use one point of personal wealth on this unit to increase each tokens health by 1, their control by 2, and their movement by 2. Furthermore, all of the weapons of that unit gain Crit (Auto-wound)."
+      }
+    ]
+  },
+  {
+    "id": "korrian-cultist",
+    "name": "Korrian Cultist",
+    "tags": ["Infantry", "The Hand", "Unico"],
+    "health": 1,
+    "save": 6,
+    "move": 8,
+    "control": 1,
+    "morale": 20,
+    "points": 8,
+    "melee_weapons": [
+      {
+        "name": "Flails and Clubs",
+        "attack": 2,
+        "hit": 4,
+        "wound": 4,
+        "rend": 0,
+        "damage": 1,
+        "properties": []
+      }
+    ],
+    "ranged_weapons": [],
+    "abilities": [
+      {
+        "name": "Glorious Martyrs",
+        "phase": "fight",
+        "uses_per_round": 999,
+        "description": "Each time a model is slain in a combat attack and that model was in combat with the attacking unit, roll a dice. Add 1 to the roll if this unit is within 12\" of a unit controlled by Demir. On a 6+, inflict 1 mortal damage on the attacking unit at the end of the Fight phase."
+      }
+    ]
+  },
+  {
+    "id": "psionic-horde",
+    "name": "Thri-kreen Psionic Horde",
+    "tags": ["Infantry", "Hai", "Thri-kreen", "Wizard"],
+    "health": 1,
+    "save": 6,
+    "move": 8,
+    "control": 1,
+    "morale": 10,
+    "points": 10,
+    "melee_weapons": [],
+    "ranged_weapons": [
+      {
+        "name": "Psionic Enhanced Fists",
+        "range": 16,
+        "attack": 2,
+        "hit": 4,
+        "wound": 4,
+        "rend": 0,
+        "damage": 1,
+        "properties": ["Anti-Monster", "Shoot in Combat", "Psionic"]
+      }
+    ],
+    "abilities": [
+      {
+        "name": "Psionic Defenses",
+        "phase": "power",
+        "uses_per_round": 999,
+        "description": "The horde focuses its psionic energy onto an enemy unit, confusing it. Choose an enemy unit that the Thrikreen can see within 12\" and do a casting roll of 2d6: if you roll higher than (12 - the number of tokens in this unit)+, the chosen target gains a -1 on its hit rolls and -1 on its save rolls until the end of the turn."
+      },
+      {
+        "name": "Psionic Flexibility",
+        "phase": "fight",
+        "uses_per_round": 999,
+        "description": "The Horde can use its ranged weapons as if they were melee weapons during the fight phase."
+      }
+    ]
+  },
+  {
+    "id": "spiderlings",
+    "name": "Spiderlings Masters",
+    "tags": ["Monster", "Silk of Mylodra", "The Hand"],
+    "health": 1,
+    "save": 6,
+    "move": 10,
+    "control": 0,
+    "morale": 20,
+    "points": 6,
+    "melee_weapons": [
+      {
+        "name": "Bite",
+        "attack": 1,
+        "hit": 5,
+        "wound": 5,
+        "rend": 0,
+        "damage": 1,
+        "properties": ["Crit (2 Hits)", "Anti-Infantry"]
+      }
+    ],
+    "ranged_weapons": [],
+    "abilities": [
+      {
+        "name": "Skittering disappearance",
+        "phase": "endturn",
+        "uses_per_round": 999,
+        "description": "Remove all tokens of this unit from the battlefield, and place a skittering-hole token in the place of one of the tokens."
+      },
+      {
+        "name": "Skittering reapparition",
+        "phase": "startturn",
+        "uses_per_round": 999,
+        "description": "Redeploy all tokens of this unit within 6\" of any skittering-hole token."
+      }
+    ]
+  },
+  {
+    "id": "steel-master",
+    "name": "Steel Masters",
+    "tags": ["The Hand", "Samarkhoy", "Infantry"],
+    "health": 1,
+    "save": 5,
+    "move": 6,
+    "control": 1,
+    "morale": 10,
+    "points": 15,
+    "melee_weapons": [
+      {
+        "name": "Emergency Machete",
+        "attack": 1,
+        "hit": 5,
+        "wound": 5,
+        "rend": 0,
+        "damage": 1,
+        "properties": []
+      }
+    ],
+    "ranged_weapons": [
+      {
+        "name": "Muskets",
+        "range": 20,
+        "attack": 2,
+        "hit": 3,
+        "wound": 3,
+        "rend": 0,
+        "damage": 1,
+        "properties": ["Anti-Infantry"]
+      }
+    ],
+    "abilities": [
+      {
+        "name": "Firing line",
+        "phase": "shooting",
+        "uses_per_round": 1,
+        "description": "If this unit has not moved this round and was not deployed at the start of the turn, add 1 to the attack characteristic of this unit's Muskets for the rest of the turn."
+      },
+      {
+        "name": "Curved Armored Plating",
+        "phase": "passive",
+        "uses_per_round": 999,
+        "description": "When saving against wounds from Archery attacks, this unit can add +1 on its save roll."
+      },
+      {
+        "name": "Mercenary Training",
+        "phase": "deployment",
+        "uses_per_round": 999,
+        "description": "You can use one point of personal wealth on this unit to increase each tokens health by 1, their control by 2, and their movement by 2. Furthermore, all of the weapons of that unit gain Crit (Auto-wound)."
+      }
+    ]
+  }
+]

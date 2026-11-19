@@ -4,3 +4,4 @@ __pycache__/
 .claude/
 .devcontainer/
 all_info/json_gui_editor.py
+CLAUDE.md

@@ -40,95 +40,10 @@ const resConfig = [
   { key: "resources", label: "Resources", color: "#ffaacc", icon: "⚙️" },
 ];
 
-// Flavor-text phrase bank, keyed by stat name then tier (0-2). Self-contained
-// copy of the bank shared by parser.js, so this page has no dependency on it.
-const qualities = {
-  Might: [
-    [
-      "le loro truppe sono contadini con spade",
-      "il loro esercito è più simbolico che reale",
-    ],
-    [
-      "le loro forze sono ben addestrate e pronte alla battaglia",
-      "i loro soldati non temono lo scontro",
-    ],
-    [
-      "le loro forze sono terrificanti da affrontare in battaglia",
-      "il loro esercito semina il terrore ovunque",
-    ],
-  ],
-  Treasure: [
-    [
-      "hanno solo risparmi di poco valore",
-      "le loro casse contengono appena il necessario",
-    ],
-    ["trattano in monete d'oro", "la loro ricchezza è notevole"],
-    ["commerciano in lingotti d'oro", "il loro tesoro è inestimabile"],
-  ],
-  Influence: [
-    [
-      "a pochi interessa della loro esistenza",
-      "sono ignorati da tutti nel sistema",
-    ],
-    ["sono rispettati nel sistema", "godono di una discreta considerazione"],
-    [
-      "sono leggendari e riveriti in ogni angolo del sistema",
-      "la loro parola è legge",
-    ],
-  ],
-  Territory: [
-    [
-      "controllano una regione dimenticata",
-      "i loro territori sono insignificanti",
-    ],
-    [
-      "governano un pianeta vasto e sviluppato, e numerose colonie",
-      "le loro terre si espandono su più sistemi",
-    ],
-    [
-      "dominano pianeti, asteroidi, colonie e persino di più",
-      "il loro dominio si estende oltre l'immaginabile",
-    ],
-  ],
-  Sovereignty: [
-    [
-      "i loro sudditi li tollerano appena",
-      "sono mal sopportati dalla popolazione",
-    ],
-    ["i loro sudditi li sostengono", "hanno il supporto della popolazione"],
-    ["i loro sudditi li venerano", "il loro regno è visto come sacro"],
-  ],
-};
-
-function generateFamilyDescription(stats) {
-  const relevant = Object.entries(stats).filter(([k]) => qualities[k]);
-  if (!relevant.length) return "";
-  const average = relevant.reduce((sum, [, v]) => sum + v, 0) / relevant.length;
-  const getTier = (value) => (value <= 2 ? 0 : value <= 4 ? 1 : 2);
-  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-  const sentences = relevant.map(([key, value]) => ({
-    key,
-    value,
-    phrase: pick(qualities[key][getTier(value)]),
-  }));
-  const paired = [];
-  for (let i = 0; i < sentences.length - 1; i += 2) {
-    const a = sentences[i],
-      b = sentences[i + 1];
-    const conj =
-      Math.abs(a.value - average) > 1 &&
-        Math.abs(b.value - average) > 1 &&
-        ((a.value > average && b.value < average) ||
-          (a.value < average && b.value > average))
-        ? "ma"
-        : "e";
-    paired.push(`${a.phrase} ${conj} ${b.phrase}`);
-  }
-  if (sentences.length % 2 !== 0)
-    paired.push(sentences[sentences.length - 1].phrase);
-  const text = paired.join(". ") + ".";
-  return text.replace(/(^\w|\.\s*\w)/g, (c) => c.toUpperCase());
-}
+// The flavor-text bank and generateFamilyDescription() now live in
+// shared.js (same label-keyed `{Might, Treasure, ...}` signature this page
+// already used, so no call-site changes needed here) -- this used to be an
+// independent copy that could drift from script.js's.
 
 let byId = {},
   tick = 0,
@@ -141,13 +56,9 @@ let fleetIconGroupsCollapsed = {}; // parentId -> <g>, only for bodies with sate
 let fleetTokenScaleEls = []; // <g class="fleet-icon-scale"> elements, rebuilt every updateScene(), rescaled by refreshIconScale()
 let fleetCourseLineEls = []; // in-transit course <line> elements, same deal (stroke-width instead of a transform)
 
-function escHtml(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+// Alias to shared.js's escapeHtml (canonical version, also escapes single
+// quotes) so every existing linkifyGlossaryTerms(...) call site here keeps working as-is.
+const escHtml = escapeHtml;
 
 // Data (all_info/*.json) is checked-in project data, not sanitized user input,
 // but a stray value there still shouldn't be able to break out of a style
@@ -159,7 +70,7 @@ function safeColor(color) {
 }
 
 // Secret late-game alignment overlay. The source colors in companies.json and
-// bodies.json are never changed; familyColor() temporarily resolves every
+// places.json are never changed; familyColor() temporarily resolves every
 // family to one of the two alignment colors while this mode is active.
 let tickleMode = false;
 const tickle_RED = "#e44747";
@@ -567,16 +478,10 @@ function applyCameraFollow() {
 // collects the failures so init() can surface them on-screen once loading
 // settles -- see showDataErrorBanner().
 let dataLoadErrors = [];
-async function loadJson(path, fallback) {
-  try {
-    const res = await fetch(path);
-    if (!res.ok) throw new Error(`${path}: ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error("[STRATMAP] failed to load", path, err);
-    dataLoadErrors.push(path);
-    return fallback;
-  }
+// Thin wrapper over shared.js's generic loadJson, keeping this page's
+// existing (path, fallback) call style and dataLoadErrors tracking.
+function fetchMapData(path, fallback) {
+  return loadJson(path, fallback, { onError: (p) => dataLoadErrors.push(p) });
 }
 function showDataErrorBanner() {
   if (!dataLoadErrors.length) return;
@@ -1665,7 +1570,7 @@ function updateScene(t) {
   defs.querySelectorAll('[id^="mp-"]').forEach((e) => e.remove());
   defs.querySelectorAll('[id^="arrow-"]').forEach((e) => e.remove());
 
-  // Permanent trade lanes only now (all_info/points_of_interest.json's
+  // Permanent trade lanes only now (all_info/places.json's
   // tradePaths) -- fleet movement has its own resolution below, replacing
   // the old warpath/progress mechanic entirely.
   (byId.__paths || []).forEach((path, pi) => {
@@ -2312,14 +2217,14 @@ function renderTimelinePanel(currentTick) {
     const row = document.createElement("div");
     row.className = "timeline-event-row";
     row.innerHTML = `
-            ${ev.description ? `<div class="timeline-event-desc">${escHtml(ev.description)}</div>` : ""}
-            ${ev.modifier ? `<div class="timeline-event-modifier">⚙ ${escHtml(ev.modifier)}</div>` : ""}`;
+            ${ev.description ? `<div class="timeline-event-desc">${linkifyGlossaryTerms(ev.description)}</div>` : ""}
+            ${ev.modifier ? `<div class="timeline-event-modifier">⚙ ${linkifyGlossaryTerms(ev.modifier)}</div>` : ""}`;
     eventsEl.appendChild(row);
   });
   autoEvents.forEach((text) => {
     const row = document.createElement("div");
     row.className = "timeline-event-row auto";
-    row.innerHTML = `<div class="timeline-event-desc">${escHtml(text)}</div>`;
+    row.innerHTML = `<div class="timeline-event-desc">${linkifyGlossaryTerms(text)}</div>`;
     eventsEl.appendChild(row);
   });
 }
@@ -2339,36 +2244,36 @@ function renderPactsPanel() {
   Object.entries(treatyTypesByName || {}).forEach(([name, details]) => {
 
     const holders = (details.holders || [])
-      .map(h => `${escHtml(h.from)} → ${escHtml(h.to)}`)
+      .map(h => `${linkifyGlossaryTerms(h.from)} → ${linkifyGlossaryTerms(h.to)}`)
       .join(", ") || "Nessuno";
 
     const opinion = details.opinionValue ?? 0;
     const opinionText = Number(opinion) > 0
-      ? `+${escHtml(opinion)}`
-      : escHtml(opinion);
+      ? `+${linkifyGlossaryTerms(opinion)}`
+      : linkifyGlossaryTerms(opinion);
 
     const card = document.createElement("section");
     card.className = "pact-card";
 
     card.innerHTML = `
-            <h2 class="pact-card-title">${escHtml(name)}</h2>
+            <h2 class="pact-card-title">${linkifyGlossaryTerms(name)}</h2>
 
             <div class="pact-description">
-                ${escHtml(details.description || "")}
-                <em>${escHtml(details.effects || "")}</em>
+                ${linkifyGlossaryTerms(details.description || "")}
+                <em>${linkifyGlossaryTerms(details.effects || "")}</em>
             </div>
 
             <div class="pact-detail-row">
                 <span class="pact-detail-label">Costo Diplomatico:</span>
                 <div class="pact-detail-value">
-                    ${escHtml(details.diplomacyCost || "—")}
+                    ${linkifyGlossaryTerms(details.diplomacyCost || "—")}
                 </div>
             </div>
 
             <div class="pact-detail-row">
                 <span class="pact-detail-label">Costo di Rottura:</span>
                 <div class="pact-detail-value">
-                    ${escHtml(details.breakupCost || "—")}
+                    ${linkifyGlossaryTerms(details.breakupCost || "—")}
                 </div>
             </div>
 
@@ -2588,12 +2493,12 @@ function renderComposition(bodyName) {
   host.style.display = "block";
   const raceRows = topComposition(raceComp)
     .map(
-      ([n, p]) => `<span class="composition-pill">${p}% ${escHtml(n)}</span>`,
+      ([n, p]) => `<span class="composition-pill">${p}% ${linkifyGlossaryTerms(n)}</span>`,
     )
     .join("");
   const religionRows = topComposition(religionComp)
     .map(
-      ([n, p]) => `<span class="composition-pill">${p}% ${escHtml(n)}</span>`,
+      ([n, p]) => `<span class="composition-pill">${p}% ${linkifyGlossaryTerms(n)}</span>`,
     )
     .join("");
   host.innerHTML = `
@@ -2777,13 +2682,23 @@ function renderFamilyQuickView(ownerName) {
   host.appendChild(header);
 
   if (company) {
+    // Apply government stat rules (e.g. Diritto Divino) before display, same
+    // as showFamilyOverlay/buildFamiliesPanel -- otherwise this popup can
+    // show different numbers than the rest of the page for the same family.
+    const govDef = governiByName[company.government];
+    const rawQvStats = {};
+    STAT_KEYS.forEach((k) => { rawQvStats[k] = getFamilyStatValue(ownerName, k); });
+    const effectiveQvStats = applyGovernmentStatRules(rawQvStats, govDef?.effetti_speciali);
+
     const statsMini = document.createElement("div");
     statsMini.className = "quickview-stats";
     STAT_KEYS.forEach((k) => {
       const pill = document.createElement("span");
       pill.className = "quickview-stat-pill";
       if (statKnown(ownerName, k)) {
-        pill.textContent = `${STAT_LABELS[k].slice(0, 3)} ${getFamilyStatValue(ownerName, k)}`;
+        pill.classList.add("glossary-term");
+        pill.dataset.glossaryTerm = STAT_LABELS[k];
+        pill.textContent = `${STAT_LABELS[k].slice(0, 3)} ${effectiveQvStats[k]}`;
       } else {
         pill.classList.add("locked");
         pill.textContent = `${STAT_LABELS[k].slice(0, 3)} 🔒`;
@@ -2961,7 +2876,7 @@ function showFamilyOverlay(name, refreshOnly = false) {
       });
     if (warnings.length) {
       fleetWarningEl.innerHTML = warnings
-        .map((w) => `<div>${escHtml(w)}</div>`)
+        .map((w) => `<div>${linkifyGlossaryTerms(w)}</div>`)
         .join("");
       fleetWarningEl.style.display = "block";
     } else {
@@ -2989,19 +2904,32 @@ function showFamilyOverlay(name, refreshOnly = false) {
       govEl.appendChild(tip);
     }
 
+    // Apply government stat rules (e.g. "Diritto Divino": Sovereignty <=2
+    // drops every other stat by 1) before display -- previously this page
+    // showed raw getFamilyStatValue() with no such adjustment, so a family
+    // could show different numbers here than on the Court page.
+    const rawStats = {};
+    STAT_KEYS.forEach((k) => {
+      rawStats[k] = getFamilyStatValue(name, k);
+    });
+    const effectiveStats = applyGovernmentStatRules(
+      rawStats,
+      govDef?.effetti_speciali,
+    );
+
     STAT_KEYS.forEach((k) => {
       const card = document.createElement("div");
       card.className = "family-stat";
       if (!statKnown(name, k)) {
         card.classList.add("locked");
-        card.innerHTML = `<div class="family-stat-label">${STAT_LABELS[k]}</div>`;
+        card.innerHTML = `<div class="family-stat-label glossary-term" data-glossary-term="${STAT_LABELS[k]}">${STAT_LABELS[k]}</div>`;
         card.appendChild(
           lockedBadge("I giocatori non conoscono ancora questo valore"),
         );
         statsRow.appendChild(card);
         return;
       }
-      const value = getFamilyStatValue(name, k);
+      const value = effectiveStats[k];
       const cap = caps ? caps[STAT_LABELS[k]] || 7 : 7;
       // Current can exceed the government's cap -- shown as-is, only the
       // bar fill itself stays visually capped at 100%.
@@ -3010,7 +2938,7 @@ function showFamilyOverlay(name, refreshOnly = false) {
         Math.min(100, (value / Math.max(cap, value, 1)) * 100),
       );
       card.innerHTML = `
-                <div class="family-stat-label">${STAT_LABELS[k]}</div>
+                <div class="family-stat-label glossary-term" data-glossary-term="${STAT_LABELS[k]}">${STAT_LABELS[k]}</div>
                 <div class="family-stat-value">${value} <span class="family-stat-cap">(${cap})</span></div>
                 <div class="family-stat-bar"><div class="family-stat-bar-fill" style="width:${pct}%"></div></div>`;
       statsRow.appendChild(card);
@@ -3019,7 +2947,7 @@ function showFamilyOverlay(name, refreshOnly = false) {
     if (STAT_KEYS.every((k) => statKnown(name, k))) {
       const statObj = {};
       STAT_KEYS.forEach((k) => {
-        statObj[STAT_LABELS[k]] = getFamilyStatValue(name, k);
+        statObj[STAT_LABELS[k]] = effectiveStats[k];
       });
       descEl.textContent = generateFamilyDescription(statObj);
     } else {
@@ -3067,8 +2995,8 @@ function renderTerritories(name) {
       const resCount = (b.resourceIds || []).length;
       row.innerHTML = `
                 <span class="territory-icon">${TERRITORY_TYPE_ICON[b.type] || "⬡"}</span>
-                <span class="territory-name">${escHtml(b.name)}</span>
-                <span class="territory-type">${escHtml(b.type || "")}</span>
+                <span class="territory-name">${linkifyGlossaryTerms(b.name)}</span>
+                <span class="territory-type">${linkifyGlossaryTerms(b.type || "")}</span>
                 ${resCount ? `<span class="territory-res-count">${resCount} risorse</span>` : ""}`;
       row.addEventListener("click", () => {
         closeFamilyOverlay();
@@ -3099,13 +3027,13 @@ function renderResourceSummary(name) {
     .map(
       (rc) => `
             <div class="resource-summary-group">
-                <div class="resource-summary-label" style="color:${rc.color}">${rc.icon} ${escHtml(rc.label)}</div>
+                <div class="resource-summary-label" style="color:${rc.color}">${rc.icon} ${linkifyGlossaryTerms(rc.label)}</div>
                 <div class="resource-summary-chips">
                     ${byCategory[rc.key]
           .map(
             ({ res, bodies }) => `
                         <div class="trait-chip" style="border-color:${rc.color}">
-                            ${escHtml(res.name)}
+                            ${linkifyGlossaryTerms(res.name)}
                             <div class="trait-tooltip">${escHtml(bodies.join(", "))}</div>
                         </div>`,
           )
@@ -3137,7 +3065,7 @@ function renderFleetLocations(name) {
       ({ body, count }) => `
         <div class="fleet-row" data-body="${escHtml(body.id)}">
             <span class="fleet-icon">🛰</span>
-            <span class="fleet-location">${escHtml(body.name)}</span>
+            <span class="fleet-location">${linkifyGlossaryTerms(body.name)}</span>
             <span class="fleet-count">${count} flott${count === 1 ? "a" : "e"}</span>
         </div>`,
     )
@@ -3167,8 +3095,8 @@ function renderFleetLocations(name) {
       return `
             <div class="fleet-row" data-named-idx="${i}">
                 <span class="fleet-icon">${icon}</span>
-                <span class="fleet-location">${escHtml(fleet.name)}${errBadge}</span>
-                <span class="fleet-count">${escHtml(statusText)}</span>
+                <span class="fleet-location">${linkifyGlossaryTerms(fleet.name)}${errBadge}</span>
+                <span class="fleet-count">${linkifyGlossaryTerms(statusText)}</span>
             </div>`;
     })
     .join("");
@@ -3214,8 +3142,8 @@ function renderFamilyTreaties(name) {
       const info = treatyTypesByName[t.type];
       return `
             <div class="treaty-row" data-idx="${i}">
-                <span class="treaty-type">${escHtml(treatyDisplayLabel(t))}</span>
-                <span class="treaty-partner">con ${escHtml(t.to)}</span>
+                <span class="treaty-type">${linkifyGlossaryTerms(treatyDisplayLabel(t))}</span>
+                <span class="treaty-partner">con ${linkifyGlossaryTerms(t.to)}</span>
                 ${info ? `<div class="trait-tooltip">${escHtml(info.description)}</div>` : ""}
             </div>`;
     })
@@ -3242,16 +3170,16 @@ function renderAssets(name) {
           const reqPills = (a.requirementIds || [])
             .map((rid) => {
               const res = resourcesById[rid];
-              return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
+              return `<span class="craft-req-pill">${linkifyGlossaryTerms((res && res.name) || rid)}</span>`;
             })
             .join("");
           return `
                 <div class="family-asset-item">
                     <div class="family-asset-header">
-                        <span class="family-asset-name">${escHtml(a.name || "—")}</span>
-                        <span class="family-asset-type">${escHtml(a.type || "")}</span>
+                        <span class="family-asset-name">${linkifyGlossaryTerms(a.name || "—")}</span>
+                        <span class="family-asset-type">${linkifyGlossaryTerms(a.type || "")}</span>
                     </div>
-                    <div class="family-asset-desc">${escHtml(a.description || "")}</div>
+                    <div class="family-asset-desc">${linkifyGlossaryTerms(a.description || "")}</div>
                     <div class="craft-req-list">${reqPills}</div>
                 </div>`;
         })
@@ -3285,12 +3213,12 @@ function renderAssets(name) {
           (a) => `
             <div class="family-asset-item unique">
                 <div class="family-asset-header">
-                    <span class="family-asset-name">${escHtml(a.name || "—")}</span>
-                    <span class="family-asset-type">${escHtml(a.type || "")}</span>
+                    <span class="family-asset-name">${linkifyGlossaryTerms(a.name || "—")}</span>
+                    <span class="family-asset-type">${linkifyGlossaryTerms(a.type || "")}</span>
                 </div>
-                ${a._via ? `<div class="family-asset-via">Da ${escHtml(a._via)} con ${escHtml(a._with)}</div>` : ""}
-                <div class="family-asset-desc">${escHtml(a.description || "")}</div>
-                ${a.effect ? `<div class="family-asset-effect">✦ ${escHtml(a.effect)}</div>` : ""}
+                ${a._via ? `<div class="family-asset-via">Da ${linkifyGlossaryTerms(a._via)} con ${linkifyGlossaryTerms(a._with)}</div>` : ""}
+                <div class="family-asset-desc">${linkifyGlossaryTerms(a.description || "")}</div>
+                ${a.effect ? `<div class="family-asset-effect">✦ ${linkifyGlossaryTerms(a.effect)}</div>` : ""}
             </div>`,
         )
         .join("");
@@ -3314,11 +3242,11 @@ function renderLocalizedAssets(bodyId) {
       (a) => `
         <div class="family-asset-item">
             <div class="family-asset-header">
-                <span class="family-asset-name">${escHtml(a.name || "—")}</span>
-                <span class="family-asset-type">${escHtml(a.type || "")}</span>
+                <span class="family-asset-name">${linkifyGlossaryTerms(a.name || "—")}</span>
+                <span class="family-asset-type">${linkifyGlossaryTerms(a.type || "")}</span>
             </div>
-            <div class="family-asset-desc">${escHtml(a.description || "")}</div>
-            ${a.effect ? `<div class="family-asset-effect">✦ ${escHtml(a.effect)}</div>` : ""}
+            <div class="family-asset-desc">${linkifyGlossaryTerms(a.description || "")}</div>
+            ${a.effect ? `<div class="family-asset-effect">✦ ${linkifyGlossaryTerms(a.effect)}</div>` : ""}
         </div>`,
     )
     .join("");
@@ -3382,7 +3310,7 @@ function renderLeaders(name) {
       tip.className = "trait-tooltip";
       tip.innerHTML =
         `<div>${escHtml(trait.description || "")}</div>` +
-        (trait.modifiers || []).map(formatModifierLine).join("");
+        (trait.modifiers || []).map((m) => formatModifierLine(m, { linkify: false })).join("");
       chip.appendChild(tip);
       traitsEl.appendChild(chip);
     });
@@ -3399,34 +3327,32 @@ function renderLeaders(name) {
 function modifierLabel(m) {
   return m.stat || m.action || m.armies || "";
 }
-function formatModifierLine(m) {
+// `linkify: false` is used inside .trait-tooltip (pointer-events:none, see
+// the generic viewport-clamped tooltip handler below) -- glossary spans
+// would render but never be hoverable/tappable there, so it's not worth
+// the nested-tooltip visual complexity; render plain escaped text instead.
+function formatModifierLine(m, { linkify = true } = {}) {
+  const render = linkify ? linkifyGlossaryTerms : escHtml;
   const isArmies = !!m.armies;
   const sign = typeof m.amount === "number" && m.amount > 0 ? "+" : "";
   const marker = isArmies ? "⚔ " : "";
-  return `<div class="modline${isArmies ? " armies-mod" : ""}">${marker}${sign}${escHtml(m.amount)}d ${escHtml(modifierLabel(m))} — ${escHtml(m.situation || "Always")}</div>`;
+  return `<div class="modline${isArmies ? " armies-mod" : ""}">${marker}${sign}${render(m.amount)}d ${render(modifierLabel(m))} — ${render(m.situation || "Always")}</div>`;
 }
 
-// Mirrors script.js's `actions` object (the canonical 9-action list) so
-// this page can group modifiers by which roll they'd actually apply to,
-// without loading script.js itself (this page has no dice-roll UI of its
-// own). Keep in sync if the action list or its rolled stats ever change.
-const ACTION_ROLLS = {
-  Attacco: ["might", "treasure"],
-  Difesa: ["might", "territory"],
-  Spionaggio: ["influence", "treasure"],
-  Controspionaggio: ["influence", "territory"],
-  "Controllo dell'Ordine": ["might", "sovereignty"],
-  "Guerra Non Convenzionale (richiede un leader)": ["influence", "might"],
-  "Raccolta Informazioni": ["influence", "sovereignty"],
-  "Aumento Stat": [
-    "might",
-    "sovereignty",
-    "influence",
-    "territory",
-    "treasure",
-  ],
-  Diplomazia: ["influence", "treasure"],
-};
+// Derived from shared.js's ACTIONS (the canonical 9-action list also used
+// by the Court page's roll calculator) so this page can group modifiers by
+// which roll they'd actually apply to, without a second hand-maintained
+// copy that could drift out of sync. The 4 "Aumento Stat (X)" variants
+// collapse into one combined "Aumento Stat" row (matching the previous
+// hand-written table); every other action keeps its own name verbatim.
+const ACTION_ROLLS = Object.entries(ACTIONS).reduce((groups, [name, def]) => {
+  const key = /^Aumento Stat \(/.test(name) ? "Aumento Stat" : name;
+  const bucket = groups[key] || (groups[key] = []);
+  def.rolls.forEach((stat) => {
+    if (!bucket.includes(stat)) bucket.push(stat);
+  });
+  return groups;
+}, {});
 
 // Buckets every modifier entry by which action(s) it could apply to: an
 // action-bound modifier goes only under its exact action; a stat-bound one
@@ -3501,7 +3427,7 @@ function renderActiveBonuses(name) {
       .map(
         ({ source, modifier }) => `
         <div class="active-bonus-row${modifier.armies ? " armies-mod" : ""}">
-            <span class="active-bonus-source">${escHtml(source)}</span>
+            <span class="active-bonus-source">${linkifyGlossaryTerms(source)}</span>
             <span class="active-bonus-line">${formatModifierLine(modifier)}</span>
         </div>`,
       )
@@ -3512,7 +3438,7 @@ function renderActiveBonuses(name) {
     .map(
       ([action, list]) => `
             <div class="active-bonus-group">
-                <h3 class="family-subsection-label">${escHtml(action)}</h3>
+                <h3 class="family-subsection-label">${linkifyGlossaryTerms(action)}</h3>
                 ${renderRows(list)}
             </div>`,
     );
@@ -3536,8 +3462,8 @@ function renderActiveBonuses(name) {
 // population-weighted average over the race compatibility matrix + the same
 // over the religion compatibility matrix, using each family's home planet's
 // composition. All three matrices are symmetric, so the baseline is the same
-// in both directions -- it's added on top of (not instead of) opinions.json's
-// curated per-pair modifiers.
+// in both directions -- it's added on top of (not instead of) action_log.json's
+// curated per-pair opinion entries.
 function topComposition(compObj, n = 3) {
   return Object.entries(compObj || {})
     .filter(([, pct]) => pct > 0)
@@ -3619,8 +3545,8 @@ function fmtBaselineNum(v) {
 
 // Curated total for one direction = live treaty-derived opinion
 // (treatyOpinionsByFamily, mirrored both ways per treaty edge at load time)
-// + opinions.json's hand-authored story-beat modifiers for this pair (now
-// the only thing that file holds) + the diplomatic baseline.
+// + action_log.json's category:"opinion" entries for this pair (opinions.json
+// is retired -- those entries were migrated in) + the diplomatic baseline.
 function computeOpinionBreakdown(from, to) {
   const mods = [
     ...((treatyOpinionsByFamily[from] || {})[to] || []),
@@ -3640,6 +3566,9 @@ function opinionBreakdownHtml(from, to, { mods, baseline }) {
   const a = companiesByName[from],
     b = companiesByName[to];
   if (baseline && a && b) {
+    // Everything built in this block only ever ends up inside a
+    // .trait-tooltip (pointer-events:none) below, so glossary spans here
+    // would render but never be hoverable -- plain escHtml throughout.
     const topA = topComposition(planetRaceComposition[a.planet])
       .map(([n, p]) => `${p}% ${escHtml(n)}`)
       .join(", ");
@@ -3677,7 +3606,7 @@ function opinionBreakdownHtml(from, to, { mods, baseline }) {
   }
   mods.forEach((m) => {
     const typeInfo = treatyTypesByName[m.label];
-    html += `<span class="opinion-mod ${m.value >= 0 ? "positive" : "negative"}">${escHtml(m.label)} ${m.value > 0 ? "+" : ""}${m.value}${typeInfo ? `<div class="trait-tooltip">${escHtml(typeInfo.description)}</div>` : ""}</span>`;
+    html += `<span class="opinion-mod ${m.value >= 0 ? "positive" : "negative"}">${linkifyGlossaryTerms(m.label)} ${m.value > 0 ? "+" : ""}${m.value}${typeInfo ? `<div class="trait-tooltip">${escHtml(typeInfo.description)}</div>` : ""}</span>`;
   });
   return html || '<div class="opinion-empty">Nessun modificatore.</div>';
 }
@@ -3723,16 +3652,16 @@ function renderOpinions(name) {
   header.className = "opinion-table-row opinion-table-header";
   header.innerHTML = `
         <span class="opinion-family-name">Famiglia</span>
-        <span class="opinion-total-header">${escHtml(name)} → </span>
-        <span class="opinion-total-header"> → ${escHtml(name)}</span>
-        ${showHandColumn ? `<span class="opinion-total-header"> → ${escHtml(PLAYER_FAMILY)}</span>` : ""}`;
+        <span class="opinion-total-header">${linkifyGlossaryTerms(name)} → </span>
+        <span class="opinion-total-header"> → ${linkifyGlossaryTerms(name)}</span>
+        ${showHandColumn ? `<span class="opinion-total-header"> → ${linkifyGlossaryTerms(PLAYER_FAMILY)}</span>` : ""}`;
   table.appendChild(header);
 
   rows.forEach(({ other, ours, theirs, theirsOfHand }) => {
     const row = document.createElement("div");
     row.className = "opinion-table-row";
     row.innerHTML = `
-            <span class="opinion-family-name"><span class="opinion-dot" style="background:${familyColor(other)}"></span>${escHtml(other)}</span>
+            <span class="opinion-family-name"><span class="opinion-dot" style="background:${familyColor(other)}"></span>${linkifyGlossaryTerms(other)}</span>
             <span class="opinion-total ${opinionTotalClass(ours.total)}">${fmtOpinionTotal(ours.total)}</span>
             <span class="opinion-total ${opinionTotalClass(theirs.total)}">${fmtOpinionTotal(theirs.total)}</span>
             ${showHandColumn ? `<span class="opinion-total ${opinionTotalClass(theirsOfHand.total)}">${fmtOpinionTotal(theirsOfHand.total)}</span>` : ""}`;
@@ -3751,7 +3680,7 @@ function renderOpinions(name) {
             ${showHandColumn
         ? `
             <div class="opinion-detail-block">
-                <h4>Loro → ${escHtml(PLAYER_FAMILY)}</h4>
+                <h4>Loro → ${linkifyGlossaryTerms(PLAYER_FAMILY)}</h4>
                 <div class="opinion-modifiers">${opinionBreakdownHtml(other, PLAYER_FAMILY, theirsOfHand)}</div>
             </div>`
         : ""
@@ -3947,19 +3876,22 @@ function buildFamiliesPanel() {
   columns.className = "families-list-columns families-list-grid";
 
   const familyHeading = document.createElement("span");
-  familyHeading.textContent = "Family";
+  familyHeading.textContent = "Famiglia";
   columns.appendChild(familyHeading);
 
   STAT_KEYS.forEach((key) => {
     const heading = document.createElement("span");
+    heading.className = "glossary-term";
+    heading.dataset.glossaryTerm = STAT_LABELS[key];
     heading.textContent = STAT_LABELS[key].slice(0, 3).toUpperCase();
-    heading.title = STAT_LABELS[key];
     columns.appendChild(heading);
   });
 
   list.appendChild(columns);
 
   Object.keys(companiesByName).sort().forEach((name) => {
+    const company = companiesByName[name];
+    const govDef = company ? governiByName[company.government] : null;
     const color = familyColor(name);
     const row = document.createElement("div");
 
@@ -3993,13 +3925,21 @@ function buildFamiliesPanel() {
 
     row.appendChild(familyCell);
 
+    // Apply government stat rules (e.g. Diritto Divino) before display, same
+    // as showFamilyOverlay -- otherwise this list can show different numbers
+    // than the family-overlay panel for the same family.
+    const rawRowStats = {};
+    STAT_KEYS.forEach((k) => { rawRowStats[k] = getFamilyStatValue(name, k); });
+    const effectiveRowStats = applyGovernmentStatRules(rawRowStats, govDef?.effetti_speciali);
+
     STAT_KEYS.forEach((key) => {
       const value = document.createElement("span");
       value.className = "families-list-stat";
-      value.title = STAT_LABELS[key];
 
       if (statKnown(name, key)) {
-        value.textContent = getFamilyStatValue(name, key);
+        value.classList.add("glossary-term");
+        value.dataset.glossaryTerm = STAT_LABELS[key];
+        value.textContent = effectiveRowStats[key];
       } else {
         value.textContent = "🔒";
         value.classList.add("locked");
@@ -4088,9 +4028,7 @@ function familyFleetLocations(name) {
   });
   return { stationed };
 }
-function qualifiesFor(asset, resourceIdSet) {
-  return (asset.requirementIds || []).every((rid) => resourceIdSet.has(rid));
-}
+// qualifiesFor(asset, resourceIdSet) now lives in shared.js.
 // Craftable assets (all_info/assets.json's craftAssets) that a given family
 // currently qualifies for -- same qualification logic as the global
 // Craftable tab, just pre-filtered to one family for the overlay's Asset section.
@@ -4254,7 +4192,7 @@ function buildAtlasPanel(filter = "") {
       const tipText = usedBy.length
         ? `Ingrediente per: ${usedBy.join(", ")}`
         : "";
-      resBlock.innerHTML = `<div class="atlas-resource-name" title="${escHtml(tipText)}">${escHtml(res.name)}</div>`;
+      resBlock.innerHTML = `<div class="atlas-resource-name" title="${escHtml(tipText)}">${linkifyGlossaryTerms(res.name)}</div>`;
       const holdersEl = document.createElement("div");
       holdersEl.className = "atlas-holders";
       if (holders.length === 0) {
@@ -4264,7 +4202,7 @@ function buildAtlasPanel(filter = "") {
         holders.forEach((b) => {
           const chip = document.createElement("span");
           chip.className = "atlas-holder-chip";
-          chip.innerHTML = `<span class="owner-dot" style="background:${familyColor(b.owner)}"></span>${escHtml(b.name)}`;
+          chip.innerHTML = `<span class="owner-dot" style="background:${familyColor(b.owner)}"></span>${linkifyGlossaryTerms(b.name)}`;
           chip.title = b.owner || "";
           chip.addEventListener("click", () => {
             focusOnBody(b.id);
@@ -4315,7 +4253,7 @@ function buildCraftPanel(filter = "") {
     const reqPills = (r.requirementIds || [])
       .map((rid) => {
         const res = resourcesById[rid];
-        return `<span class="craft-req-pill">${escHtml((res && res.name) || rid)}</span>`;
+        return `<span class="craft-req-pill">${linkifyGlossaryTerms((res && res.name) || rid)}</span>`;
       })
       .join("");
 
@@ -4326,21 +4264,21 @@ function buildCraftPanel(filter = "") {
       ? qualifiers
         .map(
           (name) =>
-            `<span class="craft-qualifier-chip" style="border-color:${familyColor(name)}">${escHtml(name)}</span>`,
+            `<span class="craft-qualifier-chip" style="border-color:${familyColor(name)}">${linkifyGlossaryTerms(name)}</span>`,
         )
         .join("")
       : '<span style="color:#444">Nessuna famiglia qualificata al momento</span>';
 
     item.innerHTML = `
             <div class="craft-item-header">
-                <span class="craft-item-name">${escHtml(r.name || "—")}</span>
-                <span class="craft-item-type">${escHtml(r.type || "")}</span>
+                <span class="craft-item-name">${linkifyGlossaryTerms(r.name || "—")}</span>
+                <span class="craft-item-type">${linkifyGlossaryTerms(r.type || "")}</span>
                 <span class="craft-item-chevron">▶</span>
             </div>
             <div class="craft-item-detail">
-                <div class="craft-detail-row"><span class="craft-detail-label">⏱ Tempo</span><span class="craft-detail-value">${escHtml(r.generationTime || "—")}</span></div>
+                <div class="craft-detail-row"><span class="craft-detail-label">⏱ Tempo</span><span class="craft-detail-value">${linkifyGlossaryTerms(r.generationTime || "—")}</span></div>
                 <div class="craft-detail-row"><span class="craft-detail-label">🔩 Requisiti</span><div class="craft-req-list">${reqPills || '<span style="color:#444">—</span>'}</div></div>
-                <div class="craft-detail-desc">${escHtml(r.description || "—")}</div>
+                <div class="craft-detail-desc">${linkifyGlossaryTerms(r.description || "—")}</div>
                 <div class="craft-detail-row"><span class="craft-detail-label">✅ Disponibile a</span><div class="craft-req-list">${qualifiersHtml}</div></div>
             </div>`;
     item.querySelector(".craft-item-header").addEventListener("click", () => {
@@ -4695,7 +4633,7 @@ function renderSearchResults(query) {
     const div = document.createElement("div");
     div.className = "search-item";
     div.dataset.idx = i;
-    div.innerHTML = `<span class="search-dot" style="background:${safeColor(item.color)}"></span><span class="search-name">${escHtml(item.name)}</span><span class="search-sub">${escHtml(item.sub)}</span>`;
+    div.innerHTML = `<span class="search-dot" style="background:${safeColor(item.color)}"></span><span class="search-name">${linkifyGlossaryTerms(item.name)}</span><span class="search-sub">${linkifyGlossaryTerms(item.sub)}</span>`;
     div.addEventListener("mousedown", (e) => {
       e.preventDefault();
       selectSearchItem(item);
@@ -4772,56 +4710,50 @@ window.addEventListener("resize", () => {
 });
 
 async function init() {
-  // Map data is split by how often it changes: bodies.json (planets/moons,
-  // never change), points_of_interest.json (bases/points + trade lanes,
-  // rarely change), fleets.json (where every family's military currently
-  // is -- both stationed and in-transit -- changes constantly, kept in its
-  // own small file so that's the only one touched most weeks).
+  // Map data is split by how often it changes: places.json (planets/moons/
+  // stations/waypoints, rarely to never change), fleets.json (where every
+  // family's military currently is -- both stationed and in-transit --
+  // changes constantly, kept in its own small file so that's the only one
+  // touched most weeks).
   const [
-    bodiesFile,
-    poiFile,
+    placesFile,
     fleetsFile,
     companies,
     governi,
     timeline,
-    statChangesFile,
     traits,
     leaders,
-    opinions,
+    actionLog,
     treatiesFile,
     assetsFile,
     resourcesFile,
     diplomacy,
     reveals,
   ] = await Promise.all([
-    loadJson("all_info/bodies.json", { bodies: [] }),
-    loadJson("all_info/points_of_interest.json", {
-      pointsOfInterest: [],
-      tradePaths: [],
-    }),
-    loadJson("all_info/fleets.json", { stationed: [], fleets: [] }),
-    loadJson("all_info/companies.json", { companies: [] }),
-    loadJson("all_info/governi.json", { governi: [] }),
-    loadJson("all_info/timeline.json", { currentMonth: 0, months: [] }),
-    loadJson("all_info/stat_changes.json", { changes: [] }),
-    loadJson("all_info/traits.json", { traits: [] }),
-    loadJson("all_info/leaders.json", { leaders: {} }),
-    loadJson("all_info/opinions.json", { opinions: {} }),
-    loadJson("all_info/treaties.json", { pacts: {} }),
-    loadJson("all_info/assets.json", {
+    fetchMapData("all_info/places.json", { places: [], tradePaths: [] }),
+    fetchMapData("all_info/fleets.json", { stationed: [], fleets: {} }),
+    fetchMapData("all_info/companies.json", { companies: [] }),
+    fetchMapData("all_info/governi.json", { governi: [] }),
+    fetchMapData("all_info/timeline.json", { currentMonth: 0, months: [] }),
+    fetchMapData("all_info/traits.json", { traits: [] }),
+    fetchMapData("all_info/leaders.json", { leaders: {} }),
+    fetchMapData("all_info/action_log.json", { entries: [] }),
+    fetchMapData("all_info/treaties.json", { pacts: {} }),
+    fetchMapData("all_info/assets.json", {
       craftAssets: [],
       familyAssets: [],
       localizedAssets: [],
     }),
-    loadJson("all_info/resources.json", { resources: [] }),
-    loadJson("all_info/diplomacy.json", {
+    fetchMapData("all_info/resources.json", { resources: [] }),
+    fetchMapData("all_info/diplomacy.json", {
       governmentCompatibility: {},
       raceCompatibility: {},
       religionCompatibility: {},
       planetRaceComposition: {},
       planetReligionComposition: {},
     }),
-    loadJson("all_info/reveals.json", { families: {} }),
+    fetchMapData("all_info/reveals.json", { families: {} }),
+    loadGlossary(),
   ]);
   showDataErrorBanner();
 
@@ -4829,9 +4761,19 @@ async function init() {
   (companies.companies || []).forEach((c) => {
     companiesByName[c.name] = c;
   });
-  statChanges = Array.isArray(statChangesFile.changes)
-    ? statChangesFile.changes
-    : [];
+  // Structured stat deltas and curated opinion deltas now both live in
+  // action_log.json (category:"stat"/"opinion") instead of timeline.json's
+  // old months[].statChanges and the separate opinions.json file. Re-attach
+  // `from` from the entry's own `month` so statChangeIsActive()/
+  // getFamilyStatValue() stay unchanged. Opinion entries are rebuilt into
+  // opinions.json's old nested {from:{to:[{label,value}]}} shape so
+  // computeOpinionBreakdown() and the rest of the opinions UI stay
+  // unchanged too; a null-month entry (no discoverable date) always counts,
+  // a dated one only once the timeline has reached it.
+  const logEntries = Array.isArray(actionLog.entries) ? actionLog.entries : [];
+  statChanges = logEntries
+    .filter((entry) => entry.category === "stat")
+    .map((entry) => ({ ...entry, from: entry.month }));
   governiByName = {};
   (governi.governi || []).forEach((g) => {
     governiByName[g.nome] = g;
@@ -4841,7 +4783,18 @@ async function init() {
   (traits.traits || []).forEach((t) => {
     traitsById[t.id] = t;
   });
-  opinionsByFamily = opinions.opinions || {};
+  const currentMonthNum = Number(timeline.currentMonth) || 0;
+  opinionsByFamily = {};
+  logEntries
+    .filter((entry) => entry.category === "opinion"
+      && (entry.month == null || Number(entry.month) <= currentMonthNum))
+    .forEach((entry) => {
+      const from = opinionsByFamily[entry.family] || (opinionsByFamily[entry.family] = {});
+      (from[entry.target] || (from[entry.target] = [])).push({
+        label: entry.reason || "",
+        value: Number(entry.amount) || 0,
+      });
+    });
   treatyTypesByName = treatiesFile.pacts || {};
   renderPactsPanel();
   treatiesByFamily = {};
@@ -4892,12 +4845,14 @@ async function init() {
     if (!ownerColors[name]) ownerColors[name] = "#888888";
   });
 
-  const bodies = [
-    ...(bodiesFile.bodies || []),
-    ...(poiFile.pointsOfInterest || []),
-  ];
-  const paths = poiFile.tradePaths || [];
-  namedFleets = fleetsFile.fleets || [];
+  const bodies = placesFile.places || [];
+  const paths = placesFile.tradePaths || [];
+  // fleets.json authors fleets grouped by owner family name; flatten back
+  // into one array with `.owner` re-attached so every existing
+  // fl.owner-based lookup below keeps working unchanged.
+  namedFleets = Object.entries(fleetsFile.fleets || {}).flatMap(
+    ([owner, fleetsForOwner]) => fleetsForOwner.map((fl) => ({ ...fl, owner })),
+  );
   fleetsById = {};
   namedFleets.forEach((fl) => {
     if (fl.id) fleetsById[fl.id] = fl;
@@ -4911,3 +4866,4 @@ async function init() {
 }
 
 init();
+initGlossaryTooltips();

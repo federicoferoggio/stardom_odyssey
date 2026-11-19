@@ -4,7 +4,20 @@
     "bobssium: craft_assets.json used 'Bossio', assumed to be the same material as 'Bobssium' (short form) -- please confirm.",
     "zinale: craft_assets.json used 'Zinza', assumed to be the same material as 'Zinale' -- please confirm."
   ],
+  "_added": "farodiion and pianeta-fortezza were referenced by bodies.json but missing from this canonical catalog entirely -- added below rather than aliased, since neither matches an existing entry.",
   "resources": [
+    {
+      "id": "farodiion",
+      "name": "Faro di Ion",
+      "category": "resources",
+      "aliases": []
+    },
+    {
+      "id": "pianeta-fortezza",
+      "name": "Pianeta Fortezza",
+      "category": "resources",
+      "aliases": []
+    },
     {
       "id": "adamantine",
       "name": "Adamantine",

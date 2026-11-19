@@ -245,7 +245,7 @@
       "name": "Attrezzature per le Spelljammer",
       "type": "Militare",
       "generationTime": "O mesi",
-      "description": "Garantisce la Abilita di Creare una flotta extra aggiuntiva che non conta contro il limite normale delle flotte. Questa flotta, denominata Rinforzatrice, ha una Height di 5 come difficoltà per essere creata. Se questo asset è perso, la flotta è anche immediatamente persa.",
+      "description": "Garantisce l'abilità di creare una flotta extra aggiuntiva che non conta contro il limite normale delle flotte. Questa flotta, denominata Rinforzatrice, ha una Height di 5 come difficoltà per essere creata. Se questo asset è perso, la flotta è anche immediatamente persa.",
       "requirementIds": [
         "diamond",
         "helium",
@@ -366,7 +366,7 @@
       "bodyId": "aepra",
       "name": "Pianeta Fortezza",
       "type": "Militare",
-      "description": "Il tuo pianeta intero é una fortezza naturale. Hai +2d su tutti i tiri di difesa contro attacchi da flotte invadenti Aepra.",
+      "description": "Il tuo pianeta intero è una fortezza naturale. Hai +2d su tutti i tiri di difesa contro attacchi da flotte invadenti Aepra.",
       "effect": "+2d Might in qualsiasi tiro di Difesa effettuato su Aepra."
     },
     {
@@ -374,7 +374,7 @@
       "bodyId": "thesuneye",
       "name": "Collettore di Energia Solare",
       "type": "Politico",
-      "description": "Una volta al mese, puoi tirare 4d10, Se ottieni almeno un dieci guadagni la abilita di concentrare la luce solare in un punto del sistema, direttamente riducendo la Might di tutte le compagnie con una popolazione in maggioranza sensitiva al sole.",
+      "description": "Una volta al mese, puoi tirare 4d10. Se ottieni almeno un dieci guadagni l'abilità di concentrare la luce solare in un punto del sistema, direttamente riducendo la Might di tutte le compagnie con una popolazione in maggioranza sensitiva al sole.",
       "effect": "-1d Might in qualsiasi tiro di Difesa effettuato da una famiglia a maggioranza sensitiva al sole."
     },
     {
