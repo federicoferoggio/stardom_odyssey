@@ -158,25 +158,23 @@
 
                     <h2>Regole Generali</h2>
 
-                    <h3>Bonus e Malus</h3>
+                    <h3>Limite ai Modificatori</h3>
                     <ul>
-                        <li>Tutti i modificatori ai tiri sono limitati a un massimo di +1 o −1.</li>
-                        <li>Se il totale di tutti i bonus darebbe +2 o più, trattalo come +1.</li>
-                        <li>Se il totale di tutti i malus darebbe −2 o più, trattalo come −1.</li>
+                        <li>Il modificatore <strong>totale</strong> su un tiro è limitato a un massimo di ±2,
+                            qualunque sia la sua fonte: abilità, Rend, altezza, vento, formazioni, carte e così via.</li>
+                        <li>Se la somma di tutti i modificatori sarebbe +2 o più, trattala come +2.</li>
+                        <li>Se la somma di tutti i modificatori sarebbe −2 o meno, trattala come −2.</li>
+                        <li>Questo limite si applica separatamente a ogni tiro: per colpire, per ferire, salvezza,
+                            carica, corsa e lancio degli incantesimi/preghiere.</li>
                     </ul>
 
                     <h3>Controllo degli Obiettivi</h3>
                     <ul>
                         <li>Per controllare un obiettivo, devi avere il grado di controllo più alto su di esso alla fine
                             di un turno.</li>
+                        <li>In caso di parità, il controllo non cambia.</li>
                         <li>Una volta assicurato, un obiettivo resta sotto il tuo controllo finché un'unità nemica non
-                            te lo sottrae.</li>
-                    </ul>
-
-                    <h3>Bonus dello Svantaggiato</h3>
-                    <ul>
-                        <li>Il giocatore che controlla meno obiettivi è lo "svantaggiato".</li>
-                        <li>Se sei lo svantaggiato all'inizio di un turno, puoi usare una carta gratuita in quel turno.</li>
+                            te lo sottrae, anche se lo abbandoni.</li>
                     </ul>
 
                 </div>
@@ -226,7 +224,6 @@
                     <h2>Come Segna Punti l'Avversario</h2>
                     Il tuo avversario guadagna PV da:
                     <ul>
-                        <li>Uccidere una delle tue unità eroe.</li>
                         <li>Obiettivi (come descritto sopra).</li>
                         <li>Missioni specifiche dichiarate.</li>
                     </ul>
@@ -234,7 +231,7 @@
                 </div>
                 <div class="rules-section">
 
-                    <h2>Unità Eroe</h2>
+                    <h2>Personaggi</h2>
                     <ul>
                         <li>Durante la fase Deployment, devi assegnare ciascuno dei tuoi personaggi a un'unità
                             diversa.</li>
@@ -245,14 +242,10 @@
                                 <li>Arren: Guerriero.</li>
                             </ul>
                         </li>
-                        <li>Se un'unità eroe viene uccisa dal nemico:
-                            <ul>
-                                <li>Il nemico guadagna 1 PV.</li>
-                                <li>Il personaggio assegnato perde metà dei suoi punti vita.</li>
-                                <li>Il personaggio assegnato ottiene 2 punti di esaurimento fino al prossimo riposo
-                                    lungo.</li>
-                            </ul>
-                        </li>
+                        <li>Le carte il cui destinatario è il nome di un personaggio possono essere giocate solo dal
+                            giocatore di quel personaggio.</li>
+                        <li>Se l'unità a cui un personaggio è assegnato viene distrutta, quel personaggio ottiene 2
+                            punti di esaurimento.</li>
                     </ul>
 
                 </div>
@@ -268,13 +261,27 @@
                     </ul>
 
                     <h3>Rompere una Formazione</h3>
+                    <p>Quando un'unità carica un'unità nemica in formazione, si risolve uno spareggio di dadi in
+                        stile Risiko:</p>
                     <ul>
-                        <li>Dopo una carica, controlla ogni unità della tua formazione in combattimento contro il
-                            tuo avversario, usando uno spareggio in stile Risiko.</li>
-                        <li>Per ogni unità in combattimento, tira un d6.</li>
-                        <li>Se vinci più della metà dei tiri, puoi muovere 2 unità per rompere la formazione.</li>
-                        <li>In caso di parità, il risultato va al difensore.</li>
+                        <li><strong>Conta i dadi.</strong> L'attaccante tira 1D6 per ogni pedina che carica adiacente
+                            a una pedina difendente. Il difensore tira 1D6 per ogni pedina difendente adiacente a una
+                            pedina che carica.</li>
+                        <li><strong>Tira e ordina.</strong> Entrambi i giocatori tirano i propri dadi, poi li
+                            ordinano dal più alto al più basso.</li>
+                        <li><strong>Confronta</strong> i dadi in coppie: il più alto contro il più alto, il secondo
+                            contro il secondo, e così via, finché un giocatore non ha più dadi. I dadi in eccesso del
+                            gruppo più numeroso vengono ignorati. In ogni coppia vince il dado più alto. <strong>In
+                                caso di parità vince il difensore.</strong></li>
+                        <li><strong>Risultato.</strong> Se l'attaccante vince <strong>almeno una</strong> coppia, la
+                            formazione si rompe: l'attaccante riposiziona le pedine dell'unità difendente come
+                            preferisce, con due limiti: ogni pedina si muove al massimo di 2 caselle, e l'unità deve
+                            restare compatta, senza pedine separate dal resto dell'unità. L'unità difendente non è più
+                            in formazione.</li>
                     </ul>
+                    <p><strong>Esempio:</strong> l'attaccante tira 6, 3, 2 e il difensore tira 5, 5. Si confronta 6
+                        contro 5 (vince l'attaccante) e 3 contro 5 (vince il difensore). Il 2 viene ignorato.
+                        L'attaccante ha vinto una coppia, quindi la formazione si rompe.</p>
 
                     <h3>Formazione in Linea</h3>
 
@@ -374,12 +381,15 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Dichiara un fronte della linea.</li>
+                        <li>Dichiara un fronte lungo uno dei lati lunghi della linea.</li>
+                        <li>Immagina i lati lunghi della linea estesi per tutto il campo di battaglia: una pedina
+                            attaccante oltre il lato del fronte è <strong>davanti</strong>; oltre il lato opposto è
+                            <strong>dietro</strong>; qualsiasi altra pedina è su un <strong>fianco</strong>.</li>
                         <li>Le unità ottengono +1 ai tiri salvezza contro attacchi in mischia che provengono da
-                            pedine nemiche sul fronte della linea.</li>
+                            pedine nemiche davanti alla linea.</li>
                         <li>Le unità subiscono −1 ai tiri salvezza contro attacchi in mischia che provengono da
                             pedine nemiche dietro la linea.</li>
-                        <li>I tiri salvezza contro attacchi dai lati non sono influenzati.</li>
+                        <li>I tiri salvezza contro attacchi dai fianchi non sono influenzati.</li>
                     </ul>
 
                     <h3>Formazione a Ventaglio</h3>
@@ -585,7 +595,9 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Puoi ritirare qualsiasi tiro di rottura della formazione fallito.</li>
+                        <li>In uno spareggio di rottura della formazione, puoi ritirare un qualsiasi dado che ha
+                            perso la propria coppia, poi confronta di nuovo quella coppia. Vale sia quando carichi sia
+                            quando sei caricato.</li>
                         <li>Le unità subiscono −1 ai tiri salvezza contro attacchi sia a distanza che in mischia
                             mentre sono in questa formazione.</li>
                     </ul>
@@ -687,8 +699,8 @@
                         </g>
                     </svg>
                     <ul>
-                        <li>Richiede almeno 1 unità.</li>
-                        <li>Garantisce +2 movimento all'unità (o unità) nella formazione.</li>
+                        <li>Deve essere larga almeno 2 pedine.</li>
+                        <li>Garantisce +2 movimento all'unità nella formazione.</li>
                         <li>Le unità subiscono −1 ai tiri salvezza contro attacchi in mischia.</li>
                     </ul>
 
@@ -699,12 +711,15 @@
                         <li>Per semplicità, quando muovi una formazione, puoi muovere il centro della formazione e
                             ruotarla liberamente attorno alla posizione finale.</li>
                         <li>Entrare in una formazione costa sempre 1 punto di movimento.</li>
-                        <li>Durante la fase Fight, puoi eseguire uno "spostamento d'ingresso".</li>
-                        <li>In uno spostamento d'ingresso, ogni pedina può muoversi fino a 3 pollici per entrare in
-                            mischia con un'unità bersaglio; farlo rompe la formazione.</li>
-                        <li>Le unità già in mischia non possono eseguire uno spostamento d'ingresso.</li>
-                        <li>Se una pedina che si sposta finirebbe il movimento già in mischia, si ferma prima
-                            invece.</li>
+                    </ul>
+
+                    <h3>Mossa di Riassetto (fase Fight)</h3>
+                    <ul>
+                        <li>Quando un'unità usa l'abilità Fight — sia perché è già in mischia, sia perché ha appena
+                            caricato — ogni sua pedina può muoversi fino a 3" per posizionarsi meglio contro il
+                            nemico, per esempio per portare più pedine adiacenti a pedine nemiche.</li>
+                        <li>L'unità deve mantenere la coerenza anche dopo questo spostamento.</li>
+                        <li>Se un'unità in formazione esegue una mossa di riassetto, la sua formazione si rompe.</li>
                     </ul>
 
                 </div>
@@ -741,6 +756,18 @@
                         <li>Le miniature possono muoversi attraverso il terreno Instabile.</li>
                         <li>Le miniature non possono essere posizionate su, o terminare alcun tipo di movimento su,
                             qualsiasi parte di terreno Instabile alto più di 1 pollice.</li>
+                    </ul>
+
+                    <h3>Acqua</h3>
+                    <ul>
+                        <li>Un'unità che termina un movimento con una pedina in un elemento del terreno Acqua diventa
+                            <strong>Bagnata</strong> (vedi Meteo).</li>
+                    </ul>
+
+                    <h3>Terreno in Fiamme</h3>
+                    <ul>
+                        <li>Un'unità che termina un movimento con una pedina in un elemento del terreno in Fiamme
+                            diventa <strong>In Fiamme</strong> (vedi Meteo), a meno che non sia già Bagnata.</li>
                     </ul>
 
                 </div>
@@ -780,17 +807,32 @@
                     <p>Diverse condizioni meteo influenzano le condizioni di combattimento. Le condizioni possibili e
                         i loro effetti sono elencati di seguito.</p>
 
+                    <h3>Bagnata e In Fiamme</h3>
                     <ul>
-                        <li><strong>Pioggia:</strong> Le unità non possono prendere fuoco e sono considerate
-                            bagnate.</li>
-                        <li><strong>Neve:</strong> Le unità bagnate possono muoversi o caricare solo per metà dei
-                            loro valori normali di movimento e carica.</li>
+                        <li><strong>Bagnata:</strong> non può diventare In Fiamme; un'unità già In Fiamme che
+                            diventa Bagnata smette di bruciare. Nella Neve, movimento e carica sono ridotti a
+                            metà. La condizione termina alla fine del turno successivo dell'unità, a meno che non
+                            stia ancora piovendo o l'unità non sia ancora in un elemento di terreno Acqua. Il Calore
+                            Estremo impedisce del tutto di diventare Bagnata.</li>
+                        <li><strong>In Fiamme:</strong> l'unità subisce 1 ferita mortale alla fine di ciascuno dei
+                            suoi turni. Con il Calore Estremo, ne subisce D3 in più. La condizione termina quando
+                            l'unità diventa Bagnata, oppure, alla fine del suo turno e dopo aver subito il danno,
+                            tira un D6: con un 4+ il fuoco si estingue. Le unità Bagnate non possono diventare In
+                            Fiamme.</li>
+                    </ul>
+
+                    <ul>
+                        <li><strong>Pioggia:</strong> Tutte le unità sono Bagnate, quindi nessuna può essere In
+                            Fiamme.</li>
+                        <li><strong>Neve:</strong> Le unità Bagnate possono muoversi o caricare solo per metà dei
+                            loro valori normali di movimento e carica (applica prima eventuali modificatori fissi al
+                            movimento, poi dimezza, arrotondando per eccesso).</li>
                         <li><strong>Neve Intensa:</strong> Si applicano tutti gli effetti della Neve, e tutte le
                             unità hanno il movimento ridotto di 2.</li>
                         <li><strong>Nebbia Densa:</strong> Tutte le unità nemiche a più di 6" da un'unità alleata
                             sono trattate come se fossero dietro un terreno Ostruente.</li>
-                        <li><strong>Calore Estremo:</strong> Le unità in fiamme ricevono 1D3 ferite mortali
-                            aggiuntive alla fine del loro turno. Le unità non possono essere bagnate.</li>
+                        <li><strong>Calore Estremo:</strong> Le unità In Fiamme ricevono D3 ferite mortali
+                            aggiuntive alla fine del loro turno. Le unità non possono essere Bagnate.</li>
                         <li><strong>Tempesta di Sabbia:</strong> Si applicano tutti gli effetti della Nebbia Densa, e
                             tutte le unità hanno il movimento ridotto di 1".</li>
                     </ul>
@@ -801,8 +843,8 @@
                         Può anche essere
                         <strong>fisso</strong> o <strong>incostante</strong> — se fisso, la direzione resta costante
                         a ogni round;
-                        se incostante, tira un D6 all'inizio di ogni nuovo round per determinare la direzione del
-                        vento.
+                        se incostante, tira un D4 all'inizio di ogni round per determinare la direzione del vento:
+                        1 = nord, 2 = est, 3 = sud, 4 = ovest.
                     </p>
 
                     <ul>
@@ -813,12 +855,12 @@
                     </ul>
 
                     <p>
-                        Le direzioni del vento sono definite solo per direzione cardinale. Quando si spara
-                        <strong>con il vento</strong>
-                        (il bersaglio è sottovento), <strong>aggiungi</strong> il modificatore al tuo tiro per
-                        colpire. Quando si spara
-                        <strong>contro il vento</strong> (il bersaglio è sopravvento), <strong>sottrai</strong> il
-                        modificatore dal tuo tiro per colpire.
+                        Quando si spara <strong>con il vento</strong> (il bersaglio è sottovento), <strong>aggiungi
+                        </strong> il modificatore al tuo tiro per colpire. Quando si spara <strong>contro il
+                        vento</strong> (il bersaglio è sopravvento), <strong>sottrai</strong> il modificatore dal tuo
+                        tiro per colpire. Quando il bersaglio è <strong>di traverso</strong> rispetto al vento (sullo
+                        stesso livello del tiratore lungo l'asse del vento — per esempio, con vento da nord, un
+                        bersaglio sulla stessa riga del tiratore), non si applica nessun modificatore.
                     </p>
 
                 </div>

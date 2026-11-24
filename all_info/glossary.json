@@ -13,6 +13,7 @@
     "Control": "Statistica dell'unità: il valore usato per contestare o rivendicare un obiettivo.",
     "Morale": "Statistica dell'unità: la resistenza psicologica alle perdite e alla pressione in battaglia.",
     "Points": "Il costo in punti dell'unità o della carta, usato per bilanciare la composizione dell'esercito.",
+    "Ward": "Statistica dell'unità (opzionale): dopo che il danno è stato assegnato, tira un D6 per ogni punto subito; con il valore indicato o più, quel punto viene annullato. Funziona anche contro il danno mortale. Le Ward non si cumulano: se un'unità ne ha più di una, si usa solo la migliore.",
 
     "Attack": "Statistica dell'arma: il numero di attacchi effettuati in un singolo attacco.",
     "Hit": "Statistica dell'arma: il valore minimo sul dado necessario per colpire con il tiro per colpire.",
@@ -24,6 +25,7 @@
     "Infantry": "Parola chiave di tipo unità: truppe a piedi, generalmente numerose ed economiche.",
     "Cavalry": "Parola chiave di tipo unità: truppe veloci, spesso montate o motorizzate.",
     "Monster": "Parola chiave di tipo unità: creature di grandi dimensioni, solitamente più resistenti e pericolose.",
+    "Fly": "Parola chiave di tipo unità: l'unità ignora le altre miniature e il terreno quando si muove (non può comunque terminare il movimento su una casella occupata o Invalicabile), e non è influenzata da Copertura o Ostruente. In un Uragano perde questo beneficio.",
 
     "Deployment": "Fase di turno: le unità vengono posizionate sul campo di battaglia.",
     "Start Turn": "Fase di turno: scattano gli effetti che si attivano all'inizio del turno.",
@@ -37,6 +39,7 @@
 
     "Companion": "Parola chiave: questa arma non è influenzata da abilità amiche che modificano le caratteristiche dell'arma o la sequenza d'attacco, eccetto quelle che applicano modificatori negativi.",
     "Shoot in Combat": "Parola chiave: questa arma può essere usata per sparare anche mentre l'unità è impegnata in corpo a corpo.",
+    "Strike-First": "Condizione: nella fase Fight, tutte le unità con questa condizione combattono prima di tutte le altre, anche nel turno dell'avversario. Tra loro vale l'ordine normale (alternato, inizia il giocatore attivo).",
     "Anti-Infantry": "Parola chiave: aggiungi 1 al Rend di quest'arma se il bersaglio ha la parola chiave Infantry. Più copie di questa abilità sono cumulative.",
     "Anti-Cavalry": "Parola chiave: aggiungi 1 al Rend di quest'arma se il bersaglio ha la parola chiave Cavalry. Più copie di questa abilità sono cumulative.",
     "Anti-Monster": "Parola chiave: aggiungi 1 al Rend di quest'arma se il bersaglio ha la parola chiave Monster. Più copie di questa abilità sono cumulative.",
