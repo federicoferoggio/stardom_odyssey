@@ -1109,6 +1109,55 @@
       "confidence": "exact",
       "target": null,
       "action": "Aumento Stat (Might)"
+    },
+    {
+      "id": "al-0099",
+      "month": 10227,
+      "category": "stat",
+      "family": "Carxus",
+      "reason": "Aumento Stat (Influence) riuscito",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "influence",
+      "amount": 1,
+      "to": null
+    },
+    {
+      "id": "al-0100",
+      "month": 10227,
+      "category": "stat",
+      "family": "Carxus",
+      "reason": "Uso temporaneo di Influence questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "influence",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0101",
+      "month": 10227,
+      "category": "stat",
+      "family": "Carxus",
+      "reason": "Uso temporaneo di Sovereignty questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "sovereignty",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0102",
+      "month": 10227,
+      "category": "action",
+      "family": "Carxus",
+      "reason": "Carxus tenta Aumento Stat (Influence): successo (2x8 vs difficoltà 6)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": null,
+      "action": "Aumento Stat (Influence)"
     }
   ]
 }
