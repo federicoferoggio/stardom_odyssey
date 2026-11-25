@@ -279,6 +279,11 @@
             "month": 10227,
             "action": "move",
             "target": "aepra"
+          },
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "tebara"
           }
         ]
       }

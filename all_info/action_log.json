@@ -1288,6 +1288,28 @@
       "confidence": "exact",
       "target": "aepra",
       "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0114",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Caillot",
+      "reason": "Flotta \"Custode delle Stelle\" (caillot-flotta-2): ordine di movimento verso aepra.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "aepra",
+      "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0115",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Caillot",
+      "reason": "Flotta \"Custode delle Stelle\" (caillot-flotta-2): ordine di movimento verso tebara.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "tebara",
+      "action": "Ordine di Movimento"
     }
   ]
 }
