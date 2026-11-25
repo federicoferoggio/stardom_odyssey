@@ -986,6 +986,17 @@
       "confidence": "exact",
       "target": "hoter",
       "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0089",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Sifu",
+      "reason": "Flotta \"Argine Spezzato\" (sifu-flotta-1): ordine di movimento verso xan.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "xan",
+      "action": "Ordine di Movimento"
     }
   ]
 }

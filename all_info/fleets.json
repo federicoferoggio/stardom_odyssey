@@ -311,7 +311,13 @@
         "id": "sifu-flotta-1",
         "name": "Argine Spezzato",
         "type": "ground-support",
-        "orders": []
+        "orders": [
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "xan"
+          }
+        ]
       }
     ],
     "Rasaily": [
