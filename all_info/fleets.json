@@ -84,7 +84,13 @@
         "id": "wueng-flotta-2",
         "name": "Lancia di Bane",
         "type": "suppressor",
-        "orders": [],
+        "orders": [
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "iltiratore"
+          }
+        ],
         "startBody": "draconia",
         "speed": 2,
         "maxDistance": 600

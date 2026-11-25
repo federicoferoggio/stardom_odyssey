@@ -1255,6 +1255,17 @@
       "confidence": "exact",
       "target": "La Mano",
       "action": "Raccolta Informazioni"
+    },
+    {
+      "id": "al-0111",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Wueng",
+      "reason": "Flotta \"Lancia di Bane\" (wueng-flotta-2): ordine di movimento verso iltiratore.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "iltiratore",
+      "action": "Ordine di Movimento"
     }
   ]
 }
