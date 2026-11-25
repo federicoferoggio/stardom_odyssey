@@ -997,6 +997,69 @@
       "confidence": "exact",
       "target": "xan",
       "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0090",
+      "month": 10227,
+      "category": "stat",
+      "family": "Rasaily",
+      "reason": "Uso temporaneo di Might questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0091",
+      "month": 10227,
+      "category": "stat",
+      "family": "Rasaily",
+      "reason": "Uso temporaneo di Treasure questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "treasure",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0092",
+      "month": 10227,
+      "category": "stat",
+      "family": "Gith",
+      "reason": "Uso temporaneo di Might questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0093",
+      "month": 10227,
+      "category": "stat",
+      "family": "Gith",
+      "reason": "Uso temporaneo di Territory questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "territory",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0094",
+      "month": 10227,
+      "category": "action",
+      "family": "Rasaily",
+      "reason": "Rasaily tenta Attacco contro/con Gith: fallimento (2x5 vs 2x5, opposed)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "Gith",
+      "action": "Attacco"
     }
   ]
 }
