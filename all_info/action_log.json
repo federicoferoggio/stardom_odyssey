@@ -1266,6 +1266,17 @@
       "confidence": "exact",
       "target": "iltiratore",
       "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0112",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Mitsumoro",
+      "reason": "Flotta \"Ultraflotta C\" (mitsumoro-flotta-3): ordine di movimento verso protblanc.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "protblanc",
+      "action": "Ordine di Movimento"
     }
   ]
 }

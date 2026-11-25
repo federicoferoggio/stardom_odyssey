@@ -188,7 +188,13 @@
         "id": "mitsumoro-flotta-3",
         "name": "Ultraflotta C",
         "type": "ground-support",
-        "orders": []
+        "orders": [
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "protblanc"
+          }
+        ]
       },
       {
         "id": "mitsumoro-flotta-4",
