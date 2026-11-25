@@ -1218,6 +1218,43 @@
       "confidence": "exact",
       "target": null,
       "action": "Aumento Stat (Sovereignty)"
+    },
+    {
+      "id": "al-0108",
+      "month": 10227,
+      "category": "stat",
+      "family": "Ntsu",
+      "reason": "Uso temporaneo di Influence questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "influence",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0109",
+      "month": 10227,
+      "category": "stat",
+      "family": "Ntsu",
+      "reason": "Uso temporaneo di Sovereignty questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "sovereignty",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0110",
+      "month": 10227,
+      "category": "action",
+      "family": "Ntsu",
+      "reason": "Ntsu tenta Raccolta Informazioni contro/con La Mano: successo (2x10 vs difficoltà 3)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "La Mano",
+      "action": "Raccolta Informazioni"
     }
   ]
 }
