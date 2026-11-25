@@ -975,6 +975,17 @@
       "reason": "Scandalo in diretta orbitale: Sudriz e Caillot",
       "sourceMonth": null,
       "confidence": "inferred"
+    },
+    {
+      "id": "al-0088",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Zolinath",
+      "reason": "Flotta \"Lama della Legge\" (zolinath-flotta-1): ordine di movimento verso hoter.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "hoter",
+      "action": "Ordine di Movimento"
     }
   ]
 }

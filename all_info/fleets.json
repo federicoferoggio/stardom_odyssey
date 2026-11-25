@@ -291,7 +291,13 @@
         "id": "zolinath-flotta-1",
         "name": "Lama della Legge",
         "type": "suppressor",
-        "orders": []
+        "orders": [
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "hoter"
+          }
+        ]
       },
       {
         "id": "zolinath-flotta-2",
