@@ -1060,6 +1060,55 @@
       "confidence": "exact",
       "target": "Gith",
       "action": "Attacco"
+    },
+    {
+      "id": "al-0095",
+      "month": 10227,
+      "category": "stat",
+      "family": "Stozav",
+      "reason": "Aumento Stat (Might) riuscito",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": 1,
+      "to": null
+    },
+    {
+      "id": "al-0096",
+      "month": 10227,
+      "category": "stat",
+      "family": "Stozav",
+      "reason": "Uso temporaneo di Might questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0097",
+      "month": 10227,
+      "category": "stat",
+      "family": "Stozav",
+      "reason": "Uso temporaneo di Sovereignty questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "sovereignty",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0098",
+      "month": 10227,
+      "category": "action",
+      "family": "Stozav",
+      "reason": "Stozav tenta Aumento Stat (Might): successo (2x6 vs difficoltà 6)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": null,
+      "action": "Aumento Stat (Might)"
     }
   ]
 }
