@@ -274,7 +274,13 @@
         "id": "caillot-flotta-2",
         "name": "Custode delle Stelle",
         "type": "arcanic-shield",
-        "orders": []
+        "orders": [
+          {
+            "month": 10227,
+            "action": "move",
+            "target": "aepra"
+          }
+        ]
       }
     ],
     "Amoako": [

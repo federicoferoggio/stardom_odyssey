@@ -1277,6 +1277,17 @@
       "confidence": "exact",
       "target": "protblanc",
       "action": "Ordine di Movimento"
+    },
+    {
+      "id": "al-0113",
+      "month": 10227,
+      "category": "fleet",
+      "family": "Caillot",
+      "reason": "Flotta \"Custode delle Stelle\" (caillot-flotta-2): ordine di movimento verso aepra.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": "aepra",
+      "action": "Ordine di Movimento"
     }
   ]
 }
