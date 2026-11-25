@@ -1158,6 +1158,55 @@
       "confidence": "exact",
       "target": null,
       "action": "Aumento Stat (Influence)"
+    },
+    {
+      "id": "al-0103",
+      "month": 10227,
+      "category": "stat",
+      "family": "Kesk",
+      "reason": "Aumento Stat (Might) riuscito",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": 1,
+      "to": null
+    },
+    {
+      "id": "al-0104",
+      "month": 10227,
+      "category": "stat",
+      "family": "Kesk",
+      "reason": "Uso temporaneo di Might questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "might",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0105",
+      "month": 10227,
+      "category": "stat",
+      "family": "Kesk",
+      "reason": "Uso temporaneo di Sovereignty questo mese.",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "stat": "sovereignty",
+      "amount": -1,
+      "to": 10228,
+      "isUsage": true
+    },
+    {
+      "id": "al-0106",
+      "month": 10227,
+      "category": "action",
+      "family": "Kesk",
+      "reason": "Kesk tenta Aumento Stat (Might): successo (2x8 vs difficoltà 4)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": null,
+      "action": "Aumento Stat (Might)"
     }
   ]
 }
