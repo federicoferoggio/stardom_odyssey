@@ -1207,6 +1207,17 @@
       "confidence": "exact",
       "target": null,
       "action": "Aumento Stat (Might)"
+    },
+    {
+      "id": "al-0107",
+      "month": 10227,
+      "category": "action",
+      "family": "Kesk",
+      "reason": "Kesk tenta Aumento Stat (Sovereignty): fallimento (nessun set vs nessun set, dynamic)",
+      "sourceMonth": null,
+      "confidence": "exact",
+      "target": null,
+      "action": "Aumento Stat (Sovereignty)"
     }
   ]
 }
